@@ -6,6 +6,7 @@ import { appUserService } from "../../../core/services/appUserService";
 import successimg from '../../../assets/images/success.gif'
 import confirmImg from '../../../assets/images/are-you-sure.jpg'
 import { AppUser } from "../../../core/model/appuser";
+import { useListQuery } from "../../../store/createListStore";
 
 export default function AppUsersList() {
     const navigate = useNavigate();
@@ -17,7 +18,7 @@ export default function AppUsersList() {
     // search
     const [calendarCreateDateFrom, setCalendarCreateDateFrom] = useState<Date | undefined | null>(null);
     const [calendarCreateDateTo, setCalendarCreateDateTo] = useState<Date | undefined | null>(null);
-
+    const query = useListQuery<AppUser>(store,appUserService);
     useEffect(() => {
         if (store.search) {
             if (store.search?.createDateSearchFrom) {
@@ -37,7 +38,8 @@ export default function AppUsersList() {
 
     useEffect(() => {
         initFilters();
-    }, []);
+        console.log("query.data", query.data);
+    }, [query.isLoading]);
 
     const initFilters = () => {
         store.tableSearch.searchRowFilter = store.tableSearch.searchRowFilter || {};
@@ -57,8 +59,9 @@ export default function AppUsersList() {
         filters, setListSearch, clearListSearch, searchChange, openItem, confirmDeleteItem,
         toast, isSuccessDialogOpen, setIsSuccessDialogOpen, formatDate, hasAccess, exportToExcel,
         importFromExcel, addData, handleDelete, useColumnConfig }
-        = useListPage<typeof store, AppUser>({
+        = useListPage<typeof store, typeof query, AppUser>({
             store: appUserListStore(),
+            query: query,
             props: {
                 initialFilterValue: '',
                 baseModelName: baseModelName,
@@ -375,10 +378,10 @@ export default function AppUsersList() {
             </Dialog> */}
 
             <div className="m-2">
-                {!store.loading && (
+                {!query.isLoading && (
                     <DataTable
                         ref={dtRef}
-                        value={store?.data}
+                        value={query?.data}
                         dataKey="id"
                         showGridlines
                         filters={filters}

@@ -16,8 +16,8 @@ const LoginPage = () => {
     const login = useAuthStore((state) => state.login);
     const userInfo = useAuthStore((state) => state.userInfo);
     const selectedValue = false;
-    const { loadList } = enumDetailStore();
-    const { fetchRoleData } = appUserRoleDetailStore();
+    // const { loadList } = enumDetailStore();
+    // const { fetchRoleData } = appUserRoleDetailStore();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -43,8 +43,8 @@ const LoginPage = () => {
                 userInfo(JSON.stringify(userInfoData));
                 setEmail("");
                 setPassword("");
-                loadList();
-                fetchRoleData();
+                // loadList();
+                // fetchRoleData();
                 navigate('/appuser');
             } else {
                 setErrorMessage("Login failed. Please check your credentials.");

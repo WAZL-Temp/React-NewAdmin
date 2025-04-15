@@ -2,7 +2,7 @@ import { useState, useRef, useMemo, useEffect, useCallback } from "react";
 import { DataTable, DataTableFilterMeta, DataTablePageEvent, DataTableSortEvent, FilterMatchMode, format, parseISO, Toast, useNavigate } from "../sharedBase/globalImports";
 import { BaseService } from "../sharedBase/baseService";
 import { BaseModel } from "../sharedBase/modelInterface";
-import { ListStore } from "../store/createListStore";
+import { ListStore, QueryStore } from "../store/createListStore";
 import { LookupServiceBase } from "../sharedBase/lookupService";
 
 type UseListPageCommonProps<TItem> = {
@@ -16,8 +16,9 @@ type UseListPageCommonProps<TItem> = {
     onShowSuccessMessage?: (message: string) => void;
 };
 
-type UseListPageProps<TStore, TItem> = {
+type UseListPageProps<TStore, TQuery, TItem> = {
     store: TStore;
+    query: TQuery;
     props: UseListPageCommonProps<TItem>;
 };
 
@@ -89,7 +90,7 @@ export const useColumnConfig = (columnsConfigDefault: any[], roleData: any) => {
     return { columnsConfig, visibleColumns, setVisibleColumns, fixedColumnFields, selectableColumns, filteredFixedColumns, handleSelectAll, handleColumnChange };
 };
 
-export function useListPage<TStore extends ListStore<TItem>, TItem>({ store, props }: UseListPageProps<TStore, TItem>) {
+export function useListPage<TStore extends ListStore<TItem>, TQuery extends QueryStore<TItem>,  TItem>({ store, query, props }: UseListPageProps<TStore,TQuery, TItem>) {
     const navigate = useNavigate();
     const [globalFilterValue, setGlobalFilterValue] = useState(props.initialFilterValue);
     const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState(false);
@@ -118,7 +119,8 @@ export function useListPage<TStore extends ListStore<TItem>, TItem>({ store, pro
                 if (appuserData.dbStatus) {
                     store.setRoleCondition(JSON.parse(appuserData.dbStatus));
                 }
-                await store.loadList();
+                //await store.loadList();
+                //await query.load();
             }
         };
 
@@ -212,8 +214,9 @@ export function useListPage<TStore extends ListStore<TItem>, TItem>({ store, pro
     }
 
     const refreshItemData = async () => {
-        store.resetStatus();
-        await store.loadList();
+        // store.resetStatus();
+        // await store.loadList();
+        query.load();
     };
 
     const onPage = (event: DataTablePageEvent) => {
@@ -335,9 +338,11 @@ export function useListPage<TStore extends ListStore<TItem>, TItem>({ store, pro
     const confirmDeleteItem = async () => {
         if (itemToDelete) {
             try {
-                await props.service.delete(itemToDelete);
-                store.resetStatus();
-                await store.loadList();
+                // await props.service.delete(itemToDelete);
+                // store.resetStatus();
+                await query.deleteItem(itemToDelete);
+                //await query.load();
+                //await store.loadList();
             } catch (error) {
                 alert("Failed to delete app Users. Please try again later.");
             } finally {

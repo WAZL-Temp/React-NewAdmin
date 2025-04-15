@@ -29,9 +29,9 @@ export class LookupServiceBase {
         }
     
         try {
-            if (!store.isFetching) {
-                store.fetchRoleData();
-            }
+            // if (!store.isFetching) {
+            //     store.fetchRoleData();
+            // }
     
             return new Promise((resolve) => {
                 const checkStore = () => {

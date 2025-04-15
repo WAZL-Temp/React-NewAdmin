@@ -10,18 +10,18 @@ import { enumDetailStore } from "./store/enumDetailsStore";
 
 const App = () => {
   const { loadList, data } = enumDetailStore();
-  const [pageLoad, setPageLoad] = useState(false);
+  const [pageLoad, setPageLoad] = useState(true);
 
   useEffect(() => {
     if (data.length) {
       setPageLoad(true);
     }
 
-    const EnumDataCall = async () => {
-      await loadList();
-    };
+    // const EnumDataCall = async () => {
+    //   await loadList();
+    // };
 
-    EnumDataCall();
+    // EnumDataCall();
   }, [data]);
 
   return (
@@ -30,7 +30,7 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<LoginPage />} />
-            <Route path="/appuser" element={<AuthGuard requiredAction="List" page="appUser"><Layout><AppUsersList /></Layout></AuthGuard>} />
+            <Route path="/appuser" element={<Layout><AppUsersList /></Layout>} />
 
             <Route path="/404" element={<Layout><NotAuthorized /></Layout>} />
             <Route path="*" element={<Navigate to="/404" replace />} />
