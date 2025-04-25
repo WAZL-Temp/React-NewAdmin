@@ -1,4 +1,4 @@
-import { BaseService } from "../sharedBase/baseService"
+import {   setToken ,setUserInfo} from "../sharedBase/baseServiceVar"
 import { create, createJSONStorage, devtools, persist } from "../sharedBase/globalImports"
 
 interface AuthStore {
@@ -20,17 +20,17 @@ export const useAuthStore = create<AuthStore>()(
         isAuthenticated: false,
         login: (token: string) => {
           set({ token, isAuthenticated: true })
-          BaseService.setToken(token)
+          setToken(token);
         },
         userDet:null,
         userInfo: (userDet: any) => {
           set({ userDet })
-          BaseService.setUserInfo(userDet)
+          setUserInfo(userDet)
         },
         logout: () => {
           set({ token: null, isAuthenticated: false })
-          BaseService.setToken("")
-          BaseService.setUserInfo({})
+          setToken("")
+          setUserInfo({})
         },
         loggedInUserID: null,
         loggedInUser: (loggedInUserID: string) => {
@@ -43,10 +43,10 @@ export const useAuthStore = create<AuthStore>()(
         merge: (persistedState: unknown, currentState: AuthStore): AuthStore => {
           const typedState = persistedState as Partial<AuthStore> | undefined
           if (typedState?.token) {
-            BaseService.setToken(typedState.token)
+            setToken(typedState.token)
           }
           if (typedState?.userDet) {
-            BaseService.setUserInfo(typedState.userDet)
+            setUserInfo(typedState.userDet)
           }
 
           return {

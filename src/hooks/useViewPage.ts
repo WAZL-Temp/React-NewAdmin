@@ -1,30 +1,30 @@
 import { useEffect, useState } from "react";
-import { ItemStore } from "../store/createItemStore";
 import { useNavigate } from "../sharedBase/globalImports";
-import { LookupServiceBase } from "../sharedBase/lookupService";
+import { UseItemQueryResult } from "../store/createItemStore";
+import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
+import { RolePermission } from "../types/roles";
 
-type UseEditPageProps<TStore, TItem> = {
-    store: TStore;
+type UseEditPageProps<TQuery, TItem> = {
+    query: TQuery;
     props: {
         id?: string;
         baseModelName?: string;
     };
 };
 
-export function useViewPage<TStore extends ItemStore<TItem>, TItem>({ store, props }: UseEditPageProps<TStore, TItem>) {
+export function useViewPage<TQuery extends UseItemQueryResult<TItem>, TItem>({ query, props }: UseEditPageProps<TQuery, TItem>) {
     const navigate = useNavigate();
     const [hiddenFields, setHiddenFields] = useState<string[]>([])
+    const { data: roleDetailsData } = useFetchRoleDetailsData();
 
     useEffect(() => {
         const fetchRoleDetails = async () => {
             if (!props.baseModelName) return;
 
-            const lookupService = new LookupServiceBase();
-            const roleDetails = await lookupService.fetchRoleDetailsData();
+            if (roleDetailsData && roleDetailsData.length > 0) {
 
-            if (Array.isArray(roleDetails)) {
-                const modelData = roleDetails.find(
-                    (r: any) => r.name.toLowerCase() === props.baseModelName!.toLowerCase()
+                const modelData = roleDetailsData.find(
+                    (r: RolePermission) => r.name.toLowerCase() === props.baseModelName!.toLowerCase()
                 );
 
                 if (modelData?.hideColumn) {
@@ -38,11 +38,11 @@ export function useViewPage<TStore extends ItemStore<TItem>, TItem>({ store, pro
                         console.error("Error parsing hideColumn:", error);
                     }
                 }
-            }
-        };
-
-        fetchRoleDetails();
-    }, [props.baseModelName]);
+                }
+            };
+    
+            fetchRoleDetails();
+        }, []);
 
     const isFieldHidden = (fieldName: string) => {
         return hiddenFields.includes(fieldName)

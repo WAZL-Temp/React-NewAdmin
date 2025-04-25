@@ -1,73 +1,39 @@
+import { useState } from "react";
 import { BaseModel } from "./modelInterface";
+import { getToken, getUserInfo, setToken, setUserInfo } from "./baseServiceVar";
 
-export class BaseService<T extends BaseModel> {
-    protected apiUrl: string = "";
-    protected apiBaseUrl: string = import.meta.env.VITE_API_URL || "";
-    protected stateName: string | undefined;
-    private static helperServiceObj: any;
-    private static token: string = "";
-    private static userInfo: any = {};
-
-    constructor(type: string) {
-        const baseUrl = import.meta.env.VITE_API_URL;
-        if (!baseUrl) {
-            throw new Error('VITE_API_URL is not defined');
-        }
-        this.apiUrl = `${baseUrl}/${type}`;
+export const useBaseService = <T extends BaseModel>(type: string) => {
+    const apiBaseUrl = import.meta.env.VITE_API_URL || "";
+    if (!apiBaseUrl) {
+        throw new Error('VITE_API_URL is not defined');
     }
+    const apiUrl = `${apiBaseUrl}/${type}`;
+    const [helperServiceObj, setHelperServiceObj] = useState<any>(null);
 
-    public static setToken(token: string) {
-        BaseService.token = token;
-    }
-
-    public static setUserInfo(userInfo: any) {
-        BaseService.userInfo = userInfo;
-    }
-
-    public static setHelperService(helperSvc: any) {
-        BaseService.helperServiceObj = helperSvc;
-    }
-
-    public static get helperService() {
-        return BaseService.helperServiceObj;
-    }
-
-    // private getHeaders(): HeadersInit {
-    //     const headers: HeadersInit = {
-    //         "Content-Type": "application/json"
-    //     };
-
-    //     if (BaseService.token) {
-    //         headers["Authorization"] = `Bearer ${BaseService.token}`;
-    //     }
-    //     return headers;
-    // }
-
-    protected getHeaders(): HeadersInit {
+    const getHeaders = (): HeadersInit => {
         const headers: HeadersInit = {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         };
-    
-        if (BaseService.token) {
-            headers["Authorization"] = `Bearer ${BaseService.token}`;
+        const token = getToken();
+        if (token) {
+            headers["Authorization"] = `Bearer ${token}`;
         }
         return headers;
-    }    
+    };
 
-    protected handleError(error: any): never {
+    const handleError = (error: any): never => {
         if (error.response && error.response.status === 401) {
-            const helperSvc = BaseService.helperService;
-            helperSvc?.setNavigationUrl(window.location.pathname);
+            helperServiceObj?.setNavigationUrl(window.location.pathname);
             throw error.response.status;
         }
 
         throw error.response?.data?.message || "Server error";
-    }
+    };
 
-    async importExcel(needSampleData: any): Promise<Blob> {
-        const response = await fetch(`${this.apiUrl}/DownloadImportExcelFile`, {
+    const importExcel = async (needSampleData: any): Promise<Blob> => {
+        const response = await fetch(`${apiUrl}/DownloadImportExcelFile`, {
             method: 'POST',
-            headers: this.getHeaders(),
+            headers: getHeaders(),
             body: JSON.stringify(needSampleData),
         });
 
@@ -75,14 +41,13 @@ export class BaseService<T extends BaseModel> {
             throw new Error("Failed to import Excel file");
         }
 
-        const res = response.blob();
-        return await res;
-    }
+        return await response.blob();
+    };
 
-    async checkImportData(): Promise<T[]> {
-        const response = await fetch(`${this.apiUrl}/ImportCheck`, {
+    const checkImportData = async (): Promise<T[]> => {
+        const response = await fetch(`${apiUrl}/ImportCheck`, {
             method: 'POST',
-            headers: this.getHeaders(),
+            headers: getHeaders(),
             body: JSON.stringify({}),
         });
 
@@ -102,56 +67,55 @@ export class BaseService<T extends BaseModel> {
             console.error('Failed to parse JSON response:', e);
             throw new Error("Invalid JSON response");
         }
-    }
+    };
 
-
-    async getImportData(file: any): Promise<T[]> {
-        const response = await fetch(`${this.apiUrl}/ImportData`, {
+    const getImportData = async (file: any): Promise<T[]> => {
+        const response = await fetch(`${apiUrl}/ImportData`, {
             method: 'POST',
-            headers: this.getHeaders(),
+            headers: getHeaders(),
             body: JSON.stringify(file),
         });
 
         if (!response.ok) throw new Error("Failed to get import data");
         return await response.json();
-    }
+    };
 
-    async syncImportData(file: any): Promise<T[]> {
-        const response = await fetch(`${this.apiUrl}/ImportDataSync`, {
+    const syncImportData = async (file: any): Promise<T[]> => {
+        const response = await fetch(`${apiUrl}/ImportDataSync`, {
             method: 'POST',
-            headers: this.getHeaders(),
+            headers: getHeaders(),
             body: JSON.stringify(file),
         });
 
         if (!response.ok) throw new Error("Failed to sync import data");
         return await response.json();
-    }
+    };
 
-    async clearData(): Promise<void> {
+    const clearData = async (): Promise<void> => {
         console.log("Clear all state functionality to be implemented.");
-    }
+    };
 
-    async getHomeCommon(type: string, pageType: string, condition: any): Promise<any[]> {
+    const getHomeCommon = async (type: string, pageType: string, condition: any): Promise<any[]> => {
         const payload = {
             "type": type,
             "pageType": pageType,
             "condition": condition
-        }
+        };
 
-        const response = await fetch(`${this.apiUrl}/GetHomeCommonData`, {
+        const response = await fetch(`${apiUrl}/GetHomeCommonData`, {
             method: 'POST',
-            headers: this.getHeaders(),
+            headers: getHeaders(),
             body: JSON.stringify(payload),
         });
 
         if (!response.ok) throw new Error("Failed to fetch home common data");
         return await response.json();
-    }
+    };
 
-    async getHomeUser(type: string, pageType: string, condition: any): Promise<any[]> {
-        const response = await fetch(`${this.apiUrl}/GetHomeUserData`, {
+    const getHomeUser = async (type: string, pageType: string, condition: any): Promise<any[]> => {
+        const response = await fetch(`${apiUrl}/GetHomeUserData`, {
             method: 'POST',
-            headers: this.getHeaders(),
+            headers: getHeaders(),
             body: JSON.stringify({ type, pageType, condition }),
         });
 
@@ -159,10 +123,10 @@ export class BaseService<T extends BaseModel> {
         return await response.json();
     }
 
-    async getHtmlData(type: string, pageType: string, language: string, condition: any): Promise<any[]> {
-        const response = await fetch(`${this.apiUrl}/GetHtmlData`, {
+    const getHtmlData = async (type: string, pageType: string, language: string, condition: any): Promise<any[]> => {
+        const response = await fetch(`${apiUrl}/GetHtmlData`, {
             method: 'POST',
-            headers: this.getHeaders(),
+            headers: getHeaders(),
             body: JSON.stringify({ type, pageType, language, condition }),
         });
 
@@ -170,13 +134,13 @@ export class BaseService<T extends BaseModel> {
         return await response.json();
     }
 
-    async getHomeCommonData(type: string, pageType: string, condition: any): Promise<any> {
+    const getHomeCommonData = async (type: string, pageType: string, condition: any): Promise<any> => {
         // const reload = true;
         try {
             const [homeCommon, homeUser, htmlData] = await Promise.all([
-                this.getHomeCommon(type, pageType, condition),
-                this.getHomeUser(type, pageType, condition),
-                this.getHtmlData(type, pageType, "en", condition),
+                getHomeCommon(type, pageType, condition),
+                getHomeUser(type, pageType, condition),
+                getHtmlData(type, pageType, "en", condition),
             ]);
 
             return { homeCommon, homeUser, htmlData };
@@ -186,12 +150,11 @@ export class BaseService<T extends BaseModel> {
         }
     }
 
-
-    async searchData(search: any, order: string[], condition: any): Promise<T[]> {
-        let searchCondition = condition;
-        const response = await fetch(`${this.apiUrl}/Search`, {
+    const searchData = async (search: any, order: string[], condition: any): Promise<T[]> => {
+        const searchCondition = condition;
+        const response = await fetch(`${apiUrl}/Search`, {
             method: 'POST',
-            headers: this.getHeaders(),
+            headers: getHeaders(),
             body: JSON.stringify({ form: search, condition: searchCondition, orderColumns: order }),
         });
 
@@ -199,13 +162,13 @@ export class BaseService<T extends BaseModel> {
         return await response.json();
     }
 
-    async exportExcel(search: any, order: string[]): Promise<Blob> {
+    const exportExcel = async (search: any, order: string[]): Promise<Blob | undefined> => {
         try {
-            const response = await fetch(`${this.apiUrl}/DownloadExcelFile`, {
+            const response = await fetch(`${apiUrl}/DownloadExcelFile`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    ...this.getHeaders(),
+                    ...getHeaders(),
                 },
                 body: JSON.stringify({ form: search, order }),
             });
@@ -216,15 +179,16 @@ export class BaseService<T extends BaseModel> {
 
             return await response.blob();
         } catch (error) {
-            this.handleError(error);
+            handleError(error);
+            return undefined;
         }
     }
 
-    async downloadPdf(fileInfo: any): Promise<Blob> {
+    const downloadPdf = async (fileInfo: any): Promise<Blob> => {
         try {
-            const response = await fetch(`${this.apiUrl}/Download"`, {
+            const response = await fetch(`${apiUrl}/Download"`, {
                 method: 'POST',
-                headers: this.getHeaders(),
+                headers: getHeaders(),
                 body: JSON.stringify(fileInfo),
             });
 
@@ -234,14 +198,14 @@ export class BaseService<T extends BaseModel> {
 
             return await response.blob();
         } catch (error) {
-            return this.handleError(error);
+            return handleError(error);
         }
     }
 
-    async getAll(condition:any): Promise<T[]> {
-        const response = await fetch(`${this.apiUrl}/Get`, {
+    const getAll = async (condition: any): Promise<T[]> => {
+        const response = await fetch(`${apiUrl}/Get`, {
             method: 'POST',
-            headers: this.getHeaders(),
+            headers: getHeaders(),
             body: JSON.stringify({ condition: condition }),
         });
 
@@ -249,11 +213,11 @@ export class BaseService<T extends BaseModel> {
         return await response.json();
     }
 
-    async get(id: number): Promise<T> {
+    const get = async (id: number): Promise<T> => {
         try {
-            const response = await fetch(`${this.apiUrl}/GetById`, {
+            const response = await fetch(`${apiUrl}/GetById`, {
                 method: 'POST',
-                headers: this.getHeaders(),
+                headers: getHeaders(),
                 body: JSON.stringify({ id }),
             });
 
@@ -271,10 +235,10 @@ export class BaseService<T extends BaseModel> {
         }
     }
 
-    async add(item: T): Promise<T> {
-        const response = await fetch(`${this.apiUrl}/Add`, {
+    const add = async (item: T): Promise<T> => {
+        const response = await fetch(`${apiUrl}/Add`, {
             method: 'POST',
-            headers: this.getHeaders(),
+            headers: getHeaders(),
             body: JSON.stringify(item),
         });
 
@@ -282,10 +246,10 @@ export class BaseService<T extends BaseModel> {
         return await response.json();
     }
 
-    async draft(item: T): Promise<T> {
-        const response = await fetch(`${this.apiUrl}/Draft`, {
+    const draft = async (item: T): Promise<T> => {
+        const response = await fetch(`${apiUrl}/Draft`, {
             method: 'POST',
-            headers: this.getHeaders(),
+            headers: getHeaders(),
             body: JSON.stringify(item),
         });
 
@@ -293,10 +257,10 @@ export class BaseService<T extends BaseModel> {
         return await response.json();
     }
 
-    async update(item: T): Promise<T> {
-        const response = await fetch(`${this.apiUrl}/Update`, {
+    const update = async (item: T): Promise<T> => {
+        const response = await fetch(`${apiUrl}/Update`, {
             method: 'POST',
-            headers: this.getHeaders(),
+            headers: getHeaders(),
             body: JSON.stringify(item),
         });
 
@@ -304,10 +268,10 @@ export class BaseService<T extends BaseModel> {
         return await response.json();
     }
 
-    async delete(id: number): Promise<void> {
-        const response = await fetch(`${this.apiUrl}/Delete`, {
+    const handleDelete = async (id: number): Promise<void> => {
+        const response = await fetch(`${apiUrl}/Delete`, {
             method: 'POST',
-            headers: this.getHeaders(),
+            headers: getHeaders(),
             body: JSON.stringify({ Id: id }),
         });
 
@@ -315,14 +279,15 @@ export class BaseService<T extends BaseModel> {
         return;
     }
 
-    async fileUpload(file: File): Promise<any> {
+    const fileUpload = async (file: File): Promise<any> => {
         const formData = new FormData();
         formData.append("file", file);
+        const token = getToken();
 
-        const response = await fetch(`${this.apiUrl}/FileUpload`, {
+        const response = await fetch(`${apiUrl}/FileUpload`, {
             method: "POST",
             headers: {
-                Authorization: `Bearer ${BaseService.token}`,
+                Authorization: `Bearer ${token}`,
             },
             body: formData,
         });
@@ -333,10 +298,10 @@ export class BaseService<T extends BaseModel> {
         return await response.json();
     }
 
-    async fileDownload(fileInfo: any): Promise<Blob> {
-        const response = await fetch(`${this.apiUrl}/Download`, {
+    const fileDownload = async (fileInfo: any): Promise<Blob> => {
+        const response = await fetch(`${apiUrl}/Download`, {
             method: 'POST',
-            headers: this.getHeaders(),
+            headers: getHeaders(),
             body: JSON.stringify(fileInfo),
         });
 
@@ -344,12 +309,12 @@ export class BaseService<T extends BaseModel> {
         return await response.blob();
     }
 
-    async unique(name: string, item: T, condition: any): Promise<boolean> {
+    const unique = async (name: string, item: T, condition: any): Promise<boolean> => {
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        const response = await fetch(`${this.apiUrl}/CheckUnique`, {
+        const response = await fetch(`${apiUrl}/CheckUnique`, {
             method: 'POST',
-            headers: this.getHeaders(),
+            headers: getHeaders(),
             body: JSON.stringify({ columnName: name, form: item, condition }),
         });
 
@@ -357,18 +322,19 @@ export class BaseService<T extends BaseModel> {
         return await response.json();
     }
 
-    async getRoleData(): Promise<any> {
+    const getRoleData = async (): Promise<any> => {
         try {
-            if (BaseService.userInfo) {
-                const cleanJson = BaseService.userInfo?.trim();
+            const userInfo = getUserInfo();
+            if (userInfo) {
+                const cleanJson = userInfo?.trim();
                 const baseUserInfo = cleanJson ? JSON.parse(cleanJson) : null;
                 const form = { role: baseUserInfo?.role, id: 0 }
 
-                const response = await fetch(`${this.apiUrl}/GetRoleData`, {
+                const response = await fetch(`${apiUrl}/GetRoleData`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        ...this.getHeaders(),
+                        ...getHeaders(),
                     },
                     body: JSON.stringify(form),
                 });
@@ -380,20 +346,36 @@ export class BaseService<T extends BaseModel> {
                 return await response.json();
             }
         } catch (error) {
-            this.handleError(error);
+            handleError(error);
         }
     }
 
-    async getGridData(pageNo: number,pageSize: number,orderBy: string,table: string): Promise<any> {
-        const form = {pageNo:pageNo,pageSize:pageSize,orderBy:orderBy,table:table};
-        const response = await fetch(`${this.apiUrl}/GetGridData`, {
+    const getGridData = async (pageNo: number, pageSize: number, orderBy: string, table: string): Promise<any> => {
+        const form = { pageNo: pageNo, pageSize: pageSize, orderBy: orderBy, table: table };
+        const response = await fetch(`${apiUrl}/GetGridData`, {
             method: 'POST',
-            headers: this.getHeaders(),
+            headers: getHeaders(),
             body: JSON.stringify(form),
         });
 
         if (!response.ok) throw new Error("Failed to fetch grid Data");
         return await response.json();
     }
-}
 
+    return {
+        setToken,
+        setUserInfo,
+        setHelperServiceObj,
+        importExcel,
+        checkImportData,
+        getImportData,
+        syncImportData,
+        clearData,
+        getHomeCommon,
+        getHomeCommonData,
+        searchData, exportExcel, downloadPdf, getAll, get, add, draft, update,
+        handleDelete, fileUpload, fileDownload, unique, getRoleData,
+        getGridData,
+        type
+    };
+};

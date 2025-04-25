@@ -1,4 +1,4 @@
-import { FileUploadService } from '../core/services/fileuploadservice';
+import { useFileUploadService } from '../core/services/fileUpload.service';
 import { useEffect, useState } from 'react';
 import { AiFillCloseCircle, MdDownloadForOffline, Tooltip, useTranslation } from '../sharedBase/globalImports';
 
@@ -15,7 +15,7 @@ interface ImageViewerProps {
 }
 
 export default function ImgViewer({ files, modelName }: ImageViewerProps) {
-  
+
   const parseAndFormatImages = (imageData: string | null) => {
     if (!imageData) return [];
     try {
@@ -36,6 +36,7 @@ export default function ImgViewer({ files, modelName }: ImageViewerProps) {
 
   const [uploadedFiles, setUploadedFiles] = useState<CustomFile[]>(parseAndFormatImages(files));;
   const { t } = useTranslation();
+  const fileUploadService = useFileUploadService(modelName);
   const [scale, setScale] = useState(1);
   const scaleStep = 0.1;
   const [imageShowDialog, setImageShowDialog] = useState(false);
@@ -56,7 +57,6 @@ export default function ImgViewer({ files, modelName }: ImageViewerProps) {
 
   const downloadFile = async (file: CustomFile) => {
     try {
-      const fileUploadService = new FileUploadService(modelName);
       const response = await fileUploadService.fileDownload(file);
       const blob = new Blob([response]);
       const link = document.createElement('a');
@@ -76,7 +76,7 @@ export default function ImgViewer({ files, modelName }: ImageViewerProps) {
           <ul className="uploaded-files-grid">
             {uploadedFiles.map((file) => (
               <li key={file.filePath} className="flex items-center space-x-4">
-                 {/* p-1 shadow-md rounded */}
+                {/* p-1 shadow-md rounded */}
                 {!file.filePath.includes('pdf') ? (
                   <>
                     <div

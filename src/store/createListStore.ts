@@ -1,153 +1,139 @@
-import { BaseService } from "../sharedBase/baseService";
-import { create, devtools } from "../sharedBase/globalImports";
-import { BaseModel } from "../sharedBase/modelInterface";
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { BaseModel } from "../sharedBase/modelInterface";
+import { useBaseService } from "../sharedBase/baseService";
 
-export interface ListStore<T> {
-  data: T[];
-  loading: boolean;
-  status: string;
-  error: string | null;
+export interface UseListQueryResult<T> {
+  data: T[] | undefined;
+  isLoading: boolean;
+  error: Error | null;
   search: any;
   tableSearch: any;
-  isFetching: boolean;
   condition: any;
   roleCondition: any;
+  deleteItem: (id: number) => void;
+  load: () => void;
   setSearch: (search: any) => void;
   setTableSearch: (tableSearch: any) => void;
+  clearSearch: (type: "search" | "table" | "both") => void;
   setCondition: (condition: any) => void;
   setRoleCondition: (roleCondition: any) => void;
-  clearSearch: (type: "search" | "table" | "both") => void;
-  deleteItem: (id: number) => void;
-  resetStatus: () => void;
+  fetchRoleData: () => Promise<T[] | undefined>;
+  fetchGridData : (pageNo: number,pageSize: number,orderBy: string,table: string) => Promise<any>;
 }
 
-export const createListStore = <T extends BaseModel>(
-  type: string
-) =>
-  create<ListStore<T>>()(
-    devtools(
-      (set, get) => ({
-        data: [],
-        loading: false,
-        status: "",
-        error: null,
-        search: {},
-        isFetching: false,
-        tableSearch: {
-          sortField: "",
-          sortOrder: "",
-          first: 0,
-          rows: 10,
-          filter: "",
-          top: "",
-          left: "",
-          searchRowFilter: {},
-        },
-        setSearch: (newSearch: any) => {
-          set((state) => ({
-            search: {
-              ...state.search,
-              ...newSearch,
-            },
-            status: "",
-          }));
-        },
-        setTableSearch: (tableSearch: any) => {
-          set({ tableSearch });
-        },
-        setCondition: (condition: any) => {
-          set({ condition });
-        },
-        setRoleCondition: (newRoleCondition: any) => {
-          set((state) => ({
-            roleCondition: {
-              ...state.roleCondition,
-              ...newRoleCondition,
-            },
-          }));
-        },
-        clearSearch: (type: "search" | "table" | "both") => {
-          if (type === "search") {
-            set({ search: {} });
-          }
-          if (type === "table") {
-            set({ tableSearch: {} });
-          }
-          if (type === "both") {
-            set({ search: {}, tableSearch: {} });
-          }
-        },
-        deleteItem: (id: number) => {
-          set((state) => ({
-            data: state.data.filter((item: any) => item.id !== id),
-          }));
-        },
-        resetStatus: () => {
-          set({ status: "" });
-        },
-      }),
-      {
-        name: `List-${type}`,
-      }
-    )
-  );
-
-  export interface QueryStore<T>{
-    data: T[] | undefined;
-    isLoading: boolean;
-    error: Error | null;
-    deleteItem: (id: number) => void;
-    load: () => void;
-  }
-
-// Hook to use TanStack Query with Zustand
 export const useListQuery = <T extends BaseModel>(
-  store: ListStore<T>,
-  service: BaseService<T>
-) => {
+  baseService: ReturnType<typeof useBaseService>
+): UseListQueryResult<T> => {
   const queryClient = useQueryClient();
+  const service = baseService;
 
-  // Fetch data using TanStack Query
-  const { data, isLoading, error } = useQuery({
-    queryKey: [`list-${service.constructor.name}`],
-    queryFn: async () => {
-      const { condition, search, roleCondition } = store;
-      const payload = { ...condition, ...search, ...roleCondition };
-      return await service.getAll(payload);
-    },
-    staleTime: 1000 * 60 * 5, // 5 minutes
+  const [search, setSearchState] = useState<any>({});
+  const [tableSearch, setTableSearchState] = useState<any>({
+    sortField: "",
+    sortOrder: "",
+    first: 0,
+    rows: 10,
+    filter: "",
+    top: "",
+    left: "",
+    searchRowFilter: {},
+  });
+  const [condition, setConditionState] = useState<any>({});
+  const [roleCondition, setRoleConditionState] = useState<any>({});
+  const [isFetching, setIsFetching] = useState<boolean>(false);
+
+  const payload = { ...condition, ...search, ...roleCondition };
+
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: [`list-${service.type}`],
+    queryFn: () => service.getAll(payload),
+    staleTime: 1000 * 60 * 5,
   });
 
-  // Mutation for deleting an item
-  const deleteMutation = useMutation<void, Error, number>({
-    mutationFn: async (id: number) => {
-      await service.delete(id);
-    },
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => service.handleDelete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [`list-${service.constructor.name}`] });
+      queryClient.invalidateQueries({ queryKey: [`list-${service.type}`] });
     },
-  } //    
-   
-  );
+  });
 
-  const load = async () => {
-    // console.log("load function called");
-    //   const { condition, search, roleCondition } = store;
-    //   const payload = { ...condition, ...search, ...roleCondition };
-    //   await queryClient.fetchQuery({
-    //     queryKey: [`list-${service.constructor.name}`],
-    //     queryFn: async () => await service.getAll(payload),
-    //   });
-    queryClient.invalidateQueries({ queryKey: [`list-${service.constructor.name}`] });
-    
+  const setSearch = (newSearch: any) => {
+    setSearchState((prev: any) => ({ ...prev, ...newSearch }));
+  };
+
+  const setTableSearch = (newTableSearch: any) => {
+    setTableSearchState(newTableSearch);
+  };
+
+  const clearSearch = (type: "search" | "table" | "both") => {
+    if (type === "search") setSearchState({});
+    if (type === "table") setTableSearchState({});
+    if (type === "both") {
+      setSearchState({});
+      setTableSearchState({});
+    }
+  };
+
+  const setCondition = (newCondition: any) => {
+    setConditionState(newCondition);
+  };
+
+  const setRoleCondition = (newRoleCondition: any) => {
+    setRoleConditionState((prev: any) => ({
+      ...prev,
+      ...newRoleCondition,
+    }));
+  };
+
+  const load = () => {
+    refetch();
+  };
+
+  const fetchRoleData = async (): Promise<T[] | undefined> => {
+    if (isFetching) return;
+    setIsFetching(true);
+
+    try {
+      const fetchedData = await service.getRoleData();
+      setIsFetching(false);
+      return fetchedData;
+    } catch (err: unknown) {
+      setIsFetching(false);
+      console.error("Error fetching role data:", err);
+    }
+  };
+
+  const fetchGridData = async (
+    pageNo: number,
+    pageSize: number,
+    orderBy: string,
+    table: string
+  ): Promise<any> => {
+    try {
+      const fetchedGridData = await service.getGridData(pageNo, pageSize, orderBy, table);
+      return fetchedGridData;
+    } catch (err: unknown) {
+      console.error("Error fetching grid data:", err);
+    }
   };
 
   return {
-    data,
+    data: data as T[] | undefined,
     isLoading,
-    error,
+    error: error as Error | null,
+    search,
+    tableSearch,
+    condition,
+    roleCondition,
     deleteItem: deleteMutation.mutate,
-    load, 
+    load,
+    setSearch,
+    setTableSearch,
+    clearSearch,
+    setCondition,
+    setRoleCondition,
+    fetchRoleData,
+    fetchGridData
   };
 };

@@ -1,14 +1,15 @@
 import { useState, useRef, useMemo, useEffect, useCallback } from "react";
 import { DataTable, DataTableFilterMeta, DataTablePageEvent, DataTableSortEvent, FilterMatchMode, format, parseISO, Toast, useNavigate } from "../sharedBase/globalImports";
-import { BaseService } from "../sharedBase/baseService";
-import { BaseModel } from "../sharedBase/modelInterface";
-import { ListStore, QueryStore } from "../store/createListStore";
-import { LookupServiceBase } from "../sharedBase/lookupService";
+import { useBaseService } from "../sharedBase/baseService";
+import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
+import { ColumnConfig, RoleData, SortOrder } from "../types/listpage";
+import { RolePermission } from "../types/roles";
+import { UseListQueryResult } from "../store/createListStore";
 
 type UseListPageCommonProps<TItem> = {
     initialFilterValue?: string;
     baseModelName?: string;
-    service: BaseService<BaseModel>;
+    service: typeof useBaseService;
     onFilterChange?: (value: string) => void;
     onConfirmDelete?: (id: number) => void;
     onDeleteItem?: (id: number) => void;
@@ -16,23 +17,20 @@ type UseListPageCommonProps<TItem> = {
     onShowSuccessMessage?: (message: string) => void;
 };
 
-type UseListPageProps<TStore, TQuery, TItem> = {
-    store: TStore;
+type UseListPageProps<TQuery, TItem> = {
     query: TQuery;
     props: UseListPageCommonProps<TItem>;
 };
 
-export const useColumnConfig = (columnsConfigDefault: any[], roleData: any) => {
-    const hiddenColumns = useMemo(() => {
+export const useColumnConfig = (columnsConfigDefault: ColumnConfig[], roleData: RoleData | RoleData[] | null) => {
+    const hiddenColumns = useMemo<string[]>(() => {
         return (Array.isArray(roleData) ? roleData : [roleData])
-            .filter((role) => role && role.hideColumn)
-            .reduce((acc: string[], role: any) => {
+            .filter((role): role is RoleData => !!role?.hideColumn)
+            .reduce((acc: string[], role: RoleData) => {
                 try {
-                    if (!roleData) return [];
-
-                    const parsedColumns = JSON.parse(role.hideColumn);
+                    const parsedColumns = JSON.parse(role.hideColumn!);
                     if (Array.isArray(parsedColumns)) {
-                        acc.push(...parsedColumns.map((col: any) => col.value));
+                        acc.push(...parsedColumns.map((col: { value: string }) => col.value));
                     } else if (typeof parsedColumns === "object" && parsedColumns.value) {
                         acc.push(parsedColumns.value);
                     }
@@ -40,7 +38,7 @@ export const useColumnConfig = (columnsConfigDefault: any[], roleData: any) => {
                     console.error("Error parsing hideColumn:", error);
                 }
                 return acc;
-            }, [roleData]);
+            }, []);
     }, [roleData]);
 
     const filteredFixedColumns = useMemo(() => {
@@ -90,7 +88,7 @@ export const useColumnConfig = (columnsConfigDefault: any[], roleData: any) => {
     return { columnsConfig, visibleColumns, setVisibleColumns, fixedColumnFields, selectableColumns, filteredFixedColumns, handleSelectAll, handleColumnChange };
 };
 
-export function useListPage<TStore extends ListStore<TItem>, TQuery extends QueryStore<TItem>,  TItem>({ store, query, props }: UseListPageProps<TStore,TQuery, TItem>) {
+export function useListPage<TQuery extends UseListQueryResult<TItem>,  TItem>({ query, props }: UseListPageProps<TQuery, TItem>) {
     const navigate = useNavigate();
     const [globalFilterValue, setGlobalFilterValue] = useState(props.initialFilterValue);
     const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState(false);
@@ -98,39 +96,41 @@ export function useListPage<TStore extends ListStore<TItem>, TQuery extends Quer
     const toast = useRef<Toast>(null);
     const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
     const dtRef = useRef<DataTable<any>>(null);
-    const [sortField, setSortField] = useState<any>();
-    const [sortOrder, setSortOrder] = useState<any>();
-    const [first, setFirst] = useState<any>();
-    const [rows, setRows] = useState<any>();
+    const [sortField, setSortField] = useState<string | undefined>();
+    const [sortOrder, setSortOrder] = useState<SortOrder>();
+    const [first, setFirst] = useState<number>();
+    const [rows, setRows] = useState<number>();
     const [totalRecords, setTotalRecords] = useState(0);
     const [filters, setFilters] = useState<DataTableFilterMeta>({ global: { value: null, matchMode: FilterMatchMode.CONTAINS }, });
     const [roleData, setRoleData] = useState<any>(null);
-    const [search, setSearch] = useState({});
-    const [searchRowFilter, setSearchRowFilter] = useState({});
+    const [search, setSearch] = useState<Record<string, unknown>>({});
+    const [searchRowFilter, setSearchRowFilter] = useState<Record<string, unknown>>({});
+    const { data: roleDetailsData } = useFetchRoleDetailsData();
+     
 
     useEffect(() => {
         const fetchRoleDetails = async () => {
-            const lookupService = new LookupServiceBase();
-            const roleDetails = await lookupService.fetchRoleDetailsData();
-            if (Array.isArray(roleDetails)) {
-                const appuserData = roleDetails.find((r: any) => r.name.toLowerCase() === (props.baseModelName?.toLowerCase() ?? ""));
+            if (roleDetailsData && roleDetailsData.length > 0) {
+                
+                const appuserData = roleDetailsData.find((r: RolePermission) => r.name.toLowerCase() === (props.baseModelName?.toLowerCase() ?? ""));
                 setRoleData(appuserData);
-
-                if (appuserData.dbStatus) {
-                    store.setRoleCondition(JSON.parse(appuserData.dbStatus));
+                
+                if (appuserData?.dbStatus) {
+                    query.setRoleCondition(JSON.parse(appuserData.dbStatus));
                 }
-                //await store.loadList();
-                //await query.load();
+                await query.load();
             }
         };
-
-
-        fetchRoleDetails();
-    }, [props.baseModelName]);
+    
+        if (roleDetailsData && roleDetailsData.length > 0) {
+            fetchRoleDetails();
+        }
+    }, [roleDetailsData, props.baseModelName]);
+    
 
     useEffect(() => {
-        if (store.tableSearch?.searchRowFilter) {
-            const updatedFilters = Object.entries(store.tableSearch.searchRowFilter).reduce((acc, [field, value]) => {
+        if (query.tableSearch?.searchRowFilter) {
+            const updatedFilters = Object.entries(query.tableSearch.searchRowFilter).reduce((acc, [field, value]) => {
                 acc[field] = {
                     value: value,
                     matchMode: Array.isArray(value) ? FilterMatchMode.IN : FilterMatchMode.CONTAINS
@@ -145,13 +145,13 @@ export function useListPage<TStore extends ListStore<TItem>, TQuery extends Quer
             }));
         }
 
-        setSortField(store.tableSearch?.sortField);
-        setSortOrder(store.tableSearch?.sortOrder);
-        setFirst(store.tableSearch?.first);
-        setRows(store.tableSearch?.rows);
-        setTotalRecords(store.data?.length);
+        setSortField(query.tableSearch?.sortField);
+        setSortOrder(query.tableSearch?.sortOrder);
+        setFirst(query.tableSearch?.first);
+        setRows(query.tableSearch?.rows);
+        setTotalRecords(query.data?.length ?? 0);
 
-    }, [store.tableSearch, store.data, globalFilterValue]);
+    }, [query.tableSearch, query.data, globalFilterValue]);
 
     useEffect(() => {
         const applyScrollPosition = () => {
@@ -199,23 +199,21 @@ export function useListPage<TStore extends ListStore<TItem>, TQuery extends Quer
         setTimeout(applyScrollPosition, 100);
     }, []);
 
-
-
-    const hasAccess = (roleData: any, requiredAction: string) => {
+    const hasAccess = (roleData: RoleData, requiredAction: string) => {
         if (!roleData) return false;
         const actions = typeof roleData.action === "string" ? JSON.parse(roleData.action) : [];
-        return actions.some((action: any) => action.name.toLowerCase() === requiredAction.toLowerCase());
+        return actions.some((action) => action.name.toLowerCase() === requiredAction.toLowerCase());
     };
 
     const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setGlobalFilterValue(value);
-        store.tableSearch.filter = value;
+        query.tableSearch.filter = value;
     }
 
     const refreshItemData = async () => {
-        // store.resetStatus();
-        // await store.loadList();
+        // query.resetStatus();
+        // await query.loadList();
         query.load();
     };
 
@@ -223,72 +221,58 @@ export function useListPage<TStore extends ListStore<TItem>, TQuery extends Quer
         setFirst(event.first);
         setRows(event.rows);
 
-        store.tableSearch.first = event.first;
-        store.tableSearch.rows = event.rows;
-        store.loadList();
+        query.tableSearch.first = event.first;
+        query.tableSearch.rows = event.rows;
+        query.load();
     };
 
     const onSort = (e: DataTableSortEvent) => {
         setSortField(e.sortField);
         setSortOrder(e.sortOrder);
 
-        store.tableSearch.sortField = e.sortField;
-        store.tableSearch.sortOrder = e.sortOrder?.toString() || "";
+        query.tableSearch.sortField = e.sortField;
+        query.tableSearch.sortOrder = e.sortOrder?.toString() || "";
     };
 
     const setListSearch = () => {
-        store.setSearch(search);
+        query.setSearch(search);
         searchData();
     }
 
     const searchData = async () => {
-        // store.clearSearch('table');
-        // store.setTableSearch((prev: any) => ({
-        //     ...prev,
-        //     searchRowFilter: {},
-        // }));
-        await store.reloadList();
+        await  query.load();
     }
 
     const clearListSearch = (type: 'search' | 'table' | 'both') => {
-        store.clearSearch(type);
+        query.clearSearch(type);
         if (type === 'table') {
-            // store.setTableSearch((prev: any) => ({
-            //     ...prev,
-            //     searchRowFilter: {},
-            // }));
             setSearchRowFilter({});
         }
 
         if (type === 'search') {
-            // store.setSearch({});
             setSearch({});
             searchData();
         }
     }
 
     const searchChange = (value: any, name: string, type: string) => {
-        // let val = value;
-        // if (type === 'date') {
-        //     val = formatDate(value);
-        // }
-        store.setSearch({ [name]: value });
+        query.setSearch({ [name]: value });
     };
 
-    const setTableSearchInfo = () => {
+    const setTableSearchInfo = useCallback(() => {
         const body = dtRef.current?.getElement().querySelector('.p-datatable-wrapper');
         const info = {
-            filter: store.tableSearch.filter,
-            sortField: store.tableSearch.sortField,
-            sortOrder: store.tableSearch.sortOrder,
-            first: store.tableSearch.first,
-            rows: store.tableSearch.rows,
+            filter: query.tableSearch.filter,
+            sortField: query.tableSearch.sortField,
+            sortOrder: query.tableSearch.sortOrder,
+            first: query.tableSearch.first,
+            rows: query.tableSearch.rows,
             top: body?.scrollTop || 0,
             left: body?.scrollLeft || 0,
-            searchRowFilter: store.tableSearch.searchRowFilter,
+            searchRowFilter: query.tableSearch.searchRowFilter,
         };
-        store.setTableSearch(info);
-    };
+        query.setTableSearch(info);
+    }, [query, dtRef]);
 
     const openItem = useCallback((item: any, action: string) => {
         setTableSearchInfo();
@@ -319,12 +303,12 @@ export function useListPage<TStore extends ListStore<TItem>, TQuery extends Quer
         }
     };
 
-    const importFromExcel = (navigate: Function, basePath: string) => {
-        navigate(`/${basePath}/import`);
+    const importFromExcel = (navigateFn: (path: string) => void, basePath: string) => {
+        navigateFn(`/${basePath}/import`);
     };
 
-    const addData = (navigate: Function, basePath: string) => {
-        navigate(`/${basePath}/add`);
+    const addData = (navigateFn: (path: string) => void, basePath: string) => {
+        navigateFn(`/${basePath}/add`);
     };
 
     const handleDelete = (deleteFunction: (id: number) => void, id: number | undefined) => {
@@ -338,12 +322,9 @@ export function useListPage<TStore extends ListStore<TItem>, TQuery extends Quer
     const confirmDeleteItem = async () => {
         if (itemToDelete) {
             try {
-                // await props.service.delete(itemToDelete);
-                // store.resetStatus();
                 await query.deleteItem(itemToDelete);
-                //await query.load();
-                //await store.loadList();
-            } catch (error) {
+                await query.load();
+            } catch {
                 alert("Failed to delete app Users. Please try again later.");
             } finally {
                 setIsDeleteDialogVisible(false);
@@ -364,7 +345,6 @@ export function useListPage<TStore extends ListStore<TItem>, TQuery extends Quer
     const closeDeleteDialog = () => {
         setIsDeleteDialogVisible(false);
         setItemToDelete(null);
-        console.log("Default close delete dialog");
     };
 
     const formatDate = (dateString: string | Date | undefined) => {

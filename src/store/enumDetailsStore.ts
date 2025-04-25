@@ -1,5 +1,4 @@
-import { EnumDetail } from "../core/model/enumdetail";
-import { enumDetailsService } from "../core/services/enumDetailsService";
-import { createListStore } from "./createListStore";
+// import { EnumDetail } from "../core/model/enumdetail";
+// import { createListStore } from "./createListStore";
 
-export const enumDetailStore = createListStore<EnumDetail>(enumDetailsService,"Enum Detail");
+// export const enumDetailStore = createListStore<EnumDetail>("Enum Detail");

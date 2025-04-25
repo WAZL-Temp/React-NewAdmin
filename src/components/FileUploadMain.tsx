@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
-import { FileUploadService } from "../core/services/fileuploadservice";
 import { FiUploadCloud, InputText, IoCheckmarkCircleSharp, RiDeleteBin6Fill, useTranslation } from "../sharedBase/globalImports";
+import { useFileUploadService } from "../core/services/fileUpload.service";
 
 interface CustomFile {
   fileName: string
@@ -33,7 +33,8 @@ export default function FileUploadMain({
   const [isLoadComplete, setIsLoadComplete] = useState<boolean>(false);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
+  const fileUploadService = useFileUploadService(modelName);
+  
   useEffect(() => {
     if (!isLoadComplete) {
       if (!initialData || initialData === "[]") {
@@ -69,7 +70,6 @@ export default function FileUploadMain({
     const files = event.target.files;
     if (!files) return;
 
-    const fileUploadService = new FileUploadService(modelName);
     const filesArray = Array.from(files);
     const newUploadedFiles: CustomFile[] = [];
 
@@ -121,8 +121,6 @@ export default function FileUploadMain({
   }
 
   const downloadFile = async (file: CustomFile) => {
-    const fileUploadService = new FileUploadService(modelName);
-
     try {
       const response = await fileUploadService.fileDownload(file)
       const blob = new Blob([response]);

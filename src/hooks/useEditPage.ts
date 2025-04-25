@@ -1,33 +1,33 @@
 import { useCallback, useEffect, useState } from "react";
-import { ItemStore } from "../store/createItemStore";
 import { format, parseISO, useNavigate } from "../sharedBase/globalImports";
-import { LookupServiceBase } from "../sharedBase/lookupService";
-import { ListStore } from "../store/createListStore";
+import { UseItemQueryResult } from "../store/createItemStore";
+import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
+import { RolePermission } from "../types/roles";
+import { UseListQueryResult } from "../store/createListStore";
 
-type UseEditPageProps<TStore, TItem> = {
-    store: TStore;
+type UseEditPageProps<TQuery, TItem> = {
+    query: TQuery;
     props: {
         id?: string;
         baseModelName?: string;
-        listStore?: ListStore<TItem>
+        listQuery?: UseListQueryResult<TItem>
     };
 };
 
-export function useEditPage<TStore extends ItemStore<TItem>, TItem>({ store, props }: UseEditPageProps<TStore, TItem>) {
+export function useEditPage<TQuery extends UseItemQueryResult<TItem>, TItem>({ query, props }: UseEditPageProps<TQuery, TItem>) {
     const [showDialog, setShowDialog] = useState(false);
     const navigate = useNavigate();
     const [hiddenFields, setHiddenFields] = useState<string[]>([]);
+    const { data: roleDetailsData } = useFetchRoleDetailsData();
 
     useEffect(() => {
         const fetchRoleDetails = async () => {
             if (!props.baseModelName) return;
 
-            const lookupService = new LookupServiceBase();
-            const roleDetails = await lookupService.fetchRoleDetailsData();
+            if (roleDetailsData && roleDetailsData.length > 0) {
 
-            if (Array.isArray(roleDetails)) {
-                const modelData = roleDetails.find(
-                    (r: any) => r.name.toLowerCase() === props.baseModelName!.toLowerCase()
+                const modelData = roleDetailsData.find(
+                    (r: RolePermission) => r.name.toLowerCase() === props.baseModelName!.toLowerCase()
                 );
 
                 if (modelData?.hideColumn) {
@@ -45,7 +45,7 @@ export function useEditPage<TStore extends ItemStore<TItem>, TItem>({ store, pro
         };
 
         fetchRoleDetails();
-    }, [props.baseModelName]);
+    }, []);
 
     const handleBackToUser = () => {
         if (props.baseModelName) {
@@ -88,6 +88,28 @@ export function useEditPage<TStore extends ItemStore<TItem>, TItem>({ store, pro
         handleCloseDialog,
         isFieldHidden,
         formatDate,
-        removeEmptyFields
+        removeEmptyFields,
+        prepareObject
     }
+}
+
+
+export function prepareObject<T>(source: Partial<T>, defaults: T): T {
+    const result: T = { ...defaults };
+
+    for (const key in defaults) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+            const value = source[key as keyof T];
+
+            if (value instanceof Date) {
+                result[key as keyof T] = (value as Date).toISOString() as any;
+            } else if (value !== undefined && value !== null) {
+                result[key as keyof T] = value;
+            } else {
+                result[key as keyof T] = defaults[key as keyof T];
+            }
+        }
+    }
+
+    return result;
 }
