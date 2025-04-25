@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { BaseService } from "../sharedBase/baseService";
+import { useBaseService } from "../sharedBase/baseService";
 import { BaseModel } from "../sharedBase/modelInterface";
 import { format, parseISO } from "../sharedBase/globalImports";
 
 type UseImportPageProps<TItem> = {
     props: {
         baseModelName?: string;
-        service: BaseService<BaseModel>;
+        service: ReturnType<typeof useBaseService>;
     };
 };
 

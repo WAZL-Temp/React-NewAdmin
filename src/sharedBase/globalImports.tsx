@@ -21,7 +21,8 @@ export { StepperPanel } from "primereact/stepperpanel";
 export { InputTextarea } from "primereact/inputtextarea";
 export { Paginator } from 'primereact/paginator';
 export { Skeleton } from 'primereact/skeleton';
-
+export type { StepperRefAttributes } from "primereact/stepper";
+export type { DropdownChangeEvent } from 'primereact/dropdown';
 
 export { TiEye } from "react-icons/ti";
 export { RiPencilFill } from "react-icons/ri";

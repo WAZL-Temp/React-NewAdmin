@@ -707,6 +707,15 @@ code {
   .uploaded-files-grid {
     grid-template-columns: repeat(1, 1fr);
   }
+
+  .item-card-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .itemList {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem;
+  }
 }
 
 @media (min-width: 768px) {

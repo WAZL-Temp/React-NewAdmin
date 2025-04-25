@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
 import { useAuthStore } from "../store/authStore";
-import { LookupServiceBase } from "../sharedBase/lookupService";
+// import { LookupServiceBase } from "../sharedBase/lookupService";
 import { AiFillHome, Button, FiShoppingBag, FiUser, IoPersonSharp, RiLogoutCircleLine, RxCross2, useLocation, useNavigate, useTranslation } from "../sharedBase/globalImports";
 
 interface SidebarProps {
@@ -14,30 +13,30 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
   const { t } = useTranslation();
   const login = useAuthStore((state) => state.login);
   const userInfo = useAuthStore((state) => state.userInfo);
-  const [roleData, setRoleData] = useState<any>([])
+  // const [roleData, setRoleData] = useState<any>([])
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    const getRoleData = async () => {
-      const lookupService = new LookupServiceBase();
-      const roleDetails = await lookupService.fetchRoleDetailsData();
+  // useEffect(() => {
+  //   const getRoleData = async () => {
+  //     const lookupService = new LookupServiceBase();
+  //     const roleDetails = await lookupService.fetchRoleDetailsData();
 
-      if (Array.isArray(roleDetails) && roleDetails.length > 0) {
-        setRoleData(roleDetails);
-      }
-    };
+  //     if (Array.isArray(roleDetails) && roleDetails.length > 0) {
+  //       setRoleData(roleDetails);
+  //     }
+  //   };
 
-    getRoleData();
-  }, []);
+  //   getRoleData();
+  // }, []);
 
-  const hasAccess = (roleData: any, requiredAction: string) => {
-    if (!roleData) return false;
+  // const hasAccess = (roleData: any, requiredAction: string) => {
+  //   if (!roleData) return false;
 
-    const actions = typeof roleData.action === "string" ? JSON.parse(roleData.action) : [];
+  //   const actions = typeof roleData.action === "string" ? JSON.parse(roleData.action) : [];
 
-    return actions.some((action: any) => action.name.toLowerCase() === requiredAction.toLowerCase());
-  }
+  //   return actions.some((action: any) => action.name.toLowerCase() === requiredAction.toLowerCase());
+  // }
 
   const handleLogout = () => {
     login("");
@@ -46,20 +45,20 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
     toggleSidebar();
   };
 
-  const hasAccessToPage = (pageName: string) => {
-    return roleData.some((action: any) => action.name.toLowerCase() === pageName.toLowerCase());
-  }
+  // const hasAccessToPage = (pageName: string) => {
+  //   return roleData.some((action: any) => action.name.toLowerCase() === pageName.toLowerCase());
+  // }
 
-  const handleNavigation = (path: string) => {
-    if (hasAccessToPage(path.slice(1))) {
-      navigate(path);
-    } else {
-      navigate("/404");
-    }
-    if (!isMinimized) {
-      toggleSidebar();
-    }
-  }
+  // const handleNavigation = (path: string) => {
+  //   if (hasAccessToPage(path.slice(1))) {
+  //     navigate(path);
+  //   } else {
+  //     navigate("/404");
+  //   }
+  //   if (!isMinimized) {
+  //     toggleSidebar();
+  //   }
+  // }
 
   return (
     <aside
@@ -117,9 +116,13 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
           {(!isMinimized) && <span className=" text-sm font-medium">AppuserTest</span>}
         </Button>
 
-        {hasAccess(roleData.find((r: any) => r.name.toLowerCase() === 'product'), "List") && (
+        {/* {hasAccess(roleData.find((r: any) => r.name.toLowerCase() === 'product'), "List") && ( */}
           <Button
-            onClick={() => handleNavigation("/product")}
+            // onClick={() => handleNavigation("/product")}
+            onClick={() => {
+              navigate("/product");
+              if (!isMinimized) toggleSidebar();
+            }}
             className={`flex items-center ${isMinimized ? 'px-1' : 'px-2'} py-2 rounded
             ${location.pathname === "/product" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
             hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]`}
@@ -132,7 +135,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
             <FiShoppingBag size={18} className={`${isMinimized ? '' : 'mr-3'}`} />
             {(!isMinimized) && <span className=" text-sm font-medium">{t("products.form_detail.fields.modelname")}</span>}
           </Button>
-        )}
+        {/* )} */}
 
         <Button
           onClick={() => {

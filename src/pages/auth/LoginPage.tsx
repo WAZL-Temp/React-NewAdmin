@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useAuthStore } from "../../store/authStore";
 import { loginByEmail, loginUser, ValidateEmail } from "./login";
 import { signInWithGoogle } from "./firebase";
-import {  appUserRoleDetailStore } from "../admin/appuser/appuserRoleDetailStore";
+import {  appUserRoleDetailStore } from "../admin/appuser/appuserRoleDetail.store";
 import { enumDetailStore } from "../../store/enumDetailsStore";
 import img1 from '../../assets/images/logo.png'
 import { Button, GoogleButton, Image, InputText, useNavigate } from "../../sharedBase/globalImports";

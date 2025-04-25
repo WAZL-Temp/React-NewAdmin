@@ -1,7 +1,6 @@
 import { useState, useRef, useMemo, useEffect, useCallback } from "react";
 import { DataTable, DataTableFilterMeta, DataTablePageEvent, DataTableSortEvent, FilterMatchMode, format, parseISO, Toast, useNavigate, useTranslation } from "../sharedBase/globalImports";
-import { BaseService } from "../sharedBase/baseService";
-import { BaseModel } from "../sharedBase/modelInterface";
+import { useBaseService } from "../sharedBase/baseService";
 import { ListStore } from "../store/createListStore";
 import { AppUser } from "../core/model/appuser";
 import { LookupServiceBase } from "../sharedBase/lookupService";
@@ -9,7 +8,7 @@ import { LookupServiceBase } from "../sharedBase/lookupService";
 type UseTestListPageCommonProps<TItem> = {
     initialFilterValue?: string;
     baseModelName?: string;
-    service: BaseService<BaseModel>;
+    service: typeof useBaseService;
     onFilterChange?: (value: string) => void;
     onConfirmDelete?: (id: number) => void;
     onDeleteItem?: (id: number) => void;

@@ -1,71 +1,36 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useListPage } from "../../../hooks/useListPage"
-import { BiSolidTrash, Button, Calendar, Checkbox, Column, DataTable, Dialog, HiOutlinePlus, Image, InputText, IoMdRefresh, IoMdSettings, MdOutlineUploadFile, MenuItem, RiPencilFill, SplitButton, TbFileExcel, TiEye, Toast, Tooltip, useNavigate, FilterMatchMode, useTranslation } from "../../../sharedBase/globalImports";
-import { appUserListStore } from "./appUserStore";
-import { appUserService } from "../../../core/services/appUserService";
+import { BiSolidTrash, Button, Calendar, Column, DataTable, Dialog, HiOutlinePlus, Image, InputText, IoMdRefresh, MdOutlineUploadFile, MenuItem, RiPencilFill, SplitButton, TbFileExcel, TiEye, Toast, Tooltip, useNavigate, FilterMatchMode, useTranslation } from "../../../sharedBase/globalImports";
 import successimg from '../../../assets/images/success.gif'
 import confirmImg from '../../../assets/images/are-you-sure.jpg'
 import { AppUser } from "../../../core/model/appuser";
+import { RowData } from "../../../types/listpage";
 import { useListQuery } from "../../../store/createListStore";
+import { useAppUserService } from "../../../core/services/appUsers.service";
 
 export default function AppUsersList() {
     const navigate = useNavigate();
     const baseModelName = "appuser";
     const { t } = useTranslation();
-    const store = appUserListStore();
-    const [visible, setVisible] = useState(false);
-    const dtRef = useRef<DataTable<any>>(null);
+    // const [visible, setVisible] = useState(false);
+    const dtRef = useRef<DataTable<AppUser[]>>(null);
     // search
     const [calendarCreateDateFrom, setCalendarCreateDateFrom] = useState<Date | undefined | null>(null);
     const [calendarCreateDateTo, setCalendarCreateDateTo] = useState<Date | undefined | null>(null);
-    const query = useListQuery<AppUser>(store,appUserService);
-    useEffect(() => {
-        if (store.search) {
-            if (store.search?.createDateSearchFrom) {
-                setCalendarCreateDateFrom(new Date(store.search.createDateSearchFrom))
-            }
-            if (store.search?.createDateSearchTo) {
-                setCalendarCreateDateTo(new Date(store.search.createDateSearchTo))
-            }
-        }
-        if (store.tableSearch) {
-            if (store.tableSearch.filter) {
-                setGlobalFilterValue(store.tableSearch.filter);
-            }
-        }
-
-    }, [store.search, store.tableSearch]);
-
-    useEffect(() => {
-        initFilters();
-        console.log("query.data", query.data);
-    }, [query.isLoading]);
-
-    const initFilters = () => {
-        store.tableSearch.searchRowFilter = store.tableSearch.searchRowFilter || {};
-
-        const initialFilters: Record<string, { value: any; matchMode: FilterMatchMode }> = {
-            global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-        };
-        columnsConfig.forEach(column => {
-            initialFilters[column.field] = { value: store.tableSearch.searchRowFilter[column.field] || null, matchMode: FilterMatchMode.CONTAINS };
-        });
-        setFilters(initialFilters);
-    };
-
+    const userService = useAppUserService();
+    const query = useListQuery<AppUser>(userService);
     const {
         roleData, globalFilterValue, setGlobalFilterValue, onGlobalFilterChange, refreshItemData, isDeleteDialogVisible,
         deleteItem, closeDeleteDialog, setFilters, onSort, onPage, first, rows, sortField, sortOrder, totalRecords,
         filters, setListSearch, clearListSearch, searchChange, openItem, confirmDeleteItem,
-        toast, isSuccessDialogOpen, setIsSuccessDialogOpen, formatDate, hasAccess, exportToExcel,
+        toast, isSuccessDialogOpen, setIsSuccessDialogOpen, formatDate, exportToExcel,
         importFromExcel, addData, handleDelete, useColumnConfig }
-        = useListPage<typeof store, typeof query, AppUser>({
-            store: appUserListStore(),
+        = useListPage<typeof query, AppUser>({
             query: query,
             props: {
                 initialFilterValue: '',
                 baseModelName: baseModelName,
-                service: appUserService
+                service: userService
             }
         });
 
@@ -102,7 +67,42 @@ export default function AppUsersList() {
     ].filter(col => col.field),
         [t]);
 
-    const { columnsConfig, visibleColumns, handleSelectAll, handleColumnChange } = useColumnConfig(columnsConfigDefault, roleData);
+    const { columnsConfig } = useColumnConfig(columnsConfigDefault, roleData);
+
+    // useEffect(() => {
+    //     console.log("appuser data", query?.data);
+    // }, [])
+
+    useEffect(() => {
+        if (query.search) {
+            if (query.search?.createDateSearchFrom) {
+                setCalendarCreateDateFrom(new Date(query.search.createDateSearchFrom))
+            }
+            if (query.search?.createDateSearchTo) {
+                setCalendarCreateDateTo(new Date(query.search.createDateSearchTo))
+            }
+        }
+    }, [query.search, query.tableSearch]);
+
+    useEffect(() => {
+        const initFilters = () => {
+            query.tableSearch.searchRowFilter = query.tableSearch.searchRowFilter || {};
+
+            const initialFilters: Record<string, { value: string | number | boolean | null | Array<string | number | boolean>; matchMode: FilterMatchMode }> = {
+                global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+            };
+            columnsConfig.forEach(column => {
+                initialFilters[column.field] = { value: query.tableSearch.searchRowFilter[column.field] || null, matchMode: FilterMatchMode.CONTAINS };
+            });
+            setFilters(initialFilters);
+        };
+        initFilters();
+        if (query.tableSearch) {
+            if (query.tableSearch.filter) {
+                setGlobalFilterValue(query.tableSearch.filter);
+            }
+        }
+    }, [columnsConfig, setFilters, setGlobalFilterValue, query.tableSearch]);
 
     const items: MenuItem[] = []
     // if (hasAccess(roleData, "Add")) {
@@ -116,7 +116,7 @@ export default function AppUsersList() {
     items.push({
         label: t("globals.exportExcel"),
         icon: 'pi pi-file-excel',
-        command: () => exportToExcel(appUserService, globalFilterValue || '', 'AppUser')
+        command: () => exportToExcel(userService, globalFilterValue || '', 'AppUser')
     });
 
     // if (hasAccess(roleData, "Import")) {
@@ -133,7 +133,7 @@ export default function AppUsersList() {
         command: () => refreshItemData()
     });
 
-    const handleFilterChangeLocal = (field: string, value: any) => {
+    const handleFilterChangeLocal = (field: string, value: string | number | boolean | null | Array<string | number | boolean>) => {
         setFilters(prevFilters => ({
             ...prevFilters,
             [field]: Array.isArray(value)
@@ -141,9 +141,9 @@ export default function AppUsersList() {
                 : { value, matchMode: FilterMatchMode.CONTAINS },
         }));
 
-        store.tableSearch.searchRowFilter = store.tableSearch.searchRowFilter || {};
-        store.tableSearch.searchRowFilter[field] = value;
-        store.setTableSearch({ ...store.tableSearch });
+        query.tableSearch.searchRowFilter = query.tableSearch.searchRowFilter || {};
+        query.tableSearch.searchRowFilter[field] = value;
+        query.setTableSearch({ ...query.tableSearch });
     };
 
     const actionBodyTemplate = useCallback((rowData: AppUser, openItem: (item: AppUser, action: string) => void) => {
@@ -171,9 +171,9 @@ export default function AppUsersList() {
                 <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-delete-${rowData.id}`} content="Delete Data" showDelay={200} position="top" />
             </div>
         );
-    }, [roleData]);
+    }, [deleteItem, handleDelete]);
 
-    const renderFileCell = (rowData: any, field: string, rowIndex: number) => {
+    const renderFileCell = (rowData: RowData, field: string, rowIndex: number) => {
         let fileName = "";
         const uniqueId = `tooltip-${field}-${rowIndex}`;
         try {
@@ -230,7 +230,7 @@ export default function AppUsersList() {
                     <Button
                         type="button"
                         className="bg-[var(--color-success)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
-                        onClick={() => exportToExcel(appUserService, globalFilterValue || '', 'AppUser')}
+                        onClick={() => exportToExcel(userService, globalFilterValue || '', 'AppUser')}
                         tooltip={t("globals.exportExcel")}
                         tooltipOptions={{
                             position: 'top',
@@ -438,7 +438,7 @@ export default function AppUsersList() {
                             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                             filterElement={
                                 <InputText
-                                    value={store.tableSearch.searchRowFilter?.name || ''}
+                                    value={query.tableSearch.searchRowFilter?.name || ''}
                                     className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                                     onChange={(e) => handleFilterChangeLocal("name", e.target.value)}
                                 />
@@ -459,7 +459,7 @@ export default function AppUsersList() {
                             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                             filterElement={
                                 <InputText
-                                    value={store.tableSearch.searchRowFilter?.firstName || ''}
+                                    value={query.tableSearch.searchRowFilter?.firstName || ''}
                                     className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                                     onChange={(e) => handleFilterChangeLocal("firstName", e.target.value)}
                                 />
@@ -480,7 +480,7 @@ export default function AppUsersList() {
                             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                             filterElement={
                                 <InputText
-                                    value={store.tableSearch.searchRowFilter?.lastName || ''}
+                                    value={query.tableSearch.searchRowFilter?.lastName || ''}
                                     className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                                     onChange={(e) => handleFilterChangeLocal("lastName", e.target.value)}
                                 />
@@ -501,7 +501,7 @@ export default function AppUsersList() {
                             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                             filterElement={
                                 <InputText
-                                    value={store.tableSearch.searchRowFilter?.mobile || ''}
+                                    value={query.tableSearch.searchRowFilter?.mobile || ''}
                                     className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                                     onChange={(e) => handleFilterChangeLocal("mobile", e.target.value)}
                                 />
@@ -522,7 +522,7 @@ export default function AppUsersList() {
                             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                             filterElement={
                                 <InputText
-                                    value={store.tableSearch.searchRowFilter?.mobileVerified || ''}
+                                    value={query.tableSearch.searchRowFilter?.mobileVerified || ''}
                                     className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                                     onChange={(e) => handleFilterChangeLocal("mobileVerified", e.target.value)}
                                 />
@@ -543,7 +543,7 @@ export default function AppUsersList() {
                             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                             filterElement={
                                 <InputText
-                                    value={store.tableSearch.searchRowFilter?.emailId || ''}
+                                    value={query.tableSearch.searchRowFilter?.emailId || ''}
                                     className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                                     onChange={(e) => handleFilterChangeLocal("emailId", e.target.value)}
                                 />
@@ -564,7 +564,7 @@ export default function AppUsersList() {
                             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                             filterElement={
                                 <InputText
-                                    value={store.tableSearch.searchRowFilter?.emailVerified || ''}
+                                    value={query.tableSearch.searchRowFilter?.emailVerified || ''}
                                     className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                                     onChange={(e) => handleFilterChangeLocal("emailVerified", e.target.value)}
                                 />
@@ -585,7 +585,7 @@ export default function AppUsersList() {
                             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                             filterElement={
                                 <InputText
-                                    value={store.tableSearch.searchRowFilter?.shopName || ''}
+                                    value={query.tableSearch.searchRowFilter?.shopName || ''}
                                     className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                                     onChange={(e) => handleFilterChangeLocal("shopName", e.target.value)}
                                 />
@@ -606,7 +606,7 @@ export default function AppUsersList() {
                             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                             filterElement={
                                 <InputText
-                                    value={store.tableSearch.searchRowFilter?.password || ''}
+                                    value={query.tableSearch.searchRowFilter?.password || ''}
                                     className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                                     onChange={(e) => handleFilterChangeLocal("password", e.target.value)}
                                 />
@@ -627,7 +627,7 @@ export default function AppUsersList() {
                             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                             filterElement={
                                 <InputText
-                                    value={store.tableSearch.searchRowFilter?.pincode || ''}
+                                    value={query.tableSearch.searchRowFilter?.pincode || ''}
                                     className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                                     onChange={(e) => handleFilterChangeLocal("pincode", e.target.value)}
                                 />
@@ -648,7 +648,7 @@ export default function AppUsersList() {
                             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                             filterElement={
                                 <InputText
-                                    value={store.tableSearch.searchRowFilter?.state || ''}
+                                    value={query.tableSearch.searchRowFilter?.state || ''}
                                     className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                                     onChange={(e) => handleFilterChangeLocal("state", e.target.value)}
                                 />
@@ -669,7 +669,7 @@ export default function AppUsersList() {
                             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                             filterElement={
                                 <InputText
-                                    value={store.tableSearch.searchRowFilter?.district || ''}
+                                    value={query.tableSearch.searchRowFilter?.district || ''}
                                     className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                                     onChange={(e) => handleFilterChangeLocal("district", e.target.value)}
                                 />
@@ -690,7 +690,7 @@ export default function AppUsersList() {
                             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                             filterElement={
                                 <InputText
-                                    value={store.tableSearch.searchRowFilter?.address || ''}
+                                    value={query.tableSearch.searchRowFilter?.address || ''}
                                     className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                                     onChange={(e) => handleFilterChangeLocal("address", e.target.value)}
                                 />
@@ -711,7 +711,7 @@ export default function AppUsersList() {
                             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                             filterElement={
                                 <InputText
-                                    value={store.tableSearch.searchRowFilter?.addressLine || ''}
+                                    value={query.tableSearch.searchRowFilter?.addressLine || ''}
                                     className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                                     onChange={(e) => handleFilterChangeLocal("addressLine", e.target.value)}
                                 />
@@ -732,7 +732,7 @@ export default function AppUsersList() {
                             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                             filterElement={
                                 <InputText
-                                    value={store.tableSearch.searchRowFilter?.gst || ''}
+                                    value={query.tableSearch.searchRowFilter?.gst || ''}
                                     className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                                     onChange={(e) => handleFilterChangeLocal("gst", e.target.value)}
                                 />
@@ -753,7 +753,7 @@ export default function AppUsersList() {
                             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                             filterElement={
                                 <InputText
-                                    value={store.tableSearch.searchRowFilter?.verifyShop || ''}
+                                    value={query.tableSearch.searchRowFilter?.verifyShop || ''}
                                     className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                                     onChange={(e) => handleFilterChangeLocal("verifyShop", e.target.value)}
                                 />
@@ -774,7 +774,7 @@ export default function AppUsersList() {
                             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                             filterElement={
                                 <InputText
-                                    value={store.tableSearch.searchRowFilter?.gstCertificate || ''}
+                                    value={query.tableSearch.searchRowFilter?.gstCertificate || ''}
                                     className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                                     onChange={(e) => handleFilterChangeLocal("gstCertificate", e.target.value)}
                                 />
@@ -792,7 +792,7 @@ export default function AppUsersList() {
                             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                             filterElement={
                                 <InputText
-                                    value={store.tableSearch.searchRowFilter?.photoShopFront || ''}
+                                    value={query.tableSearch.searchRowFilter?.photoShopFront || ''}
                                     className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                                     onChange={(e) => handleFilterChangeLocal("photoShopFront", e.target.value)}
                                 />
@@ -810,7 +810,7 @@ export default function AppUsersList() {
                             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                             filterElement={
                                 <InputText
-                                    value={store.tableSearch.searchRowFilter?.visitingCard || ''}
+                                    value={query.tableSearch.searchRowFilter?.visitingCard || ''}
                                     className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                                     onChange={(e) => handleFilterChangeLocal("visitingCard", e.target.value)}
                                 />
@@ -828,7 +828,7 @@ export default function AppUsersList() {
                             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                             filterElement={
                                 <InputText
-                                    value={store.tableSearch.searchRowFilter?.cheque || ''}
+                                    value={query.tableSearch.searchRowFilter?.cheque || ''}
                                     className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                                     onChange={(e) => handleFilterChangeLocal("cheque", e.target.value)}
                                 />
@@ -846,7 +846,7 @@ export default function AppUsersList() {
                             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                             filterElement={
                                 <InputText
-                                    value={store.tableSearch.searchRowFilter?.isActive || ''}
+                                    value={query.tableSearch.searchRowFilter?.isActive || ''}
                                     className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                                     onChange={(e) => handleFilterChangeLocal("isActive", e.target.value)}
                                 />
@@ -867,7 +867,7 @@ export default function AppUsersList() {
                             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                             filterElement={
                                 <InputText
-                                    value={store.tableSearch.searchRowFilter?.isAdmin || ''}
+                                    value={query.tableSearch.searchRowFilter?.isAdmin || ''}
                                     className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                                     onChange={(e) => handleFilterChangeLocal("isAdmin", e.target.value)}
                                 />
@@ -888,7 +888,7 @@ export default function AppUsersList() {
                             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                             filterElement={
                                 <InputText
-                                    value={store.tableSearch.searchRowFilter?.hasImpersonateAccess || ''}
+                                    value={query.tableSearch.searchRowFilter?.hasImpersonateAccess || ''}
                                     className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                                     onChange={(e) => handleFilterChangeLocal("hasImpersonateAccess", e.target.value)}
                                 />
@@ -909,7 +909,7 @@ export default function AppUsersList() {
                             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                             filterElement={
                                 <InputText
-                                    value={store.tableSearch.searchRowFilter?.photoAttachment || ''}
+                                    value={query.tableSearch.searchRowFilter?.photoAttachment || ''}
                                     className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                                     onChange={(e) => handleFilterChangeLocal("photoAttachment", e.target.value)}
                                 />
@@ -927,7 +927,7 @@ export default function AppUsersList() {
                             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                             filterElement={
                                 <InputText
-                                    value={store.tableSearch.searchRowFilter?.roleLabel || ''}
+                                    value={query.tableSearch.searchRowFilter?.roleLabel || ''}
                                     className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                                     onChange={(e) => handleFilterChangeLocal("roleLabel", e.target.value)}
                                 />
@@ -948,7 +948,7 @@ export default function AppUsersList() {
                             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                             filterElement={
                                 <InputText
-                                    value={store.tableSearch.searchRowFilter?.publishLabel || ''}
+                                    value={query.tableSearch.searchRowFilter?.publishLabel || ''}
                                     className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                                     onChange={(e) => handleFilterChangeLocal("publishLabel", e.target.value)}
                                 />
@@ -983,7 +983,7 @@ export default function AppUsersList() {
                             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                             filterElement={
                                 <InputText
-                                    value={store.tableSearch.searchRowFilter?.totalPlot || ''}
+                                    value={query.tableSearch.searchRowFilter?.totalPlot || ''}
                                     className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                                     onChange={(e) => handleFilterChangeLocal("totalPlot", e.target.value)}
                                 />
