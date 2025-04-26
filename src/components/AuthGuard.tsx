@@ -1,6 +1,6 @@
 import { type ReactNode, useEffect, useState } from "react";
 import { LookupServiceBase } from "../sharedBase/lookupService";
-import { Navigate, useLocation } from "../sharedBase/globalImports";
+import { Navigate, useLocation } from "../sharedBase/globalUtils";
 
 interface AuthGuardProps {
   children: ReactNode

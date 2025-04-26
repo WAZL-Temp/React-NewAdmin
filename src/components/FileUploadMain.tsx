@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
-import { FiUploadCloud, InputText, IoCheckmarkCircleSharp, RiDeleteBin6Fill, useTranslation } from "../sharedBase/globalImports";
+import { FiUploadCloud, InputText, IoCheckmarkCircleSharp, RiDeleteBin6Fill } from "../sharedBase/globalImports";
 import { useFileUploadService } from "../core/services/fileUpload.service";
+import { useTranslation } from "../sharedBase/globalUtils";
 
 interface CustomFile {
   fileName: string

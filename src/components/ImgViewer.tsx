@@ -1,13 +1,8 @@
 import { useFileUploadService } from '../core/services/fileUpload.service';
 import { useEffect, useState } from 'react';
-import { AiFillCloseCircle, MdDownloadForOffline, Tooltip, useTranslation } from '../sharedBase/globalImports';
-
-
-interface CustomFile {
-  fileName: string;
-  filePath: string;
-  type: string;
-}
+import { AiFillCloseCircle, MdDownloadForOffline, Tooltip } from '../sharedBase/globalImports';
+import { CustomFile } from '../core/model/customfile';
+import { useTranslation } from '../sharedBase/globalUtils';
 
 interface ImageViewerProps {
   files: string | null;

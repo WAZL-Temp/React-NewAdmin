@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter, Navigate, Route, Routes } from './sharedBase/globalImports';
+import { BrowserRouter, Navigate, Route, Routes } from './sharedBase/globalUtils';
 import Layout from './components/Layout';
 import LoginPage from './pages/auth/LoginPage';
 // import AuthGuard from '../src/components/AuthGuard';
@@ -12,13 +12,15 @@ import { useListQuery } from "./store/createListStore";
 import { useEnumDetailsService } from "./core/services/enumDetails.service";
 import AppUsersView from "./pages/admin/appuser/AppUsersView";
 import AppUsersEdit from "./pages/admin/appuser/AppUsersEdit";
+import AppUsersImport from "./pages/admin/appuser/AppUsersImport";
 
 
 const App = () => {
-  const enumDetailQuery = useListQuery<EnumDetail>(useEnumDetailsService());
+  const enumDetailService = useEnumDetailsService();
+  const enumDetailQuery = useListQuery<EnumDetail>(enumDetailService);
   const [pageLoad, setPageLoad] = useState(true);
 
-  useEffect(() => {
+  useEffect(() => {    
     if (enumDetailQuery?.data?.length) {
       setPageLoad(true);
     }
@@ -41,6 +43,7 @@ const App = () => {
             <Route path="/appuser/:id" element={<Layout><AppUsersView /></Layout>} />
             <Route path="/appuser/add" element={<Layout><AppUsersEdit /></Layout>} />
             <Route path="/appuser/edit/:id" element={<Layout><AppUsersEdit /></Layout>} />
+            <Route path="/appuser/import" element={<Layout><AppUsersImport /></Layout>} />
 
             <Route path="/product" element={<Layout><ProductsList /></Layout>} />
 

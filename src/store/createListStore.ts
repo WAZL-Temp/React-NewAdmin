@@ -19,7 +19,7 @@ export interface UseListQueryResult<T> {
   setCondition: (condition: any) => void;
   setRoleCondition: (roleCondition: any) => void;
   fetchRoleData: () => Promise<T[] | undefined>;
-  fetchGridData : (pageNo: number,pageSize: number,orderBy: string,table: string) => Promise<any>;
+  fetchGridData: (pageNo: number, pageSize: number, orderBy: string, table: string) => Promise<any>;
 }
 
 export const useListQuery = <T extends BaseModel>(
@@ -28,19 +28,29 @@ export const useListQuery = <T extends BaseModel>(
   const queryClient = useQueryClient();
   const service = baseService;
 
-  const [search, setSearchState] = useState<any>({});
-  const [tableSearch, setTableSearchState] = useState<any>({
-    sortField: "",
-    sortOrder: "",
-    first: 0,
-    rows: 10,
-    filter: "",
-    top: "",
-    left: "",
-    searchRowFilter: {},
-  });
-  const [condition, setConditionState] = useState<any>({});
-  const [roleCondition, setRoleConditionState] = useState<any>({});
+  const cachedState = queryClient.getQueryData<{
+    search: any;
+    tableSearch: any;
+    condition: any;
+    roleCondition: any;
+  }>([`list-${service.type}-state`]);
+
+
+  const [search, setSearchState] = useState<any>(cachedState?.search || {});
+  const [tableSearch, setTableSearchState] = useState<any>(
+    cachedState?.tableSearch || {
+      sortField: "",
+      sortOrder: "",
+      first: 0,
+      rows: 10,
+      filter: "",
+      top: "",
+      left: "",
+      searchRowFilter: {},
+    }
+  );
+  const [condition, setConditionState] = useState<any>(cachedState?.condition || {});
+  const [roleCondition, setRoleConditionState] = useState<any>(cachedState?.roleCondition || {});
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
   const payload = { ...condition, ...search, ...roleCondition };
@@ -58,12 +68,39 @@ export const useListQuery = <T extends BaseModel>(
     },
   });
 
+  const saveStateToCache = () => {
+    queryClient.setQueryData([`list-${service.type}-state`], {
+      search,
+      tableSearch,
+      condition,
+      roleCondition,
+    });
+  };
+
   const setSearch = (newSearch: any) => {
-    setSearchState((prev: any) => ({ ...prev, ...newSearch }));
+    setSearchState((prev: any) => {
+      const updated = { ...prev, ...newSearch };
+      queryClient.setQueryData([`list-${service.type}-state`], {
+        search: updated,
+        tableSearch,
+        condition,
+        roleCondition,
+      });
+      return updated;
+    });
   };
 
   const setTableSearch = (newTableSearch: any) => {
-    setTableSearchState(newTableSearch);
+    setTableSearchState((prev: any) => {
+      const updated = { ...prev, ...newTableSearch };
+      queryClient.setQueryData([`list-${service.type}-state`], {
+        search,
+        tableSearch: updated,
+        condition,
+        roleCondition,
+      });
+      return updated;
+    });
   };
 
   const clearSearch = (type: "search" | "table" | "both") => {
@@ -73,17 +110,25 @@ export const useListQuery = <T extends BaseModel>(
       setSearchState({});
       setTableSearchState({});
     }
+    saveStateToCache();
   };
 
   const setCondition = (newCondition: any) => {
     setConditionState(newCondition);
+    saveStateToCache();
   };
 
   const setRoleCondition = (newRoleCondition: any) => {
-    setRoleConditionState((prev: any) => ({
-      ...prev,
-      ...newRoleCondition,
-    }));
+    setRoleConditionState((prev: any) => {
+      const updated = { ...prev, ...newRoleCondition };
+      queryClient.setQueryData([`list-${service.type}-state`], {
+        search,
+        tableSearch,
+        condition,
+        roleCondition: updated,
+      });
+      return updated;
+    });
   };
 
   const load = () => {

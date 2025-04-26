@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import { useAuthStore } from "../../store/authStore";
 import { loginByEmail, loginUser, ValidateEmail } from "./login";
 import { signInWithGoogle } from "./firebase";
-import {  appUserRoleDetailStore } from "../admin/appuser/appuserRoleDetail.store";
-import { enumDetailStore } from "../../store/enumDetailsStore";
+// import {  appUserRoleDetailStore } from "../admin/appuser/appuserRoleDetail.store";
+// import { enumDetailStore } from "../../store/enumDetailsStore";
 import img1 from '../../assets/images/logo.png'
-import { Button, GoogleButton, Image, InputText, useNavigate } from "../../sharedBase/globalImports";
+import { Button, GoogleButton, Image, InputText } from "../../sharedBase/globalImports";
+import { useNavigate } from "../../sharedBase/globalUtils";
 
 const LoginPage = () => {
-    let navigate = useNavigate();
+    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
@@ -84,8 +85,8 @@ const LoginPage = () => {
         try {
             const response = await loginByEmail(email, emailToken);
             if (response) {
-                loadList();
-                fetchRoleData();
+                // loadList();
+                // fetchRoleData();
                 login(response?.token);
                 const userInfoData = response?.userInfo[0];
                 userInfo(JSON.stringify(userInfoData));

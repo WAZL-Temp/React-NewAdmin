@@ -15,16 +15,16 @@ export const useFetchDataEnum = (type: string) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      try {
+      try {        
         const enumDetaildata = query?.data;
-        if (enumDetaildata != null) {
+        
+        if (enumDetaildata) {
           const enumData = enumDetaildata.filter((item) => item.section === type);
           setData(enumData);
           return;
         } else {
           return [];
         }
-        // setData(data.filter((item: any) => item.section === type));
       } catch (err: any) {
         setError(err.message || "Failed to fetch data");
       } finally {

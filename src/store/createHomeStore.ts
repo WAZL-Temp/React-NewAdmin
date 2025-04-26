@@ -43,12 +43,12 @@ export const useHomeQuery = <T extends BaseModel>(
       await service.handleDelete(id);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [`home-${service.constructor.name}`] });
+      queryClient.invalidateQueries({ queryKey: [`home-${service.type}`] });
     },
   });
 
   const load = () => {
-    queryClient.invalidateQueries({ queryKey: [`home-${service.constructor.name}`] });
+    queryClient.invalidateQueries({ queryKey: [`home-${service.type}`] });
   };
 
   return {

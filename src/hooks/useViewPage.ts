@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "../sharedBase/globalImports";
+import { useNavigate } from "../sharedBase/globalUtils";
 import { UseItemQueryResult } from "../store/createItemStore";
 import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
 import { RolePermission } from "../types/roles";

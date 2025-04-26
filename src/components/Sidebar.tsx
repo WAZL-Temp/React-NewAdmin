@@ -1,6 +1,7 @@
 import { useAuthStore } from "../store/authStore";
 // import { LookupServiceBase } from "../sharedBase/lookupService";
-import { AiFillHome, Button, FiShoppingBag, FiUser, IoPersonSharp, RiLogoutCircleLine, RxCross2, useLocation, useNavigate, useTranslation } from "../sharedBase/globalImports";
+import { AiFillHome, Button, FiShoppingBag, FiUser, IoPersonSharp, RiLogoutCircleLine, RxCross2 } from "../sharedBase/globalImports";
+import {useLocation, useNavigate, useTranslation} from '../sharedBase/globalUtils';
 
 interface SidebarProps {
   isSidebarOpen: boolean;

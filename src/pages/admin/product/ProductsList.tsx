@@ -3,7 +3,8 @@ import { Product } from "../../../core/model/product";
 import successimg from '../../../assets/images/success.gif';
 import { useProductService } from "../../../core/services/products.service";
 import confirmImg from '../../../assets/images/are-you-sure.jpg'
-import { useNavigate, useTranslation, BiSolidTrash, Button, Calendar, Column, DataTable, Dialog, FilterMatchMode, HiOutlinePlus, Image, InputText, IoMdRefresh, MdOutlineUploadFile, MenuItem, RiPencilFill, SplitButton, TbFileExcel, TiEye, Toast, Tooltip } from "../../../sharedBase/globalImports";
+import {  BiSolidTrash, Button, Calendar, Column, DataTable, Dialog, FilterMatchMode, HiOutlinePlus, Image, InputText, IoMdRefresh, MdOutlineUploadFile, MenuItem, RiPencilFill, SplitButton, TbFileExcel, TiEye, Toast, Tooltip } from "../../../sharedBase/globalImports";
+import {useNavigate, useTranslation} from '../../../sharedBase/globalUtils';
 import { useListPage } from "../../../hooks/useListPage";
 import { useListQuery } from "../../../store/createListStore";
 

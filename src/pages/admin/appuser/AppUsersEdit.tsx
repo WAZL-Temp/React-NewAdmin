@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import successImg from '../../../assets/images/success.gif'
-import { useNavigate, useParams, useTranslation, BsArrowLeft, Button, Calendar, Checkbox, Dialog, Dropdown, DropdownChangeEvent, FaSave, Image, InputText, InputTextarea, IoIosArrowBack, IoIosArrowForward, Stepper, StepperPanel, StepperRefAttributes, Toast } from '../../../sharedBase/globalImports';
+import { BsArrowLeft, Button, Calendar, Checkbox, Dialog, Dropdown, DropdownChangeEvent, FaSave, Image, InputText, InputTextarea, IoIosArrowBack, IoIosArrowForward, Stepper, StepperPanel, StepperRefAttributes, Toast } from '../../../sharedBase/globalImports';
+import { useNavigate, useParams, useTranslation } from '../../../sharedBase/globalUtils';
 import { useEditPage } from '../../../hooks/useEditPage';
 import { AppUser } from '../../../core/model/appuser';
 import { selectDropdownEnum } from '../../../sharedBase/dropdownUtils';
@@ -47,6 +48,7 @@ export default function AppUsersEdit() {
   const [dialogMessage, setDialogMessage] = useState('');
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [userData, setUserData] = useState<AppUser>();
+
   const roleTypeData = useFetchDataEnum("RoleType");
   const publishTypeData = useFetchDataEnum("PublishType");
   const verifyTypeData = useFetchDataEnum("VerifyType");
@@ -84,7 +86,7 @@ export default function AppUsersEdit() {
       lastLogin: undefined,
       defaultLanguage: '',
       isPremiumUser: false,
-      totalPlot:  0,
+      totalPlot: undefined,
     };
   }
 
@@ -110,44 +112,44 @@ export default function AppUsersEdit() {
     fetchData();
   }, [isEditMode, prepareObject, id]);
 
+  useEffect(() => {
+    const bindDropDownList = async () => {
+      setListRoles(roleTypeData?.data);
+      setListPublishes(publishTypeData?.data);
+      setListVerifyShop(verifyTypeData?.data);
 
-useEffect(() => {
-  const bindDropDownList = async () => {
-    if (!userData) return;
+      if (!userData) return;
 
-    setListRoles(roleTypeData?.data);
-    if (userData?.role) {
-      const selectedList = roleTypeData?.data.filter(
-        (a) => a.value === userData?.role
-      );
-      if (selectedList.length) {
-        setSelectedRoles(selectedList[0].value);
+      if (userData?.role) {
+        const selectedList = roleTypeData?.data.filter(
+          (a) => a.value === userData?.role
+        );
+        if (selectedList.length) {
+          setSelectedRoles(selectedList[0].value);
+        }
       }
-    }
- 
-    setListPublishes(publishTypeData?.data);
-    if (userData?.publish) {
-      const selectedList = publishTypeData?.data.filter(
-        (a) => a.value === userData?.publish
-      );
-      if (selectedList.length) {
-        setSelectedPublishes(selectedList[0].value);
-      }
-    }
 
-    setListVerifyShop(verifyTypeData?.data);
-     if (userData?.verifyShop) {
-      const selectedList = verifyTypeData?.data.filter(
-        (a) => a.value === userData?.verifyShop
-      );
-      if (selectedList.length) {
-        setSelectedVerifyShop(selectedList[0].value);
+      if (userData?.publish) {
+        const selectedList = publishTypeData?.data.filter(
+          (a) => a.value === userData?.publish
+        );
+        if (selectedList.length) {
+          setSelectedPublishes(selectedList[0].value);
+        }
       }
-    }
-  };
 
-  bindDropDownList();
-}, [userData, roleTypeData?.data, publishTypeData?.data, verifyTypeData?.data]);
+      if (userData?.verifyShop) {
+        const selectedList = verifyTypeData?.data.filter(
+          (a) => a.value === userData?.verifyShop
+        );
+        if (selectedList.length) {
+          setSelectedVerifyShop(selectedList[0].value);
+        }
+      }
+    };
+
+    bindDropDownList();
+  }, [userData, roleTypeData?.data, publishTypeData?.data, verifyTypeData?.data]);
 
 
   const handleInputChange = (field: string, value: string) => {
@@ -217,11 +219,11 @@ useEffect(() => {
       const schema = globalschema[fieldName as keyof typeof globalschema];
       const isRequired = input.hasAttribute('required');
       const isEmpty = value === '' || value === null || value === undefined;
-       
+
       if (isRequired) {
         if (schema) {
           const result = schema.safeParse(value);
-          
+
           if (!result.success) {
             newErrors[fieldName] = result.error.errors[0].message;
             hasError = true;
@@ -253,13 +255,13 @@ useEffect(() => {
       }
 
     });
-    
+
     setErrors(newErrors);
     return !hasError;
   };
 
   const next = () => {
-    const isValid = validateStepFields(stepNo);
+    const isValid = validateStepFields(stepNo);    
     if (!isValid) {
       return;
     }
@@ -276,9 +278,8 @@ useEffect(() => {
 
   const handleSubmitClick = () => {
     const isValid = validateStepFields(stepNo);
-    
+
     if (!isValid) return;
-    // handleSubmit(event as any);
     const form = document.getElementById("myForm") as HTMLFormElement | null;
     if (form) {
       form.requestSubmit();
@@ -348,7 +349,7 @@ useEffect(() => {
         setDialogMessage(t('globals.addDialogMsg', { model: 'App User' }));
       }
 
-      setItem(initialData()); 
+      setItem(initialData());
       await listQuery?.load();
       setShowDialog(true);
     } catch (error) {
@@ -1256,7 +1257,7 @@ useEffect(() => {
                             type="text"
                             id="totalPlot"
                             name="totalPlot"
-                            value={item.totalPlot?.toString() || ''}
+                            value={item.totalPlot !== undefined ? String(item.totalPlot) : ''}
                             placeholder={t("appUsers.columns.fields.totalPlot")}
                             className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
                             onChange={(e) => handleInputChange('totalPlot', e.target.value)}
@@ -1271,8 +1272,8 @@ useEffect(() => {
           </form>
         </div>
 
-        <div className="fixed bottom-0 z-auto  bg-[var(--color-white)] text-[var(--color-dark)] shadow-lg border-t border-[var(--color-border)] available-width">
-          <div className="flex gap-2  px-3 button-container">
+        <div className="fixed bottom-0 z-auto  shadow-lg border-t border-[var(--color-border)] bg-[var(--color-white)] available-width">
+          <div className="flex gap-2 px-3 button-container">
             {stepNo > 0 && (
               <Button
                 type="button"

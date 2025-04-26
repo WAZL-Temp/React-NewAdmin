@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useBaseService } from "../sharedBase/baseService";
-import { BaseModel } from "../sharedBase/modelInterface";
-import { format, parseISO } from "../sharedBase/globalImports";
+import { format, parseISO } from "../sharedBase/globalUtils";
 
 type UseImportPageProps<TItem> = {
     props: {
@@ -31,7 +30,7 @@ export function useImportPage<TItem>({ props }: UseImportPageProps<TItem>) {
         };
 
         fetchImportStatus();
-    }, [props.service.checkImportData]);
+    }, [props.service, props.service.checkImportData]);
 
     const onPage = (event: any) => {
         setFirst(event.first);
