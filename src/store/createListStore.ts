@@ -104,13 +104,14 @@ export const useListQuery = <T extends BaseModel>(
   };
 
   const clearSearch = (type: "search" | "table" | "both") => {
+    
     if (type === "search") setSearchState({});
     if (type === "table") setTableSearchState({});
     if (type === "both") {
       setSearchState({});
       setTableSearchState({});
     }
-    saveStateToCache();
+    // saveStateToCache();
   };
 
   const setCondition = (newCondition: any) => {
