@@ -1,18 +1,18 @@
 import { useEffect } from "react";
 import img1 from '../assets/images/logo.png';
 import { useTheme } from "../hooks/useTheme";
-import { Button, Dropdown, FaBars, Image, useTranslation } from "../sharedBase/globalImports";
+import { Button, Dropdown, FaBars, Image } from "../sharedBase/globalImports";
 import { useLanguageStore } from "../store/useLanguageStore";
+import { useTranslation } from "../sharedBase/globalUtils";
 
 interface HeaderProps {
     toggleMinimized: () => void;
 }
 
 const Header = ({ toggleMinimized }: HeaderProps) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const { theme, setTheme, themes } = useTheme();
-     const { selectedLanguage, setLanguage } = useLanguageStore();
-    const { i18n } = useTranslation();
+    const { selectedLanguage, setLanguage } = useLanguageStore();
 
     useEffect(() => {
         i18n.changeLanguage(selectedLanguage);

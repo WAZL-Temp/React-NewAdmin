@@ -1,4 +1,4 @@
-import { create } from "../sharedBase/globalImports";
+import { create } from "../sharedBase/globalUtils";
 
 interface LanguageStore {
   selectedLanguage: string;

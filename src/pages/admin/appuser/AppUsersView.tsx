@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import TooltipWithText from "../../../components/TooltipWithText";
 import ImgViewer from "../../../components/ImgViewer";
-import { useTranslation, useParams, format, BsArrowLeft, Button, FaEdit, IoIosArrowBack, IoIosArrowForward, Stepper, StepperPanel, StepperRefAttributes } from "../../../sharedBase/globalImports";
+import {  BsArrowLeft, Button, FaEdit, IoIosArrowBack, IoIosArrowForward, Stepper, StepperPanel, StepperRefAttributes } from "../../../sharedBase/globalImports";
+import {useTranslation, useParams, format} from '../../../sharedBase/globalUtils';
 import { AppUser } from "../../../core/model/appuser";
 import { useViewPage } from "../../../hooks/useViewPage";
 import { useAppUserService } from "../../../core/services/appUsers.service";

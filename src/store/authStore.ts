@@ -1,5 +1,5 @@
-import {   setToken ,setUserInfo} from "../sharedBase/baseServiceVar"
-import { create, createJSONStorage, devtools, persist } from "../sharedBase/globalImports"
+import {   setToken ,setUserInfo} from "../sharedBase/baseServiceVar";
+import { create, createJSONStorage, devtools, persist } from "../sharedBase/globalUtils";
 
 interface AuthStore {
   token: string | null

@@ -3,7 +3,8 @@ import Sidebar from './Sidebar';
 import img1 from '../assets/images/only-logo.png';
 import Header from './Header';
 import { useTheme } from '../hooks/useTheme';
-import { Button, Dropdown, FaBars, Image, useLocation, useTranslation } from '../sharedBase/globalImports';
+import { Button, Dropdown, FaBars, Image } from '../sharedBase/globalImports';
+import {useLocation, useTranslation} from '../sharedBase/globalUtils';
 import { useLanguageStore } from "../store/useLanguageStore";
 
 interface LayoutProps {

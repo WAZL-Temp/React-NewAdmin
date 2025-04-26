@@ -1,9 +1,10 @@
 import { useState, useRef, useMemo, useEffect, useCallback } from "react";
-import { DataTable, DataTableFilterMeta, DataTablePageEvent, DataTableSortEvent, FilterMatchMode, format, parseISO, Toast, useNavigate } from "../sharedBase/globalImports";
+import { DataTable, DataTableFilterMeta, DataTablePageEvent, DataTableSortEvent, FilterMatchMode, Toast} from "../sharedBase/globalImports";
+import {format, parseISO, useNavigate } from '../sharedBase/globalUtils';
 import { useBaseService } from "../sharedBase/baseService";
-import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
+// import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
 import { ColumnConfig, RoleData, SortOrder } from "../types/listpage";
-import { RolePermission } from "../types/roles";
+// import { RolePermission } from "../types/roles";
 import { UseListQueryResult } from "../store/createListStore";
 
 type UseListPageCommonProps<TItem> = {
@@ -88,7 +89,7 @@ export const useColumnConfig = (columnsConfigDefault: ColumnConfig[], roleData: 
     return { columnsConfig, visibleColumns, setVisibleColumns, fixedColumnFields, selectableColumns, filteredFixedColumns, handleSelectAll, handleColumnChange };
 };
 
-export function useListPage<TQuery extends UseListQueryResult<TItem>,  TItem>({ query, props }: UseListPageProps<TQuery, TItem>) {
+export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ query, props }: UseListPageProps<TQuery, TItem>) {
     const navigate = useNavigate();
     const [globalFilterValue, setGlobalFilterValue] = useState(props.initialFilterValue);
     const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState(false);
@@ -105,31 +106,31 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>,  TItem>({ 
     const [roleData, setRoleData] = useState<any>(null);
     const [search, setSearch] = useState<Record<string, unknown>>({});
     const [searchRowFilter, setSearchRowFilter] = useState<Record<string, unknown>>({});
-    const { data: roleDetailsData } = useFetchRoleDetailsData();
-     
+    // const { data: roleDetailsData } = useFetchRoleDetailsData();
+
+
+    // useEffect(() => {
+    //     const fetchRoleDetails = async () => {
+    //         if (roleDetailsData && roleDetailsData.length > 0) {
+
+    //             const appuserData = roleDetailsData.find((r: RolePermission) => r.name.toLowerCase() === (props.baseModelName?.toLowerCase() ?? ""));
+    //             setRoleData(appuserData);
+
+    //             if (appuserData?.dbStatus) {
+    //                 query.setRoleCondition(JSON.parse(appuserData.dbStatus));
+    //             }
+    //             await query.load();
+    //         }
+    //     };
+
+    //     if (roleDetailsData && roleDetailsData.length > 0) {
+    //         fetchRoleDetails();
+    //     }
+    // }, [roleDetailsData, props.baseModelName]);
+
 
     useEffect(() => {
-        const fetchRoleDetails = async () => {
-            if (roleDetailsData && roleDetailsData.length > 0) {
-                
-                const appuserData = roleDetailsData.find((r: RolePermission) => r.name.toLowerCase() === (props.baseModelName?.toLowerCase() ?? ""));
-                setRoleData(appuserData);
-                
-                if (appuserData?.dbStatus) {
-                    query.setRoleCondition(JSON.parse(appuserData.dbStatus));
-                }
-                await query.load();
-            }
-        };
-    
-        if (roleDetailsData && roleDetailsData.length > 0) {
-            fetchRoleDetails();
-        }
-    }, [roleDetailsData, props.baseModelName]);
-    
-
-    useEffect(() => {
-        if (query.tableSearch?.searchRowFilter) {
+        if (query.tableSearch.searchRowFilter) {
             const updatedFilters = Object.entries(query.tableSearch.searchRowFilter).reduce((acc, [field, value]) => {
                 acc[field] = {
                     value: value,
@@ -240,7 +241,7 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>,  TItem>({ 
     }
 
     const searchData = async () => {
-        await  query.load();
+        await query.load();
     }
 
     const clearListSearch = (type: 'search' | 'table' | 'both') => {
