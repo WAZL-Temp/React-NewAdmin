@@ -1,6 +1,6 @@
 import { useState, useRef, useMemo, useEffect, useCallback } from "react";
-import { DataTable, DataTableFilterMeta, DataTablePageEvent, DataTableSortEvent, FilterMatchMode, Toast} from "../sharedBase/globalImports";
-import {format, parseISO, useNavigate } from '../sharedBase/globalUtils';
+import { DataTable, DataTableFilterMeta, DataTablePageEvent, DataTableSortEvent, FilterMatchMode, Toast } from "../sharedBase/globalImports";
+import { format, parseISO, useNavigate } from '../sharedBase/globalUtils';
 import { useBaseService } from "../sharedBase/baseService";
 // import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
 import { ColumnConfig, RoleData, SortOrder } from "../types/listpage";
@@ -252,7 +252,10 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
 
         if (type === 'search') {
             setSearch({});
-            searchData();
+            query.clearSearch(type);
+            setTimeout(() => {
+                searchData();
+            }, 100);
         }
     }
 
