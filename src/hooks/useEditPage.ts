@@ -1,12 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { format, parseISO, useNavigate } from "../sharedBase/globalUtils";
-import { UseItemQueryResult } from "../store/createItemStore";
 import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
 import { RolePermission } from "../types/roles";
-import { UseListQueryResult } from "../store/createListStore";
+import { UseListQueryResult } from "../store/useListQuery";
 
-type UseEditPageProps<TQuery, TItem> = {
-    query: TQuery;
+type UseEditPageProps<TItem> = {
     props: {
         id?: string;
         baseModelName?: string;
@@ -14,7 +12,7 @@ type UseEditPageProps<TQuery, TItem> = {
     };
 };
 
-export function useEditPage<TQuery extends UseItemQueryResult<TItem>, TItem>({ query, props }: UseEditPageProps<TQuery, TItem>) {
+export function useEditPage<TItem>({ props }: UseEditPageProps<TItem>) {
     const [showDialog, setShowDialog] = useState(false);
     const navigate = useNavigate();
     const [hiddenFields, setHiddenFields] = useState<string[]>([]);

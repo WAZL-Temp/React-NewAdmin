@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useAppUserService } from "../core/services/appUsers.service";
-import { useListQuery } from "../store/createListStore";
+import { useListQuery } from "../store/useListQuery";
 import { AppUser } from "../core/model/appuser";
 import { EnumDetail } from "../core/model/enumdetail";
 import { useEnumDetailsService } from "../core/services/enumDetails.service";
 
 export const useFetchDataEnum = (type: string) => {
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<EnumDetail[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const enumDetailService = useEnumDetailsService();
@@ -39,7 +39,7 @@ export const useFetchDataEnum = (type: string) => {
 };
 
 export const useGetLabelEnum = (type: string, value: string) => {
-  const [label, setLabel] = useState<any>({});
+  const [label, setLabel] = useState<EnumDetail>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const enumDetailService = useEnumDetailsService();
@@ -51,7 +51,7 @@ export const useGetLabelEnum = (type: string, value: string) => {
       try {
         const data = query?.data;
         const filteredData = data?.filter(
-          (item: any) => item.section === type && item.value === value
+          (item: EnumDetail) => item.section === type && item.value === value
         );
         setLabel(filteredData && filteredData.length ? filteredData[0] : {});
       } catch (err: any) {
@@ -77,12 +77,21 @@ export const useFetchRoleDetailsData = () => {
   useEffect(() => {
     const fetchRoleDetails = async () => {
       setLoading(true);
+      setError(null);
+
       try {
-        const response = await query.fetchRoleData();
+        const response = await query?.fetchRoleData();
+        //  console.log("Response from fetchRoleData:", response);
         
-        setData(response || []);
-      } catch (err: any) {
-        setError(err.message || "Failed to fetch role details");
+         if (response) {
+          setData(response);
+        } else {
+          setData([]);
+          // setError("No role data found.");
+        }
+      } catch {
+        // setError();
+        // || "Failed to fetch role details"
       } finally {
         setLoading(false);
       }

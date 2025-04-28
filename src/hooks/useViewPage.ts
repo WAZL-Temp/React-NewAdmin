@@ -1,18 +1,16 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "../sharedBase/globalUtils";
-import { UseItemQueryResult } from "../store/createItemStore";
 import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
 import { RolePermission } from "../types/roles";
 
-type UseEditPageProps<TQuery, TItem> = {
-    query: TQuery;
+type UseEditPageProps<TItem> = {
     props: {
         id?: string;
         baseModelName?: string;
     };
 };
 
-export function useViewPage<TQuery extends UseItemQueryResult<TItem>, TItem>({ query, props }: UseEditPageProps<TQuery, TItem>) {
+export function useViewPage<TItem>({ props }: UseEditPageProps<TItem>) {
     const navigate = useNavigate();
     const [hiddenFields, setHiddenFields] = useState<string[]>([])
     const { data: roleDetailsData } = useFetchRoleDetailsData();
@@ -48,7 +46,7 @@ export function useViewPage<TQuery extends UseItemQueryResult<TItem>, TItem>({ q
         return hiddenFields.includes(fieldName)
     }
 
-    const handleEdit = (userid: any) => {
+    const handleEdit = (userid: string | number) => {
         navigate(`/${props.baseModelName}/edit/${userid}`);
     };
 

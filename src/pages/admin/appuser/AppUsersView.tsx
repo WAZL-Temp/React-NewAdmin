@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import TooltipWithText from "../../../components/TooltipWithText";
 import ImgViewer from "../../../components/ImgViewer";
-import {  BsArrowLeft, Button, FaEdit, IoIosArrowBack, IoIosArrowForward, Stepper, StepperPanel, StepperRefAttributes } from "../../../sharedBase/globalImports";
-import {useTranslation, useParams, format} from '../../../sharedBase/globalUtils';
+import { BsArrowLeft, Button, FaEdit, IoIosArrowBack, IoIosArrowForward, Stepper, StepperPanel, StepperRefAttributes } from "../../../sharedBase/globalImports";
+import { useTranslation, useParams, format } from '../../../sharedBase/globalUtils';
 import { AppUser } from "../../../core/model/appuser";
 import { useViewPage } from "../../../hooks/useViewPage";
 import { useAppUserService } from "../../../core/services/appUsers.service";
-import { useItemQuery } from "../../../store/createItemStore";
+import { useItemQuery } from "../../../store/useItemQuery";
 
 
 export default function AppUsersView() {
@@ -22,8 +22,45 @@ export default function AppUsersView() {
   ];
   const baseModelName = "appuser";
   const userService = useAppUserService();
-   const query = useItemQuery<AppUser>(userService);
-  const [userData, setUserData] = useState<AppUser>();
+  const query = useItemQuery<AppUser>(userService);
+  const [userData, setUserData] = useState<AppUser | undefined>(initialData() || {});
+
+  function initialData(): AppUser {
+    return {
+      id: undefined,
+      name: '',
+      firstName: '',
+      lastName: '',
+      mobile: '',
+      mobileVerified: false,
+      emailId: '',
+      emailVerified: false,
+      shopName: '',
+      password: '',
+      pincode: '',
+      state: '',
+      district: '',
+      address: '',
+      addressLine: '',
+      verifyShop: '',
+      gst: '',
+      gstCertificate: null,
+      photoShopFront: null,
+      visitingCard: null,
+      cheque: null,
+      gstOtp: '',
+      isActive: false,
+      isAdmin: false,
+      hasImpersonateAccess: false,
+      photoAttachment: null,
+      role: '',
+      publish: '',
+      lastLogin: undefined,
+      defaultLanguage: '',
+      isPremiumUser: false,
+      totalPlot: undefined,
+    };
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,7 +69,7 @@ export default function AppUsersView() {
     };
     fetchData();
 
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     if (query?.data) {
@@ -44,8 +81,7 @@ export default function AppUsersView() {
     }
   }, [query?.data]);
 
-  const { isFieldHidden, handleEdit, handleBackToUser } = useViewPage<typeof query, AppUser>({
-    query: query,
+  const { isFieldHidden, handleEdit, handleBackToUser } = useViewPage<AppUser>({
     props: {
       id: id,
       baseModelName: baseModelName,

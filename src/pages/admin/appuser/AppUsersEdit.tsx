@@ -10,9 +10,9 @@ import TooltipWithText from '../../../components/TooltipWithText';
 import FileUploadMain from '../../../components/FileUploadMain';
 import { EnumDetail } from '../../../core/model/enumdetail';
 import { CustomFile } from '../../../core/model/customfile';
-import { useItemQuery } from '../../../store/createItemStore';
+import { useItemQuery } from '../../../store/useItemQuery';
 import { useAppUserService } from '../../../core/services/appUsers.service';
-import { useListQuery } from '../../../store/createListStore';
+import { useListQuery } from '../../../store/useListQuery';
 import { useFetchDataEnum } from '../../../sharedBase/lookupService';
 
 export default function AppUsersEdit() {
@@ -47,7 +47,7 @@ export default function AppUsersEdit() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [dialogMessage, setDialogMessage] = useState('');
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [userData, setUserData] = useState<AppUser>();
+  const [userData, setUserData] = useState<AppUser>(initialData());
 
   const roleTypeData = useFetchDataEnum("RoleType");
   const publishTypeData = useFetchDataEnum("PublishType");
@@ -91,8 +91,7 @@ export default function AppUsersEdit() {
   }
 
   const { showDialog, setShowDialog, isFieldHidden, handleCloseDialog, formatDate, removeEmptyFields, prepareObject }
-    = useEditPage<typeof itemQuery, AppUser>({
-      query: itemQuery,
+    = useEditPage<AppUser>({
       props: {
         id: id,
         baseModelName: baseModelName,
@@ -103,7 +102,7 @@ export default function AppUsersEdit() {
   useEffect(() => {
     const fetchData = async () => {
       if (isEditMode) {
-        const data = await itemQuery.getItem(parseInt(id as string, 10));
+        const data = await itemQuery.getItem(parseInt(id as string, 10));        
         setUserData(data);
         const preparedData = prepareObject<AppUser>(data, initialData());
         setItem(preparedData);

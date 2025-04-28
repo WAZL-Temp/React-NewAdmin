@@ -6,7 +6,7 @@ import successimg from '../../../assets/images/success.gif'
 import confirmImg from '../../../assets/images/are-you-sure.jpg'
 import { AppUser } from "../../../core/model/appuser";
 import { RowData } from "../../../types/listpage";
-import { useListQuery } from "../../../store/createListStore";
+import { useListQuery } from "../../../store/useListQuery";
 import { useAppUserService } from "../../../core/services/appUsers.service";
 
 export default function AppUsersList() {
@@ -31,7 +31,7 @@ export default function AppUsersList() {
             props: {
                 initialFilterValue: '',
                 baseModelName: baseModelName,
-                service: userService
+                service:  userService
             }
         });
 
@@ -69,10 +69,6 @@ export default function AppUsersList() {
         [t]);
 
     const { columnsConfig } = useColumnConfig(columnsConfigDefault, roleData);
-
-    // useEffect(() => {
-    //     console.log("appuser data", query?.data);
-    // }, [])
 
     useEffect(() => {
         if (query.search) {
@@ -291,7 +287,7 @@ export default function AppUsersList() {
                         dateFormat="mm-dd-yy"
                         id="fromDate"
                         name="fromDate"
-                        onChange={(e) => { setCalendarCreateDateFrom(e.value); searchChange(e.value, 'createDateSearchFrom', 'date') }}
+                        onChange={(e) => { setCalendarCreateDateFrom(e.value); searchChange(e.value, 'createDateSearchFrom') }}
                         showIcon
                         placeholder={t("globals.startDatePlaceholder")}
                         yearRange="2023:2025"
@@ -305,7 +301,7 @@ export default function AppUsersList() {
                         dateFormat="mm-dd-yy"
                         id="toDate"
                         name="toDate"
-                        onChange={(e) => { setCalendarCreateDateTo(e.value); searchChange(e.value, 'createDateSearchTo', 'date') }}
+                        onChange={(e) => { setCalendarCreateDateTo(e.value); searchChange(e.value, 'createDateSearchTo') }}
                         showIcon
                         placeholder={t("globals.endDatePlaceholder")}
                         yearRange="2023:2025"
@@ -326,7 +322,7 @@ export default function AppUsersList() {
                     <Button
                         type="button"
                         className="bg-[var(--color-danger)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
-                        onClick={() => { clearListSearch('search'); setCalendarCreateDateTo(null); setCalendarCreateDateFrom(null); }}
+                        onClick={() => { setCalendarCreateDateTo(null); setCalendarCreateDateFrom(null);clearListSearch('search');  }}
                     >
                         {t("globals.clearAll")}
                     </Button>
@@ -389,7 +385,7 @@ export default function AppUsersList() {
                         showGridlines
                         filters={filters}
                         sortField={sortField}
-                        sortOrder={sortOrder}
+                        sortOrder={sortOrder as 1 | 0 | -1}
                         onSort={onSort}
                         onFilter={(e) => setFilters(e.filters)}
                         removableSort

@@ -1,60 +1,14 @@
-import { useEffect, useState } from "react";
-import { BrowserRouter, Navigate, Route, Routes } from './sharedBase/globalUtils';
-import Layout from './components/Layout';
-import LoginPage from './pages/auth/LoginPage';
-// import AuthGuard from '../src/components/AuthGuard';
-import NotAuthorized from './pages/NotAuthorize';
-import AppUsersList from './pages/admin/appuser/AppUsersList';
-import AppUsersHome from "./pages/admin/appuser/AppUsersHome";
-import ProductsList from "./pages/admin/product/ProductsList";
-import { EnumDetail } from "./core/model/enumdetail";
-import { useListQuery } from "./store/createListStore";
-import { useEnumDetailsService } from "./core/services/enumDetails.service";
-import AppUsersView from "./pages/admin/appuser/AppUsersView";
-import AppUsersEdit from "./pages/admin/appuser/AppUsersEdit";
-import AppUsersImport from "./pages/admin/appuser/AppUsersImport";
-
+import { BrowserRouter} from './sharedBase/globalUtils';
+import AppRoutes from './AppRoutes';
 
 const App = () => {
-  const enumDetailService = useEnumDetailsService();
-  const enumDetailQuery = useListQuery<EnumDetail>(enumDetailService);
-  const [pageLoad, setPageLoad] = useState(true);
-
-  useEffect(() => {    
-    if (enumDetailQuery?.data?.length) {
-      setPageLoad(true);
-    }
-
-    const EnumDataCall = async () => {
-      await enumDetailQuery.load();
-    };
-
-    EnumDataCall();
-  }, [enumDetailQuery?.data]);
 
   return (
-    pageLoad ? (
-      <div className="font-custom">
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<LoginPage />} />
-            <Route path="/appuser" element={<Layout><AppUsersList /></Layout>} />
-            <Route path="/appuser/homes" element={<Layout><AppUsersHome /></Layout>} />
-            <Route path="/appuser/:id" element={<Layout><AppUsersView /></Layout>} />
-            <Route path="/appuser/add" element={<Layout><AppUsersEdit /></Layout>} />
-            <Route path="/appuser/edit/:id" element={<Layout><AppUsersEdit /></Layout>} />
-            <Route path="/appuser/import" element={<Layout><AppUsersImport /></Layout>} />
-
-            <Route path="/product" element={<Layout><ProductsList /></Layout>} />
-
-            <Route path="/404" element={<Layout><NotAuthorized /></Layout>} />
-            <Route path="*" element={<Navigate to="/404" replace />} />
-          </Routes>
-        </BrowserRouter>
-      </div>
-    ) : (
-      <div>Loading...</div>
-    )
+    <div className="font-custom">
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
+    </div>
   )
 };
 
