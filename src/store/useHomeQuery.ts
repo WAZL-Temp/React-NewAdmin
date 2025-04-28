@@ -20,19 +20,13 @@ export const useHomeQuery = <T extends BaseModel>(
   service : ReturnType<typeof useBaseService>
 ): UseHomeQueryResult => {
   const queryClient = useQueryClient();
-
-  const [homeCommonData, setHomeCommonData] = useState<HomeCommonData | null>(null);
-  const [homeUserData, setHomeUserData] = useState<HomeCommonData | null>(null);
-  const [homeHtmlData, setHomeHtmlData] = useState<ListHtmlData | null>(null);
   const [search, setSearch] = useState<Record<string, unknown>>({});
+ 
 
-  const { isLoading, error } = useQuery({
+  const { data,isLoading, error } = useQuery({
     queryKey: [`home-${service.type}`],
     queryFn: async () => {
-      const { homeCommon, homeUser, htmlData } = await service.getHomeCommonData("default", "admin", null);
-      setHomeCommonData(homeCommon);
-      setHomeUserData(homeUser);
-      setHomeHtmlData(htmlData);
+     const { homeCommon, homeUser, htmlData } = await service.getHomeCommonData("default", "admin", null);
       return { homeCommon, homeUser, htmlData };
     },
     staleTime: 1000 * 60 * 5,
@@ -52,9 +46,9 @@ export const useHomeQuery = <T extends BaseModel>(
   };
 
   return {
-    homeCommonData,
-    homeUserData,
-    homeHtmlData,
+    homeCommonData: data?.homeCommon ?? null,
+    homeUserData: data?.homeUser ?? null,
+    homeHtmlData: data?.htmlData ?? null,
     search,
     setSearch,
     isLoading,

@@ -6,7 +6,7 @@ import confirmImg from '../../../assets/images/are-you-sure.jpg'
 import {  BiSolidTrash, Button, Calendar, Column, DataTable, Dialog, FilterMatchMode, HiOutlinePlus, Image, InputText, IoMdRefresh, MdOutlineUploadFile, MenuItem, RiPencilFill, SplitButton, TbFileExcel, TiEye, Toast, Tooltip } from "../../../sharedBase/globalImports";
 import {useNavigate, useTranslation} from '../../../sharedBase/globalUtils';
 import { useListPage } from "../../../hooks/useListPage";
-import { useListQuery } from "../../../store/createListStore";
+import { useListQuery } from "../../../store/useListQuery";
 
 
 const ProductsList = () => {

@@ -10,7 +10,6 @@ import { useImportPage } from '../../../hooks/useImportPage';
 import { AppUser } from '../../../core/model/appuser';
 import { RowData } from '../../../types/listpage';
 import { CustomFile } from '../../../core/model/customfile';
-import { useListQuery } from '../../../store/createListStore';
 
 const AppUsersImport = () => {
   const { t } = useTranslation();
@@ -27,7 +26,6 @@ const AppUsersImport = () => {
   const [loadingSync, setLoadingSync] = useState(false);
   const baseModelName = "AppUsers";
   const userService = useAppUserService();
-  const query = useListQuery<AppUser>(userService);
 
   const { onPage, first, rows, handleDownloadTemplate, downloading, importAllow, formatDate }
     = useImportPage({

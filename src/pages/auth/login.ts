@@ -23,7 +23,7 @@ const loginUser = async (payload: LoginPayload): Promise<LoginResponse | null> =
 };
 
 
-const ValidateEmail = async (emailID?: string, token?: string): Promise<any> => {
+const ValidateEmail = async (emailID?: string, token?: string) => {
     const payload = {
         emailId: emailID,
     };
@@ -43,7 +43,7 @@ const ValidateEmail = async (emailID?: string, token?: string): Promise<any> => 
         try {
             const data = JSON.parse(responseText);
             return data;
-        } catch (e) {
+        } catch  {
             console.warn('Response is not JSON, returning raw text');
             return responseText;
         }
@@ -53,7 +53,7 @@ const ValidateEmail = async (emailID?: string, token?: string): Promise<any> => 
     }
 };
 
-const loginByEmail = async (emailId?: any, token?: any): Promise<any> => {
+const loginByEmail = async (emailId?: string, token?: string) => {
     const payload = { 'emailId': emailId };
     try {
         const response = await fetch(`${import.meta.env.VITE_API_URL}/Login/LoginEmail`, {
@@ -69,7 +69,7 @@ const loginByEmail = async (emailId?: any, token?: any): Promise<any> => {
         try {
             const data = JSON.parse(responseText);
             return data;
-        } catch (e) {
+        } catch {
             console.warn('Response is not JSON, returning raw text');
             return responseText;
         }

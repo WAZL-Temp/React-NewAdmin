@@ -2,24 +2,25 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { BaseModel } from "../sharedBase/modelInterface";
 import { useBaseService } from "../sharedBase/baseService";
+import { CachedState, ConditionParams, RoleConditionParams, SearchParams, TableSearchParams } from "../types/listpage";
 
 export interface UseListQueryResult<T> {
   data: T[] | undefined;
   isLoading: boolean;
   error: Error | null;
-  search: any;
-  tableSearch: any;
-  condition: any;
-  roleCondition: any;
+  search: SearchParams;
+  tableSearch: TableSearchParams;
+  condition: ConditionParams;
+  roleCondition: RoleConditionParams;
   deleteItem: (id: number) => void;
   load: () => void;
-  setSearch: (search: any) => void;
-  setTableSearch: (tableSearch: any) => void;
+  setSearch: (search: SearchParams) => void;
+  setTableSearch: (tableSearch: TableSearchParams) => void;
   clearSearch: (type: "search" | "table" | "both") => void;
-  setCondition: (condition: any) => void;
-  setRoleCondition: (roleCondition: any) => void;
+  setCondition: (condition: ConditionParams) => void;
+  setRoleCondition: (roleCondition: RoleConditionParams) => void;
   fetchRoleData: () => Promise<T[] | undefined>;
-  fetchGridData: (pageNo: number, pageSize: number, orderBy: string, table: string) => Promise<any>;
+  fetchGridData: (pageNo: number, pageSize: number, orderBy: string, table: string) => Promise<{ data: T[]; total: number } | undefined>;
 }
 
 export const useListQuery = <T extends BaseModel>(
@@ -28,16 +29,10 @@ export const useListQuery = <T extends BaseModel>(
   const queryClient = useQueryClient();
   const service = baseService;
 
-  const cachedState = queryClient.getQueryData<{
-    search: any;
-    tableSearch: any;
-    condition: any;
-    roleCondition: any;
-  }>([`list-${service.type}-state`]);
+  const cachedState = queryClient.getQueryData<CachedState>([`list-${service.type}-state`]);
 
-
-  const [search, setSearchState] = useState<any>(cachedState?.search || {});
-  const [tableSearch, setTableSearchState] = useState<any>(
+  const [search, setSearchState] = useState<SearchParams>(cachedState?.search || {});
+  const [tableSearch, setTableSearchState] = useState<TableSearchParams>(
     cachedState?.tableSearch || {
       sortField: "",
       sortOrder: "",
@@ -49,8 +44,8 @@ export const useListQuery = <T extends BaseModel>(
       searchRowFilter: {},
     }
   );
-  const [condition, setConditionState] = useState<any>(cachedState?.condition || {});
-  const [roleCondition, setRoleConditionState] = useState<any>(cachedState?.roleCondition || {});
+  const [condition, setConditionState] = useState<ConditionParams>(cachedState?.condition || {});
+  const [roleCondition, setRoleConditionState] = useState<RoleConditionParams>(cachedState?.roleCondition || {});
   const [isFetching, setIsFetching] = useState<boolean>(false);
 
   const payload = { ...condition, ...search, ...roleCondition };
@@ -77,8 +72,8 @@ export const useListQuery = <T extends BaseModel>(
     });
   };
 
-  const setSearch = (newSearch: any) => {
-    setSearchState((prev: any) => {
+  const setSearch = (newSearch: SearchParams) => {
+    setSearchState((prev:SearchParams) => {
       const updated = { ...prev, ...newSearch };
       queryClient.setQueryData([`list-${service.type}-state`], {
         search: updated,
@@ -90,8 +85,8 @@ export const useListQuery = <T extends BaseModel>(
     });
   };
 
-  const setTableSearch = (newTableSearch: any) => {
-    setTableSearchState((prev: any) => {
+  const setTableSearch = (newTableSearch: Partial<TableSearchParams>) => {
+    setTableSearchState((prev) => {
       const updated = { ...prev, ...newTableSearch };
       queryClient.setQueryData([`list-${service.type}-state`], {
         search,
@@ -106,21 +101,39 @@ export const useListQuery = <T extends BaseModel>(
   const clearSearch = (type: "search" | "table" | "both") => {
     
     if (type === "search") setSearchState({});
-    if (type === "table") setTableSearchState({});
+    if (type === "table") setTableSearchState({
+      sortField: "",
+      sortOrder: "",
+      first: 0,
+      rows: 10,
+      filter: "",
+      top: "",
+      left: "",
+      searchRowFilter: {},
+    });
     if (type === "both") {
       setSearchState({});
-      setTableSearchState({});
+      setTableSearchState({
+      sortField: "",
+      sortOrder: "",
+      first: 0,
+      rows: 10,
+      filter: "",
+      top: "",
+      left: "",
+      searchRowFilter: {},
+    });
     }
-    // saveStateToCache();
+    saveStateToCache();
   };
 
-  const setCondition = (newCondition: any) => {
+  const setCondition = (newCondition: ConditionParams) => {
     setConditionState(newCondition);
     saveStateToCache();
   };
 
-  const setRoleCondition = (newRoleCondition: any) => {
-    setRoleConditionState((prev: any) => {
+  const setRoleCondition = (newRoleCondition: RoleConditionParams) => {
+    setRoleConditionState((prev:RoleConditionParams) => {
       const updated = { ...prev, ...newRoleCondition };
       queryClient.setQueryData([`list-${service.type}-state`], {
         search,
@@ -142,11 +155,18 @@ export const useListQuery = <T extends BaseModel>(
 
     try {
       const fetchedData = await service.getRoleData();
-      setIsFetching(false);
+      // console.log("Fetched role data:", fetchedData);
+      
+      if (!fetchedData) {
+        console.error("No data returned from the service.");
+        return [];
+      }
       return fetchedData;
-    } catch (err: unknown) {
+    } catch  {
+      // (err: unknown)
       setIsFetching(false);
-      console.error("Error fetching role data:", err);
+      // console.error("Error fetching role data:", err);
+      return [];
     }
   };
 
@@ -155,7 +175,7 @@ export const useListQuery = <T extends BaseModel>(
     pageSize: number,
     orderBy: string,
     table: string
-  ): Promise<any> => {
+  ): Promise<{ data: T[]; total: number } | undefined> => {
     try {
       const fetchedGridData = await service.getGridData(pageNo, pageSize, orderBy, table);
       return fetchedGridData;

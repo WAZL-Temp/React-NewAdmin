@@ -7,7 +7,7 @@ import {useNavigate, useTranslation} from '../../../sharedBase/globalUtils';
 import { HomeUserData, SummaryData, UserData } from '../../../types/homepage';
 import { useHomePage } from '../../../hooks/useHomePage';
 import { useAppUserService } from '../../../core/services/appUsers.service';
-import { useHomeQuery } from '../../../store/createHomeStore';
+import { useHomeQuery } from '../../../store/useHomeQuery';
 
 export default function AppUsersHome() {
   const navigate = useNavigate();

@@ -1,16 +1,16 @@
 import { useState, useRef, useMemo, useEffect, useCallback } from "react";
-import { DataTable, DataTableFilterMeta, DataTablePageEvent, DataTableSortEvent, FilterMatchMode, Toast } from "../sharedBase/globalImports";
+import { DataTable, DataTableFilterMeta, DataTablePageEvent, DataTableSortEvent, DataTableValueArray, FilterMatchMode, Toast } from "../sharedBase/globalImports";
 import { format, parseISO, useNavigate } from '../sharedBase/globalUtils';
 import { useBaseService } from "../sharedBase/baseService";
-// import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
-import { ColumnConfig, RoleData, SortOrder } from "../types/listpage";
-// import { RolePermission } from "../types/roles";
-import { UseListQueryResult } from "../store/createListStore";
+import { Action, ColumnConfig, RoleData } from "../types/listpage";
+import { UseListQueryResult } from "../store/useListQuery";
+import { RolePermission } from "../types/roles";
+import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
 
 type UseListPageCommonProps<TItem> = {
     initialFilterValue?: string;
     baseModelName?: string;
-    service: typeof useBaseService;
+    service: ReturnType<typeof useBaseService>;
     onFilterChange?: (value: string) => void;
     onConfirmDelete?: (id: number) => void;
     onDeleteItem?: (id: number) => void;
@@ -96,37 +96,37 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
     const [itemToDelete, setItemToDelete] = useState<number | null>(null);
     const toast = useRef<Toast>(null);
     const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
-    const dtRef = useRef<DataTable<any>>(null);
+    const dtRef = useRef<DataTable<DataTableValueArray>>(null);
     const [sortField, setSortField] = useState<string | undefined>();
-    const [sortOrder, setSortOrder] = useState<SortOrder>();
+    const [sortOrder, setSortOrder] = useState<string | number>();
     const [first, setFirst] = useState<number>();
     const [rows, setRows] = useState<number>();
     const [totalRecords, setTotalRecords] = useState(0);
     const [filters, setFilters] = useState<DataTableFilterMeta>({ global: { value: null, matchMode: FilterMatchMode.CONTAINS }, });
-    const [roleData, setRoleData] = useState<any>(null);
+    const [roleData, setRoleData] = useState<RoleData | null>(null);
     const [search, setSearch] = useState<Record<string, unknown>>({});
     const [searchRowFilter, setSearchRowFilter] = useState<Record<string, unknown>>({});
-    // const { data: roleDetailsData } = useFetchRoleDetailsData();
+    const { data: roleDetailsData } = useFetchRoleDetailsData();
 
 
-    // useEffect(() => {
-    //     const fetchRoleDetails = async () => {
-    //         if (roleDetailsData && roleDetailsData.length > 0) {
+    useEffect(() => {
+        const fetchRoleDetails = async () => {
+            if (roleDetailsData && roleDetailsData.length > 0) {
 
-    //             const appuserData = roleDetailsData.find((r: RolePermission) => r.name.toLowerCase() === (props.baseModelName?.toLowerCase() ?? ""));
-    //             setRoleData(appuserData);
+                const appuserData = roleDetailsData.find((r: RolePermission) => r.name.toLowerCase() === (props.baseModelName?.toLowerCase() ?? ""));
+                setRoleData(appuserData);
 
-    //             if (appuserData?.dbStatus) {
-    //                 query.setRoleCondition(JSON.parse(appuserData.dbStatus));
-    //             }
-    //             await query.load();
-    //         }
-    //     };
+                if (appuserData?.dbStatus) {
+                    query.setRoleCondition(JSON.parse(appuserData.dbStatus));
+                }
+                await query.load();
+            }
+        };
 
-    //     if (roleDetailsData && roleDetailsData.length > 0) {
-    //         fetchRoleDetails();
-    //     }
-    // }, [roleDetailsData, props.baseModelName]);
+        if (roleDetailsData && roleDetailsData.length > 0) {
+            fetchRoleDetails();
+        }
+    }, [roleDetailsData, props.baseModelName]);
 
 
     useEffect(() => {
@@ -203,7 +203,7 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
     const hasAccess = (roleData: RoleData, requiredAction: string) => {
         if (!roleData) return false;
         const actions = typeof roleData.action === "string" ? JSON.parse(roleData.action) : [];
-        return actions.some((action) => action.name.toLowerCase() === requiredAction.toLowerCase());
+        return actions.some((action: Action) => action.name.toLowerCase() === requiredAction.toLowerCase());
     };
 
     const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -252,14 +252,14 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
 
         if (type === 'search') {
             setSearch({});
-            query.clearSearch(type);
+            query.setSearch(search);
             setTimeout(() => {
                 searchData();
             }, 100);
         }
     }
 
-    const searchChange = (value: any, name: string, type: string) => {
+    const searchChange = (value: string | Date | null | undefined, name: string) => {
         query.setSearch({ [name]: value });
     };
 

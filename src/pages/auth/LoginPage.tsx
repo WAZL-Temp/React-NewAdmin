@@ -2,11 +2,10 @@ import React, { useState } from "react";
 import { useAuthStore } from "../../store/authStore";
 import { loginByEmail, loginUser, ValidateEmail } from "./login";
 import { signInWithGoogle } from "./firebase";
-// import {  appUserRoleDetailStore } from "../admin/appuser/appuserRoleDetail.store";
-// import { enumDetailStore } from "../../store/enumDetailsStore";
 import img1 from '../../assets/images/logo.png'
 import { Button, GoogleButton, Image, InputText } from "../../sharedBase/globalImports";
 import { useNavigate } from "../../sharedBase/globalUtils";
+import { FirebaseUser } from "../../types/auth";
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -14,11 +13,8 @@ const LoginPage = () => {
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [loading, setLoading] = useState(false);
-    const login = useAuthStore((state) => state.login);
-    const userInfo = useAuthStore((state) => state.userInfo);
+    const { login, userInfo } = useAuthStore();
     const selectedValue = false;
-    // const { loadList } = enumDetailStore();
-    // const { fetchRoleData } = appUserRoleDetailStore();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -40,17 +36,15 @@ const LoginPage = () => {
             const response = await loginUser(payload);
             if (response) {
                 const userInfoData = response?.userInfo[0];
-                login(response.token);
-                userInfo(JSON.stringify(userInfoData));
+                login(response.token);                
+                userInfo(userInfoData);
                 setEmail("");
                 setPassword("");
-                // loadList();
-                // fetchRoleData();
                 navigate('/appuser');
             } else {
                 setErrorMessage("Login failed. Please check your credentials.");
             }
-        } catch (error: any) {
+        } catch {
             setErrorMessage("Invalid Credentials");
         } finally {
             setLoading(false);
@@ -62,19 +56,24 @@ const LoginPage = () => {
         setLoading(true);
 
         try {
-            const user = await signInWithGoogle();
-            if (!user || !user.email) throw new Error("Google Sign-In data is incomplete.");
+            const user = await signInWithGoogle() as unknown as FirebaseUser;
 
-            const idToken = (user as any).stsTokenManager?.accessToken;
+            if (!user || !user.email) throw new Error("Google Sign-In data is incomplete.");
+            
+            const idToken =  user.stsTokenManager?.accessToken;
 
             if (selectedValue) {
                 await validateRegisterEmail(user.email, idToken);
             } else {
                 await validateByEmail(user.email, idToken);
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error("Google Sign-In error:", error);
-            setErrorMessage(`Failed to sign in with Google. ${error.message}`);
+            if (error instanceof Error) {
+                setErrorMessage(`Failed to sign in with Google. ${error.message}`);
+            } else {
+                setErrorMessage("Failed to sign in with Google. An unknown error occurred.");
+            }
         } finally {
             setLoading(false);
         }
@@ -85,11 +84,9 @@ const LoginPage = () => {
         try {
             const response = await loginByEmail(email, emailToken);
             if (response) {
-                // loadList();
-                // fetchRoleData();
                 login(response?.token);
                 const userInfoData = response?.userInfo[0];
-                userInfo(JSON.stringify(userInfoData));
+                userInfo(userInfoData);
                 navigate('/appuser');
             } else {
                 console.error('Login failed: Token not found');
@@ -100,7 +97,7 @@ const LoginPage = () => {
         }
     };
 
-    const validateRegisterEmail = async (email: any, emailToken: any) => {
+    const validateRegisterEmail = async (email: string, emailToken: string) => {
         try {
             const data = await ValidateEmail(email, emailToken);
 
@@ -116,7 +113,7 @@ const LoginPage = () => {
         }
     };
 
-    const validateByEmail = async (email: any, emailToken: any) => {
+    const validateByEmail = async (email: string, emailToken: string) => {
         try {
             const data = await ValidateEmail(email, emailToken);
 

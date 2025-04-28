@@ -12,8 +12,9 @@ interface SidebarProps {
 
 const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) => {
   const { t } = useTranslation();
-  const login = useAuthStore((state) => state.login);
-  const userInfo = useAuthStore((state) => state.userInfo);
+  // const login = useAuthStore((state) => state.login);
+  // const userInfo = useAuthStore((state) => state.userInfo);
+  const { login, userInfo } = useAuthStore();
   // const [roleData, setRoleData] = useState<any>([])
   const navigate = useNavigate();
   const location = useLocation();
