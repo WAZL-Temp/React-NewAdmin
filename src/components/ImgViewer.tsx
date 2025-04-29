@@ -18,7 +18,7 @@ export default function ImgViewer({ files, modelName }: ImageViewerProps) {
       if (!Array.isArray(parsedFiles)) {
         return [];
       }
-      return parsedFiles.map((img: any) => ({
+      return parsedFiles.map((img: CustomFile) => ({
         fileName: img.fileName,
         filePath: img.filePath.replace(/\\/g, '/'),
         type: img.type,

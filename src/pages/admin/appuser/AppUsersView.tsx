@@ -81,7 +81,7 @@ export default function AppUsersView() {
     }
   }, [query?.data]);
 
-  const { isFieldHidden, handleEdit, handleBackToUser } = useViewPage<AppUser>({
+  const { isFieldHidden, handleEdit, handleBackToUser } = useViewPage({
     props: {
       id: id,
       baseModelName: baseModelName,

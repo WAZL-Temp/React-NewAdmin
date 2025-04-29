@@ -4,10 +4,10 @@ import { format, parseISO, useNavigate } from '../sharedBase/globalUtils';
 import { useBaseService } from "../sharedBase/baseService";
 import { Action, ColumnConfig, RoleData } from "../types/listpage";
 import { UseListQueryResult } from "../store/useListQuery";
-import { RolePermission } from "../types/roles";
 import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
+import { RoleDetail } from "../core/model/roledetail";
 
-type UseListPageCommonProps<TItem> = {
+type UseListPageCommonProps = {
     initialFilterValue?: string;
     baseModelName?: string;
     service: ReturnType<typeof useBaseService>;
@@ -18,12 +18,12 @@ type UseListPageCommonProps<TItem> = {
     onShowSuccessMessage?: (message: string) => void;
 };
 
-type UseListPageProps<TQuery, TItem> = {
+type UseListPageProps<TQuery> = {
     query: TQuery;
-    props: UseListPageCommonProps<TItem>;
+    props: UseListPageCommonProps;
 };
 
-export const useColumnConfig = (columnsConfigDefault: ColumnConfig[], roleData: RoleData | RoleData[] | null) => {
+export const useColumnConfig = (columnsConfigDefault: ColumnConfig[], roleData: RoleDetail | RoleDetail[] | null) => {
     const hiddenColumns = useMemo<string[]>(() => {
         return (Array.isArray(roleData) ? roleData : [roleData])
             .filter((role): role is RoleData => !!role?.hideColumn)
@@ -89,7 +89,7 @@ export const useColumnConfig = (columnsConfigDefault: ColumnConfig[], roleData: 
     return { columnsConfig, visibleColumns, setVisibleColumns, fixedColumnFields, selectableColumns, filteredFixedColumns, handleSelectAll, handleColumnChange };
 };
 
-export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ query, props }: UseListPageProps<TQuery, TItem>) {
+export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ query, props }: UseListPageProps<TQuery>) {
     const navigate = useNavigate();
     const [globalFilterValue, setGlobalFilterValue] = useState(props.initialFilterValue);
     const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState(false);
@@ -102,8 +102,8 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
     const [first, setFirst] = useState<number>();
     const [rows, setRows] = useState<number>();
     const [totalRecords, setTotalRecords] = useState(0);
-    const [filters, setFilters] = useState<DataTableFilterMeta>({ global: { value: null, matchMode: FilterMatchMode.CONTAINS }, });
-    const [roleData, setRoleData] = useState<RoleData | null>(null);
+    const [filters, setFilters] = useState<DataTableFilterMeta>({ global: { value: null, matchMode: FilterMatchMode.CONTAINS } });
+    const [roleData, setRoleData] = useState<RoleDetail | null>(null);
     const [search, setSearch] = useState<Record<string, unknown>>({});
     const [searchRowFilter, setSearchRowFilter] = useState<Record<string, unknown>>({});
     const { data: roleDetailsData } = useFetchRoleDetailsData();
@@ -113,13 +113,13 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
         const fetchRoleDetails = async () => {
             if (roleDetailsData && roleDetailsData.length > 0) {
 
-                const appuserData = roleDetailsData.find((r: RolePermission) => r.name.toLowerCase() === (props.baseModelName?.toLowerCase() ?? ""));
-                setRoleData(appuserData);
+                const appuserData = roleDetailsData.find((r: RoleDetail) => r.name === (props.baseModelName?.toLowerCase() ?? ""));
+                setRoleData(appuserData ?? null);
 
                 if (appuserData?.dbStatus) {
                     query.setRoleCondition(JSON.parse(appuserData.dbStatus));
                 }
-                await query.load();
+                // await query.load();
             }
         };
 
@@ -213,8 +213,6 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
     }
 
     const refreshItemData = async () => {
-        // query.resetStatus();
-        // await query.loadList();
         query.load();
     };
 
@@ -246,16 +244,14 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
 
     const clearListSearch = (type: 'search' | 'table' | 'both') => {
         query.clearSearch(type);
+
         if (type === 'table') {
             setSearchRowFilter({});
         }
 
         if (type === 'search') {
             setSearch({});
-            query.setSearch(search);
-            setTimeout(() => {
-                searchData();
-            }, 100);
+            searchData();
         }
     }
 
@@ -293,7 +289,7 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
         }
     }, [props.baseModelName, navigate, setTableSearchInfo]);
 
-    const exportToExcel = async (service: any, searchVal: string, title: string) => {
+    const exportToExcel = async (service: ReturnType<typeof useBaseService>, searchVal: string, title: string) => {
         try {
             const blob = await service.exportExcel(searchVal);
             const url = window.URL.createObjectURL(blob);

@@ -1,4 +1,4 @@
-import {   setToken ,setUserInfo} from "../sharedBase/baseServiceVar";
+import { setToken, setUserInfo } from "../sharedBase/baseServiceVar";
 import { create, createJSONStorage, devtools, persist } from "../sharedBase/globalUtils";
 import { UserInfo } from "../types/auth";
 
@@ -23,7 +23,7 @@ export const useAuthStore = create<AuthStore>()(
           set({ token, isAuthenticated: true })
           setToken(token);
         },
-        userDet:null,
+        userDet: null,
         userInfo: (userDet: UserInfo) => {
           set({ userDet })
           setUserInfo(userDet)
@@ -31,7 +31,7 @@ export const useAuthStore = create<AuthStore>()(
         logout: () => {
           set({ token: null, isAuthenticated: false })
           setToken("")
-          setUserInfo({})
+          setUserInfo({ id: 0, name: "", firstName: "", lastName: "", emailId: "", lastLogin: "", mobile: "", isAdmin: false, role: "", address: "", photoAttachment: [], state: "", district: "", isPremiumUser: false, totalPlot: 0 })
         },
         loggedInUserID: null,
         loggedInUser: (loggedInUserID: string) => {

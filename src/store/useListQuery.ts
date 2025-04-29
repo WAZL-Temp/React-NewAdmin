@@ -19,7 +19,6 @@ export interface UseListQueryResult<T> {
   clearSearch: (type: "search" | "table" | "both") => void;
   setCondition: (condition: ConditionParams) => void;
   setRoleCondition: (roleCondition: RoleConditionParams) => void;
-  fetchRoleData: () => Promise<T[] | undefined>;
   fetchGridData: (pageNo: number, pageSize: number, orderBy: string, table: string) => Promise<{ data: T[]; total: number } | undefined>;
 }
 
@@ -46,7 +45,6 @@ export const useListQuery = <T extends BaseModel>(
   );
   const [condition, setConditionState] = useState<ConditionParams>(cachedState?.condition || {});
   const [roleCondition, setRoleConditionState] = useState<RoleConditionParams>(cachedState?.roleCondition || {});
-  const [isFetching, setIsFetching] = useState<boolean>(false);
 
   const payload = { ...condition, ...search, ...roleCondition };
 
@@ -73,7 +71,7 @@ export const useListQuery = <T extends BaseModel>(
   };
 
   const setSearch = (newSearch: SearchParams) => {
-    setSearchState((prev:SearchParams) => {
+    setSearchState((prev: SearchParams) => {
       const updated = { ...prev, ...newSearch };
       queryClient.setQueryData([`list-${service.type}-state`], {
         search: updated,
@@ -99,8 +97,9 @@ export const useListQuery = <T extends BaseModel>(
   };
 
   const clearSearch = (type: "search" | "table" | "both") => {
-    
-    if (type === "search") setSearchState({});
+
+    if (type === "search") setSearchState({}); setSearch({});
+
     if (type === "table") setTableSearchState({
       sortField: "",
       sortOrder: "",
@@ -114,15 +113,15 @@ export const useListQuery = <T extends BaseModel>(
     if (type === "both") {
       setSearchState({});
       setTableSearchState({
-      sortField: "",
-      sortOrder: "",
-      first: 0,
-      rows: 10,
-      filter: "",
-      top: "",
-      left: "",
-      searchRowFilter: {},
-    });
+        sortField: "",
+        sortOrder: "",
+        first: 0,
+        rows: 10,
+        filter: "",
+        top: "",
+        left: "",
+        searchRowFilter: {},
+      });
     }
     saveStateToCache();
   };
@@ -133,7 +132,7 @@ export const useListQuery = <T extends BaseModel>(
   };
 
   const setRoleCondition = (newRoleCondition: RoleConditionParams) => {
-    setRoleConditionState((prev:RoleConditionParams) => {
+    setRoleConditionState((prev: RoleConditionParams) => {
       const updated = { ...prev, ...newRoleCondition };
       queryClient.setQueryData([`list-${service.type}-state`], {
         search,
@@ -146,28 +145,9 @@ export const useListQuery = <T extends BaseModel>(
   };
 
   const load = () => {
-    refetch();
-  };
-
-  const fetchRoleData = async (): Promise<T[] | undefined> => {
-    if (isFetching) return;
-    setIsFetching(true);
-
-    try {
-      const fetchedData = await service.getRoleData();
-      // console.log("Fetched role data:", fetchedData);
-      
-      if (!fetchedData) {
-        console.error("No data returned from the service.");
-        return [];
-      }
-      return fetchedData;
-    } catch  {
-      // (err: unknown)
-      setIsFetching(false);
-      // console.error("Error fetching role data:", err);
-      return [];
-    }
+    setTimeout(() => {
+      refetch();
+    }, 10);
   };
 
   const fetchGridData = async (
@@ -199,7 +179,6 @@ export const useListQuery = <T extends BaseModel>(
     clearSearch,
     setCondition,
     setRoleCondition,
-    fetchRoleData,
     fetchGridData
   };
 };

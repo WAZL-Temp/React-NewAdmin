@@ -2,6 +2,7 @@ export interface RoleDetail {
 	id?: number;
 	name?: string;
 	roleId?: number;
+	roleName?: string;
 	action?: string;
 	hideColumn?: string;
 	status?: string;

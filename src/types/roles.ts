@@ -18,10 +18,10 @@ export interface Action {
     id: number;
     name: string;
     roleId: number;
+    roleName: string;
     action: Action[];
     hideColumn: HideColumn[];
     status: Status[];
     dbStatus: { [key: string]: string };
-    roleName: string;
   }
   

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import img1 from '../assets/images/logo.png';
 import { useTheme } from "../hooks/useTheme";
 import { Button, Dropdown, FaBars, Image } from "../sharedBase/globalImports";
-import { useLanguageStore } from "../store/useLanguageStore";
+import { useLanguageStore } from "../store/useLanguage.store";
 import { useTranslation } from "../sharedBase/globalUtils";
 
 interface HeaderProps {

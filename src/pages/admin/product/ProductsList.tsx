@@ -261,7 +261,7 @@ const ProductsList = () => {
             dateFormat="mm-dd-yy"
             id="fromDate"
             name="fromDate"
-            onChange={(e) => { setCalendarCreateDateFrom(e.value); searchChange(e.value, 'createDateSearchFrom', 'date') }}
+            onChange={(e) => { setCalendarCreateDateFrom(e.value); searchChange(e.value, 'createDateSearchFrom') }}
             showIcon
             placeholder={t("globals.startDatePlaceholder")}
             yearRange="2023:2025"
@@ -275,7 +275,7 @@ const ProductsList = () => {
             dateFormat="mm-dd-yy"
             id="toDate"
             name="toDate"
-            onChange={(e) => { setCalendarCreateDateTo(e.value); searchChange(e.value, 'createDateSearchTo', 'date') }}
+            onChange={(e) => { setCalendarCreateDateTo(e.value); searchChange(e.value, 'createDateSearchTo') }}
             showIcon
             placeholder={t("globals.endDatePlaceholder")}
             yearRange="2023:2025"
@@ -357,7 +357,7 @@ const ProductsList = () => {
           showGridlines
           filters={filters}
           sortField={sortField}
-          sortOrder={sortOrder}
+          sortOrder={sortOrder as 1 | 0 | -1}
           onSort={onSort}
           onFilter={(e) => setFilters(e.filters)}
           removableSort

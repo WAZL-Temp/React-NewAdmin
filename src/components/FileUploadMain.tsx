@@ -2,13 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { FiUploadCloud, InputText, IoCheckmarkCircleSharp, RiDeleteBin6Fill } from "../sharedBase/globalImports";
 import { useFileUploadService } from "../core/services/fileUpload.service";
 import { useTranslation } from "../sharedBase/globalUtils";
-
-interface CustomFile {
-  fileName: string
-  filePath: string
-  type: string
-  progress?: number
-}
+import { CustomFile } from "../core/model/customfile";
 
 interface FileUploadProps {
   initialData: string | null
@@ -53,6 +47,7 @@ export default function FileUploadMain({
             filePath: img.filePath,
             type: img.type,
           }));
+          
           setUploadedFiles(formattedFiles);
         } else {
           setUploadedFiles([]);
@@ -60,7 +55,6 @@ export default function FileUploadMain({
         setIsLoadComplete(true);
       } catch (error) {
         console.error("Failed to parse image JSON:", error);
-        setUploadError("Invalid data format");
         setUploadedFiles([]);
         setIsLoadComplete(true);
       }
@@ -107,7 +101,7 @@ export default function FileUploadMain({
       }
     }
 
-    const allFiles = [...uploadedFiles, ...newUploadedFiles];
+    const allFiles = [...uploadedFiles, ...newUploadedFiles];    
     setUploadedFiles(allFiles);
     onFileUpload(allFiles);
     if (event.target) {

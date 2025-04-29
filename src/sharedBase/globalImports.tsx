@@ -60,6 +60,5 @@ export type { MenuItem } from "primereact/menuitem";
 export type { CarouselResponsiveOption } from 'primereact/carousel';
 export type { ColumnFilterElementTemplateOptions } from 'primereact/column';
 export type { DataTableFilterMeta, DataTablePageEvent, DataTableSortEvent, DataTableValue, DataTableValueArray } from 'primereact/datatable';
-
 export type { NavigateFunction } from "react-router-dom";
 export { default as GoogleButton } from 'react-google-button';
