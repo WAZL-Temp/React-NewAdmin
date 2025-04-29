@@ -1,18 +1,19 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "../sharedBase/globalUtils";
 import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
-import { RolePermission } from "../types/roles";
+// import { RolePermission } from "../types/roles";
+import { RoleDetail } from "../core/model/roledetail";
 
-type UseEditPageProps<TItem> = {
+type UseEditPageProps = {
     props: {
         id?: string;
         baseModelName?: string;
     };
 };
 
-export function useViewPage<TItem>({ props }: UseEditPageProps<TItem>) {
+export function useViewPage({ props }: UseEditPageProps) {
     const navigate = useNavigate();
-    const [hiddenFields, setHiddenFields] = useState<string[]>([])
+    const [hiddenFields, setHiddenFields] = useState<string[]>([]);
     const { data: roleDetailsData } = useFetchRoleDetailsData();
 
     useEffect(() => {
@@ -20,27 +21,26 @@ export function useViewPage<TItem>({ props }: UseEditPageProps<TItem>) {
             if (!props.baseModelName) return;
 
             if (roleDetailsData && roleDetailsData.length > 0) {
-
                 const modelData = roleDetailsData.find(
-                    (r: RolePermission) => r.name.toLowerCase() === props.baseModelName!.toLowerCase()
+                    (r: RoleDetail) => r.name === props.baseModelName!.toLowerCase()
                 );
 
                 if (modelData?.hideColumn) {
                     try {
                         const parsedColumns = JSON.parse(modelData.hideColumn);
                         if (Array.isArray(parsedColumns)) {
-                            const hiddenFieldNames = parsedColumns.map((column: any) => column.value);
+                            const hiddenFieldNames = parsedColumns.map((column: { value: string }) => column.value);
                             setHiddenFields(hiddenFieldNames);
                         }
                     } catch (error) {
                         console.error("Error parsing hideColumn:", error);
                     }
                 }
-                }
-            };
-    
-            fetchRoleDetails();
-        }, []);
+            }
+        };
+
+        fetchRoleDetails();
+    }, [props.baseModelName, roleDetailsData]);
 
     const isFieldHidden = (fieldName: string) => {
         return hiddenFields.includes(fieldName)

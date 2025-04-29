@@ -1,10 +1,11 @@
 import { useBaseService } from "../../sharedBase/baseService";
 import { FileInfo } from "../../types/listpage";
+import { CustomFile } from "../model/customfile";
 
 export const useFileUploadService = (modelName: string) => {
     const baseService = useBaseService<File>(modelName);
 
-    const fileUpload = async (file: File): Promise<File> => {
+    const fileUpload = async (file: File): Promise<CustomFile> => {
         return baseService.fileUpload(file);
     };
 

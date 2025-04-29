@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { useAppUserService } from "../core/services/appUsers.service";
 import { useListQuery } from "../store/useListQuery";
-import { AppUser } from "../core/model/appuser";
 import { EnumDetail } from "../core/model/enumdetail";
 import { useEnumDetailsService } from "../core/services/enumDetails.service";
+import { useAppuserRoleService } from "../core/services/appUserRole.service";
+import { RoleDetail } from "../core/model/roledetail";
 
 export const useFetchDataEnum = (type: string) => {
   const [data, setData] = useState<EnumDetail[]>([]);
@@ -15,9 +15,9 @@ export const useFetchDataEnum = (type: string) => {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      try {        
+      try {
         const enumDetaildata = query?.data;
-        
+
         if (enumDetaildata) {
           const enumData = enumDetaildata.filter((item) => item.section === type);
           setData(enumData);
@@ -25,15 +25,15 @@ export const useFetchDataEnum = (type: string) => {
         } else {
           return [];
         }
-      } catch (err: any) {
-        setError(err.message || "Failed to fetch data");
+      } catch {
+        setError("Failed to fetch data");
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [query?.data, type]);
 
   return { data, loading, error };
 };
@@ -54,25 +54,26 @@ export const useGetLabelEnum = (type: string, value: string) => {
           (item: EnumDetail) => item.section === type && item.value === value
         );
         setLabel(filteredData && filteredData.length ? filteredData[0] : {});
-      } catch (err: any) {
-        setError(err.message || "Failed to fetch label");
+      } catch {
+        setError("Failed to fetch label");
       } finally {
         setLoading(false);
       }
     };
 
     fetchLabel();
-  }, []);
+  }, [query?.data, type, value]);
 
   return { label, loading, error };
 };
 
 export const useFetchRoleDetailsData = () => {
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<RoleDetail[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const userService = useAppUserService();
-  const query = useListQuery<AppUser>(userService);
+  const {
+    fetchRoleData,
+  } = useAppuserRoleService();
 
   useEffect(() => {
     const fetchRoleDetails = async () => {
@@ -80,25 +81,23 @@ export const useFetchRoleDetailsData = () => {
       setError(null);
 
       try {
-        const response = await query?.fetchRoleData();
-        //  console.log("Response from fetchRoleData:", response);
+        const response = await fetchRoleData();
         
-         if (response) {
+        if (response && response.length > 0) {
           setData(response);
         } else {
           setData([]);
-          // setError("No role data found.");
+          setError("No role data found.");
         }
       } catch {
-        // setError();
-        // || "Failed to fetch role details"
+        setError("Failed to fetch role details");
       } finally {
         setLoading(false);
       }
     };
 
     fetchRoleDetails();
-  }, []);
+  }, [fetchRoleData]);
 
   return { data, loading, error };
 };

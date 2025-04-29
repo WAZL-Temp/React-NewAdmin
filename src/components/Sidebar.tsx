@@ -1,7 +1,10 @@
-import { useAuthStore } from "../store/authStore";
-// import { LookupServiceBase } from "../sharedBase/lookupService";
-import { AiFillHome, Button, FiShoppingBag, FiUser, IoPersonSharp, RiLogoutCircleLine, RxCross2 } from "../sharedBase/globalImports";
-import {useLocation, useNavigate, useTranslation} from '../sharedBase/globalUtils';
+import { useAuthStore } from "../store/auth.store";
+import { AiFillHome, Button, FiShoppingBag, RiLogoutCircleLine, RxCross2 } from "../sharedBase/globalImports";
+import { useLocation, useNavigate, useTranslation } from '../sharedBase/globalUtils';
+import { UserInfo } from "../types/auth";
+// import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
+// import { useEffect, useState } from "react";
+// import { Action } from "../types/listpage";
 
 interface SidebarProps {
   isSidebarOpen: boolean;
@@ -12,20 +15,16 @@ interface SidebarProps {
 
 const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) => {
   const { t } = useTranslation();
-  // const login = useAuthStore((state) => state.login);
-  // const userInfo = useAuthStore((state) => state.userInfo);
   const { login, userInfo } = useAuthStore();
-  // const [roleData, setRoleData] = useState<any>([])
+  // const [roleData, setRoleData] = useState<RoleDetail | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
+  // const { data: roleDetailsData } = useFetchRoleDetailsData();
 
   // useEffect(() => {
   //   const getRoleData = async () => {
-  //     const lookupService = new LookupServiceBase();
-  //     const roleDetails = await lookupService.fetchRoleDetailsData();
-
-  //     if (Array.isArray(roleDetails) && roleDetails.length > 0) {
-  //       setRoleData(roleDetails);
+  //     if (roleDetailsData && roleDetailsData.length > 0) {
+  //       setRoleData(roleDetailsData ?? null);
   //     }
   //   };
 
@@ -37,12 +36,12 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
 
   //   const actions = typeof roleData.action === "string" ? JSON.parse(roleData.action) : [];
 
-  //   return actions.some((action: any) => action.name.toLowerCase() === requiredAction.toLowerCase());
+  //   return actions.some((action: Action) => action.name.toLowerCase() === requiredAction.toLowerCase());
   // }
 
   const handleLogout = () => {
     login("");
-    userInfo("");
+    userInfo(null as unknown as UserInfo);
     window.location.href = "/";
     toggleSidebar();
   };
@@ -100,7 +99,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
           {(!isMinimized) && <span className=" text-sm font-medium">{t("globals.homes")}</span>}
         </Button>
 
-        <Button
+        {/* <Button
           onClick={() => {
             navigate("/appusertests");
             if (!isMinimized) toggleSidebar();
@@ -116,30 +115,30 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
         >
           <FiUser size={18} className={`${isMinimized ? '' : 'mr-3'}`} />
           {(!isMinimized) && <span className=" text-sm font-medium">AppuserTest</span>}
-        </Button>
+        </Button> */}
 
         {/* {hasAccess(roleData.find((r: any) => r.name.toLowerCase() === 'product'), "List") && ( */}
-          <Button
-            // onClick={() => handleNavigation("/product")}
-            onClick={() => {
-              navigate("/product");
-              if (!isMinimized) toggleSidebar();
-            }}
-            className={`flex items-center ${isMinimized ? 'px-1' : 'px-2'} py-2 rounded
+        <Button
+          // onClick={() => handleNavigation("/product")}
+          onClick={() => {
+            navigate("/product");
+            if (!isMinimized) toggleSidebar();
+          }}
+          className={`flex items-center ${isMinimized ? 'px-1' : 'px-2'} py-2 rounded
             ${location.pathname === "/product" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
             hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]`}
-            tooltip={t("products.form_detail.fields.modelname")}
-            tooltipOptions={{
-              position: 'right',
-              className: 'font-normal rounded text-sm p-1'
-            }}
-          >
-            <FiShoppingBag size={18} className={`${isMinimized ? '' : 'mr-3'}`} />
-            {(!isMinimized) && <span className=" text-sm font-medium">{t("products.form_detail.fields.modelname")}</span>}
-          </Button>
+          tooltip={t("products.form_detail.fields.modelname")}
+          tooltipOptions={{
+            position: 'right',
+            className: 'font-normal rounded text-sm p-1'
+          }}
+        >
+          <FiShoppingBag size={18} className={`${isMinimized ? '' : 'mr-3'}`} />
+          {(!isMinimized) && <span className=" text-sm font-medium">{t("products.form_detail.fields.modelname")}</span>}
+        </Button>
         {/* )} */}
 
-        <Button
+        {/* <Button
           onClick={() => {
             navigate("/role");
             if (!isMinimized) toggleSidebar();
@@ -155,7 +154,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
         >
           <IoPersonSharp size={18} className={`${isMinimized ? '' : 'mr-3'}`} />
           {(!isMinimized) && <span className=" text-sm font-medium">{t("appUsers.columns.fields.role")}</span>}
-        </Button>
+        </Button> */}
       </nav>
 
       <footer className="flex justify-center items-center p-2 border-t bg-[var(--color-primary)] text-[var(--color-white)] ">

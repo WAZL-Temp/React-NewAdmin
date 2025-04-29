@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useListPage } from "../../../hooks/useListPage"
+import { useListPage } from "../../../hooks/useListPage";
 import { BiSolidTrash, Button, Calendar, Column, DataTable, Dialog, HiOutlinePlus, Image, InputText, IoMdRefresh, MdOutlineUploadFile, MenuItem, RiPencilFill, SplitButton, TbFileExcel, TiEye, Toast, Tooltip,  FilterMatchMode } from "../../../sharedBase/globalImports";
 import {useTranslation,useNavigate} from '../../../sharedBase/globalUtils';
-import successimg from '../../../assets/images/success.gif'
-import confirmImg from '../../../assets/images/are-you-sure.jpg'
+import successimg from '../../../assets/images/success.gif';
+import confirmImg from '../../../assets/images/are-you-sure.jpg';
 import { AppUser } from "../../../core/model/appuser";
 import { RowData } from "../../../types/listpage";
 import { useListQuery } from "../../../store/useListQuery";

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { BaseModel } from "./modelInterface";
 import { getToken, getUserInfo, setToken, setUserInfo } from "./baseServiceVar";
+import { CustomFile } from "../core/model/customfile";
+import { FileInfo } from "../types/listpage";
 
 export const useBaseService = <T extends BaseModel>(type: string) => {
     const apiBaseUrl = import.meta.env.VITE_API_URL || "";
@@ -279,7 +281,7 @@ export const useBaseService = <T extends BaseModel>(type: string) => {
         return;
     }
 
-    const fileUpload = async (file: File): Promise<any> => {
+    const fileUpload = async (file: File): Promise<CustomFile> => {
         const formData = new FormData();
         formData.append("file", file);
         const token = getToken();
@@ -298,7 +300,7 @@ export const useBaseService = <T extends BaseModel>(type: string) => {
         return await response.json();
     }
 
-    const fileDownload = async (fileInfo: any): Promise<Blob> => {
+    const fileDownload = async (fileInfo: FileInfo): Promise<Blob> => {
         const response = await fetch(`${apiUrl}/Download`, {
             method: 'POST',
             headers: getHeaders(),
@@ -325,11 +327,10 @@ export const useBaseService = <T extends BaseModel>(type: string) => {
     const getRoleData = async (): Promise<any> => {
         try {
             const userInfo = getUserInfo();
+            
             if (userInfo) {
-                const cleanJson = userInfo?.trim();
-                const baseUserInfo = cleanJson ? JSON.parse(cleanJson) : null;
-                const form = { role: baseUserInfo?.role, id: 0 }
-
+                const form = { role: userInfo?.role, id: 0 }
+                
                 const response = await fetch(`${apiUrl}/GetRoleData`, {
                     method: 'POST',
                     headers: {

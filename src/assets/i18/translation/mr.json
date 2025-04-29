@@ -58,7 +58,7 @@
     "noKeepIt": "नाही, ठेवू द्या",
     "yesDelete": "होय, हटवा",
     "recordDeleted": "रेकॉर्ड यशस्वीरित्या हटवला गेला",
-    "viewAllAppUsers": "सर्व अॅप वापरकर्ते पहा",
+    "viewAllAppUsers": "सर्व अ‍ॅप वापरकर्ते पहा",
     "total": "एकूण",
     "average": "सरासरी",
     "maxNo": "कमाल संख्या",
@@ -116,7 +116,7 @@
     },
     "form_detail": {
       "fields": {
-        "modelname": "अॅप वापरकर्ता",
+        "modelname": "अ‍ॅप वापरकर्ता",
         "importAction": "आयात कृती",
         "importRemark": "इम्पोर्ट रिमार्क",
         "accessDetails": "प्रवेश तपशील",

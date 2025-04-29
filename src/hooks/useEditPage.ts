@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { format, parseISO, useNavigate } from "../sharedBase/globalUtils";
 import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
-import { RolePermission } from "../types/roles";
 import { UseListQueryResult } from "../store/useListQuery";
+import { RoleDetail } from "../core/model/roledetail";
 
 type UseEditPageProps<TItem> = {
     props: {
@@ -25,14 +25,14 @@ export function useEditPage<TItem>({ props }: UseEditPageProps<TItem>) {
             if (roleDetailsData && roleDetailsData.length > 0) {
 
                 const modelData = roleDetailsData.find(
-                    (r: RolePermission) => r.name.toLowerCase() === props.baseModelName!.toLowerCase()
+                    (r: RoleDetail) => r.name  === props.baseModelName!.toLowerCase()
                 );
 
                 if (modelData?.hideColumn) {
                     try {
                         const parsedColumns = JSON.parse(modelData.hideColumn);
                         if (Array.isArray(parsedColumns)) {
-                            const hiddenFieldNames = parsedColumns.map((column: any) => column.value);
+                            const hiddenFieldNames = parsedColumns.map((column: { value: string }) => column.value);
                             setHiddenFields(hiddenFieldNames);
                         }
                     } catch (error) {
@@ -43,7 +43,7 @@ export function useEditPage<TItem>({ props }: UseEditPageProps<TItem>) {
         };
 
         fetchRoleDetails();
-    }, []);
+    }, [props.baseModelName, roleDetailsData]);
 
     const handleBackToUser = () => {
         if (props.baseModelName) {
@@ -71,13 +71,13 @@ export function useEditPage<TItem>({ props }: UseEditPageProps<TItem>) {
         return format(date, "MM-dd-yyyy");
     };
 
-    const removeEmptyFields = (obj: any) => {
+    const removeEmptyFields = (obj:  Record<string, unknown>) => {
         return Object.keys(obj).reduce((acc, key) => {
             if (obj[key] !== "" && obj[key] !== undefined && obj[key] !== null) {
                 acc[key] = obj[key];
             }
             return acc;
-        }, {} as Record<string, any>);
+        }, {} as Record<string, unknown>);
     };
 
     return {
@@ -100,7 +100,7 @@ export function prepareObject<T>(source: Partial<T>, defaults: T): T {
             const value = source[key as keyof T];
 
             if (value instanceof Date) {
-                result[key as keyof T] = (value as Date).toISOString() as any;
+                result[key as keyof T] = (value as Date).toISOString() as unknown as T[keyof T];
             } else if (value !== undefined && value !== null) {
                 result[key as keyof T] = value;
             } else {

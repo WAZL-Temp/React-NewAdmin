@@ -1,7 +1,11 @@
 import { Column, DataTable, Skeleton } from "../sharedBase/globalImports";
 
 
-const TableSkeleton = ({ cols }: any) => {
+interface ColumnProps {
+    header: string;
+}
+
+const TableSkeleton = ({ cols }: { cols: ColumnProps[] }) => {
     return (
         <div className='pb-20'>
             <DataTable
@@ -16,7 +20,7 @@ const TableSkeleton = ({ cols }: any) => {
                 rowsPerPageOptions={[5, 10, 25, 50]}
                 resizableColumns
             >
-                {cols.map((col: any, index: any) => (
+                {cols.map((col, index) => (
                     <Column
                         key={index}
                         header={col.header}

@@ -5,7 +5,7 @@ import Header from './Header';
 import { useTheme } from '../hooks/useTheme';
 import { Button, Dropdown, FaBars, Image } from '../sharedBase/globalImports';
 import {useLocation, useTranslation} from '../sharedBase/globalUtils';
-import { useLanguageStore } from "../store/useLanguageStore";
+import { useLanguageStore } from "../store/useLanguage.store";
 
 interface LayoutProps {
   children: React.ReactNode;

@@ -1,4 +1,5 @@
 import { CarouselResponsiveOption, NavigateFunction } from "../sharedBase/globalImports";
+import { HtmlDataItem } from "../types/homepage";
 
 export const responsiveOptions: CarouselResponsiveOption[] = [
     { breakpoint: "1400px", numVisible: 3, numScroll: 1 },
@@ -8,18 +9,18 @@ export const responsiveOptions: CarouselResponsiveOption[] = [
 ];
 
 export function useHomePage() {
-    const renderHtmlContent = (item: any, type: string): string => {        
+    const renderHtmlContent = (item: HtmlDataItem, type: string): string => {        
         if (item.name === type) {
             return item.html;
         }
         return '';
     };
 
-    const handleUserView = (navigate: NavigateFunction, userid: any, modelType: string) => {
+    const handleUserView = (navigate: NavigateFunction, userid: string | number, modelType: string) => {
         navigate(`/${modelType}/${userid}`);
     };
 
-    const handleUserEdit = (navigate: NavigateFunction, userid: any, modelType: string) => {
+    const handleUserEdit = (navigate: NavigateFunction, userid: string | number, modelType: string) => {
         navigate(`/${modelType}/edit/${userid}`);
     };
 

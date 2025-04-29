@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import { useBaseService } from "../sharedBase/baseService";
 import { format, parseISO } from "../sharedBase/globalUtils";
+import { DataTablePageEvent } from "../sharedBase/globalImports";
 
-type UseImportPageProps<TItem> = {
+type UseImportPageProps = {
     props: {
         baseModelName?: string;
         service: ReturnType<typeof useBaseService>;
     };
 };
 
-export function useImportPage<TItem>({ props }: UseImportPageProps<TItem>) {
+export function useImportPage({ props }: UseImportPageProps) {
     const [first, setFirst] = useState(0);
     const [rows, setRows] = useState(10);
     const [downloading, setDownloading] = useState<boolean>(false);
@@ -32,7 +33,7 @@ export function useImportPage<TItem>({ props }: UseImportPageProps<TItem>) {
         fetchImportStatus();
     }, [props.service, props.service.checkImportData]);
 
-    const onPage = (event: any) => {
+    const onPage = (event: DataTablePageEvent) => {
         setFirst(event.first);
         setRows(event.rows);
     };

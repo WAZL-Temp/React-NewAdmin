@@ -102,7 +102,7 @@ export default function AppUsersEdit() {
   useEffect(() => {
     const fetchData = async () => {
       if (isEditMode) {
-        const data = await itemQuery.getItem(parseInt(id as string, 10));        
+        const data = await itemQuery.getItem(parseInt(id as string, 10));
         setUserData(data);
         const preparedData = prepareObject<AppUser>(data, initialData());
         setItem(preparedData);
@@ -333,7 +333,6 @@ export default function AppUsersEdit() {
         verifyShopLabel: item.verifyShop,
         roleLabel: item.role,
         publishLabel: item.publish,
-        // totalPlot: parseInt(item.totalPlot?.toString() || '', 10)
       };
 
       const cleanedPayload = removeEmptyFields(payload);
