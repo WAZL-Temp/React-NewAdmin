@@ -86,7 +86,7 @@ export const useFetchRoleDetailsData = () => {
         if (response && response.length > 0) {
           setData(response);
         } else {
-          setData([]);
+          // setData([]);
           setError("No role data found.");
         }
       } catch {
