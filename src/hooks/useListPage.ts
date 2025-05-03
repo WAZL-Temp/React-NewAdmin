@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useState, useRef, useMemo, useEffect, useCallback } from "react";
 import { DataTable, DataTableFilterMeta, DataTablePageEvent, DataTableSortEvent, DataTableValueArray, FilterMatchMode, Toast } from "../sharedBase/globalImports";
 import { format, parseISO, useNavigate } from '../sharedBase/globalUtils';
@@ -98,7 +99,7 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
     const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
     const dtRef = useRef<DataTable<DataTableValueArray>>(null);
     const [sortField, setSortField] = useState<string | undefined>();
-    const [sortOrder, setSortOrder] = useState<string | number>();
+    const [sortOrder, setSortOrder] = useState<string | number | undefined>();
     const [first, setFirst] = useState<number>();
     const [rows, setRows] = useState<number>();
     const [totalRecords, setTotalRecords] = useState(0);
@@ -107,7 +108,6 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
     const [search, setSearch] = useState<Record<string, unknown>>({});
     const [searchRowFilter, setSearchRowFilter] = useState<Record<string, unknown>>({});
     const { data: roleDetailsData } = useFetchRoleDetailsData();
-
 
     useEffect(() => {
         const fetchRoleDetails = async () => {
@@ -153,6 +153,12 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
         setTotalRecords(query.data?.length ?? 0);
 
     }, [query.tableSearch, query.data, globalFilterValue]);
+
+    useEffect(() => {
+        if(query?.search){
+            setSearchRowFilter(query.search?.searchRowFilter);
+        }
+    }, [searchRowFilter, query.search?.searchRowFilter, query.search]);
 
     useEffect(() => {
         const applyScrollPosition = () => {
@@ -227,7 +233,7 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
 
     const onSort = (e: DataTableSortEvent) => {
         setSortField(e.sortField);
-        setSortOrder(e.sortOrder);
+        setSortOrder(e.sortOrder ?? undefined);
 
         query.tableSearch.sortField = e.sortField;
         query.tableSearch.sortOrder = e.sortOrder?.toString() || "";
@@ -239,6 +245,7 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
     }
 
     const searchData = async () => {
+        setSearchRowFilter({});
         await query.load();
     }
 
@@ -267,8 +274,8 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
             sortOrder: query.tableSearch.sortOrder,
             first: query.tableSearch.first,
             rows: query.tableSearch.rows,
-            top: body?.scrollTop || 0,
-            left: body?.scrollLeft || 0,
+            top: (body?.scrollTop || 0).toString(),
+            left: (body?.scrollLeft || 0).toString(),
             searchRowFilter: query.tableSearch.searchRowFilter,
         };
         query.setTableSearch(info);
@@ -292,12 +299,16 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
     const exportToExcel = async (service: ReturnType<typeof useBaseService>, searchVal: string, title: string) => {
         try {
             const blob = await service.exportExcel(searchVal);
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.href = url;
-            link.download = `${title}.xlsx`;
-            link.click();
-            window.URL.revokeObjectURL(url);
+            if (blob) {
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = `${title}.xlsx`;
+                link.click();
+                window.URL.revokeObjectURL(url);
+            } else {
+                console.error("Failed to export to Excel: Blob is undefined.");
+            }
         } catch (error) {
             console.error("Error exporting to Excel:", error);
         }
