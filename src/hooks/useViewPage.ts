@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "../sharedBase/globalUtils";
 import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
-// import { RolePermission } from "../types/roles";
 import { RoleDetail } from "../core/model/roledetail";
 
 type UseEditPageProps = {

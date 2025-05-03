@@ -1,6 +1,5 @@
 import { Column, DataTable, Skeleton } from "../sharedBase/globalImports";
 
-
 interface ColumnProps {
     header: string;
 }
