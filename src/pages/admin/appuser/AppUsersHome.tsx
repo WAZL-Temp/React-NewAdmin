@@ -13,7 +13,7 @@ export default function AppUsersHome() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const userService = useAppUserService();
-  const query = useHomeQuery<AppUser>(userService);
+  const query = useHomeQuery(userService);
   const [summaryData, setSummaryData] = useState<SummaryData>();
   const [topData, setTopData] = useState<UserData[]>();
   const [lastData, setLastData] = useState<UserData[]>();

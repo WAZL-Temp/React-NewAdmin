@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useBaseService } from "../sharedBase/baseService";
-import { BaseModel } from "../sharedBase/modelInterface";
 import { HomeCommonData, ListHtmlData } from "../types/homepage";
 
 interface UseHomeQueryResult  {
@@ -16,7 +15,7 @@ interface UseHomeQueryResult  {
   load: () => void;
 }
 
-export const useHomeQuery = <T extends BaseModel>(
+export const useHomeQuery = (
   service : ReturnType<typeof useBaseService>
 ): UseHomeQueryResult => {
   const queryClient = useQueryClient();

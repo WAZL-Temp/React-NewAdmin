@@ -164,7 +164,7 @@ export const useBaseService = <T extends BaseModel>(type: string) => {
         return await response.json();
     }
 
-    const exportExcel = async (search: any, order: string[]): Promise<Blob | undefined> => {
+    const exportExcel = async (search: any, order?: string[]): Promise<Blob | undefined> => {
         try {
             const response = await fetch(`${apiUrl}/DownloadExcelFile`, {
                 method: 'POST',
