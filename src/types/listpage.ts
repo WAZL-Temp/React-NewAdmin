@@ -52,7 +52,7 @@ export interface TableSearchParams {
     top: string;
     left: string;
     searchRowFilter: { [key: string]: any };
-  }
+}
 
 export interface CachedState {
     search: SearchParams;

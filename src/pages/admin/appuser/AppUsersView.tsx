@@ -603,7 +603,7 @@ export default function AppUsersView() {
           {stepNo > 0 && (
             <Button
               type="button"
-              className="bg-[#f9fafb] rounded-md p-2 w-[100px] text-[var(--color-primary)] bg-[var(--color-white)]  border-2 border-[var(--color-primary)] font-medium text-[13px] flex items-center justify-center space-x-2"
+              className="bg-[#f9fafb] rounded-md p-2 w-[120px] text-[var(--color-primary)] bg-[var(--color-white)]  border-2 border-[var(--color-primary)] font-medium text-[13px] flex items-center justify-center space-x-2"
               onClick={prev}
             >
               <IoIosArrowBack size={15} className="text-[var(--color-primary)]" />
@@ -613,7 +613,7 @@ export default function AppUsersView() {
           {stepNo !== stepsData.length - 1 && (
             <Button
               type="button"
-              className="bg-[var(--color-primary)] rounded-md p-2 w-[100px]  text-[var(--color-white)] font-medium text-[13px] flex items-center justify-center space-x-2"
+              className="bg-[var(--color-primary)] rounded-md p-2 w-[120px]  text-[var(--color-white)] font-medium text-[13px] flex items-center justify-center space-x-2  border-2 border-[var(--color-primary)]"
               onClick={next}
             >
               <span>{t("globals.next")}</span>
@@ -624,7 +624,7 @@ export default function AppUsersView() {
           {stepNo === stepsData.length - 1 && (
             <Button
               type="button"
-              className="bg-[var(--color-primary)] rounded-md p-2 w-[100px]  text-[var(--color-white)] font-medium text-[13px] flex items-center justify-center"
+              className="bg-[var(--color-primary)] rounded-md p-2 w-[120px]  text-[var(--color-white)] font-medium text-[13px] flex items-center justify-center  border-2 border-[var(--color-primary)]"
               onClick={() => handleEdit(userData?.id ?? "")}
             >
               <FaEdit size={15} className=" text-[var(--color-white)]" />
