@@ -293,7 +293,7 @@ export default function AppUsersList() {
                         yearRange="2023:2025"
                         monthNavigator
                         yearNavigator
-                        className="calendardark w-[130px] lg:w-[150px] bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] p-1 lg:p-2 rounded-md text-xs"
+                        className="calendardark w-[180px] bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] p-1 lg:p-2 rounded-md text-xs"
                     />
 
                     <Calendar
@@ -307,7 +307,7 @@ export default function AppUsersList() {
                         yearRange="2023:2025"
                         monthNavigator
                         yearNavigator
-                        className="calendardark w-[130px] lg:w-[150px] bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] p-1 lg:p-2 rounded-md text-xs"
+                        className="calendardark w-[180px] bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] p-1 lg:p-2 rounded-md text-xs"
                     />
                 </div>
 
