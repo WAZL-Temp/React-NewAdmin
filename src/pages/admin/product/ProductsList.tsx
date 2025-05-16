@@ -420,7 +420,7 @@ const ProductsList = () => {
             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
             filter filterElement={
               <InputText
-                value={query.tableSearch.searchRowFilter?.name || ''}
+                value={query.tableSearch.searchRowFilter?.slug || ''}
                 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                 onChange={(e) => handleFilterChangeLocal("slug", e.target.value)}
               />
@@ -442,7 +442,7 @@ const ProductsList = () => {
             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
             filter filterElement={
               <InputText
-                value={query.tableSearch.searchRowFilter?.name || ''}
+                value={query.tableSearch.searchRowFilter?.sku || ''}
                 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                 onChange={(e) => handleFilterChangeLocal("sku", e.target.value)}
               />
@@ -464,7 +464,7 @@ const ProductsList = () => {
             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
             filter filterElement={
               <InputText
-                value={query.tableSearch.searchRowFilter?.name || ''}
+                value={query.tableSearch.searchRowFilter?.specifications || ''}
                 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                 onChange={(e) => handleFilterChangeLocal("specifications", e.target.value)}
               />
@@ -486,7 +486,7 @@ const ProductsList = () => {
             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
             filter filterElement={
               <InputText
-                value={query.tableSearch.searchRowFilter?.name || ''}
+                value={query.tableSearch.searchRowFilter?.shippingAmount || ''}
                 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                 onChange={(e) => handleFilterChangeLocal("shippingAmount", e.target.value)}
               />
@@ -508,7 +508,7 @@ const ProductsList = () => {
             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
             filter filterElement={
               <InputText
-                value={query.tableSearch.searchRowFilter?.name || ''}
+                value={query.tableSearch.searchRowFilter?.regularPrice || ''}
                 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                 onChange={(e) => handleFilterChangeLocal("regularPrice", e.target.value)}
               />
@@ -530,7 +530,7 @@ const ProductsList = () => {
             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
             filter filterElement={
               <InputText
-                value={query.tableSearch.searchRowFilter?.name || ''}
+                value={query.tableSearch.searchRowFilter?.salePrice || ''}
                 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                 onChange={(e) => handleFilterChangeLocal("salePrice", e.target.value)}
               />
@@ -552,7 +552,7 @@ const ProductsList = () => {
             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
             filter filterElement={
               <InputText
-                value={query.tableSearch.searchRowFilter?.name || ''}
+                value={query.tableSearch.searchRowFilter?.cgst || ''}
                 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                 onChange={(e) => handleFilterChangeLocal("cgst", e.target.value)}
               />
@@ -574,7 +574,7 @@ const ProductsList = () => {
             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
             filter filterElement={
               <InputText
-                value={query.tableSearch.searchRowFilter?.name || ''}
+                value={query.tableSearch.searchRowFilter?.sgst || ''}
                 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                 onChange={(e) => handleFilterChangeLocal("sgst", e.target.value)}
               />
@@ -596,7 +596,7 @@ const ProductsList = () => {
             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
             filter filterElement={
               <InputText
-                value={query.tableSearch.searchRowFilter?.name || ''}
+                value={query.tableSearch.searchRowFilter?.igst || ''}
                 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                 onChange={(e) => handleFilterChangeLocal("igst", e.target.value)}
               />
@@ -618,7 +618,7 @@ const ProductsList = () => {
             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
             filter filterElement={
               <InputText
-                value={query.tableSearch.searchRowFilter?.name || ''}
+                value={query.tableSearch.searchRowFilter?.categoryId || ''}
                 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                 onChange={(e) => handleFilterChangeLocal("categoryId", e.target.value)}
               />
@@ -640,7 +640,7 @@ const ProductsList = () => {
             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
             filter filterElement={
               <InputText
-                value={query.tableSearch.searchRowFilter?.name || ''}
+                value={query.tableSearch.searchRowFilter?.productStatus || ''}
                 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                 onChange={(e) => handleFilterChangeLocal("productStatus", e.target.value)}
               />
@@ -662,7 +662,7 @@ const ProductsList = () => {
             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
             filter filterElement={
               <InputText
-                value={query.tableSearch.searchRowFilter?.name || ''}
+                value={query.tableSearch.searchRowFilter?.category || ''}
                 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                 onChange={(e) => handleFilterChangeLocal("category", e.target.value)}
               />
@@ -684,7 +684,7 @@ const ProductsList = () => {
             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
             filter filterElement={
               <InputText
-                value={query.tableSearch.searchRowFilter?.name || ''}
+                value={query.tableSearch.searchRowFilter?.minQty || ''}
                 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                 onChange={(e) => handleFilterChangeLocal("minQty", e.target.value)}
               />
@@ -706,7 +706,7 @@ const ProductsList = () => {
             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
             filter filterElement={
               <InputText
-                value={query.tableSearch.searchRowFilter?.name || ''}
+                value={query.tableSearch.searchRowFilter?.minQtyFarmer || ''}
                 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                 onChange={(e) => handleFilterChangeLocal("minQtyFarmer", e.target.value)}
               />
@@ -728,7 +728,7 @@ const ProductsList = () => {
             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
             filter filterElement={
               <InputText
-                value={query.tableSearch.searchRowFilter?.name || ''}
+                value={query.tableSearch.searchRowFilter?.salePriceFarmer || ''}
                 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                 onChange={(e) => handleFilterChangeLocal("salePriceFarmer", e.target.value)}
               />
@@ -750,7 +750,7 @@ const ProductsList = () => {
             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
             filter filterElement={
               <InputText
-                value={query.tableSearch.searchRowFilter?.name || ''}
+                value={query.tableSearch.searchRowFilter?.isActive || ''}
                 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                 onChange={(e) => handleFilterChangeLocal("isActive", e.target.value)}
               />
@@ -772,7 +772,7 @@ const ProductsList = () => {
             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
             filter filterElement={
               <InputText
-                value={query.tableSearch.searchRowFilter?.name || ''}
+                value={query.tableSearch.searchRowFilter?.orderNo || ''}
                 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                 onChange={(e) => handleFilterChangeLocal("orderNo", e.target.value)}
               />
@@ -794,7 +794,7 @@ const ProductsList = () => {
             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
             filter filterElement={
               <InputText
-                value={query.tableSearch.searchRowFilter?.name || ''}
+                value={query.tableSearch.searchRowFilter?.deliveredData || ''}
                 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                 onChange={(e) => handleFilterChangeLocal("deliveredData", e.target.value)}
               />
@@ -816,7 +816,7 @@ const ProductsList = () => {
             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
             filter filterElement={
               <InputText
-                value={query.tableSearch.searchRowFilter?.name || ''}
+                value={query.tableSearch.searchRowFilter?.totalDeliverProduct || ''}
                 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                 onChange={(e) => handleFilterChangeLocal("totalDeliverProduct", e.target.value)}
               />
@@ -838,7 +838,7 @@ const ProductsList = () => {
             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
             filter filterElement={
               <InputText
-                value={query.tableSearch.searchRowFilter?.name || ''}
+                value={query.tableSearch.searchRowFilter?.isParent || ''}
                 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                 onChange={(e) => handleFilterChangeLocal("isParent", e.target.value)}
               />
@@ -860,7 +860,7 @@ const ProductsList = () => {
             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
             filter filterElement={
               <InputText
-                value={query.tableSearch.searchRowFilter?.name || ''}
+                value={query.tableSearch.searchRowFilter?.variableLabel || ''}
                 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                 onChange={(e) => handleFilterChangeLocal("variableLabel", e.target.value)}
               />
@@ -882,7 +882,7 @@ const ProductsList = () => {
             style={{ width: "200px", backgroundColor: "var(--color-white)" }}
             filter filterElement={
               <InputText
-                value={query.tableSearch.searchRowFilter?.name || ''}
+                value={query.tableSearch.searchRowFilter?.variableValue || ''}
                 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
                 onChange={(e) => handleFilterChangeLocal("variableValue", e.target.value)}
               />
