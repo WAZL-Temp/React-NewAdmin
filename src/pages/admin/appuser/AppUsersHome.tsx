@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { AppUser } from '../../../core/model/appuser';
 import user1 from '../../../assets/images/user1.png';
 import user2 from '../../../assets/images/user2.png';
-import {  Button, Card, Carousel, CgEye, CiShoppingCart, FaArrowRight, FaRegComment, GoInbox, Image, MdOutlineLocationOn, RiFileEditLine } from '../../../sharedBase/globalImports';
-import {useNavigate, useTranslation} from '../../../sharedBase/globalUtils';
+import { Button, Card, Carousel, CgEye, CiShoppingCart, FaArrowRight, FaRegComment, GoInbox, Image, MdOutlineLocationOn, RiFileEditLine } from '../../../sharedBase/globalImports';
+import { useNavigate, useTranslation } from '../../../sharedBase/globalUtils';
 import { HomeUserData, SummaryData, UserData } from '../../../types/homepage';
 import { useHomePage } from '../../../hooks/useHomePage';
 import { useAppUserService } from '../../../core/services/appUsers.service';
 import { useHomeQuery } from '../../../store/useHomeQuery';
+import Loader from '../../../components/Loader';
 
 export default function AppUsersHome() {
   const navigate = useNavigate();
@@ -45,72 +46,76 @@ export default function AppUsersHome() {
 
   return (
     <div className='relative h-screen flex flex-col overflow-y-auto overflow-x-hidden'>
-      <div className="flex flex-col p-4">
-        <div className="flex flex-col border-none mb-10">
-          <div className="py-2">
-            {query?.homeHtmlData && (
-              <div
-                className="text-lg sm:text-xl lg:text-2xl font-bold text-[var(--color-black)] text-center leading-tight max-w-3xl mx-auto tracking-wide"
-                dangerouslySetInnerHTML={{ __html: query?.homeHtmlData.htmlData[0].html }}
-              />
-            )}
-          </div>
-
-          <section className="p-2">
-            <div className="summary-grid">
-              <SummaryCard title={t("globals.total")} value={summaryData?.total ?? 0} icon={<CiShoppingCart className="text-blue-600 text-xl lg:text-3xl" />} bgColor="bg-blue-100" iconBgColor="bg-blue-200" />
-              <SummaryCard title={t("globals.average")} value={summaryData?.avgNo ?? 0} icon={<MdOutlineLocationOn className="text-orange-600 text-xl lg:text-3xl" />} bgColor="bg-orange-100" iconBgColor="bg-orange-200" />
-              <SummaryCard title={t("globals.maxNo")} value={summaryData?.maxNo ?? 0} icon={<GoInbox className="text-cyan-600 text-xl lg:text-3xl" />} bgColor="bg-cyan-100" iconBgColor="bg-cyan-200" />
-              <SummaryCard title={t("globals.minNo")} value={summaryData?.minNo ?? 0} icon={<FaRegComment className="text-purple-600 text-xl lg:text-3xl" />} bgColor="bg-purple-100" iconBgColor="bg-purple-200" />
+      {query.isLoading ? (
+        <Loader />
+      ) : (
+        <div className="flex flex-col p-4">
+          <div className="flex flex-col border-none mb-10">
+            <div className="py-2">
+              {query?.homeHtmlData && (
+                <div
+                  className="text-lg sm:text-xl lg:text-2xl font-bold text-[var(--color-black)] text-center leading-tight max-w-3xl mx-auto tracking-wide"
+                  dangerouslySetInnerHTML={{ __html: query?.homeHtmlData.htmlData[0].html }}
+                />
+              )}
             </div>
-          </section>
 
-          <section className="p-2 flex items-center justify-center my-3">
-            <div onClick={handleListClick}>
-              <Button
-                label={t("globals.viewAllAppUsers")}
-                className="rounded-md bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white p-2 border-none text-sm"
-              />
-            </div>
-          </section>
-
-          {topData && topData.length > 0 ? (
-            <Carousel
-              value={topData}
-              numVisible={3}
-              numScroll={3}
-              responsiveOptions={responsiveOptions}
-              itemTemplate={(user) => <ItemSlider user={user} />}
-            />
-          ) : (
-            <p className="text-center text-[var(--color-dark)]">No users available</p>
-          )}
-
-          <section className="px-3 sm:p-6 lg:p-6">
-            <div className="itemList">
-              <ItemList title={t('globals.createdByMe')} users={listHomeUserData ?? []} />
-              <ItemList title={t('globals.topUsers', { length: topData?.length })} users={topData ?? []} />
-            </div>
-          </section>
-
-          {lastData && (
-            <section className="item-card-grid">
-              {(lastData ?? []).slice(0, 4).map((item: UserData, index: number) => (
-                <ItemCard key={index} user={item as UserData} />
-              ))}
+            <section className="p-2">
+              <div className="summary-grid">
+                <SummaryCard title={t("globals.total")} value={summaryData?.total ?? 0} icon={<CiShoppingCart className="text-blue-600 text-xl lg:text-3xl" />} bgColor="bg-blue-100" iconBgColor="bg-blue-200" />
+                <SummaryCard title={t("globals.average")} value={summaryData?.avgNo ?? 0} icon={<MdOutlineLocationOn className="text-orange-600 text-xl lg:text-3xl" />} bgColor="bg-orange-100" iconBgColor="bg-orange-200" />
+                <SummaryCard title={t("globals.maxNo")} value={summaryData?.maxNo ?? 0} icon={<GoInbox className="text-cyan-600 text-xl lg:text-3xl" />} bgColor="bg-cyan-100" iconBgColor="bg-cyan-200" />
+                <SummaryCard title={t("globals.minNo")} value={summaryData?.minNo ?? 0} icon={<FaRegComment className="text-purple-600 text-xl lg:text-3xl" />} bgColor="bg-purple-100" iconBgColor="bg-purple-200" />
+              </div>
             </section>
-          )}
 
-          <div className="p-2 mt-5">
-            {query?.homeHtmlData && (
-              <div
-                className="text-lg sm:text-xl lg:text-2xl font-bold text-[var(--color-black)] text-center leading-tight max-w-3xl mx-auto tracking-wide"
-                dangerouslySetInnerHTML={{ __html:query?.homeHtmlData.htmlData[1].html }}
+            <section className="p-2 flex items-center justify-center my-3">
+              <div onClick={handleListClick}>
+                <Button
+                  label={t("globals.viewAllAppUsers")}
+                  className="rounded-md bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white p-2 border-none text-sm"
+                />
+              </div>
+            </section>
+
+            {topData && topData.length > 0 ? (
+              <Carousel
+                value={topData}
+                numVisible={3}
+                numScroll={3}
+                responsiveOptions={responsiveOptions}
+                itemTemplate={(user) => <ItemSlider user={user} />}
               />
+            ) : (
+              <p className="text-center text-[var(--color-dark)]">No users available</p>
             )}
+
+            <section className="px-3 sm:p-6 lg:p-6">
+              <div className="itemList">
+                <ItemList title={t('globals.createdByMe')} users={listHomeUserData ?? []} />
+                <ItemList title={t('globals.topUsers', { length: topData?.length })} users={topData ?? []} />
+              </div>
+            </section>
+
+            {lastData && (
+              <section className="item-card-grid">
+                {(lastData ?? []).slice(0, 4).map((item: UserData, index: number) => (
+                  <ItemCard key={index} user={item as UserData} />
+                ))}
+              </section>
+            )}
+
+            <div className="p-2 mt-5">
+              {query?.homeHtmlData && (
+                <div
+                  className="text-lg sm:text-xl lg:text-2xl font-bold text-[var(--color-black)] text-center leading-tight max-w-3xl mx-auto tracking-wide"
+                  dangerouslySetInnerHTML={{ __html: query?.homeHtmlData.htmlData[1].html }}
+                />
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
