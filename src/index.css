@@ -698,7 +698,7 @@ code {
   grid-template-columns: repeat(1, 1fr);
   gap: 16px;
   padding: 0 8px;
-  margin-top: 20px;
+  /* margin-top: 20px; */
   justify-items: center;
 }
 
@@ -776,7 +776,7 @@ code {
 
   .item-card-grid {
     grid-template-columns: repeat(4, 1fr);
-    padding: 0 40px;
+    /* padding: 0 40px; */
   }
 
   .import-grid {
