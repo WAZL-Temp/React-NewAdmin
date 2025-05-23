@@ -88,7 +88,7 @@ const AppUsersImport = () => {
     try {
 
       if (!uploadedFile) {
-        console.error("No file uploaded")
+        console.error("No file uploaded");
         return
       }
       setImportSyncComplete(true);
@@ -102,9 +102,9 @@ const AppUsersImport = () => {
         }, 2000);
       }
     } catch (error) {
-      console.error("Error syncing data:", error)
+      console.error("Error syncing data:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 

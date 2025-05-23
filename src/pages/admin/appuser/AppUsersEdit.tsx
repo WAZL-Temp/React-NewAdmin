@@ -816,6 +816,7 @@ export default function AppUsersEdit() {
                               filter
                               checkmark={true}
                               highlightOnSelect={false}
+                              appendTo="self"
                               className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] dropdowndark"
                             />
                           </div>
@@ -1078,6 +1079,7 @@ export default function AppUsersEdit() {
                               required
                               checkmark={true}
                               highlightOnSelect={false}
+                              appendTo="self"
                             />
                             {errors.role && (
                               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
@@ -1110,6 +1112,7 @@ export default function AppUsersEdit() {
                               highlightOnSelect={false}
                               className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] "
                               required
+                              appendTo="self"
                             />
                             {errors.publish && (
                               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">

@@ -73,10 +73,10 @@ export default function AppUsersList() {
     useEffect(() => {
         if (query.search) {
             if (query.search?.createDateSearchFrom) {
-                setCalendarCreateDateFrom(new Date(query.search.createDateSearchFrom))
+                setCalendarCreateDateFrom(new Date(query.search.createDateSearchFrom));
             }
             if (query.search?.createDateSearchTo) {
-                setCalendarCreateDateTo(new Date(query.search.createDateSearchTo))
+                setCalendarCreateDateTo(new Date(query.search.createDateSearchTo));
             }
         }
 
@@ -88,7 +88,6 @@ export default function AppUsersList() {
     }, [query.search, query.tableSearch, setGlobalFilterValue]);
 
     useEffect(() => {
-
         const initFilters = () => {
             query.tableSearch.searchRowFilter = query.tableSearch.searchRowFilter || {};
 

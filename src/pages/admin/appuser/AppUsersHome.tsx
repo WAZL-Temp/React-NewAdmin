@@ -112,7 +112,7 @@ export default function AppUsersHome() {
                                 className="w-full h-full object-cover"
                               />
                             </div>
-                            <h3 className="mt-3 text-sm sm:text-base font-semibold text-gray-800 text-center">
+                            <h3 className="mt-3 text-sm sm:text-sm font-semibold text-gray-800 text-center">
                               {item.name}
                             </h3>
                           </div>
@@ -182,15 +182,15 @@ const ItemSlider = ({ user }: { user: AppUser }) => {
             <div className="flex items-center justify-center gap-3">
               <div
                 onClick={() => navigate(`/${baseModelName}/${user.id}`)}
-                className="flex p-2 items-center justify-center rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white hover:bg-[var(--color-primary)] transition cursor-pointer"
+                className="flex p-[6px] items-center justify-center rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white hover:bg-[var(--color-primary)] transition cursor-pointer"
               >
-                <CgEye className="text-white w-8 h-8 " />
+                <CgEye className="text-white w-7 h-7 " />
               </div>
               <div
                 onClick={() => navigate(`/${baseModelName}/edit/${user.id}`)}
-                className="p-2  flex items-center justify-center rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white hover:bg-[var(--color-primary)] transition cursor-pointer"
+                className="p-[6px] flex items-center justify-center rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white hover:bg-[var(--color-primary)] transition cursor-pointer"
               >
-                <RiFileEditLine className="text-white w-8 h-8" />
+                <RiFileEditLine className="text-white w-7 h-7" />
               </div>
             </div>
           </div>
@@ -224,7 +224,7 @@ const ItemList = ({ title, users }: { title: string; users: UserData[] }) => {
             <div className="p-2 sm:p-3">
               <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-xl overflow-hidden w-full max-w-full min-w-0">
                 <div className="w-full md:w-1/3 flex items-center justify-center bg-blue-100">
-                  <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-36 md:h-36 rounded-full overflow-hidden">
+                  <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-32 md:h-3w-32 rounded-full overflow-hidden">
                     <Image
                       src={avatar}
                       alt={user.name || 'User avatar'}

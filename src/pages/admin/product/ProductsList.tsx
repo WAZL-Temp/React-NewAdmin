@@ -67,10 +67,10 @@ const ProductsList = () => {
   useEffect(() => {
     if (query.search) {
       if (query.search?.createDateSearchFrom) {
-        setCalendarCreateDateFrom(new Date(query.search.createDateSearchFrom))
+        setCalendarCreateDateFrom(new Date(query.search.createDateSearchFrom));
       }
       if (query.search?.createDateSearchTo) {
-        setCalendarCreateDateTo(new Date(query.search.createDateSearchTo))
+        setCalendarCreateDateTo(new Date(query.search.createDateSearchTo));
       }
     }
   }, [query.search, query.tableSearch]);
