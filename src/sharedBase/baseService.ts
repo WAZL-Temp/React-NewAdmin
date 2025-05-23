@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { BaseModel } from "./modelInterface";
 import { getToken, getUserInfo, setToken, setUserInfo } from "./baseServiceVar";
 import { CustomFile } from "../core/model/customfile";
@@ -10,7 +9,6 @@ export const useBaseService = <T extends BaseModel>(type: string) => {
         throw new Error('VITE_API_URL is not defined');
     }
     const apiUrl = `${apiBaseUrl}/${type}`;
-    const [helperServiceObj, setHelperServiceObj] = useState<any>(null);
 
     const getHeaders = (): HeadersInit => {
         const headers: HeadersInit = {
@@ -25,7 +23,6 @@ export const useBaseService = <T extends BaseModel>(type: string) => {
 
     const handleError = (error: any): never => {
         if (error.response && error.response.status === 401) {
-            helperServiceObj?.setNavigationUrl(window.location.pathname);
             throw error.response.status;
         }
 
@@ -366,7 +363,6 @@ export const useBaseService = <T extends BaseModel>(type: string) => {
     return {
         setToken,
         setUserInfo,
-        setHelperServiceObj,
         importExcel,
         checkImportData,
         getImportData,
