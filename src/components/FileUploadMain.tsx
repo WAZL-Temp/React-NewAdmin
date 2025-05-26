@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { FiUploadCloud, InputText, IoCheckmarkCircleSharp, RiDeleteBin6Fill } from "../sharedBase/globalImports";
-import { useFileUploadService } from "../core/services/fileUpload.service";
+import { useFileUploadService } from "../core/service/fileUpload.service";
 import { useTranslation } from "../sharedBase/globalUtils";
 import { CustomFile } from "../core/model/customfile";
 
@@ -33,7 +33,7 @@ export default function FileUploadMain({
   useEffect(() => {
     if (!isLoadComplete) {
       if (!initialData || initialData === "[]") {
-        setUploadedFiles([]);
+        // setUploadedFiles([]);
         setIsLoadComplete(true);
         return
       }
@@ -49,13 +49,14 @@ export default function FileUploadMain({
           }));
           
           setUploadedFiles(formattedFiles);
-        } else {
-          setUploadedFiles([]);
-        }
+        } 
+        // else {
+        //   setUploadedFiles([]);
+        // }
         setIsLoadComplete(true);
       } catch (error) {
         console.error("Failed to parse image JSON:", error);
-        setUploadedFiles([]);
+        // setUploadedFiles([]);
         setIsLoadComplete(true);
       }
     }

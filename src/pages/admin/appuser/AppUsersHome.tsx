@@ -7,7 +7,7 @@ import { Button, Card, Carousel, CgEye, CiShoppingCart, FaRegComment, GoInbox, I
 import { useNavigate, useTranslation } from '../../../sharedBase/globalUtils';
 import { HomeUserData, SummaryData, UserData } from '../../../types/homepage';
 import { useHomePage } from '../../../hooks/useHomePage';
-import { useAppUserService } from '../../../core/services/appUsers.service';
+import { useAppUserService } from '../../../core/service/appUsers.service';
 import { useHomeQuery } from '../../../store/useHomeQuery';
 import Loader from '../../../components/Loader';
 

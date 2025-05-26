@@ -1,4 +1,4 @@
-import { useFileUploadService } from '../core/services/fileUpload.service';
+import { useFileUploadService } from '../core/service/fileUpload.service';
 import { useEffect, useState } from 'react';
 import { AiFillCloseCircle, MdDownloadForOffline, Tooltip } from '../sharedBase/globalImports';
 import { CustomFile } from '../core/model/customfile';

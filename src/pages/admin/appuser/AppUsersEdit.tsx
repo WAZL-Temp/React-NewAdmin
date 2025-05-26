@@ -11,7 +11,7 @@ import FileUploadMain from '../../../components/FileUploadMain';
 import { EnumDetail } from '../../../core/model/enumdetail';
 import { CustomFile } from '../../../core/model/customfile';
 import { useItemQuery } from '../../../store/useItemQuery';
-import { useAppUserService } from '../../../core/services/appUsers.service';
+import { useAppUserService } from '../../../core/service/appUsers.service';
 import { useListQuery } from '../../../store/useListQuery';
 import { useFetchDataEnum } from '../../../sharedBase/lookupService';
 import Loader from '../../../components/Loader';
@@ -28,7 +28,7 @@ export default function AppUsersEdit() {
   const listQuery = useListQuery<AppUser>(userService);
   const isEditMode = Boolean(id);
   const stepperRef = useRef<StepperRefAttributes | null>(null);
-  const [item, setItem] = useState<AppUser>(initialData());
+  const [item, setItem] = useState<AppUser>(initData());
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [stepNo, setStepNo] = useState(0);
   const headers = [
@@ -39,22 +39,25 @@ export default function AppUsersEdit() {
   ];
 
   const [listVerifyShop, setListVerifyShop] = useState<EnumDetail[]>([]);
-  const [listRoles, setListRoles] = useState<EnumDetail[]>([]);
-  const [listPublishes, setListPublishes] = useState<EnumDetail[]>([]);
+  const [listRole, setListRole] = useState<EnumDetail[]>([]);
+  const [listPublish, setListPublish] = useState<EnumDetail[]>([]);
 
   const [selectedVerifyShop, setSelectedVerifyShop] = useState<string | undefined>(undefined);
-  const [selectedRoles, setSelectedRoles] = useState<string | undefined>(undefined);
-  const [selectedPublishes, setSelectedPublishes] = useState<string | undefined>(undefined);
+  const [selectedRole, setSelectedRole] = useState<string | undefined>(undefined);
+  const [selectedPublish, setSelectedPublish] = useState<string | undefined>(undefined);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [dialogMessage, setDialogMessage] = useState('');
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [userData, setUserData] = useState<AppUser>(initialData());
+  const [itemData, setItemData] = useState<AppUser>(initData());
 
-  const roleTypeData = useFetchDataEnum("RoleType");
-  const publishTypeData = useFetchDataEnum("PublishType");
-  const verifyTypeData = useFetchDataEnum("VerifyType");
+  const roleData = useFetchDataEnum("RoleType");
+  const publishData = useFetchDataEnum("PublishType");
+  const verifyData = useFetchDataEnum("VerifyType");
 
-  function initialData(): AppUser {
+  const [calendarLastLogin, setCalendarLastLogin] = useState<Date | null>(null);
+
+  function initData(): AppUser {
     return {
       id: undefined,
       name: '',
@@ -73,15 +76,15 @@ export default function AppUsersEdit() {
       addressLine: '',
       verifyShop: '',
       gst: '',
-      gstCertificate: null,
-      photoShopFront: null,
-      visitingCard: null,
-      cheque: null,
+      gstCertificate: undefined,
+      photoShopFront: undefined,
+      visitingCard: undefined,
+      cheque: undefined,
       gstOtp: '',
       isActive: false,
       isAdmin: false,
       hasImpersonateAccess: false,
-      photoAttachment: null,
+      photoAttachment: undefined,
       role: '',
       publish: '',
       lastLogin: undefined,
@@ -91,7 +94,7 @@ export default function AppUsersEdit() {
     };
   }
 
-  const { showDialog, setShowDialog, handleCloseDialog, formatDate, removeEmptyFields, prepareObject }
+  const { showDialog, setShowDialog, isFieldHidden, handleCloseDialog, formatDate, removeEmptyFields, prepareObject }
     = useEditPage<AppUser>({
       props: {
         id: id,
@@ -104,9 +107,15 @@ export default function AppUsersEdit() {
     const fetchData = async () => {
       if (isEditMode) {
         const data = await itemQuery.getItem(parseInt(id as string, 10));
-        setUserData(data);
-        const preparedData = prepareObject<AppUser>(data, initialData());
+        setItemData(data);
+        const preparedData = prepareObject<AppUser>(data, initData());
         setItem(preparedData);
+
+        if (preparedData.lastLogin) {
+          setCalendarLastLogin(new Date(preparedData.lastLogin));
+        } else {
+          setCalendarLastLogin(null);
+        }
       }
     };
     fetchData();
@@ -114,33 +123,33 @@ export default function AppUsersEdit() {
 
   useEffect(() => {
     const bindDropDownList = async () => {
-      setListRoles(roleTypeData?.data);
-      setListPublishes(publishTypeData?.data);
-      setListVerifyShop(verifyTypeData?.data);
+      setListRole(roleData?.data);
+      setListPublish(publishData?.data);
+      setListVerifyShop(verifyData?.data);
 
-      if (!userData) return;
+      if (!itemData) return;
 
-      if (userData?.role) {
-        const selectedList = roleTypeData?.data.filter(
-          (a) => a.value === userData?.role
+      if (itemData?.role) {
+        const selectedList = roleData?.data.filter(
+          (a) => a.value === itemData?.role
         );
         if (selectedList.length) {
-          setSelectedRoles(selectedList[0].value);
+          setSelectedRole(selectedList[0].value);
         }
       }
 
-      if (userData?.publish) {
-        const selectedList = publishTypeData?.data.filter(
-          (a) => a.value === userData?.publish
+      if (itemData?.publish) {
+        const selectedList = publishData?.data.filter(
+          (a) => a.value === itemData?.publish
         );
         if (selectedList.length) {
-          setSelectedPublishes(selectedList[0].value);
+          setSelectedPublish(selectedList[0].value);
         }
       }
 
-      if (userData?.verifyShop) {
-        const selectedList = verifyTypeData?.data.filter(
-          (a) => a.value === userData?.verifyShop
+      if (itemData?.verifyShop) {
+        const selectedList = verifyData?.data.filter(
+          (a) => a.value === itemData?.verifyShop
         );
         if (selectedList.length) {
           setSelectedVerifyShop(selectedList[0].value);
@@ -149,7 +158,7 @@ export default function AppUsersEdit() {
     };
 
     bindDropDownList();
-  }, [userData, roleTypeData?.data, publishTypeData?.data, verifyTypeData?.data]);
+  }, [itemData, roleData?.data, publishData?.data, verifyData?.data]);
 
 
   const handleInputChange = (field: string, value: string) => {
@@ -167,6 +176,12 @@ export default function AppUsersEdit() {
         }));
       }
     }
+  };
+
+  const onClearDate = () => {
+    setItem((prev) => ({ ...prev, lastLogin: undefined }));
+    setCalendarLastLogin(null);
+    setErrors((prev) => ({ ...prev, lastLogin: '' }));
   };
 
   const handleFileUpload = (files: CustomFile[], inputName: string) => {
@@ -339,8 +354,8 @@ export default function AppUsersEdit() {
       const cleanedPayload = removeEmptyFields(payload);
       let updatedItem;
 
-      if (userData?.id) {
-        updatedItem = { ...cleanedPayload, id: parseInt(userData?.id.toString(), 10) };
+      if (itemData?.id) {
+        updatedItem = { ...cleanedPayload, id: parseInt(itemData?.id.toString(), 10) };
         await itemQuery.updateItem(updatedItem);
         setDialogMessage(t('globals.updateDialogMsg', { model: 'App User' }));
       } else {
@@ -348,12 +363,12 @@ export default function AppUsersEdit() {
         setDialogMessage(t('globals.addDialogMsg', { model: 'App User' }));
       }
 
-      setItem(initialData());
+      setItem(initData());
       await listQuery?.load();
       setShowDialog(true);
     } catch (error) {
       console.error("Error:", error);
-      if (userData?.id) {
+      if (itemData?.id) {
         alert("Failed to update App User. Please try again later.");
       } else {
         alert("Failed to add App User. Please try again later.");
@@ -387,150 +402,160 @@ export default function AppUsersEdit() {
                     <StepperPanel header={headers[0]}>
                       <div ref={(el) => { stepRefs.current[0] = el; }} className="p-2 mt-3 lg:mt-10 mb-12 md:mb-0 lg:mb-0 bg-[var(--color-white)] text-[var(--color-dark)]">
                         <div className="user-grid pb-4">
-                          <div className="flex flex-col">
-                            <div className=" flex items-center">
-                              <label
-                                htmlFor="name"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]"
-                              >
-                                {t("appUsers.columns.fields.name")}
-                              </label>
-                              <span className=" text-[var(--color-danger)] pl-2 ">*</span>
-                              <TooltipWithText text={t('appUsers.columns.fields.name')} />
+                          {!isFieldHidden("name") && (
+                            <div className="flex flex-col">
+                              <div className=" flex items-center">
+                                <label
+                                  htmlFor="name"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]"
+                                >
+                                  {t("appUsers.columns.fields.name")}
+                                </label>
+                                <span className=" text-[var(--color-danger)] pl-2 ">*</span>
+                                <TooltipWithText text={t('appUsers.columns.fields.name')} />
+                              </div>
+                              <InputText
+                                type="text"
+                                id="name"
+                                name="name"
+                                value={item.name}
+                                onChange={(e) => handleInputChange('name', e.target.value)}
+                                placeholder={t('appUsers.columns.fields.name')}
+                                className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                                minLength={2}
+                                maxLength={100}
+                                required
+                              />
+                              {errors.name && (
+                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                                  {errors.name}
+                                </p>
+                              )}
                             </div>
-                            <InputText
-                              type="text"
-                              id="name"
-                              name="name"
-                              value={item.name}
-                              onChange={(e) => handleInputChange('name', e.target.value)}
-                              placeholder={t('appUsers.columns.fields.name')}
-                              className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
-                              minLength={2}
-                              maxLength={100}
-                              required
-                            />
-                            {errors.name && (
-                              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                {errors.name}
-                              </p>
-                            )}
-                          </div>
+                          )}
 
-                          <div className="flex flex-col">
-                            <div className="flex items-center">
-                              <label
-                                htmlFor="firstName"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]"
-                              >
-                                {t("appUsers.columns.fields.firstName")}
-                              </label>
-                              <TooltipWithText text={t("appUsers.columns.fields.firstName")} />
+                          {!isFieldHidden("firstName") && (
+                            <div className="flex flex-col">
+                              <div className="flex items-center">
+                                <label
+                                  htmlFor="firstName"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]"
+                                >
+                                  {t("appUsers.columns.fields.firstName")}
+                                </label>
+                                <TooltipWithText text={t("appUsers.columns.fields.firstName")} />
+                              </div>
+                              <InputText
+                                type="text"
+                                id="firstName"
+                                name="firstName"
+                                value={item.firstName}
+                                placeholder={t("appUsers.columns.fields.firstName")}
+                                className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                                minLength={2}
+                                maxLength={100}
+                                onChange={(e) => handleInputChange('firstName', e.target.value)}
+                              />
+                              {errors.firstName && (
+                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                                  {errors.firstName}
+                                </p>
+                              )}
                             </div>
-                            <InputText
-                              type="text"
-                              id="firstName"
-                              name="firstName"
-                              value={item.firstName}
-                              placeholder={t("appUsers.columns.fields.firstName")}
-                              className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
-                              minLength={2}
-                              maxLength={100}
-                              onChange={(e) => handleInputChange('firstName', e.target.value)}
-                            />
-                            {errors.firstName && (
-                              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                {errors.firstName}
-                              </p>
-                            )}
-                          </div>
+                          )}
 
-                          <div className="flex flex-col">
-                            <div className=" flex items-center">
-                              <label
-                                htmlFor="lastName"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
-                              >
-                                {t("appUsers.columns.fields.lastName")}
-                              </label>
-                              <TooltipWithText text={t("appUsers.columns.fields.lastName")} />
+                          {!isFieldHidden("lastName") && (
+                            <div className="flex flex-col">
+                              <div className=" flex items-center">
+                                <label
+                                  htmlFor="lastName"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
+                                >
+                                  {t("appUsers.columns.fields.lastName")}
+                                </label>
+                                <TooltipWithText text={t("appUsers.columns.fields.lastName")} />
+                              </div>
+                              <InputText
+                                type="text"
+                                id="lastName"
+                                name="lastName"
+                                value={item.lastName}
+                                placeholder={t("appUsers.columns.fields.lastName")}
+                                className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                                minLength={2}
+                                maxLength={100}
+                                onChange={(e) => handleInputChange('lastName', e.target.value)}
+                              />
+                              {errors.lastName && (
+                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                                  {errors.lastName}
+                                </p>
+                              )}
                             </div>
-                            <InputText
-                              type="text"
-                              id="lastName"
-                              name="lastName"
-                              value={item.lastName}
-                              placeholder={t("appUsers.columns.fields.lastName")}
-                              className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
-                              minLength={2}
-                              maxLength={100}
-                              onChange={(e) => handleInputChange('lastName', e.target.value)}
-                            />
-                            {errors.lastName && (
-                              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                {errors.lastName}
-                              </p>
-                            )}
-                          </div>
+                          )}
 
-                          <div className="flex flex-col">
-                            <div className=" flex items-center">
-                              <label
-                                htmlFor="mobile"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
-                              >
-                                {t("appUsers.columns.fields.mobile")}
-                              </label>
-                              <span className=" text-[var(--color-danger)] pl-2">*</span>
-                              <TooltipWithText text={t("appUsers.columns.fields.mobile")} />
+                          {!isFieldHidden("mobile") && (
+                            <div className="flex flex-col">
+                              <div className=" flex items-center">
+                                <label
+                                  htmlFor="mobile"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
+                                >
+                                  {t("appUsers.columns.fields.mobile")}
+                                </label>
+                                <span className=" text-[var(--color-danger)] pl-2">*</span>
+                                <TooltipWithText text={t("appUsers.columns.fields.mobile")} />
+                              </div>
+                              <InputText
+                                type="text"
+                                id="mobile"
+                                name="mobile"
+                                value={item.mobile}
+                                placeholder={t("appUsers.columns.fields.mobile")}
+                                className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                                minLength={10}
+                                maxLength={10}
+                                onChange={(e) => handleInputChange('mobile', e.target.value)}
+                                required
+                              />
+                              {errors.mobile && (
+                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                                  {errors.mobile}
+                                </p>
+                              )}
                             </div>
-                            <InputText
-                              type="text"
-                              id="mobile"
-                              name="mobile"
-                              value={item.mobile}
-                              placeholder={t("appUsers.columns.fields.mobile")}
-                              className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
-                              minLength={10}
-                              maxLength={10}
-                              onChange={(e) => handleInputChange('mobile', e.target.value)}
-                              required
-                            />
-                            {errors.mobile && (
-                              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                {errors.mobile}
-                              </p>
-                            )}
-                          </div>
+                          )}
 
-                          <div className="flex flex-col">
-                            <div className=" flex items-center">
-                              <label
-                                htmlFor="mobileVerified"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
-                              >
-                                {t("appUsers.columns.fields.mobileVerified")}
-                              </label>
-                              <span className=" text-[var(--color-danger)] pl-2">*</span>
-                              <TooltipWithText text={t("appUsers.columns.fields.mobileVerified")} />
+                          {!isFieldHidden("mobileVerified") && (
+                            <div className="flex flex-col">
+                              <div className=" flex items-center">
+                                <label
+                                  htmlFor="mobileVerified"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
+                                >
+                                  {t("appUsers.columns.fields.mobileVerified")}
+                                </label>
+                                <span className=" text-[var(--color-danger)] pl-2">*</span>
+                                <TooltipWithText text={t("appUsers.columns.fields.mobileVerified")} />
+                              </div>
+                              <Checkbox
+                                inputId="mobileVerified"
+                                name="mobileVerified"
+                                value="mobileVerified"
+                                checked={item.mobileVerified ?? false}
+                                onChange={(e) =>
+                                  handleCheckboxChange(e, "mobileVerified")
+                                }
+                                className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                                required
+                              />
+                              {errors.mobileVerified && (
+                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                                  {errors.mobileVerified}
+                                </p>
+                              )}
                             </div>
-                            <Checkbox
-                              inputId="mobileVerified"
-                              name="mobileVerified"
-                              value="mobileVerified"
-                              checked={item.mobileVerified ?? false}
-                              onChange={(e) =>
-                                handleCheckboxChange(e, "mobileVerified")
-                              }
-                              className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
-                              required
-                            />
-                            {errors.mobileVerified && (
-                              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                {errors.mobileVerified}
-                              </p>
-                            )}
-                          </div>
+                          )}
                         </div>
                       </div>
                     </StepperPanel>
@@ -538,115 +563,123 @@ export default function AppUsersEdit() {
                     <StepperPanel header={headers[1]}>
                       <div ref={(el) => { stepRefs.current[1] = el; }} className="p-2 mt-3 lg:mt-10 bg-[var(--color-white)] text-[var(--color-dark)] mb-12 md:mb-0 lg:mb-0">
                         <div className="user-grid pb-4">
-                          <div className="flex flex-col">
-                            <div className=" flex items-center">
-                              <label
-                                htmlFor="emailId"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
-                              >
-                                {t("appUsers.columns.fields.emailId")}
-                              </label>
-                              <TooltipWithText text={t("appUsers.columns.fields.emailId")} />
+                          {!isFieldHidden("emailId") && (
+                            <div className="flex flex-col">
+                              <div className=" flex items-center">
+                                <label
+                                  htmlFor="emailId"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
+                                >
+                                  {t("appUsers.columns.fields.emailId")}
+                                </label>
+                                <TooltipWithText text={t("appUsers.columns.fields.emailId")} />
+                              </div>
+                              <InputText
+                                type="email"
+                                id="emailId"
+                                name="emailId"
+                                value={item.emailId}
+                                placeholder={t("appUsers.columns.fields.emailId")}
+                                className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                                maxLength={100}
+                                onChange={(e) => handleInputChange('emailId', e.target.value)}
+                              />
+                              {errors.emailId && (
+                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                                  {errors.emailId}
+                                </p>
+                              )}
                             </div>
-                            <InputText
-                              type="email"
-                              id="emailId"
-                              name="emailId"
-                              value={item.emailId}
-                              placeholder={t("appUsers.columns.fields.emailId")}
-                              className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
-                              maxLength={100}
-                              onChange={(e) => handleInputChange('emailId', e.target.value)}
-                            />
-                            {errors.emailId && (
-                              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                {errors.emailId}
-                              </p>
-                            )}
-                          </div>
+                          )}
 
-                          <div className="flex flex-col">
-                            <div className=" flex items-center">
-                              <label
-                                htmlFor="emailVerified"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
-                              >
-                                {t("appUsers.columns.fields.emailVerified")}
-                              </label>
-                              <TooltipWithText text={t("appUsers.columns.fields.emailVerified")} />
+                          {!isFieldHidden("emailVerified") && (
+                            <div className="flex flex-col">
+                              <div className=" flex items-center">
+                                <label
+                                  htmlFor="emailVerified"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
+                                >
+                                  {t("appUsers.columns.fields.emailVerified")}
+                                </label>
+                                <TooltipWithText text={t("appUsers.columns.fields.emailVerified")} />
+                              </div>
+                              <Checkbox
+                                inputId="emailVerified"
+                                name="emailVerified"
+                                value="emailVerified"
+                                checked={item.emailVerified ?? false}
+                                onChange={(e) =>
+                                  handleCheckboxChange(e, "emailVerified")
+                                }
+                                className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                              />
+                              {errors.emailVerified && (
+                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                                  {errors.emailVerified}
+                                </p>
+                              )}
                             </div>
-                            <Checkbox
-                              inputId="emailVerified"
-                              name="emailVerified"
-                              value="emailVerified"
-                              checked={item.emailVerified ?? false}
-                              onChange={(e) =>
-                                handleCheckboxChange(e, "emailVerified")
-                              }
-                              className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
-                            />
-                            {errors.emailVerified && (
-                              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                {errors.emailVerified}
-                              </p>
-                            )}
-                          </div>
+                          )}
 
-                          <div className="flex flex-col">
-                            <div className=" flex items-center">
-                              <label
-                                htmlFor="shopName"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
-                              >
-                                {t("appUsers.columns.fields.shopName")}
-                              </label>
-                              <TooltipWithText text={t("appUsers.columns.fields.shopName")} />
+                          {!isFieldHidden("shopName") && (
+                            <div className="flex flex-col">
+                              <div className=" flex items-center">
+                                <label
+                                  htmlFor="shopName"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
+                                >
+                                  {t("appUsers.columns.fields.shopName")}
+                                </label>
+                                <TooltipWithText text={t("appUsers.columns.fields.shopName")} />
+                              </div>
+                              <InputText
+                                type="text"
+                                id="shopName"
+                                name="shopName"
+                                value={item.shopName}
+                                placeholder={t("appUsers.columns.fields.shopName")}
+                                className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                                minLength={2}
+                                maxLength={100}
+                                onChange={(e) => handleInputChange('shopName', e.target.value)}
+                              />
+                              {errors.shopName && (
+                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                                  {errors.shopName}
+                                </p>
+                              )}
                             </div>
-                            <InputText
-                              type="text"
-                              id="shopName"
-                              name="shopName"
-                              value={item.shopName}
-                              placeholder={t("appUsers.columns.fields.shopName")}
-                              className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
-                              minLength={2}
-                              maxLength={100}
-                              onChange={(e) => handleInputChange('shopName', e.target.value)}
-                            />
-                            {errors.shopName && (
-                              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                {errors.shopName}
-                              </p>
-                            )}
-                          </div>
+                          )}
 
-                          <div className="flex flex-col">
-                            <div className=" flex items-center">
-                              <label
-                                htmlFor="password"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
-                              >
-                                {t("appUsers.columns.fields.password")}
-                              </label>
-                              <TooltipWithText text={t("appUsers.columns.fields.password")} />
+                          {!isFieldHidden("password") && (
+                            <div className="flex flex-col">
+                              <div className=" flex items-center">
+                                <label
+                                  htmlFor="password"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
+                                >
+                                  {t("appUsers.columns.fields.password")}
+                                </label>
+                                <TooltipWithText text={t("appUsers.columns.fields.password")} />
+                              </div>
+                              <InputText
+                                type="password"
+                                id="password"
+                                name="password"
+                                value={item.password}
+                                placeholder={t("appUsers.columns.fields.password")}
+                                className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                                minLength={2}
+                                maxLength={100}
+                                onChange={(e) => handleInputChange('password', e.target.value)}
+                              />
+                              {errors.password && (
+                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                                  {errors.password}
+                                </p>
+                              )}
                             </div>
-                            <InputText
-                              type="password"
-                              id="password"
-                              name="password"
-                              value={item.password}
-                              placeholder={t("appUsers.columns.fields.password")}
-                              className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
-                              minLength={2}
-                              maxLength={100}
-                              onChange={(e) => handleInputChange('password', e.target.value)}
-                            />
-                            {errors.password && (
-                              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                {errors.password}
-                              </p>
-                            )}
-                          </div>
+                          )}
                         </div>
                       </div>
                     </StepperPanel>
@@ -654,140 +687,150 @@ export default function AppUsersEdit() {
                     <StepperPanel header={headers[2]}>
                       <div ref={(el) => { stepRefs.current[2] = el; }} className="p-2 mt-3 lg:mt-10 bg-[var(--color-white)] text-[var(--color-dark)] mb-12 md:mb-0 lg:mb-0">
                         <div className="user-grid pb-4">
-                          <div className="flex flex-col">
-                            <div className=" flex items-center">
-                              <label
-                                htmlFor="pincode"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
-                              >
-                                {t("appUsers.columns.fields.pincode")}
-                              </label>
-                              <TooltipWithText text={t("appUsers.columns.fields.pincode")} />
+                          {!isFieldHidden("pincode") && (
+                            <div className="flex flex-col">
+                              <div className=" flex items-center">
+                                <label
+                                  htmlFor="pincode"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
+                                >
+                                  {t("appUsers.columns.fields.pincode")}
+                                </label>
+                                <TooltipWithText text={t("appUsers.columns.fields.pincode")} />
+                              </div>
+                              <InputText
+                                type="text"
+                                id="pincode"
+                                name="pincode"
+                                value={item.pincode}
+                                placeholder={t("appUsers.columns.fields.pincode")}
+                                className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                                maxLength={6}
+                                onChange={(e) => handleInputChange('pincode', e.target.value)}
+                              />
+                              {errors.pincode && (
+                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                                  {errors.pincode}
+                                </p>
+                              )}
                             </div>
-                            <InputText
-                              type="text"
-                              id="pincode"
-                              name="pincode"
-                              value={item.pincode}
-                              placeholder={t("appUsers.columns.fields.pincode")}
-                              className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
-                              maxLength={6}
-                              onChange={(e) => handleInputChange('pincode', e.target.value)}
-                            />
-                            {errors.pincode && (
-                              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                {errors.pincode}
-                              </p>
-                            )}
-                          </div>
+                          )}
 
-                          <div className="flex flex-col">
-                            <div className=" flex items-center">
-                              <label
-                                htmlFor="state"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
-                              >
-                                {t("appUsers.columns.fields.state")}
-                              </label>
-                              <TooltipWithText text={t("appUsers.columns.fields.state")} />
+                          {!isFieldHidden("state") && (
+                            <div className="flex flex-col">
+                              <div className=" flex items-center">
+                                <label
+                                  htmlFor="state"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
+                                >
+                                  {t("appUsers.columns.fields.state")}
+                                </label>
+                                <TooltipWithText text={t("appUsers.columns.fields.state")} />
+                              </div>
+                              <InputText
+                                type="text"
+                                id="state"
+                                name="state"
+                                value={item.state}
+                                placeholder={t("appUsers.columns.fields.state")}
+                                className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)]  border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                                maxLength={100}
+                                onChange={(e) => handleInputChange('state', e.target.value)}
+                              />
+                              {errors.state && (
+                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                                  {errors.state}
+                                </p>
+                              )}
                             </div>
-                            <InputText
-                              type="text"
-                              id="state"
-                              name="state"
-                              value={item.state}
-                              placeholder={t("appUsers.columns.fields.state")}
-                              className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)]  border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
-                              maxLength={100}
-                              onChange={(e) => handleInputChange('state', e.target.value)}
-                            />
-                            {errors.state && (
-                              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                {errors.state}
-                              </p>
-                            )}
-                          </div>
+                          )}
 
-                          <div className="flex flex-col">
-                            <div className=" flex items-center">
-                              <label
-                                htmlFor="district"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
-                              >
-                                {t("appUsers.columns.fields.district")}
-                              </label>
-                              <TooltipWithText text={t("appUsers.columns.fields.district")} />
+                          {!isFieldHidden("district") && (
+                            <div className="flex flex-col">
+                              <div className=" flex items-center">
+                                <label
+                                  htmlFor="district"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
+                                >
+                                  {t("appUsers.columns.fields.district")}
+                                </label>
+                                <TooltipWithText text={t("appUsers.columns.fields.district")} />
+                              </div>
+                              <InputText
+                                type="text"
+                                id="district"
+                                name="district"
+                                value={item.district}
+                                placeholder={t("appUsers.columns.fields.district")}
+                                className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                                maxLength={100}
+                                onChange={(e) => handleInputChange('district', e.target.value)}
+                              />
+                              {errors.district && (
+                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                                  {errors.district}
+                                </p>
+                              )}
                             </div>
-                            <InputText
-                              type="text"
-                              id="district"
-                              name="district"
-                              value={item.district}
-                              placeholder={t("appUsers.columns.fields.district")}
-                              className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
-                              maxLength={100}
-                              onChange={(e) => handleInputChange('district', e.target.value)}
-                            />
-                            {errors.district && (
-                              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                {errors.district}
-                              </p>
-                            )}
-                          </div>
+                          )}
 
-                          <div className="flex flex-col">
-                            <div className=" flex items-center">
-                              <label
-                                htmlFor="address"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
-                              >
-                                {t("appUsers.columns.fields.address")}
-                              </label>
-                              <TooltipWithText text={t("appUsers.columns.fields.address")} />
+                          {!isFieldHidden("address") && (
+                            <div className="flex flex-col">
+                              <div className=" flex items-center">
+                                <label
+                                  htmlFor="address"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
+                                >
+                                  {t("appUsers.columns.fields.address")}
+                                </label>
+                                <TooltipWithText text={t("appUsers.columns.fields.address")} />
+                              </div>
+                              <InputTextarea
+                                id="address"
+                                name="address"
+                                value={item.address}
+                                placeholder={t("appUsers.columns.fields.address")}
+                                className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)]  border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                                minLength={2}
+                                maxLength={10000}
+                                onChange={(e) => handleInputChange('address', e.target.value)}
+                              />
+                              {errors.address && (
+                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                                  {errors.address}
+                                </p>
+                              )}
                             </div>
-                            <InputTextarea
-                              id="address"
-                              name="address"
-                              value={item.address}
-                              placeholder={t("appUsers.columns.fields.address")}
-                              className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)]  border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
-                              minLength={2}
-                              maxLength={10000}
-                              onChange={(e) => handleInputChange('address', e.target.value)}
-                            />
-                            {errors.address && (
-                              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                {errors.address}
-                              </p>
-                            )}
-                          </div>
+                          )}
 
-                          <div className="flex flex-col">
-                            <div className=" flex items-center">
-                              <label
-                                htmlFor="addressLine"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
-                              >
-                                {t("appUsers.columns.fields.addressLine")}
-                              </label>
-                              <TooltipWithText text={t("appUsers.columns.fields.addressLine")} />
+                          {!isFieldHidden("addressLine") && (
+                            <div className="flex flex-col">
+                              <div className=" flex items-center">
+                                <label
+                                  htmlFor="addressLine"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
+                                >
+                                  {t("appUsers.columns.fields.addressLine")}
+                                </label>
+                                <TooltipWithText text={t("appUsers.columns.fields.addressLine")} />
+                              </div>
+                              <InputTextarea
+                                id="addressLine"
+                                name="addressLine"
+                                value={item.addressLine}
+                                placeholder={t("appUsers.columns.fields.addressLine")}
+                                className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                                minLength={2}
+                                maxLength={10000}
+                                onChange={(e) => handleInputChange('addressLine', e.target.value)}
+                              />
+                              {errors.addressLine && (
+                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                                  {errors.addressLine}
+                                </p>
+                              )}
                             </div>
-                            <InputTextarea
-                              id="addressLine"
-                              name="addressLine"
-                              value={item.addressLine}
-                              placeholder={t("appUsers.columns.fields.addressLine")}
-                              className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
-                              minLength={2}
-                              maxLength={10000}
-                              onChange={(e) => handleInputChange('addressLine', e.target.value)}
-                            />
-                            {errors.addressLine && (
-                              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                {errors.addressLine}
-                              </p>
-                            )}
-                          </div>
+                          )}
                         </div>
                       </div>
                     </StepperPanel>
@@ -795,422 +838,462 @@ export default function AppUsersEdit() {
                     <StepperPanel header={headers[3]}>
                       <div ref={(el) => { stepRefs.current[3] = el; }} className="p-2 mb-12 md:mb-0 lg:mb-0 bg-[var(--color-white)] text-[var(--color-dark)] mt-3 lg:mt-10">
                         <div className="user-grid pb-4">
-                          <div className="flex flex-col">
-                            <div className=" flex items-center">
-                              <label
-                                htmlFor="verifyShop"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]"
-                              >
-                                {t("appUsers.columns.fields.verifyShop")}
-                              </label>
-                              <TooltipWithText text={t("appUsers.columns.fields.verifyShop")} />
+                          {!isFieldHidden("verifyShop") && (
+                            <div className="flex flex-col">
+                              <div className=" flex items-center">
+                                <label
+                                  htmlFor="verifyShop"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]"
+                                >
+                                  {t("appUsers.columns.fields.verifyShop")}
+                                </label>
+                                <TooltipWithText text={t("appUsers.columns.fields.verifyShop")} />
+                              </div>
+                              <Dropdown
+                                id="verifyShop"
+                                name="verifyShop"
+                                value={selectedVerifyShop}
+                                placeholder={t("appUsers.columns.fields.verifyShop")}
+                                options={listVerifyShop}
+                                optionLabel="name"
+                                onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "verifyShop"); setSelectedVerifyShop(e.value) }}
+                                filter
+                                checkmark={true}
+                                highlightOnSelect={false}
+                                appendTo="self"
+                                className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] dropdowndark"
+                              />
                             </div>
-                            <Dropdown
-                              id="verifyShop"
-                              name="verifyShop"
-                              value={selectedVerifyShop}
-                              placeholder={t("appUsers.columns.fields.verifyShop")}
-                              options={listVerifyShop}
-                              optionLabel="name"
-                              onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "verifyShop"); setSelectedVerifyShop(e.value) }}
-                              filter
-                              checkmark={true}
-                              highlightOnSelect={false}
-                              appendTo="self"
-                              className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] dropdowndark"
-                            />
-                          </div>
+                          )}
 
-                          <div className="flex flex-col">
-                            <div className=" flex items-center">
-                              <label
-                                htmlFor="gst"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
-                              >
-                                {t("appUsers.columns.fields.gst")}
-                              </label>
-                              <TooltipWithText text={t("appUsers.columns.fields.gst")} />
+                          {!isFieldHidden("gst") && (
+                            <div className="flex flex-col">
+                              <div className=" flex items-center">
+                                <label
+                                  htmlFor="gst"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
+                                >
+                                  {t("appUsers.columns.fields.gst")}
+                                </label>
+                                <TooltipWithText text={t("appUsers.columns.fields.gst")} />
+                              </div>
+                              <InputText
+                                type="text"
+                                id="gst"
+                                name="gst"
+                                value={item.gst}
+                                placeholder={t("appUsers.columns.fields.gst")}
+                                className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                                minLength={2}
+                                maxLength={100}
+                                onChange={(e) => handleInputChange('gst', e.target.value)}
+                              />
+                              {errors.gst && (
+                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                                  {errors.gst}
+                                </p>
+                              )}
                             </div>
-                            <InputText
-                              type="text"
-                              id="gst"
-                              name="gst"
-                              value={item.gst}
-                              placeholder={t("appUsers.columns.fields.gst")}
-                              className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
-                              minLength={2}
-                              maxLength={100}
-                              onChange={(e) => handleInputChange('gst', e.target.value)}
-                            />
-                            {errors.gst && (
-                              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                {errors.gst}
-                              </p>
-                            )}
-                          </div>
+                          )}
 
-                          <div className="flex flex-col">
-                            <div className="flex items-center">
-                              <label
-                                htmlFor="gstCertificate"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
-                              >
-                                {t("appUsers.columns.fields.gstCertificate")}
-                              </label>
-                              <TooltipWithText text={t("appUsers.columns.fields.gstCertificate")} />
+                          {!isFieldHidden("gstCertificate") && (
+                            <div className="flex flex-col">
+                              <div className="flex items-center">
+                                <label
+                                  htmlFor="gstCertificate"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
+                                >
+                                  {t("appUsers.columns.fields.gstCertificate")}
+                                </label>
+                                <TooltipWithText text={t("appUsers.columns.fields.gstCertificate")} />
+                              </div>
+                              <FileUploadMain
+                                modelName="AppUser"
+                                propName="gstCertificate"
+                                onFileUpload={(files) => handleFileUpload(files, 'gstCertificate')}
+                                accept=".jpg,.jpeg,.png,.pdf"
+                                initialData={item.gstCertificate ?? null}
+                                maxFileNumber={2}
+                              />
                             </div>
-                            <FileUploadMain
-                              modelName="AppUser"
-                              propName="gstCertificate"
-                              onFileUpload={(files) => handleFileUpload(files, 'gstCertificate')}
-                              accept=".jpg,.jpeg,.png,.pdf"
-                              initialData={item.gstCertificate ?? null}
-                              maxFileNumber={2}
-                            />
-                          </div>
+                          )}
 
-                          <div className="flex flex-col">
-                            <div className="flex items-center">
-                              <label
-                                htmlFor="photoShopFront"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
-                              >
-                                {t("appUsers.columns.fields.photoShopFront")}
-                              </label>
-                              <TooltipWithText text={t("appUsers.columns.fields.photoShopFront")} />
+                          {!isFieldHidden("photoShopFront") && (
+                            <div className="flex flex-col">
+                              <div className="flex items-center">
+                                <label
+                                  htmlFor="photoShopFront"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
+                                >
+                                  {t("appUsers.columns.fields.photoShopFront")}
+                                </label>
+                                <TooltipWithText text={t("appUsers.columns.fields.photoShopFront")} />
+                              </div>
+
+                              <FileUploadMain
+                                modelName="AppUser"
+                                propName="photoShopFront"
+                                onFileUpload={(files) => handleFileUpload(files, 'photoShopFront')}
+                                accept=".jpg,.jpeg,.png,.pdf"
+                                initialData={item.photoShopFront ?? null}
+                                maxFileNumber={2}
+                              />
                             </div>
+                          )}
 
-                            <FileUploadMain
-                              modelName="AppUser"
-                              propName="photoShopFront"
-                              onFileUpload={(files) => handleFileUpload(files, 'photoShopFront')}
-                              accept=".jpg,.jpeg,.png,.pdf"
-                              initialData={item.photoShopFront ?? null}
-                              maxFileNumber={2}
-                            />
-                          </div>
-
-                          <div className="flex flex-col">
-                            <div className="flex items-center">
-                              <label
-                                htmlFor="visitingCard"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
-                              >
-                                {t("appUsers.columns.fields.visitingCard")}
-                              </label>
-                              <TooltipWithText text={t("appUsers.columns.fields.visitingCard")} />
+                          {!isFieldHidden("visitingCard") && (
+                            <div className="flex flex-col">
+                              <div className="flex items-center">
+                                <label
+                                  htmlFor="visitingCard"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
+                                >
+                                  {t("appUsers.columns.fields.visitingCard")}
+                                </label>
+                                <TooltipWithText text={t("appUsers.columns.fields.visitingCard")} />
+                              </div>
+                              <FileUploadMain
+                                modelName="AppUser"
+                                propName="visitingCard"
+                                onFileUpload={(files) => handleFileUpload(files, 'visitingCard')}
+                                accept=".jpg,.jpeg,.png,.pdf"
+                                initialData={item.visitingCard ?? null}
+                                maxFileNumber={2}
+                              />
                             </div>
-                            <FileUploadMain
-                              modelName="AppUser"
-                              propName="visitingCard"
-                              onFileUpload={(files) => handleFileUpload(files, 'visitingCard')}
-                              accept=".jpg,.jpeg,.png,.pdf"
-                              initialData={item.visitingCard ?? null}
-                              maxFileNumber={2}
-                            />
-                          </div>
+                          )}
 
-                          <div className="flex flex-col">
-                            <div className="flex items-center">
-                              <label
-                                htmlFor="cheque"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
-                              >
-                                {t("appUsers.columns.fields.cheque")}
-                              </label>
-                              <TooltipWithText text={t("appUsers.columns.fields.cheque")} />
+                          {!isFieldHidden("cheque") && (
+                            <div className="flex flex-col">
+                              <div className="flex items-center">
+                                <label
+                                  htmlFor="cheque"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
+                                >
+                                  {t("appUsers.columns.fields.cheque")}
+                                </label>
+                                <TooltipWithText text={t("appUsers.columns.fields.cheque")} />
+                              </div>
+
+                              <FileUploadMain
+                                modelName="AppUser"
+                                propName="cheque"
+                                onFileUpload={(files) => handleFileUpload(files, 'cheque')}
+                                accept=".jpg,.jpeg,.png,.pdf"
+                                initialData={item.cheque ?? null}
+                                maxFileNumber={1}
+                              />
                             </div>
+                          )}
 
-                            <FileUploadMain
-                              modelName="AppUser"
-                              propName="cheque"
-                              onFileUpload={(files) => handleFileUpload(files, 'cheque')}
-                              accept=".jpg,.jpeg,.png,.pdf"
-                              initialData={item.cheque ?? null}
-                              maxFileNumber={1}
-                            />
-                          </div>
-
-                          <div className="flex flex-col">
-                            <div className=" flex items-center">
-                              <label
-                                htmlFor="gstOtp"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
-                              >
-                                {t("appUsers.columns.fields.gstOtp")}
-                              </label>
-                              <TooltipWithText text={t("appUsers.columns.fields.gstOtp")} />
+                          {!isFieldHidden("gstOtp") && (
+                            <div className="flex flex-col">
+                              <div className=" flex items-center">
+                                <label
+                                  htmlFor="gstOtp"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
+                                >
+                                  {t("appUsers.columns.fields.gstOtp")}
+                                </label>
+                                <TooltipWithText text={t("appUsers.columns.fields.gstOtp")} />
+                              </div>
+                              <InputText
+                                type="text"
+                                id="gstOtp"
+                                name="gstOtp"
+                                value={item.gstOtp}
+                                placeholder={t("appUsers.columns.fields.gstOtp")}
+                                className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                                maxLength={100}
+                                onChange={(e) => handleInputChange('gstOtp', e.target.value)}
+                              />
                             </div>
-                            <InputText
-                              type="text"
-                              id="gstOtp"
-                              name="gstOtp"
-                              value={item.gstOtp}
-                              placeholder={t("appUsers.columns.fields.gstOtp")}
-                              className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
-                              maxLength={100}
-                              onChange={(e) => handleInputChange('gstOtp', e.target.value)}
-                            />
-                          </div>
+                          )}
 
-                          <div className="flex flex-col">
-                            <div className="flex items-center">
-                              <label
-                                htmlFor="isActive"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
-                              >
-                                {t("appUsers.columns.fields.isActive")}
-                              </label>
-                              <span className=" text-[var(--color-danger)] pl-2">*</span>
-                              <TooltipWithText text={t("appUsers.columns.fields.isActive")} />
+                          {!isFieldHidden("isActive") && (
+                            <div className="flex flex-col">
+                              <div className="flex items-center">
+                                <label
+                                  htmlFor="isActive"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
+                                >
+                                  {t("appUsers.columns.fields.isActive")}
+                                </label>
+                                <span className=" text-[var(--color-danger)] pl-2">*</span>
+                                <TooltipWithText text={t("appUsers.columns.fields.isActive")} />
+                              </div>
+                              <div>
+                                <Checkbox
+                                  inputId="isActive"
+                                  name="isActive"
+                                  value="isActive"
+                                  checked={item.isActive ?? false}
+                                  onChange={(e) =>
+                                    handleCheckboxChange(e, "isActive")
+                                  }
+                                  className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                                  required
+                                />
+                              </div>
+                              {errors.isActive && (
+                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                                  {errors.isActive}
+                                </p>
+                              )}
                             </div>
-                            <div>
+                          )}
+
+                          {!isFieldHidden("isAdmin") && (
+                            <div className="flex flex-col">
+                              <div className="flex items-center">
+                                <label
+                                  htmlFor="isAdmin"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]"
+                                >
+                                  {t("appUsers.columns.fields.isAdmin")}
+                                </label>
+                                <span className=" text-[var(--color-danger)] pl-2">*</span>
+                                <TooltipWithText text={t("appUsers.columns.fields.isAdmin")} />
+                              </div>
                               <Checkbox
-                                inputId="isActive"
-                                name="isActive"
-                                value="isActive"
-                                checked={item.isActive ?? false}
-                                onChange={(e) =>
-                                  handleCheckboxChange(e, "isActive")
-                                }
+                                inputId="isAdmin"
+                                name="isAdmin"
+                                value="isAdmin"
+                                checked={item.isAdmin ?? false}
+                                onChange={(e) => handleCheckboxChange(e, "isAdmin")}
                                 className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
                                 required
                               />
+                              {errors.isAdmin && (
+                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                                  {errors.isAdmin}
+                                </p>
+                              )}
                             </div>
-                            {errors.isActive && (
-                              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                {errors.isActive}
-                              </p>
-                            )}
-                          </div>
+                          )}
 
-                          <div className="flex flex-col">
-                            <div className="flex items-center">
-                              <label
-                                htmlFor="isAdmin"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]"
-                              >
-                                {t("appUsers.columns.fields.isAdmin")}
-                              </label>
-                              <span className=" text-[var(--color-danger)] pl-2">*</span>
-                              <TooltipWithText text={t("appUsers.columns.fields.isAdmin")} />
+                          {!isFieldHidden("hasImpersonateAccess") && (
+                            <div className="flex flex-col">
+                              <div className=" flex items-center">
+                                <label
+                                  htmlFor="hasImpersonateAccess"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]"
+                                >
+                                  {t("appUsers.columns.fields.hasImpersonateAccess")}
+                                </label>
+                                <TooltipWithText text={t("appUsers.columns.fields.hasImpersonateAccess")} />
+                              </div>
+                              <div className="">
+                                <Checkbox
+                                  inputId="hasImpersonateAccess"
+                                  name="hasImpersonateAccess"
+                                  value="hasImpersonateAccess"
+                                  checked={item.hasImpersonateAccess ?? false}
+                                  onChange={(e) =>
+                                    handleCheckboxChange(e, "hasImpersonateAccess")
+                                  }
+                                  className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                                />
+                              </div>
                             </div>
-                            <Checkbox
-                              inputId="isAdmin"
-                              name="isAdmin"
-                              value="isAdmin"
-                              checked={item.isAdmin ?? false}
-                              onChange={(e) => handleCheckboxChange(e, "isAdmin")}
-                              className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
-                              required
-                            />
-                            {errors.isAdmin && (
-                              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                {errors.isAdmin}
-                              </p>
-                            )}
-                          </div>
+                          )}
 
-                          <div className="flex flex-col">
-                            <div className=" flex items-center">
-                              <label
-                                htmlFor="hasImpersonateAccess"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]"
-                              >
-                                {t("appUsers.columns.fields.hasImpersonateAccess")}
-                              </label>
-                              <TooltipWithText text={t("appUsers.columns.fields.hasImpersonateAccess")} />
-                            </div>
-                            <div className="">
-                              <Checkbox
-                                inputId="hasImpersonateAccess"
-                                name="hasImpersonateAccess"
-                                value="hasImpersonateAccess"
-                                checked={item.hasImpersonateAccess ?? false}
-                                onChange={(e) =>
-                                  handleCheckboxChange(e, "hasImpersonateAccess")
-                                }
-                                className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                          {!isFieldHidden("photoAttachment") && (
+                            <div className="flex flex-col">
+                              <div className="flex items-center">
+                                <label
+                                  htmlFor="photoAttachment"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]"
+                                >
+                                  {t("appUsers.columns.fields.photoAttachment")}
+                                </label>
+                                <TooltipWithText text={t("appUsers.columns.fields.photoAttachment")} />
+                              </div>
+                              <FileUploadMain
+                                modelName="AppUser"
+                                propName="photoAttachment"
+                                onFileUpload={(files) => handleFileUpload(files, 'photoAttachment')}
+                                accept=".jpg,.jpeg,.png,.pdf"
+                                initialData={item.photoAttachment ?? null}
+                                maxFileNumber={2}
                               />
                             </div>
-                          </div>
+                          )}
 
-                          <div className="flex flex-col">
-                            <div className="flex items-center">
-                              <label
-                                htmlFor="photoAttachment"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]"
-                              >
-                                {t("appUsers.columns.fields.photoAttachment")}
-                              </label>
-                              <TooltipWithText text={t("appUsers.columns.fields.photoAttachment")} />
+                          {!isFieldHidden("role") && (
+                            <div className="flex flex-col">
+                              <div className=" flex items-center">
+                                <label
+                                  htmlFor="role"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
+                                >
+                                  {t("appUsers.columns.fields.role")}
+                                </label>
+                                <span className=" text-[var(--color-danger)] pl-2">*</span>
+                                <TooltipWithText text={t("appUsers.columns.fields.role")} />
+                              </div>
+                              <Dropdown
+                                id="role"
+                                name="role"
+                                value={selectedRole}
+                                placeholder={t("appUsers.columns.fields.role")}
+                                options={listRole}
+                                optionLabel="name"
+                                onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "role"); setSelectedRole(e.value) }}
+                                filter
+                                className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] "
+                                required
+                                checkmark={true}
+                                highlightOnSelect={false}
+                                appendTo="self"
+                              />
+                              {errors.role && (
+                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                                  {errors.role}
+                                </p>
+                              )}
                             </div>
-                            <FileUploadMain
-                              modelName="AppUser"
-                              propName="photoAttachment"
-                              onFileUpload={(files) => handleFileUpload(files, 'photoAttachment')}
-                              accept=".jpg,.jpeg,.png,.pdf"
-                              initialData={item.photoAttachment ?? null}
-                              maxFileNumber={2}
-                            />
-                          </div>
+                          )}
 
-                          <div className="flex flex-col">
-                            <div className=" flex items-center">
-                              <label
-                                htmlFor="role"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
-                              >
-                                {t("appUsers.columns.fields.role")}
-                              </label>
-                              <span className=" text-[var(--color-danger)] pl-2">*</span>
-                              <TooltipWithText text={t("appUsers.columns.fields.role")} />
+                          {!isFieldHidden("publish") && (
+                            <div className="flex flex-col">
+                              <div className=" flex items-center">
+                                <label
+                                  htmlFor="publish"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]  "
+                                >
+                                  {t("appUsers.columns.fields.publish")}
+                                </label>
+                                <span className=" text-[var(--color-danger)] pl-2">*</span>
+                                <TooltipWithText text={t("appUsers.columns.fields.publish")} />
+                              </div>
+                              <Dropdown
+                                id="publish"
+                                name="publish"
+                                value={selectedPublish}
+                                placeholder={t("appUsers.columns.fields.publish")}
+                                options={listPublish}
+                                optionLabel="name"
+                                onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "publish"); setSelectedPublish(e.value) }}
+                                filter
+                                checkmark={true}
+                                highlightOnSelect={false}
+                                className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] "
+                                required
+                                appendTo="self"
+                              />
+                              {errors.publish && (
+                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                                  {errors.publish}
+                                </p>
+                              )}
                             </div>
-                            <Dropdown
-                              id="role"
-                              name="role"
-                              value={selectedRoles}
-                              placeholder={t("appUsers.columns.fields.role")}
-                              options={listRoles}
-                              optionLabel="name"
-                              onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "role"); setSelectedRoles(e.value) }}
-                              filter
-                              className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] "
-                              required
-                              checkmark={true}
-                              highlightOnSelect={false}
-                              appendTo="self"
-                            />
-                            {errors.role && (
-                              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                {errors.role}
-                              </p>
-                            )}
-                          </div>
+                          )}
 
-                          <div className="flex flex-col">
-                            <div className=" flex items-center">
-                              <label
-                                htmlFor="publish"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]  "
-                              >
-                                {t("appUsers.columns.fields.publish")}
-                              </label>
-                              <span className=" text-[var(--color-danger)] pl-2">*</span>
-                              <TooltipWithText text={t("appUsers.columns.fields.publish")} />
-                            </div>
-                            <Dropdown
-                              id="publish"
-                              name="publish"
-                              value={selectedPublishes}
-                              placeholder={t("appUsers.columns.fields.publish")}
-                              options={listPublishes}
-                              optionLabel="name"
-                              onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "publish"); setSelectedPublishes(e.value) }}
-                              filter
-                              checkmark={true}
-                              highlightOnSelect={false}
-                              className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] "
-                              required
-                              appendTo="self"
-                            />
-                            {errors.publish && (
-                              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                {errors.publish}
-                              </p>
-                            )}
-                          </div>
-
-                          <div className="flex flex-col">
-                            <div className=" flex items-center">
-                              <label
-                                htmlFor="lastLogin"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
-                              >
-                                {t("appUsers.columns.fields.lastLogin")}
-                              </label>
-                              <TooltipWithText text={t("appUsers.columns.fields.lastLogin")} />
-                            </div>
-                            <Calendar
-                              name="CreateDateFrom"
-                              dateFormat="mm-dd-yy"
-                              value={item.lastLogin ? new Date(item.lastLogin) : null}
-                              yearNavigator
-                              monthNavigator
-                              yearRange="1920:2040"
-                              onChange={(e) => handleInputChange('lastLogin', e.value ? formatDate(e.value) : '')}
-                              showIcon
-                              placeholder={t("appUsers.columns.fields.lastLogin")}
-                              className="calendardark text-sm rounded-md py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
-                            />
-                          </div>
-
-                          <div className="flex flex-col">
-                            <div className=" flex items-center">
-                              <label
-                                htmlFor="defaultLanguage"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
-                              >
-                                {t("appUsers.columns.fields.defaultLanguage")}
-                              </label>
-                              <TooltipWithText text={t("appUsers.columns.fields.defaultLanguage")} />
-                            </div>
-                            <InputText
-                              type="text"
-                              id="defaultLanguage"
-                              name="defaultLanguage"
-                              value={item.defaultLanguage}
-                              placeholder={t("appUsers.columns.fields.defaultLanguage")}
-                              className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
-                              maxLength={10}
-                              onChange={(e) => handleInputChange('defaultLanguage', e.target.value)}
-                            />
-                          </div>
-
-                          <div className="flex flex-col">
-                            <div className=" flex items-center">
-                              <label
-                                htmlFor="isPremiumUser"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
-                              >
-                                {t("appUsers.columns.fields.isPremiumUser")}
-                              </label>
-                              <TooltipWithText text="IsPremiumUser" />
-                            </div>
-                            <div className="">
-                              <Checkbox
-                                inputId="isPremiumUser"
-                                name="isPremiumUser"
-                                value="isPremiumUser"
-                                checked={item.isPremiumUser ?? false}
-                                onChange={(e) =>
-                                  handleCheckboxChange(e, "isPremiumUser")
-                                }
-                                className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                          {!isFieldHidden("lastLogin") && (
+                            <div className="flex flex-col">
+                              <div className=" flex items-center">
+                                <label
+                                  htmlFor="lastLogin"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
+                                >
+                                  {t("appUsers.columns.fields.lastLogin")}
+                                </label>
+                                <TooltipWithText text={t("appUsers.columns.fields.lastLogin")} />
+                              </div>
+                              <Calendar
+                                id="lastLogin"
+                                dateFormat="mm-dd-yy"
+                                value={calendarLastLogin}
+                                yearNavigator
+                                monthNavigator
+                                yearRange="1920:2040"
+                                onChange={(e) => {
+                                  const value = e.value;
+                                  handleInputChange('lastLogin', value ? formatDate(value) : '');
+                                  setCalendarLastLogin(value ? new Date(value) : null);
+                                }}
+                                onClearButtonClick={onClearDate}
+                                showIcon
+                                showButtonBar
+                                placeholder={t("appUsers.columns.fields.lastLogin")}
+                                className="calendardark text-sm rounded-md py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
                               />
                             </div>
-                          </div>
+                          )}
 
-                          <div className="flex flex-col">
-                            <div className=" flex items-center">
-                              <label
-                                htmlFor="totalPlot"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
-                              >
-                                {t("appUsers.columns.fields.totalPlot")}
-                              </label>
-                              <TooltipWithText text={t("appUsers.columns.fields.totalPlot")} />
+                          {!isFieldHidden("defaultLanguage") && (
+                            <div className="flex flex-col">
+                              <div className=" flex items-center">
+                                <label
+                                  htmlFor="defaultLanguage"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
+                                >
+                                  {t("appUsers.columns.fields.defaultLanguage")}
+                                </label>
+                                <TooltipWithText text={t("appUsers.columns.fields.defaultLanguage")} />
+                              </div>
+                              <InputText
+                                type="text"
+                                id="defaultLanguage"
+                                name="defaultLanguage"
+                                value={item.defaultLanguage}
+                                placeholder={t("appUsers.columns.fields.defaultLanguage")}
+                                className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                                maxLength={10}
+                                onChange={(e) => handleInputChange('defaultLanguage', e.target.value)}
+                              />
                             </div>
-                            <InputText
-                              type="text"
-                              id="totalPlot"
-                              name="totalPlot"
-                              value={item.totalPlot !== undefined ? String(item.totalPlot) : ''}
-                              placeholder={t("appUsers.columns.fields.totalPlot")}
-                              className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
-                              onChange={(e) => handleInputChange('totalPlot', e.target.value)}
-                            />
-                          </div>
+                          )}
+
+                          {!isFieldHidden("isPremiumUser") && (
+                            <div className="flex flex-col">
+                              <div className=" flex items-center">
+                                <label
+                                  htmlFor="isPremiumUser"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
+                                >
+                                  {t("appUsers.columns.fields.isPremiumUser")}
+                                </label>
+                                <TooltipWithText text="IsPremiumUser" />
+                              </div>
+                              <div className="">
+                                <Checkbox
+                                  inputId="isPremiumUser"
+                                  name="isPremiumUser"
+                                  value="isPremiumUser"
+                                  checked={item.isPremiumUser ?? false}
+                                  onChange={(e) =>
+                                    handleCheckboxChange(e, "isPremiumUser")
+                                  }
+                                  className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                                />
+                              </div>
+                            </div>
+                          )}
+
+                          {!isFieldHidden("totalPlot") && (
+                            <div className="flex flex-col">
+                              <div className=" flex items-center">
+                                <label
+                                  htmlFor="totalPlot"
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
+                                >
+                                  {t("appUsers.columns.fields.totalPlot")}
+                                </label>
+                                <TooltipWithText text={t("appUsers.columns.fields.totalPlot")} />
+                              </div>
+                              <InputText
+                                type="text"
+                                id="totalPlot"
+                                name="totalPlot"
+                                value={item.totalPlot !== undefined ? String(item.totalPlot) : ''}
+                                placeholder={t("appUsers.columns.fields.totalPlot")}
+                                className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                                onChange={(e) => handleInputChange('totalPlot', e.target.value)}
+                              />
+                            </div>
+                          )}
                         </div>
                       </div>
                     </StepperPanel>
