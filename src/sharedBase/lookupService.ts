@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useListQuery } from "../store/useListQuery";
 import { EnumDetail } from "../core/model/enumdetail";
-import { useEnumDetailsService } from "../core/services/enumDetails.service";
-import { useAppuserRoleService } from "../core/services/appUserRole.service";
+import { useEnumDetailsService } from "../core/service/enumDetails.service";
+import { useAppuserRoleService } from "../core/service/appUserRole.service";
 import { RoleDetail } from "../core/model/roledetail";
 
 export const useFetchDataEnum = (type: string) => {
@@ -82,7 +82,7 @@ export const useFetchRoleDetailsData = () => {
 
       try {
         const response = await fetchRoleData();
-        
+
         if (response && response.length > 0) {
           setData(response);
         } else {
@@ -100,4 +100,22 @@ export const useFetchRoleDetailsData = () => {
   }, [fetchRoleData]);
 
   return { data, loading, error };
+};
+
+interface Service {
+  getAll: (userFilter: boolean) => Promise<unknown[]>;
+}
+
+export const getService = (type: string): Service | null => {
+  const service: Service | null = null;
+  return service;
+};
+
+export const getData = async (type: string, userFilter: boolean = false): Promise<unknown[]> => {
+  const service = getService(type);
+
+  if (service) {
+    return await service.getAll(userFilter);
+  }
+  return [];
 };

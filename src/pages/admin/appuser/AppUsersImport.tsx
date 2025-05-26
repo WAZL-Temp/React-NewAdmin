@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { useAppUserService } from '../../../core/services/appUsers.service';
+import { useAppUserService } from '../../../core/service/appUsers.service';
 import { BsArrowLeft, Button, Column, DataTable, Dialog, Image, RiEyeFill, RiFileDownloadFill, RiFileFill, SplitButton, Tooltip } from '../../../sharedBase/globalImports';
 import { useTranslation } from '../../../sharedBase/globalUtils';
-import { useFileUploadService } from "../../../core/services/fileUpload.service";
+import { useFileUploadService } from "../../../core/service/fileUpload.service";
 import FileUploadMain from '../../../components/FileUploadMain';
 import TableSkeleton from '../../../components/TableSkeleton';
 import successimg from '../../../assets/images/success.gif';

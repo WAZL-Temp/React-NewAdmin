@@ -1,4 +1,4 @@
-export interface AppUser {
+export interface AppUserTest {
 	createDate?: Date;
 	id?: number;
 	name?: string;

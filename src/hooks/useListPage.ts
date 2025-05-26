@@ -205,7 +205,7 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
         setTimeout(applyScrollPosition, 100);
     }, []);
 
-    const hasAccess = (roleData: RoleData, requiredAction: string) => {
+    const hasAccess = (roleData: RoleDetail | null, requiredAction: string) => {
         if (!roleData) return false;
         const actions = typeof roleData.action === "string" ? JSON.parse(roleData.action) : [];
         return actions.some((action: Action) => action.name.toLowerCase() === requiredAction.toLowerCase());

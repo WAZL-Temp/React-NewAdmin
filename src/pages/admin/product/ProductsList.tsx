@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Product } from "../../../core/model/product";
 import successimg from '../../../assets/images/success.gif';
-import { useProductService } from "../../../core/services/products.service";
+import { useProductService } from "../../../core/service/products.service";
 import confirmImg from '../../../assets/images/are-you-sure.jpg'
-import { BiSolidTrash, Button, Calendar, Column, DataTable, Dialog, FilterMatchMode, HiOutlinePlus, Image, InputText, IoMdRefresh, MdOutlineUploadFile, MenuItem, RiPencilFill, SplitButton, TbFileExcel, TiEye, Toast, Tooltip } from "../../../sharedBase/globalImports";
+import { BiSolidTrash, Button, Calendar, Checkbox, Column, DataTable, Dialog, FilterMatchMode, HiOutlinePlus, Image, InputText, IoMdRefresh, MdOutlineUploadFile, MenuItem, RiPencilFill, SplitButton, TbFileExcel, TiEye, Toast, Tooltip } from "../../../sharedBase/globalImports";
 import { useNavigate, useTranslation } from '../../../sharedBase/globalUtils';
 import { useListPage } from "../../../hooks/useListPage";
 import { useListQuery } from "../../../store/useListQuery";
@@ -16,6 +16,7 @@ const ProductsList = () => {
   const { t } = useTranslation();
   const productService = useProductService();
   const query = useListQuery<Product>(productService);
+  const [visible, setVisible] = useState(false);
   const dtRef = useRef<DataTable<Product[]>>(null);
   // search
   const [calendarCreateDateFrom, setCalendarCreateDateFrom] = useState<Date | undefined | null>(null);
@@ -48,7 +49,7 @@ const ProductsList = () => {
   ], [t]);
 
   const {
-    roleData, globalFilterValue, setGlobalFilterValue, onGlobalFilterChange, refreshItemData, isDeleteDialogVisible,
+    roleData, hasAccess, globalFilterValue, setGlobalFilterValue, onGlobalFilterChange, refreshItemData, isDeleteDialogVisible,
     deleteItem, closeDeleteDialog, setFilters, onSort, onPage, first, rows, sortField, sortOrder, totalRecords,
     filters, setListSearch, clearListSearch, searchChange, openItem, confirmDeleteItem,
     toast, isSuccessDialogOpen, setIsSuccessDialogOpen, exportToExcel,
@@ -62,7 +63,7 @@ const ProductsList = () => {
       }
     });
 
-  const { columnsConfig } = useColumnConfig(columnsConfigDefault, roleData);
+  const { columnsConfig, visibleColumns, handleSelectAll, handleColumnChange } = useColumnConfig(columnsConfigDefault, roleData);
 
   useEffect(() => {
     if (query.search) {
@@ -97,11 +98,13 @@ const ProductsList = () => {
   }, [columnsConfig, setFilters, setGlobalFilterValue, query.tableSearch]);
 
   const items: MenuItem[] = []
+  // if (hasAccess(roleData, "Add")) {
   items.push({
     label: t("globals.add"),
     icon: 'pi pi-plus',
     command: () => addData(navigate, baseModelName)
   });
+  // }
 
   items.push({
     label: t("globals.exportExcel"),
@@ -109,11 +112,13 @@ const ProductsList = () => {
     command: () => exportToExcel(productService, globalFilterValue || '', 'Product')
   });
 
+  // if (hasAccess(roleData, "Import")) {
   items.push({
     label: t("globals.import"),
     icon: 'pi pi-upload',
     command: () => importFromExcel(navigate, baseModelName)
   });
+  // }
 
   items.push({
     label: t("globals.refresh"),
@@ -137,23 +142,29 @@ const ProductsList = () => {
   const actionBodyTemplate = useCallback((rowData: Product, openItem: (item: Product, action: string) => void) => {
     return (
       <div className="flex items-center justify-start action-group gap-3">
+        {/* {hasAccess(roleData, "View") && ( */}
         <Button id={`tooltip-view-${rowData.id}`} className="p-button-text text-xs w-3 text-center" onClick={() => openItem(rowData, 'view')}>
           <TiEye size={17} className="font-bold text-[var(--color-primary)]" />
         </Button>
+        {/* )} */}
         <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-view-${rowData.id}`} content="View Data" showDelay={200} position="top" />
 
+        {/* {hasAccess(roleData, "Edit") && ( */}
         <Button id={`tooltip-edit-${rowData.id}`} className="p-button-text text-xs w-3 text-center" onClick={() => openItem(rowData, 'edit')}>
           <RiPencilFill size={17} className="font-bold" />
         </Button>
+        {/* )} */}
         <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-edit-${rowData.id}`} content="Edit Data" showDelay={200} position="top" />
 
+        {/* {hasAccess(roleData, "Delete") && ( */}
         <Button id={`tooltip-delete-${rowData.id}`} className="p-button-text text-xs w-3 text-center text-[var(--color-danger)]" onClick={() => handleDelete(deleteItem, rowData.id)} >
           <BiSolidTrash size={17} className="font-bold" />
         </Button>
+        {/* )} */}
         <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-delete-${rowData.id}`} content="Delete Data" showDelay={200} position="top" />
       </div>
     );
-  }, [deleteItem, handleDelete]);
+  }, [deleteItem, handleDelete, hasAccess, roleData]);
 
   return (
     <div className='relative h-screen flex flex-col overflow-auto'>
@@ -175,6 +186,7 @@ const ProductsList = () => {
             </div>
 
             <div className="hidden lg:flex items-center space-x-2 flex-wrap  text-[var(--color-white)] bg-[var(--color-white)]">
+              {/* {hasAccess(roleData, "Add") && ( */}
               <Button
                 type="button"
                 className="bg-[var(--color-secondary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
@@ -187,6 +199,7 @@ const ProductsList = () => {
               >
                 <HiOutlinePlus size={18} />
               </Button>
+              {/* )} */}
 
               <Button
                 type="button"
@@ -201,6 +214,7 @@ const ProductsList = () => {
                 <TbFileExcel size={18} />
               </Button>
 
+              {/* {hasAccess(roleData, "Import") && ( */}
               <Button
                 type="button"
                 className="bg-[var(--color-info)]  text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
@@ -213,6 +227,7 @@ const ProductsList = () => {
               >
                 <MdOutlineUploadFile size={18} />
               </Button>
+              {/* )} */}
 
               <Button
                 type="button"
@@ -276,6 +291,11 @@ const ProductsList = () => {
                 type="button"
                 className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
                 onClick={() => setListSearch()}
+                tooltip={t("globals.apply")}
+                tooltipOptions={{
+                  position: 'top',
+                  className: 'font-normal rounded text-sm p-1'
+                }}
               >
                 {t("globals.apply")}
               </Button>
@@ -283,10 +303,61 @@ const ProductsList = () => {
                 type="button"
                 className="bg-[var(--color-danger)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
                 onClick={() => { clearListSearch('search'); setCalendarCreateDateTo(null); setCalendarCreateDateFrom(null); }}
+                tooltip={t("globals.clearAll")}
+                tooltipOptions={{
+                  position: 'top',
+                  className: 'font-normal rounded text-sm p-1'
+                }}
               >
                 {t("globals.clearAll")}
               </Button>
+              {/* <Button
+                onClick={() => setVisible(true)}
+                className="p-1 lg:p-2 bg-[var(--color-white)] text-[var(--color-primary)] border border-[var(--color-border)] text-xs lg:text-sm rounded-md"          >
+                <IoMdSettings size={20} />
+              </Button> */}
             </div>
+            <Dialog
+              header={t("globals.columnVisibility")}
+              visible={visible}
+              onHide={() => setVisible(false)}
+              className="w-full max-w-[95vw] sm:max-w-[70vw] md:max-w-[60vw] lg:max-w-[50vw] text-xs lg:text-sm"
+              style={{
+                position: "fixed",
+                top: "10vh",
+                left: "50%",
+                transform: "translateX(-50%)",
+                maxHeight: "80vh",
+                overflowY: "auto"
+              }}
+            >
+              <div className="mb-2 ">
+                <label className="flex items-center justify-end space-x-2 mb-2">
+                  <Checkbox
+                    onChange={handleSelectAll}
+                    checked={visibleColumns.length === columnsConfig.length}
+                  >
+                  </Checkbox>
+                  <span className=" text-sm font-normal text-black">{t("globals.selectAll")}</span>
+                </label>
+              </div>
+
+              <div className="selectable-columns-container">
+                <div className="selectable-columns-grid">
+                  {columnsConfigDefault.map((col) => (
+                    <label key={col.field} className="flex items-center space-x-2">
+                      <Checkbox
+                        onChange={() => handleColumnChange(col.field)}
+                        checked={visibleColumns.includes(col.field)}
+                        disabled={col.isDefault}
+                      >
+                      </Checkbox>
+                      <span className="text-base sm:text-sm font-normal text-black">{col.header}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </Dialog>
           </div>
 
           <div className="m-2">
@@ -332,6 +403,7 @@ const ProductsList = () => {
                 className="text-sm sticky bg-[var(--color-white)] text-[var(--color-dark)]  font-semibold whitespace-nowrap overflow-hidden text-ellipsis"
               />
 
+              {/* {visibleColumns.includes('name') && ( */}
               <Column
                 field="name" header={t("products.columns.fields.name")} sortable
                 headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -352,7 +424,8 @@ const ProductsList = () => {
                   </>
                 )}
               />
-
+              {/* )}
+              {visibleColumns.includes('slug') && ( */}
               <Column
                 field="slug" header={t("products.columns.fields.slug")} sortable
                 headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -373,7 +446,8 @@ const ProductsList = () => {
                   </>
                 )}
               />
-
+              {/* )}
+              {visibleColumns.includes('sku') && ( */}
               <Column
                 field="sku" header={t("products.columns.fields.sku")} sortable
                 headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -394,7 +468,8 @@ const ProductsList = () => {
                   </>
                 )}
               />
-
+              {/* )}
+              {visibleColumns.includes('specifications') && ( */}
               <Column
                 field="specifications" header={t("products.columns.fields.specifications")} sortable
                 headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -415,7 +490,8 @@ const ProductsList = () => {
                   </>
                 )}
               />
-
+              {/* )}
+              {visibleColumns.includes('shippingAmount') && ( */}
               <Column
                 field="shippingAmount" header={t("products.columns.fields.shippingAmount")} sortable
                 headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -436,7 +512,8 @@ const ProductsList = () => {
                   </>
                 )}
               />
-
+              {/* )}
+              {visibleColumns.includes('regularPrice') && ( */}
               <Column
                 field="regularPrice" header={t("products.columns.fields.regularPrice")} sortable
                 headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -457,7 +534,8 @@ const ProductsList = () => {
                   </>
                 )}
               />
-
+              {/* )}
+              {visibleColumns.includes('salePrice') && ( */}
               <Column
                 field="salePrice" header={t("products.columns.fields.salePrice")} sortable
                 headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -478,7 +556,8 @@ const ProductsList = () => {
                   </>
                 )}
               />
-
+              {/* )}
+              {visibleColumns.includes('cgst') && ( */}
               <Column
                 field="cgst" header={t("products.columns.fields.cgst")} sortable
                 headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -499,7 +578,8 @@ const ProductsList = () => {
                   </>
                 )}
               />
-
+              {/* )}
+              {visibleColumns.includes('sgst') && ( */}
               <Column
                 field="sgst" header={t("products.columns.fields.sgst")} sortable
                 headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -520,7 +600,8 @@ const ProductsList = () => {
                   </>
                 )}
               />
-
+              {/* )}
+              {visibleColumns.includes('igst') && ( */}
               <Column
                 field="igst" header={t("products.columns.fields.igst")} sortable
                 headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -541,7 +622,8 @@ const ProductsList = () => {
                   </>
                 )}
               />
-
+              {/* )}
+              {visibleColumns.includes('categoryId') && ( */}
               <Column
                 field="categoryId" header={t("products.columns.fields.categoryId")} sortable
                 headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -562,7 +644,8 @@ const ProductsList = () => {
                   </>
                 )}
               />
-
+              {/* )}
+              {visibleColumns.includes('productStatus') && ( */}
               <Column
                 field="productStatus" header={t("products.columns.fields.productStatus")} sortable
                 headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -583,7 +666,8 @@ const ProductsList = () => {
                   </>
                 )}
               />
-
+              {/* )}
+              {visibleColumns.includes('category') && ( */}
               <Column
                 field="category" header={t("products.columns.fields.category")} sortable
                 headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -604,7 +688,8 @@ const ProductsList = () => {
                   </>
                 )}
               />
-
+              {/* )}
+              {visibleColumns.includes('minQty') && ( */}
               <Column
                 field="minQty" header={t("products.columns.fields.minQty")} sortable
                 headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -625,7 +710,8 @@ const ProductsList = () => {
                   </>
                 )}
               />
-
+              {/* )}
+              {visibleColumns.includes('minQtyFarmer') && ( */}
               <Column
                 field="minQtyFarmer" header={t("products.columns.fields.minQtyFarmer")} sortable
                 headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -646,7 +732,8 @@ const ProductsList = () => {
                   </>
                 )}
               />
-
+              {/* )}
+              {visibleColumns.includes('salePriceFarmer') && ( */}
               <Column
                 field="salePriceFarmer" header={t("products.columns.fields.salePriceFarmer")} sortable
                 headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -667,7 +754,8 @@ const ProductsList = () => {
                   </>
                 )}
               />
-
+              {/* )}
+              {visibleColumns.includes('isActive') && ( */}
               <Column
                 field="isActive" header={t("products.columns.fields.isActive")} sortable
                 headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -688,7 +776,8 @@ const ProductsList = () => {
                   </>
                 )}
               />
-
+              {/* )}
+              {visibleColumns.includes('orderNo') && ( */}
               <Column
                 field="orderNo" header={t("products.columns.fields.orderNo")} sortable
                 headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -709,7 +798,8 @@ const ProductsList = () => {
                   </>
                 )}
               />
-
+              {/* )}
+              {visibleColumns.includes('deliveredData') && ( */}
               <Column
                 field="deliveredData" header={t("products.columns.fields.deliveredData")} sortable
                 headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -730,7 +820,8 @@ const ProductsList = () => {
                   </>
                 )}
               />
-
+              {/* )}
+              {visibleColumns.includes('totalDeliverProduct') && ( */}
               <Column
                 field="totalDeliverProduct" header={t("products.columns.fields.totalDeliverProduct")} sortable
                 headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -751,7 +842,8 @@ const ProductsList = () => {
                   </>
                 )}
               />
-
+              {/* )}
+              {visibleColumns.includes('isParent') && ( */}
               <Column
                 field="isParent" header={t("products.columns.fields.isParent")} sortable
                 headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -772,6 +864,8 @@ const ProductsList = () => {
                   </>
                 )}
               />
+              {/* )}
+              {visibleColumns.includes('variableLabel') && ( */}
               <Column
                 field="variableLabel" header={t("products.columns.fields.variableLabel")} sortable
                 headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -792,6 +886,8 @@ const ProductsList = () => {
                   </>
                 )}
               />
+              {/* )}
+              {visibleColumns.includes('variableValue') && ( */}
               <Column
                 field="variableValue" header={t("products.columns.fields.variableValue")} sortable
                 headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -812,6 +908,7 @@ const ProductsList = () => {
                   </>
                 )}
               />
+              {/* )} */}
             </DataTable>
           </div>
 
