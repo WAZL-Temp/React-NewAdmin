@@ -42,6 +42,7 @@ export interface AppUser {
 	updateById?: number;
 	deleteById?: number;
 	isDelete?: boolean;
+	appUserList?: string;
   }
   
   
