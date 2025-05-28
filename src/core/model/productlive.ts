@@ -46,4 +46,5 @@ export interface ProductLive {
 	updateById?: number;
 	deleteById?: number;
 	isDelete?: boolean;
+	productList?: string;
 }

@@ -1087,3 +1087,14 @@ code {
     justify-content: center;
   }
 }
+
+
+.p-radiobutton-box {
+  border: 1px solid var(--color-border);
+  border-radius: 9999px;
+}
+
+.p-radiobutton-box.p-focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
+}

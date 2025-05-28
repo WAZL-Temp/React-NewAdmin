@@ -103,19 +103,20 @@ export const useFetchRoleDetailsData = () => {
 };
 
 interface Service {
-  getAll: (userFilter: boolean) => Promise<unknown[]>;
+  getAll: (condition: any) => Promise<unknown[]>;
 }
 
-export const getService = (type: string): Service | null => {
+export function getService(type: string): Service | null {
   const service: Service | null = null;
   return service;
-};
+}
 
-export const getData = async (type: string, userFilter: boolean = false): Promise<unknown[]> => {
-  const service = getService(type);
-
-  if (service) {
-    return await service.getAll(userFilter);
+export async function getData(service: Service | null, userFilter: boolean = false): Promise<any[]> {
+  if (service != null) {
+    const condition = {};
+    const data = await service.getAll(condition);
+    return data;
+  } else {
+    return [];
   }
-  return [];
-};
+}

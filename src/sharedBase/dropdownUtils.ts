@@ -1,4 +1,4 @@
-import { DropdownChangeEvent } from "./globalImports";
+import { DropdownChangeEvent, RadioButtonChangeEvent } from "./globalImports";
 
 export const selectDropdownEnum = (
   e: DropdownChangeEvent,
@@ -18,6 +18,26 @@ export const selectDropdownEnum = (
   return updatedModel;
 };
 
+export const selectRadioEnum = (
+  e: RadioButtonChangeEvent,
+  controlName: string,
+  model: any,
+  setModel: (updatedModel: any) => void,
+  setName: boolean = false
+) => {
+  const updatedModel = { ...model };
+  updatedModel[controlName] = e.value;
+
+  if (controlName + 'Label' in updatedModel) {
+    updatedModel[controlName + 'Label'] = e.target.name;
+  }
+
+  if (setName) {
+    updatedModel[controlName] = e.target.name;
+  }
+  setModel(updatedModel);
+};
+
 interface Option {
   id: string | number;
   name: string;
@@ -28,34 +48,22 @@ interface Model {
 }
 
 export const selectMultiData = (
-  data: { value: Option[] },
-  controlName: string,
-  model: Model,
-  setModel: (model: Model) => void,
-  item?: Record<string, unknown>
+  data: any,
+  controlName: string
 ) => {
-  const newModel = { ...model };
-  newModel[controlName] = data.value.map((i) => i.id).join(',');
-  if (item && controlName + 'Label' in item) {
-    newModel[controlName + 'Label'] = data.value.map((i) => i.name).join(',');
+  if (!data || !Array.isArray(data)) {
+    return {
+      [controlName]: '',
+      [`${controlName}Label`]: '',
+    };
   }
-  setModel(newModel);
-};
 
-export const selectRadioEnum = (
-  data: { value: string | number | { name: string }; name?: string },
-  controlName: string,
-  setName: boolean = false,
-  model: Model,
-  setModel: (model: Model) => void,
-  item?: Record<string, unknown>
-) => {
-  const newModel = { ...model };
-  newModel[controlName] = setName && typeof data.value === 'object' && data.value !== null
-    ? (data.value as { name: string }).name
-    : data.value as string | number;
-  if (item && controlName + 'Label' in item) {
-    newModel[controlName + 'Label'] = data.name || '';
-  }
-  setModel(newModel);
+  const selectedIds = data.map((i: Option) => i.id).join(',');
+  const selectedNames = data.map((i: Option) => i.name).join(',');
+
+  const updatedModel: Model = {};
+  updatedModel[controlName] = selectedIds;
+  updatedModel[`${controlName}Label`] = selectedNames;
+
+  return updatedModel;
 };

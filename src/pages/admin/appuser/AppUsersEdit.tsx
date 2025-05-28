@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import successImg from '../../../assets/images/success.gif'
-import { BsArrowLeft, Button, Calendar, Checkbox, Dialog, Dropdown, DropdownChangeEvent, FaSave, Image, InputText, InputTextarea, IoIosArrowBack, IoIosArrowForward, Stepper, StepperPanel, StepperRefAttributes, Toast } from '../../../sharedBase/globalImports';
+import { BsArrowLeft, Button, Calendar, Checkbox, Dialog, Dropdown, DropdownChangeEvent, FaSave, Image, InputText, InputTextarea, IoIosArrowBack, IoIosArrowForward, MultiSelect, MultiSelectChangeEvent, Stepper, StepperPanel, StepperRefAttributes, Toast } from '../../../sharedBase/globalImports';
 import { useNavigate, useParams, useTranslation } from '../../../sharedBase/globalUtils';
 import { useEditPage } from '../../../hooks/useEditPage';
 import { AppUser } from '../../../core/model/appuser';
-import { selectDropdownEnum } from '../../../sharedBase/dropdownUtils';
+import { selectDropdownEnum, selectMultiData } from '../../../sharedBase/dropdownUtils';
 import { getGlobalSchema } from '../../../globalschema';
 import TooltipWithText from '../../../components/TooltipWithText';
 import FileUploadMain from '../../../components/FileUploadMain';
@@ -13,7 +13,7 @@ import { CustomFile } from '../../../core/model/customfile';
 import { useItemQuery } from '../../../store/useItemQuery';
 import { useAppUserService } from '../../../core/service/appUsers.service';
 import { useListQuery } from '../../../store/useListQuery';
-import { useFetchDataEnum } from '../../../sharedBase/lookupService';
+import { getData, useFetchDataEnum } from '../../../sharedBase/lookupService';
 import Loader from '../../../components/Loader';
 
 export default function AppUsersEdit() {
@@ -56,6 +56,14 @@ export default function AppUsersEdit() {
   const verifyData = useFetchDataEnum("VerifyType");
 
   const [calendarLastLogin, setCalendarLastLogin] = useState<Date | null>(null);
+
+  const [model, setModel] = useState<{
+    selectedItems?: string;
+    selectedItemsLabel?: string;
+  }>({});
+  const appUserData = itemQuery.data?.[0];
+  const [listAppUser, setListAppUser] = useState<AppUser[]>([]);
+  // const [selectedAppUser, setSelectedAppUser] = useState<AppUser[]>([]);
 
   function initData(): AppUser {
     return {
@@ -160,6 +168,28 @@ export default function AppUsersEdit() {
     bindDropDownList();
   }, [itemData, roleData?.data, publishData?.data, verifyData?.data]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+
+        const userList = await getData(userService, false);
+        setListAppUser(userList);
+        if (appUserData && appUserData.appUserList) {
+          // const arrList = appUserData.appUserList.split(',');
+          // const selectedList = userList.filter((a) => arrList.includes(String(a.id)));
+          // setSelectedAppUser(selectedList);
+        } else {
+          // setSelectedAppUser([]);
+        }
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setListAppUser([]);
+        // setSelectedAppUser([]);
+      }
+    };
+
+    fetchData();
+  }, [appUserData]);
 
   const handleInputChange = (field: string, value: string) => {
     setItem((prev) => ({ ...prev, [field]: value }));
@@ -378,10 +408,18 @@ export default function AppUsersEdit() {
     }
   };
 
+  const handleMultiSelectChange = (e: MultiSelectChangeEvent) => {
+    const selectedUserIds = e.value;
+
+    const selectedData = listAppUser.filter((u) => selectedUserIds.includes(u.id));
+    const updatedModel = selectMultiData(selectedData, 'selectedItems');
+    setModel((prev) => ({ ...prev, ...updatedModel }));
+  };
+
   return (
     <div className='relative h-screen flex flex-col'>
       <div className="flex flex-col overflow-y-auto overflow-x-hidden">
-        <div className="flex items-center  p-1 border-b topbar border-[var(--color-border)] shadow-md bg-[var(--color-white)] text-[var(--color-dark)] w-full fixed  top-30 z-20">
+        <div className="flex items-center p-1 border-b topbar border-[var(--color-border)] shadow-md bg-[var(--color-white)] text-[var(--color-dark)] w-full fixed  top-30 z-20">
           <Button
             className="backBtn cursor-pointer flex items-center"
             onClick={handleBackToUser}
@@ -398,10 +436,10 @@ export default function AppUsersEdit() {
             <div className="flex flex-col  border-none bg-[var(--color-white)] text-[var(--color-dark)] mb-10 sm:mb-20">
               <form id="myForm" onSubmit={handleSubmit} noValidate>
                 <div className="w-full bg-[var(--color-white)] text-[var(--color-dark)]">
-                  <Stepper ref={stepperRef} headerPosition="top">
+                  <Stepper ref={stepperRef} headerPosition="bottom">
                     <StepperPanel header={headers[0]}>
                       <div ref={(el) => { stepRefs.current[0] = el; }} className="p-2 mt-3 lg:mt-10 mb-12 md:mb-0 lg:mb-0 bg-[var(--color-white)] text-[var(--color-dark)]">
-                        <div className="user-grid pb-4">
+                        <div className="user-grid pb-5">
                           {!isFieldHidden("name") && (
                             <div className="flex flex-col">
                               <div className=" flex items-center">
@@ -562,7 +600,7 @@ export default function AppUsersEdit() {
 
                     <StepperPanel header={headers[1]}>
                       <div ref={(el) => { stepRefs.current[1] = el; }} className="p-2 mt-3 lg:mt-10 bg-[var(--color-white)] text-[var(--color-dark)] mb-12 md:mb-0 lg:mb-0">
-                        <div className="user-grid pb-4">
+                        <div className="user-grid pb-5">
                           {!isFieldHidden("emailId") && (
                             <div className="flex flex-col">
                               <div className=" flex items-center">
@@ -686,7 +724,7 @@ export default function AppUsersEdit() {
 
                     <StepperPanel header={headers[2]}>
                       <div ref={(el) => { stepRefs.current[2] = el; }} className="p-2 mt-3 lg:mt-10 bg-[var(--color-white)] text-[var(--color-dark)] mb-12 md:mb-0 lg:mb-0">
-                        <div className="user-grid pb-4">
+                        <div className="user-grid pb-5">
                           {!isFieldHidden("pincode") && (
                             <div className="flex flex-col">
                               <div className=" flex items-center">
@@ -837,7 +875,7 @@ export default function AppUsersEdit() {
 
                     <StepperPanel header={headers[3]}>
                       <div ref={(el) => { stepRefs.current[3] = el; }} className="p-2 mb-12 md:mb-0 lg:mb-0 bg-[var(--color-white)] text-[var(--color-dark)] mt-3 lg:mt-10">
-                        <div className="user-grid pb-4">
+                        <div className="user-grid pb-5">
                           {!isFieldHidden("verifyShop") && (
                             <div className="flex flex-col">
                               <div className=" flex items-center">
@@ -1294,6 +1332,37 @@ export default function AppUsersEdit() {
                               />
                             </div>
                           )}
+
+                          <div className="flex flex-col">
+                            <div className=" flex items-center">
+                              <label
+                                htmlFor="totalPlot"
+                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
+                              >
+                               AppUser MultiSelect
+                              </label>
+                              <TooltipWithText text="AppUser MultiSelect" />
+                            </div>
+                            <MultiSelect
+                              name="selectedItems"
+                              value={
+                                model.selectedItems
+                                  ? model.selectedItems
+                                    .split(',')
+                                    .map((id) => parseInt(id))
+                                    .filter((id) => !isNaN(id))
+                                  : []
+                              }
+                              options={listAppUser}
+                              onChange={handleMultiSelectChange}
+                              optionLabel="name"
+                              optionValue="id"
+                              filter
+                              placeholder="Select Names"
+                              // className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] "
+                              className="text-sm w-full lg:w-20rem flex items-center h-[40px]  border bg-[var(--color-white)] text-[var(--color-dark)] border-[var(--color-gray)] rounded-md shadow-sm"
+                            />
+                          </div>
                         </div>
                       </div>
                     </StepperPanel>

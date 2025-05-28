@@ -15,6 +15,7 @@ export default function AppUsersView() {
   const { id } = useParams<{ id: string }>();
   const stepperRef = useRef<StepperRefAttributes | null>(null);
   const [stepNo, setStepNo] = useState(0);
+  const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
   const stepsData = [
     t("appUsers.form_detail.fields.accessDetails"),
     t("appUsers.form_detail.fields.shopDetails"),
@@ -120,9 +121,7 @@ export default function AppUsersView() {
           <div className="flex flex-col border-none mb-10 sm:mb-20">
             <Stepper ref={stepperRef} headerPosition="bottom">
               <StepperPanel header={stepsData[0]}>
-                <div className="mb-12 md:mb-0 lg:mb-0 bg-[var(--color-white)] text-[var(--color-dark)] mt-3 lg:mt-10">
-                  {/* <input type="hidden" name="id" value={userData?.id} /> */}
-
+                <div ref={(el) => { stepRefs.current[0] = el; }} className="p-2 mb-12 md:mb-0 lg:mb-0 bg-[var(--color-white)] text-[var(--color-dark)] mt-3 lg:mt-10">
                   <div className="user-grid pb-5">
                     {!isFieldHidden("name") && (
                       <div className="flex flex-col   bg-[var(--color-white)] text-[var(--color-dark)] bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
@@ -214,8 +213,8 @@ export default function AppUsersView() {
               </StepperPanel>
 
               <StepperPanel header={stepsData[1]}>
-                <div className="p-2 mb-12 md:mb-0 lg:mb-0 bg-[var(--color-white)] text-[var(--color-dark)] mt-3 lg:mt-10">
-                  <div className="user-grid   bg-[var(--color-white)] text-[var(--color-dark)] pb-5">
+                <div ref={(el) => { stepRefs.current[1] = el; }} className="p-2 mt-3 lg:mt-10 bg-[var(--color-white)] text-[var(--color-dark)] mb-12 md:mb-0 lg:mb-0">
+                  <div className="user-grid pb-5">
                     {!isFieldHidden("emailId") && (
                       <div className="flex flex-col bg-[var(--color-white)] text-[var(--color-dark)]  bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
                         <div className="flex items-center space-x-2">
@@ -288,7 +287,7 @@ export default function AppUsersView() {
               </StepperPanel>
 
               <StepperPanel header={stepsData[2]}>
-                <div className="p-2 mb-12 md:mb-0 lg:mb-0 bg-[var(--color-white)] text-[var(--color-dark)] mt-3 lg:mt-10">
+                <div ref={(el) => { stepRefs.current[2] = el; }} className="p-2 mt-3 lg:mt-10 bg-[var(--color-white)] text-[var(--color-dark)] mb-12 md:mb-0 lg:mb-0">
                   <div className="user-grid pb-5">
                     {!isFieldHidden("pincode") && (
                       <div className="flex flex-col  bg-[var(--color-white)] text-[var(--color-dark)] bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
@@ -354,7 +353,7 @@ export default function AppUsersView() {
               </StepperPanel>
 
               <StepperPanel header={stepsData[3]}>
-                <div className="p-2 bg-[var(--color-white)] text-[var(--color-dark)] mt-3 lg:mt-10 mb-12 md:mb-0 lg:mb-0">
+                <div ref={(el) => { stepRefs.current[3] = el; }} className="p-2 mb-12 md:mb-0 lg:mb-0 bg-[var(--color-white)] text-[var(--color-dark)] mt-3 lg:mt-10">
                   <div className="user-grid">
                     {!isFieldHidden("gst") && (
                       <div className="flex flex-col bg-[var(--color-white)] text-[var(--color-dark)]  bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">

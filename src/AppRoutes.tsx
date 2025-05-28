@@ -8,6 +8,7 @@ import ProductsList from "./pages/admin/product/ProductsList";
 import AppUsersView from "./pages/admin/appuser/AppUsersView";
 import AppUsersEdit from "./pages/admin/appuser/AppUsersEdit";
 import AppUsersImport from "./pages/admin/appuser/AppUsersImport";
+import FormControls from './pages/admin/role/FormControls';
 
 const AppRoutes = () => {
   return (
@@ -21,6 +22,8 @@ const AppRoutes = () => {
       <Route path="/appuser/import" element={<Layout><AppUsersImport /></Layout>} />
 
       <Route path="/product" element={<Layout><ProductsList /></Layout>} />
+
+      <Route path="/formcontrols" element={<Layout><FormControls /></Layout>} />
 
       <Route path="/404" element={<Layout><NotAuthorized /></Layout>} />
       <Route path="*" element={<Navigate to="/404" replace />} />
