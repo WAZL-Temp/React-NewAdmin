@@ -1,5 +1,4 @@
 export interface AppUserTest {
-	createDate?: Date;
 	id?: number;
 	name?: string;
 	firstName?: string;
@@ -36,12 +35,11 @@ export interface AppUserTest {
 	defaultLanguage?: string;
 	isPremiumUser?: boolean;
 	totalPlot?: number;
+	createDate?: Date;
 	updateDate?: Date;
 	deleteDate?: Date;
 	createById?: number;
 	updateById?: number;
 	deleteById?: number;
 	isDelete?: boolean;
-  }
-  
-  
+}
