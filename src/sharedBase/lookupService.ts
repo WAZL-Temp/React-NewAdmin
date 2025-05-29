@@ -106,12 +106,14 @@ interface Service {
   getAll: (condition: any) => Promise<unknown[]>;
 }
 
-export function getService(type: string): Service | null {
+export function getService(): Service | null {
+  // type: string
   const service: Service | null = null;
   return service;
 }
 
-export async function getData(service: Service | null, userFilter: boolean = false): Promise<any[]> {
+export async function getData(service: Service | null): Promise<any[]> {
+  // userFilter: boolean = false
   if (service != null) {
     const condition = {};
     const data = await service.getAll(condition);

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAppUserService } from '../../../core/service/appUsers.service';
-import { BsArrowLeft, Button, Column, DataTable, Dialog, Image, RiEyeFill, RiFileDownloadFill, RiFileFill, SplitButton, Tooltip } from '../../../sharedBase/globalImports';
+import { BsArrowLeft, Button, Column, DataTable, DataTableFilterMeta, Dialog, FilterMatchMode, Image, InputText, RiEyeFill, RiFileDownloadFill, RiFileFill, SplitButton, Tooltip } from '../../../sharedBase/globalImports';
 import { useTranslation } from '../../../sharedBase/globalUtils';
 import { useFileUploadService } from "../../../core/service/fileUpload.service";
 import FileUploadMain from '../../../components/FileUploadMain';
@@ -18,7 +18,7 @@ const AppUsersImport = () => {
   const [importedData, setImportedData] = useState<AppUser[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<any>(null);
-   const fileUploadService = useFileUploadService("AppUser");
+  const fileUploadService = useFileUploadService("AppUser");
   const [validFile, setValidFile] = useState(false);
   const [importValidateComplete, setImportValidateComplete] = useState(false);
   const [totalRecords, setTotalRecords] = useState<number>(0);
@@ -26,6 +26,7 @@ const AppUsersImport = () => {
   const [loadingSync, setLoadingSync] = useState(false);
   const baseModelName = "AppUsers";
   const userService = useAppUserService();
+  const [filters, setFilters] = useState<DataTableFilterMeta>({ global: { value: null, matchMode: FilterMatchMode.CONTAINS } });
 
   const { onPage, first, rows, handleDownloadTemplate, downloading, importAllow, formatDate }
     = useImportPage({
@@ -168,6 +169,15 @@ const AppUsersImport = () => {
     );
   };
 
+  const handleFilterChangeLocal = (field: string, value: string | number | boolean | null | Array<string | number | boolean>) => {
+    setFilters(prevFilters => ({
+      ...prevFilters,
+      [field]: Array.isArray(value)
+        ? { value, matchMode: FilterMatchMode.IN }
+        : { value, matchMode: FilterMatchMode.CONTAINS },
+    }));
+  };
+
   return (
     <div className="relative flex flex-col h-screen overflow-y-auto overflow-x-hidden mb-20">
       <div className="flex items-center topbar p-1 bg-[var(--color-white] text-[var(--color-dark)] w-full fixed top-30 z-20">
@@ -242,10 +252,13 @@ const AppUsersImport = () => {
                 <>
                   <DataTable
                     value={importedData}
-                    // dataKey="id"
+                    dataKey="id"
                     resizableColumns
                     scrollable
                     // scrollHeight="53vh"
+                    filterDisplay="row"
+                    filters={filters}
+                    onFilter={(e) => setFilters(e.filters)}
                     scrollHeight="calc(100vh - 300px)"
                     showGridlines
                     paginator
@@ -263,6 +276,13 @@ const AppUsersImport = () => {
                       field="importAction" header={t("appUsers.form_detail.fields.importAction")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("importAction", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <>
                           <div id={`tooltip-importAction-${rowIndex}`} className="text-left truncate font-medium">
@@ -276,6 +296,13 @@ const AppUsersImport = () => {
                       field="importRemark" header={t("appUsers.form_detail.fields.importRemark")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("importRemark", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <>
                           <div id={`tooltip-importRemark-${rowIndex}`} className="text-left truncate font-medium">
@@ -286,9 +313,35 @@ const AppUsersImport = () => {
                       )}
                     />
                     <Column
+                      field="createDate" header={t("appUsers.columns.fields.createDate")} sortable
+                      headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                      style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("createDate", e.target.value)}
+                        />
+                      }
+                      body={(rowData, { rowIndex }) => (
+                        <>
+                          <div id={`tooltip-createDate-${rowIndex}`} className="text-left truncate font-medium">
+                            {formatDate(rowData.createDate)}
+                          </div>
+                        </>
+                      )}
+                    />
+                    <Column
                       field="name" header={t("appUsers.columns.fields.name")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("name", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <>
                           <div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
@@ -302,6 +355,13 @@ const AppUsersImport = () => {
                       field="firstName" header={t("appUsers.columns.fields.firstName")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("firstName", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <>
                           <div id={`tooltip-firstName-${rowIndex}`} className="text-left truncate font-medium">
@@ -315,6 +375,13 @@ const AppUsersImport = () => {
                       field="lastName" header={t("appUsers.columns.fields.lastName")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("lastName", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <>
                           <div id={`tooltip-lastName-${rowIndex}`} className="text-left truncate font-medium">
@@ -328,6 +395,13 @@ const AppUsersImport = () => {
                       field="mobile" header={t("appUsers.columns.fields.mobile")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("mobile", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <>
                           <div id={`tooltip-mobile-${rowIndex}`} className="text-left truncate font-medium">
@@ -341,6 +415,13 @@ const AppUsersImport = () => {
                       field="mobileVerified" header={t("appUsers.columns.fields.mobileVerified")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("mobileVerified", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <>
                           <div id={`tooltip-mobileVerified-${rowIndex}`} className="text-left truncate font-medium">
@@ -354,6 +435,13 @@ const AppUsersImport = () => {
                       field="emailId" header={t("appUsers.columns.fields.emailId")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("emailId", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <>
                           <div id={`tooltip-emailId-${rowIndex}`} className="text-left truncate font-medium">
@@ -367,6 +455,13 @@ const AppUsersImport = () => {
                       field="emailVerified" header={t("appUsers.columns.fields.emailVerified")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("emailVerified", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <>
                           <div id={`tooltip-emailVerified-${rowIndex}`} className="text-left truncate font-medium">
@@ -380,6 +475,13 @@ const AppUsersImport = () => {
                       field="shopName" header={t("appUsers.columns.fields.shopName")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("shopName", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <>
                           <div id={`tooltip-shopName-${rowIndex}`} className="text-left truncate font-medium">
@@ -393,6 +495,13 @@ const AppUsersImport = () => {
                       field="password" header={t("appUsers.columns.fields.password")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("password", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <>
                           <div id={`tooltip-password-${rowIndex}`} className="text-left truncate font-medium">
@@ -406,6 +515,13 @@ const AppUsersImport = () => {
                       field="pincode" header={t("appUsers.columns.fields.pincode")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("pincode", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <>
                           <div id={`tooltip-pincode-${rowIndex}`} className="text-left truncate font-medium">
@@ -419,6 +535,13 @@ const AppUsersImport = () => {
                       field="state" header={t("appUsers.columns.fields.state")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("state", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <>
                           <div id={`tooltip-state-${rowIndex}`} className="text-left truncate font-medium">
@@ -432,6 +555,13 @@ const AppUsersImport = () => {
                       field="district" header={t("appUsers.columns.fields.district")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("district", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <>
                           <div id={`tooltip-district-${rowIndex}`} className="text-left truncate font-medium">
@@ -445,6 +575,13 @@ const AppUsersImport = () => {
                       field="address" header={t("appUsers.columns.fields.address")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("address", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <>
                           <div id={`tooltip-address-${rowIndex}`} className="text-left truncate font-medium">
@@ -458,6 +595,13 @@ const AppUsersImport = () => {
                       field="addressLine" header={t("appUsers.columns.fields.addressLine")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("addressLine", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <>
                           <div id={`tooltip-addressLine-${rowIndex}`} className="text-left truncate font-medium">
@@ -471,6 +615,13 @@ const AppUsersImport = () => {
                       field="gst" header={t("appUsers.columns.fields.gst")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("gst", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <>
                           <div id={`tooltip-gst-${rowIndex}`} className="text-left truncate font-medium">
@@ -484,6 +635,13 @@ const AppUsersImport = () => {
                       field="verifyShop" header={t("appUsers.columns.fields.verifyShop")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("verifyShop", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <>
                           <div id={`tooltip-verifyShop-${rowIndex}`} className="text-left truncate font-medium">
@@ -497,6 +655,13 @@ const AppUsersImport = () => {
                       field="gstCertificate" header={t("appUsers.columns.fields.gstCertificate")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("gstCertificate", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <div className="text-left truncate font-medium">
                           {renderFileCell(rowData, 'gstCertificate', rowIndex)}
@@ -507,6 +672,13 @@ const AppUsersImport = () => {
                       field="photoShopFront" header={t("appUsers.columns.fields.photoShopFront")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("photoShopFront", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <div className="text-left truncate font-medium">
                           {renderFileCell(rowData, 'photoShopFront', rowIndex)}
@@ -517,6 +689,13 @@ const AppUsersImport = () => {
                       field="visitingCard" header={t("appUsers.columns.fields.visitingCard")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("visitingCard", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <div className="text-left truncate font-medium">
                           {renderFileCell(rowData, 'visitingCard', rowIndex)}
@@ -527,6 +706,13 @@ const AppUsersImport = () => {
                       field="cheque" header={t("appUsers.columns.fields.cheque")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("cheque", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <div className="text-left truncate font-medium">
                           {renderFileCell(rowData, 'cheque', rowIndex)}
@@ -534,9 +720,36 @@ const AppUsersImport = () => {
                       )}
                     />
                     <Column
+                      field="gstOtp" header={t("appUsers.columns.fields.gstOtp")} sortable
+                      headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                      style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("gstOtp", e.target.value)}
+                        />
+                      }
+                      body={(rowData, { rowIndex }) => (
+                        <>
+                          <div id={`tooltip-gstOtp-${rowIndex}`} className="text-left truncate font-medium">
+                            {rowData.gstOtp}
+                          </div>
+                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-gstOtp-${rowIndex}`} content={rowData.gstOtp} showDelay={200} position="top" />
+                        </>
+                      )}
+                    />
+                    <Column
                       field="isActive" header={t("appUsers.columns.fields.isActive")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("isActive", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <>
                           <div id={`tooltip-isActive-${rowIndex}`} className="text-left truncate font-medium">
@@ -550,6 +763,13 @@ const AppUsersImport = () => {
                       field="isAdmin" header={t("appUsers.columns.fields.isAdmin")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("isAdmin", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <>
                           <div id={`tooltip-isAdmin-${rowIndex}`} className="text-left truncate font-medium">
@@ -563,6 +783,13 @@ const AppUsersImport = () => {
                       field="hasImpersonateAccess" header={t("appUsers.columns.fields.hasImpersonateAccess")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("hasImpersonateAccess", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <>
                           <div id={`tooltip-hasImpersonateAccess-${rowIndex}`} className="text-left truncate font-medium">
@@ -576,6 +803,13 @@ const AppUsersImport = () => {
                       field="photoAttachment" header={t("appUsers.columns.fields.photoAttachment")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("photoAttachment", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <div className="text-left truncate font-medium">
                           {renderFileCell(rowData, 'photoAttachment', rowIndex)}
@@ -586,6 +820,13 @@ const AppUsersImport = () => {
                       field="roleLabel" header={t("appUsers.columns.fields.roleLabel")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("roleLabel", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <>
                           <div id={`tooltip-roleLabel-${rowIndex}`} className="text-left truncate font-medium">
@@ -599,6 +840,13 @@ const AppUsersImport = () => {
                       field="publishLabel" header={t("appUsers.columns.fields.publishLabel")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("publishLabel", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <>
                           <div id={`tooltip-publishLabel-${rowIndex}`} className="text-left truncate font-medium">
@@ -612,12 +860,59 @@ const AppUsersImport = () => {
                       field="lastLogin" header={t("appUsers.columns.fields.lastLogin")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("lastLogin", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <>
                           <div id={`tooltip-lastLogin-${rowIndex}`} className="text-left truncate font-medium">
                             {formatDate(rowData.lastLogin)}
                           </div>
                           <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-lastLogin-${rowIndex}`} content={formatDate(rowData.lastLogin)} showDelay={200} position="top" />
+                        </>
+                      )}
+                    />
+                    <Column
+                      field="defaultLanguage" header={t("appUsers.columns.fields.defaultLanguage")} sortable
+                      headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                      style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("defaultLanguage", e.target.value)}
+                        />
+                      }
+                      body={(rowData, { rowIndex }) => (
+                        <>
+                          <div id={`tooltip-defaultLanguage-${rowIndex}`} className="text-left truncate font-medium">
+                            {rowData.defaultLanguage}
+                          </div>
+                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-defaultLanguage-${rowIndex}`} content={rowData.defaultLanguage} showDelay={200} position="top" />
+                        </>
+                      )}
+                    />
+                    <Column
+                      field="isPremiumUser" header={t("appUsers.columns.fields.isPremiumUser")} sortable
+                      headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                      style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("isPremiumUser", e.target.value)}
+                        />
+                      }
+                      body={(rowData, { rowIndex }) => (
+                        <>
+                          <div id={`tooltip-isPremiumUser-${rowIndex}`} className="text-left truncate font-medium">
+                            {rowData.isPremiumUser ? "true" : "false"}
+                          </div>
+                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isPremiumUser-${rowIndex}`} content={rowData.isPremiumUser ? "true" : "false"} showDelay={200} position="top" />
                         </>
                       )}
                     />
