@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useListPage } from "../../../hooks/useListPage";
-import { BiSolidTrash, Button, Calendar, Column, DataTable, Dialog, HiOutlinePlus, IoMdSettings, Image, InputText, IoMdRefresh, MdOutlineUploadFile, MenuItem, RiPencilFill, SplitButton, TbFileExcel, TiEye, Toast, Tooltip, FilterMatchMode, Checkbox } from "../../../sharedBase/globalImports";
+import { BiSolidTrash, Button, Calendar, Column, DataTable, Dialog, HiOutlinePlus, Image, InputText, IoMdRefresh, MdOutlineUploadFile, MenuItem, RiPencilFill, SplitButton, TbFileExcel, TiEye, Toast, Tooltip, FilterMatchMode, Checkbox } from "../../../sharedBase/globalImports";
 import { useTranslation, useNavigate } from '../../../sharedBase/globalUtils';
 import successimg from '../../../assets/images/success.gif';
 import confirmImg from '../../../assets/images/are-you-sure.jpg';
@@ -22,7 +22,7 @@ export default function AppUsersList() {
     const userService = useAppUserService();
     const query = useListQuery<AppUser>(userService);
     const {
-        roleData, hasAccess, globalFilterValue, setGlobalFilterValue, onGlobalFilterChange, refreshItemData, isDeleteDialogVisible,
+        roleData, globalFilterValue, setGlobalFilterValue, onGlobalFilterChange, refreshItemData, isDeleteDialogVisible,
         deleteItem, closeDeleteDialog, setFilters, onSort, onPage, first, rows, sortField, sortOrder, totalRecords,
         filters, setListSearch, clearListSearch, searchChange, openItem, confirmDeleteItem,
         toast, isSuccessDialogOpen, setIsSuccessDialogOpen, formatDate, exportToExcel,
@@ -170,7 +170,7 @@ export default function AppUsersList() {
                 <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-delete-${rowData.id}`} content="Delete Data" showDelay={200} position="top" />
             </div>
         );
-    }, [deleteItem, handleDelete, roleData, hasAccess]);
+    }, [deleteItem, handleDelete]);
 
     const renderFileCell = (rowData: RowData, field: string, rowIndex: number) => {
         let fileName = "";
@@ -877,6 +877,28 @@ export default function AppUsersList() {
                                     )}
                                 />
                                 {/* )}
+                                {visibleColumns.includes('gstOtp') && ( */}
+                                <Column
+                                    field="gstOtp" header={t("appUsers.columns.fields.gstOtp")} sortable filter
+                                    headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                                    style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                                    filterElement={
+                                        <InputText
+                                            value={query.tableSearch.searchRowFilter?.gstOtp || ''}
+                                            className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                                            onChange={(e) => handleFilterChangeLocal("gstOtp", e.target.value)}
+                                        />
+                                    }
+                                    body={(rowData, { rowIndex }) => (
+                                        <>
+                                            <div id={`tooltip-gstOtp-${rowIndex}`} className="text-left truncate font-medium">
+                                                {rowData.gstOtp}
+                                            </div>
+                                            <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-gstOtp-${rowIndex}`} content={rowData.gstOtp} showDelay={200} position="top" />
+                                        </>
+                                    )}
+                                />
+                                {/* )}
                                 {visibleColumns.includes('isActive') && ( */}
                                 <Column
                                     field="isActive" header={t("appUsers.columns.fields.isActive")} sortable filter
@@ -1039,6 +1061,50 @@ export default function AppUsersList() {
                                                 {rowData.totalPlot}
                                             </div>
                                             <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-totalPlot-${rowIndex}`} content={rowData.totalPlot} showDelay={200} position="top" />
+                                        </>
+                                    )}
+                                />
+                                {/* )}
+                                {visibleColumns.includes('defaultLanguage') && ( */}
+                                <Column
+                                    field="defaultLanguage" header={t("appUsers.columns.fields.defaultLanguage")} sortable filter
+                                    headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                                    style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                                    filterElement={
+                                        <InputText
+                                            value={query.tableSearch.searchRowFilter?.defaultLanguage || ''}
+                                            className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                                            onChange={(e) => handleFilterChangeLocal("defaultLanguage", e.target.value)}
+                                        />
+                                    }
+                                    body={(rowData, { rowIndex }) => (
+                                        <>
+                                            <div id={`tooltip-defaultLanguage-${rowIndex}`} className="text-left truncate font-medium">
+                                                {rowData.defaultLanguage}
+                                            </div>
+                                            <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-defaultLanguage-${rowIndex}`} content={rowData.defaultLanguage} showDelay={200} position="top" />
+                                        </>
+                                    )}
+                                />
+                                {/* )}
+                                {visibleColumns.includes('isPremiumUser') && (  */}
+                                <Column
+                                    field="isPremiumUser" header={t("appUsers.columns.fields.isPremiumUser")} sortable filter
+                                    headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                                    style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                                    filterElement={
+                                        <InputText
+                                            value={query.tableSearch.searchRowFilter?.isPremiumUser || ''}
+                                            className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                                            onChange={(e) => handleFilterChangeLocal("isPremiumUser", e.target.value)}
+                                        />
+                                    }
+                                    body={(rowData, { rowIndex }) => (
+                                        <>
+                                            <div id={`tooltip-isPremiumUser-${rowIndex}`} className="text-left truncate font-medium">
+                                                {rowData.isPremiumUser ? "true" : "false"}
+                                            </div>
+                                            <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isPremiumUser-${rowIndex}`} content={rowData.isPremiumUser ? "true" : "false"} showDelay={200} position="top" />
                                         </>
                                     )}
                                 />

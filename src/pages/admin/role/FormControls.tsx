@@ -39,7 +39,7 @@ export default function FormControls() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const list = await getData(productService, false);
+                const list = await getData(productService);
                 setListProductLive(list);
                 if (item && item.productList) {
                     // const arrList = item.productList.split(',');
@@ -61,7 +61,7 @@ export default function FormControls() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const userList = await getData(userService, false);
+                const userList = await getData(userService);
                 setListAppUser(userList);
                 if (appuserItem && appuserItem.appUserList) {
                     // const arrList = appuserItem.appUserList.split(',');

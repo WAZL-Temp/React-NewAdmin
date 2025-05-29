@@ -104,7 +104,7 @@ export default function AppUsersHome() {
                     <div className="flex space-x-4 overflow-x-auto scrollbar-hide px-2 py-4 snap-x snap-mandatory justify-start sm:justify-center">
                       {listHomeUserData.map((item, index) => (
                         <div key={index} className="flex-none snap-center">
-                          <div className="bg-white shadow-xl rounded-2xl p-4 flex flex-col items-center max-w-xs">
+                          <div className="bg-white shadow-xl rounded-2xl p-4 flex flex-col items-center max-w-xs min-h-[160px] sm:min-h-[180px]">
                             <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden">
                               <Image
                                 src={avatar}
@@ -112,8 +112,8 @@ export default function AppUsersHome() {
                                 className="w-full h-full object-cover"
                               />
                             </div>
-                            <h3 className="mt-3 text-sm sm:text-sm font-semibold text-gray-800 text-center">
-                              {item.name}
+                            <h3 className="mt-3 text-sm sm:text-sm font-semibold text-gray-800 text-center min-h-[24px]">
+                              {item.name }
                             </h3>
                           </div>
                         </div>
@@ -166,9 +166,9 @@ const ItemSlider = ({ user }: { user: AppUser }) => {
   const baseModelName = 'appuser';
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center h-full">
       <div className="shadow-md hover:shadow-lg transition-shadow duration-300 rounded-xl overflow-hidden w-full max-w-full min-w-0">
-        <div className="p-2 sm:p-4">
+        <div className="p-2 sm:p-4 flex flex-col h-full justify-between">
           <div className="relative mb-4">
             <Image
               src={teambanner}
@@ -179,19 +179,19 @@ const ItemSlider = ({ user }: { user: AppUser }) => {
           <div className="text-center">
             <h4 className="text-base sm:text-lg font-semibold text-gray-900">{user.name}</h4>
             <p className="text-xs sm:text-sm text-gray-600 mb-4">{user.emailId}</p>
-            <div className="flex items-center justify-center gap-3">
-              <div
-                onClick={() => navigate(`/${baseModelName}/${user.id}`)}
-                className="flex p-[6px] items-center justify-center rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white hover:bg-[var(--color-primary)] transition cursor-pointer"
-              >
-                <CgEye className="text-white w-7 h-7 " />
-              </div>
-              <div
-                onClick={() => navigate(`/${baseModelName}/edit/${user.id}`)}
-                className="p-[6px] flex items-center justify-center rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white hover:bg-[var(--color-primary)] transition cursor-pointer"
-              >
-                <RiFileEditLine className="text-white w-7 h-7" />
-              </div>
+          </div>
+          <div className="flex items-center justify-center gap-3">
+            <div
+              onClick={() => navigate(`/${baseModelName}/${user.id}`)}
+              className="flex p-[6px] items-center justify-center rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white hover:bg-[var(--color-primary)] transition cursor-pointer"
+            >
+              <CgEye className="text-white w-7 h-7 " />
+            </div>
+            <div
+              onClick={() => navigate(`/${baseModelName}/edit/${user.id}`)}
+              className="p-[6px] flex items-center justify-center rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white hover:bg-[var(--color-primary)] transition cursor-pointer"
+            >
+              <RiFileEditLine className="text-white w-7 h-7" />
             </div>
           </div>
         </div>
@@ -222,9 +222,9 @@ const ItemList = ({ title, users }: { title: string; users: UserData[] }) => {
           ]}
           itemTemplate={(user) => (
             <div className="p-2 sm:p-3">
-              <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-xl overflow-hidden w-full max-w-full min-w-0">
-                <div className="w-full md:w-1/3 flex items-center justify-center bg-blue-100">
-                  <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-32 md:h-3w-32 rounded-full overflow-hidden">
+              <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-xl overflow-hidden w-full max-w-full min-w-0 min-h-[150px] sm:min-h-[200px]">
+                <div className="w-full md:w-1/3 flex items-center justify-center bg-blue-100 h-auto">
+                  <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-32 md:h-32 rounded-full overflow-hidden">
                     <Image
                       src={avatar}
                       alt={user.name || 'User avatar'}

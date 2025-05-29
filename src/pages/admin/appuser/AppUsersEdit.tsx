@@ -55,13 +55,13 @@ export default function AppUsersEdit() {
   const publishData = useFetchDataEnum("PublishType");
   const verifyData = useFetchDataEnum("VerifyType");
 
-  const [calendarLastLogin, setCalendarLastLogin] = useState<Date | null>(null);
+  // const [calendarLastLogin, setCalendarLastLogin] = useState<Date | null>(null);
 
   const [model, setModel] = useState<{
     selectedItems?: string;
     selectedItemsLabel?: string;
   }>({});
-  const appUserData = itemQuery.data?.[0];
+  const appUserData = itemQuery.data;
   const [listAppUser, setListAppUser] = useState<AppUser[]>([]);
   // const [selectedAppUser, setSelectedAppUser] = useState<AppUser[]>([]);
 
@@ -118,16 +118,16 @@ export default function AppUsersEdit() {
         setItemData(data);
         const preparedData = prepareObject<AppUser>(data, initData());
         setItem(preparedData);
-
-        if (preparedData.lastLogin) {
-          setCalendarLastLogin(new Date(preparedData.lastLogin));
-        } else {
-          setCalendarLastLogin(null);
-        }
       }
     };
     fetchData();
   }, [isEditMode, prepareObject, id]);
+
+  // if (preparedData.lastLogin) {
+  //   setCalendarLastLogin(new Date(preparedData.lastLogin));
+  // } else {
+  //   setCalendarLastLogin(null);
+  // }
 
   useEffect(() => {
     const bindDropDownList = async () => {
@@ -172,7 +172,7 @@ export default function AppUsersEdit() {
     const fetchData = async () => {
       try {
 
-        const userList = await getData(userService, false);
+        const userList = await getData(userService);
         setListAppUser(userList);
         if (appUserData && appUserData.appUserList) {
           // const arrList = appUserData.appUserList.split(',');
@@ -208,11 +208,11 @@ export default function AppUsersEdit() {
     }
   };
 
-  const onClearDate = () => {
-    setItem((prev) => ({ ...prev, lastLogin: undefined }));
-    setCalendarLastLogin(null);
-    setErrors((prev) => ({ ...prev, lastLogin: '' }));
-  };
+  // const onClearDate = () => {
+  //   setItem((prev) => ({ ...prev, lastLogin: undefined }));
+  //   setCalendarLastLogin(null);
+  //   setErrors((prev) => ({ ...prev, lastLogin: '' }));
+  // };
 
   const handleFileUpload = (files: CustomFile[], inputName: string) => {
     setItem(prevData => ({
@@ -1242,6 +1242,18 @@ export default function AppUsersEdit() {
                               <Calendar
                                 id="lastLogin"
                                 dateFormat="mm-dd-yy"
+                                value={item.lastLogin ? new Date(item.lastLogin) : null}
+                                yearNavigator
+                                monthNavigator
+                                yearRange="1920:2040"
+                                onChange={(e) => handleInputChange('lastLogin', e.value ? formatDate(e.value) : '')}
+                                showIcon
+                                placeholder={t("appUsers.columns.fields.lastLogin")}
+                                className="calendardark text-sm rounded-md py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                              />
+                              {/* <Calendar
+                                id="lastLogin"
+                                dateFormat="mm-dd-yy"
                                 value={calendarLastLogin}
                                 yearNavigator
                                 monthNavigator
@@ -1256,7 +1268,7 @@ export default function AppUsersEdit() {
                                 showButtonBar
                                 placeholder={t("appUsers.columns.fields.lastLogin")}
                                 className="calendardark text-sm rounded-md py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
-                              />
+                              /> */}
                             </div>
                           )}
 
@@ -1339,7 +1351,7 @@ export default function AppUsersEdit() {
                                 htmlFor="totalPlot"
                                 className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
                               >
-                               AppUser MultiSelect
+                                AppUser MultiSelect
                               </label>
                               <TooltipWithText text="AppUser MultiSelect" />
                             </div>
