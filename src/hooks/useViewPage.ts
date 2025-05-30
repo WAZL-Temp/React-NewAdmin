@@ -49,13 +49,13 @@ export function useViewPage({ props }: UseEditPageProps) {
         navigate(`/${props.baseModelName}/edit/${userid}`);
     };
 
-    const handleBackToUser = () => {
+    const handleBack = () => {
         navigate(`/${props.baseModelName}`);
     };
 
     return {
         isFieldHidden,
         handleEdit,
-        handleBackToUser
+        handleBack
     }
 }
