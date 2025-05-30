@@ -7,14 +7,14 @@ import { Button, Card, Carousel, CgEye, CiShoppingCart, FaRegComment, GoInbox, I
 import { useNavigate, useTranslation } from '../../../sharedBase/globalUtils';
 import { HomeUserData, SummaryData, UserData } from '../../../types/homepage';
 import { useHomePage } from '../../../hooks/useHomePage';
-import { useAppUserService } from '../../../core/service/appUsers.service';
+import { AppUserService } from '../../../core/service/appUsers.service';
 import { useHomeQuery } from '../../../store/useHomeQuery';
 import Loader from '../../../components/Loader';
 
 export default function AppUsersHome() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const userService = useAppUserService();
+  const userService = AppUserService();
   const query = useHomeQuery(userService);
   const [summaryData, setSummaryData] = useState<SummaryData>();
   const [topData, setTopData] = useState<UserData[]>();
