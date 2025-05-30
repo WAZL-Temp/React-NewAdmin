@@ -262,10 +262,13 @@ const columnsConfigDefault = useMemo(() =>[
                 <>
                   <DataTable
                     value={importedData}
-                    // dataKey="id"
+                    dataKey="id"
                     resizableColumns
                     scrollable
                     // scrollHeight="53vh"
+                    filterDisplay="row"
+                    filters={filters}
+                    onFilter={(e) => setFilters(e.filters)}
                     scrollHeight="calc(100vh - 300px)"
                     showGridlines
                     paginator
@@ -310,7 +313,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("name", e.target.value)}
 /> 
@@ -329,7 +332,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("firstName", e.target.value)}
 /> 
@@ -348,7 +351,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("lastName", e.target.value)}
 /> 
@@ -367,7 +370,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("mobile", e.target.value)}
 /> 
@@ -386,7 +389,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("mobileVerified", e.target.value)}
 /> 
@@ -405,7 +408,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("emailId", e.target.value)}
 /> 
@@ -424,7 +427,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("emailVerified", e.target.value)}
 /> 
@@ -443,7 +446,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("shopName", e.target.value)}
 /> 
@@ -462,7 +465,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("password", e.target.value)}
 /> 
@@ -481,7 +484,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("pincode", e.target.value)}
 /> 
@@ -500,7 +503,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("state", e.target.value)}
 /> 
@@ -519,7 +522,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("district", e.target.value)}
 /> 
@@ -538,7 +541,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("address", e.target.value)}
 /> 
@@ -557,7 +560,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("addressLine", e.target.value)}
 /> 
@@ -576,7 +579,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("verifyShopLabel", e.target.value)}
 /> 
@@ -595,7 +598,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("gst", e.target.value)}
 /> 
@@ -614,7 +617,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("gstCertificate", e.target.value)}
 /> 
@@ -629,7 +632,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("gstCertificate", e.target.value)}
 /> 
@@ -648,7 +651,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("photoShopFront", e.target.value)}
 /> 
@@ -663,7 +666,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("photoShopFront", e.target.value)}
 /> 
@@ -682,7 +685,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("visitingCard", e.target.value)}
 /> 
@@ -697,7 +700,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("visitingCard", e.target.value)}
 /> 
@@ -716,7 +719,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("cheque", e.target.value)}
 /> 
@@ -731,7 +734,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("cheque", e.target.value)}
 /> 
@@ -750,7 +753,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("gstOtp", e.target.value)}
 /> 
@@ -769,7 +772,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("isActive", e.target.value)}
 /> 
@@ -788,7 +791,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("isAdmin", e.target.value)}
 /> 
@@ -807,7 +810,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("hasImpersonateAccess", e.target.value)}
 /> 
@@ -826,7 +829,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("photoAttachment", e.target.value)}
 /> 
@@ -841,7 +844,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("photoAttachment", e.target.value)}
 /> 
@@ -860,7 +863,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("roleLabel", e.target.value)}
 /> 
@@ -879,7 +882,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("publishLabel", e.target.value)}
 /> 
@@ -898,7 +901,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("lastLogin", e.target.value)}
 /> 
@@ -913,7 +916,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("defaultLanguage", e.target.value)}
 /> 
@@ -932,7 +935,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("isPremiumUser", e.target.value)}
 /> 
@@ -951,7 +954,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-
+ 
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("totalPlot", e.target.value)}
 /> 

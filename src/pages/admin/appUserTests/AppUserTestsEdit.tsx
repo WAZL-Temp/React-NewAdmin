@@ -22,7 +22,6 @@ export default function AppUserTestsEdit() {
   const globalschema = getGlobalSchema(t);
   const toast = useRef<Toast>(null);
   const baseModelName = "appUserTest";
-  const modelName = "AppUserTest";
   const userService = AppUserTestsService();
   const itemQuery = useItemQuery<AppUserTest>(userService);
   const listQuery = useListQuery<AppUserTest>(userService);
@@ -51,9 +50,9 @@ const [selectedVerifyShop, setSelectedVerifyShop] = useState<String | undefined>
   const [itemStore, setUserData] = useState<AppUserTest>(initData());
 
     
-const VerifyShopData = useFetchDataEnum("VerifyShop");
-const RoleData = useFetchDataEnum("Role");
-const PublishData = useFetchDataEnum("Publish");
+const VerifyShopData = useFetchDataEnum("VerifyShopType");
+const RoleData = useFetchDataEnum("RoleType");
+const PublishData = useFetchDataEnum("PublishType");
 
 
   

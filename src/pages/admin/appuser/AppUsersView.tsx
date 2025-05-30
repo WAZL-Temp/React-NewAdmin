@@ -83,7 +83,7 @@ export default function AppUsersView() {
     }
   }, [query?.data]);
 
-  const { handleEdit, handleBackToUser, isFieldHidden } = useViewPage({
+  const { handleEdit, handleBack, isFieldHidden } = useViewPage({
     props: {
       id: id,
       baseModelName: baseModelName,
@@ -107,7 +107,7 @@ export default function AppUsersView() {
       <div className="flex items-center p-1 shadow-md   bg-[var(--color-white)] text-[var(--color-dark)] topbar w-full fixed  top-30 z-20">
         <Button
           className="backBtn cursor-pointer flex items-center"
-          onClick={handleBackToUser}
+          onClick={handleBack}
         >
           <BsArrowLeft className="h-6 w-6 cursor-pointer mx-3" />
         </Button>

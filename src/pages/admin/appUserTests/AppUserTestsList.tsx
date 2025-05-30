@@ -396,7 +396,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.name || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("name", e.target.value)}
 /> 
@@ -415,7 +415,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.firstName || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("firstName", e.target.value)}
 /> 
@@ -434,7 +434,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.lastName || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("lastName", e.target.value)}
 /> 
@@ -453,7 +453,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.mobile || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("mobile", e.target.value)}
 /> 
@@ -472,7 +472,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.mobileVerified || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("mobileVerified", e.target.value)}
 /> 
@@ -491,7 +491,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.emailId || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("emailId", e.target.value)}
 /> 
@@ -510,7 +510,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.emailVerified || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("emailVerified", e.target.value)}
 /> 
@@ -529,7 +529,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.shopName || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("shopName", e.target.value)}
 /> 
@@ -548,7 +548,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.password || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("password", e.target.value)}
 /> 
@@ -567,7 +567,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.pincode || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("pincode", e.target.value)}
 /> 
@@ -586,7 +586,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.state || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("state", e.target.value)}
 /> 
@@ -605,7 +605,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.district || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("district", e.target.value)}
 /> 
@@ -624,7 +624,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.address || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("address", e.target.value)}
 /> 
@@ -643,7 +643,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.addressLine || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("addressLine", e.target.value)}
 /> 
@@ -662,7 +662,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.verifyShopLabel || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("verifyShopLabel", e.target.value)}
 /> 
@@ -681,7 +681,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.gst || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("gst", e.target.value)}
 /> 
@@ -700,7 +700,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.gstCertificate || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("gstCertificate", e.target.value)}
 /> 
@@ -715,7 +715,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.gstCertificate || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("gstCertificate", e.target.value)}
 /> 
@@ -734,7 +734,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.photoShopFront || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("photoShopFront", e.target.value)}
 /> 
@@ -749,7 +749,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.photoShopFront || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("photoShopFront", e.target.value)}
 /> 
@@ -768,7 +768,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.visitingCard || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("visitingCard", e.target.value)}
 /> 
@@ -783,7 +783,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.visitingCard || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("visitingCard", e.target.value)}
 /> 
@@ -802,7 +802,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.cheque || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("cheque", e.target.value)}
 /> 
@@ -817,7 +817,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.cheque || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("cheque", e.target.value)}
 /> 
@@ -836,7 +836,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.gstOtp || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("gstOtp", e.target.value)}
 /> 
@@ -855,7 +855,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.isActive || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("isActive", e.target.value)}
 /> 
@@ -874,7 +874,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.isAdmin || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("isAdmin", e.target.value)}
 /> 
@@ -893,7 +893,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.hasImpersonateAccess || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("hasImpersonateAccess", e.target.value)}
 /> 
@@ -912,7 +912,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.photoAttachment || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("photoAttachment", e.target.value)}
 /> 
@@ -927,7 +927,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.photoAttachment || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("photoAttachment", e.target.value)}
 /> 
@@ -946,7 +946,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.roleLabel || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("roleLabel", e.target.value)}
 /> 
@@ -965,7 +965,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.publishLabel || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("publishLabel", e.target.value)}
 /> 
@@ -984,7 +984,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.lastLogin || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("lastLogin", e.target.value)}
 /> 
@@ -999,7 +999,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.defaultLanguage || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("defaultLanguage", e.target.value)}
 /> 
@@ -1018,7 +1018,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.isPremiumUser || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("isPremiumUser", e.target.value)}
 /> 
@@ -1037,7 +1037,7 @@ headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.{propName} || ''}
+value={query.tableSearch.searchRowFilter?.totalPlot || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
 onChange={(e) => handleFilterChangeLocal("totalPlot", e.target.value)}
 /> 
