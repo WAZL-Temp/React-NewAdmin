@@ -11,7 +11,7 @@ import FileUploadMain from '../../../components/FileUploadMain';
 import { EnumDetail } from '../../../core/model/enumdetail';
 import { CustomFile } from '../../../core/model/customfile';
 import { useItemQuery } from '../../../store/useItemQuery';
-import { useAppUserService } from '../../../core/service/appUsers.service';
+import { AppUserService } from '../../../core/service/appUsers.service';
 import { useListQuery } from '../../../store/useListQuery';
 import { getData, useFetchDataEnum } from '../../../sharedBase/lookupService';
 import Loader from '../../../components/Loader';
@@ -23,7 +23,7 @@ export default function AppUsersEdit() {
   const globalschema = getGlobalSchema(t);
   const toast = useRef<Toast>(null);
   const baseModelName = "appuser";
-  const userService = useAppUserService();
+  const userService = AppUserService();
   const itemQuery = useItemQuery<AppUser>(userService);
   const listQuery = useListQuery<AppUser>(userService);
   const isEditMode = Boolean(id);

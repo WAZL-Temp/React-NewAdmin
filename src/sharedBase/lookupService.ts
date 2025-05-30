@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import { useListQuery } from "../store/useListQuery";
 import { EnumDetail } from "../core/model/enumdetail";
-import { useEnumDetailsService } from "../core/service/enumDetails.service";
-import { useAppuserRoleService } from "../core/service/appUserRole.service";
+import { EnumDetailsService } from "../core/service/enumDetails.service";
+import { AppuserRoleService } from "../core/service/appUserRole.service";
 import { RoleDetail } from "../core/model/roledetail";
 
 export const useFetchDataEnum = (type: string) => {
   const [data, setData] = useState<EnumDetail[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const enumDetailService = useEnumDetailsService();
+  const enumDetailService = EnumDetailsService();
   const query = useListQuery<EnumDetail>(enumDetailService);
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export const useGetLabelEnum = (type: string, value: string) => {
   const [label, setLabel] = useState<EnumDetail>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const enumDetailService = useEnumDetailsService();
+  const enumDetailService = EnumDetailsService();
   const query = useListQuery<EnumDetail>(enumDetailService);
 
   useEffect(() => {
@@ -73,7 +73,7 @@ export const useFetchRoleDetailsData = () => {
   const [error, setError] = useState<string | null>(null);
   const {
     fetchRoleData,
-  } = useAppuserRoleService();
+  } = AppuserRoleService();
 
   useEffect(() => {
     const fetchRoleDetails = async () => {

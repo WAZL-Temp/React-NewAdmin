@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Product } from "../../../core/model/product";
 import successimg from '../../../assets/images/success.gif';
-import { useProductService } from "../../../core/service/products.service";
+import { ProductService } from "../../../core/service/products.service";
 import confirmImg from '../../../assets/images/are-you-sure.jpg'
 import { BiSolidTrash, Button, Calendar, Checkbox, Column, DataTable, Dialog, FilterMatchMode, HiOutlinePlus, Image, InputText, IoMdRefresh, MdOutlineUploadFile, MenuItem, RiPencilFill, SplitButton, TbFileExcel, TiEye, Toast, Tooltip } from "../../../sharedBase/globalImports";
 import { useNavigate, useTranslation } from '../../../sharedBase/globalUtils';
@@ -14,7 +14,7 @@ const ProductsList = () => {
   const navigate = useNavigate();
   const baseModelName = "product";
   const { t } = useTranslation();
-  const productService = useProductService();
+  const productService = ProductService();
   const query = useListQuery<Product>(productService);
   const [visible, setVisible] = useState(false);
   const dtRef = useRef<DataTable<Product[]>>(null);

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useAppUserService } from '../../../core/service/appUsers.service';
+import { AppUserService } from '../../../core/service/appUsers.service';
 import { BsArrowLeft, Button, Column, DataTable, DataTableFilterMeta, Dialog, FilterMatchMode, Image, InputText, RiEyeFill, RiFileDownloadFill, RiFileFill, SplitButton, Tooltip } from '../../../sharedBase/globalImports';
 import { useTranslation } from '../../../sharedBase/globalUtils';
 import { useFileUploadService } from "../../../core/service/fileUpload.service";
@@ -25,7 +25,7 @@ const AppUsersImport = () => {
   const [importSyncComplete, setImportSyncComplete] = useState(false);
   const [loadingSync, setLoadingSync] = useState(false);
   const baseModelName = "AppUsers";
-  const userService = useAppUserService();
+  const userService = AppUserService();
   const [filters, setFilters] = useState<DataTableFilterMeta>({ global: { value: null, matchMode: FilterMatchMode.CONTAINS } });
 
   const { onPage, first, rows, handleDownloadTemplate, downloading, importAllow, formatDate }
