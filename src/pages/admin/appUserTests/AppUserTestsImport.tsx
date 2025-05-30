@@ -339,10 +339,10 @@ onChange={(e) => handleFilterChangeLocal("firstName", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-firstName-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.firstName}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-firstName-${rowIndex}`} content={rowData.firstName} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -358,10 +358,10 @@ onChange={(e) => handleFilterChangeLocal("lastName", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-lastName-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.lastName}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-lastName-${rowIndex}`} content={rowData.lastName} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -377,10 +377,10 @@ onChange={(e) => handleFilterChangeLocal("mobile", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-mobile-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.mobile}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-mobile-${rowIndex}`} content={rowData.mobile} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -396,10 +396,10 @@ onChange={(e) => handleFilterChangeLocal("mobileVerified", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-mobileVerified-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.mobileVerified}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-mobileVerified-${rowIndex}`} content={rowData.mobileVerified} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -415,10 +415,10 @@ onChange={(e) => handleFilterChangeLocal("emailId", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-emailId-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.emailId}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-emailId-${rowIndex}`} content={rowData.emailId} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -434,10 +434,10 @@ onChange={(e) => handleFilterChangeLocal("emailVerified", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-emailVerified-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.emailVerified}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-emailVerified-${rowIndex}`} content={rowData.emailVerified} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -453,10 +453,10 @@ onChange={(e) => handleFilterChangeLocal("shopName", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-shopName-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.shopName}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-shopName-${rowIndex}`} content={rowData.shopName} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -472,10 +472,10 @@ onChange={(e) => handleFilterChangeLocal("password", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-password-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.password}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-password-${rowIndex}`} content={rowData.password} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -491,10 +491,10 @@ onChange={(e) => handleFilterChangeLocal("pincode", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-pincode-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.pincode}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-pincode-${rowIndex}`} content={rowData.pincode} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -510,10 +510,10 @@ onChange={(e) => handleFilterChangeLocal("state", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-state-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.state}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-state-${rowIndex}`} content={rowData.state} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -529,10 +529,10 @@ onChange={(e) => handleFilterChangeLocal("district", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-district-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.district}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-district-${rowIndex}`} content={rowData.district} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -548,10 +548,10 @@ onChange={(e) => handleFilterChangeLocal("address", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-address-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.address}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-address-${rowIndex}`} content={rowData.address} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -567,10 +567,10 @@ onChange={(e) => handleFilterChangeLocal("addressLine", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-addressLine-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.addressLine}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-addressLine-${rowIndex}`} content={rowData.addressLine} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -586,10 +586,10 @@ onChange={(e) => handleFilterChangeLocal("verifyShopLabel", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-verifyShopLabel-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.verifyShopLabel}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-verifyShopLabel-${rowIndex}`} content={rowData.verifyShopLabel} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -605,10 +605,10 @@ onChange={(e) => handleFilterChangeLocal("gst", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-gst-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.gst}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-gst-${rowIndex}`} content={rowData.gst} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -639,10 +639,10 @@ onChange={(e) => handleFilterChangeLocal("gstCertificate", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-gstCertificate-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.gstCertificate}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-gstCertificate-${rowIndex}`} content={rowData.gstCertificate} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -673,10 +673,10 @@ onChange={(e) => handleFilterChangeLocal("photoShopFront", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-photoShopFront-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.photoShopFront}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-photoShopFront-${rowIndex}`} content={rowData.photoShopFront} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -707,10 +707,10 @@ onChange={(e) => handleFilterChangeLocal("visitingCard", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-visitingCard-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.visitingCard}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-visitingCard-${rowIndex}`} content={rowData.visitingCard} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -741,10 +741,10 @@ onChange={(e) => handleFilterChangeLocal("cheque", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-cheque-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.cheque}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-cheque-${rowIndex}`} content={rowData.cheque} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -760,10 +760,10 @@ onChange={(e) => handleFilterChangeLocal("gstOtp", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-gstOtp-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.gstOtp}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-gstOtp-${rowIndex}`} content={rowData.gstOtp} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -779,10 +779,10 @@ onChange={(e) => handleFilterChangeLocal("isActive", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-isActive-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.isActive}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-isActive-${rowIndex}`} content={rowData.isActive} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -798,10 +798,10 @@ onChange={(e) => handleFilterChangeLocal("isAdmin", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-isAdmin-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.isAdmin}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-isAdmin-${rowIndex}`} content={rowData.isAdmin} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -817,10 +817,10 @@ onChange={(e) => handleFilterChangeLocal("hasImpersonateAccess", e.target.value)
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-hasImpersonateAccess-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.hasImpersonateAccess}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-hasImpersonateAccess-${rowIndex}`} content={rowData.hasImpersonateAccess} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -851,10 +851,10 @@ onChange={(e) => handleFilterChangeLocal("photoAttachment", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-photoAttachment-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.photoAttachment}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-photoAttachment-${rowIndex}`} content={rowData.photoAttachment} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -870,10 +870,10 @@ onChange={(e) => handleFilterChangeLocal("roleLabel", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-roleLabel-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.roleLabel}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-roleLabel-${rowIndex}`} content={rowData.roleLabel} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -889,10 +889,10 @@ onChange={(e) => handleFilterChangeLocal("publishLabel", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-publishLabel-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.publishLabel}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-publishLabel-${rowIndex}`} content={rowData.publishLabel} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -907,7 +907,7 @@ onChange={(e) => handleFilterChangeLocal("lastLogin", e.target.value)}
 /> 
  }
 body={(rowData, { rowIndex }) => (
-<div id={`tooltip-createDate-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-lastLogin-${rowIndex}`} className="text-left truncate font-medium">
  {formatDate(rowData.lastLogin)}
  </div>
 )} /> 
@@ -923,10 +923,10 @@ onChange={(e) => handleFilterChangeLocal("defaultLanguage", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-defaultLanguage-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.defaultLanguage}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-defaultLanguage-${rowIndex}`} content={rowData.defaultLanguage} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -942,10 +942,10 @@ onChange={(e) => handleFilterChangeLocal("isPremiumUser", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-isPremiumUser-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.isPremiumUser}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-isPremiumUser-${rowIndex}`} content={rowData.isPremiumUser} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -961,10 +961,10 @@ onChange={(e) => handleFilterChangeLocal("totalPlot", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-totalPlot-${rowIndex}`} className="text-left truncate font-medium">
  {rowData.totalPlot}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-totalPlot-${rowIndex}`} content={rowData.totalPlot} showDelay={200} position="top" />
 </>
 )}
  /> 
