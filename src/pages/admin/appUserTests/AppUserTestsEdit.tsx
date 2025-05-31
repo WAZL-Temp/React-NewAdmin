@@ -42,12 +42,12 @@ const [listVerifyShop, setListVerifyShop] = useState<EnumDetail[]>([]);
 const [selectedVerifyShop, setSelectedVerifyShop] = useState<String | undefined>(undefined);
  const [selectedRole, setSelectedRole] = useState<String | undefined>(undefined);
  const [selectedPublish, setSelectedPublish] = useState<String | undefined>(undefined);
- calendarLastLogin: Date|null =null;
+
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [dialogMessage, setDialogMessage] = useState('');
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [itemStore, setUserData] = useState<AppUserTest>(initData());
+  const [itemData, setItemData] = useState<AppUserTest>(initData());
 
     
 const VerifyShopData = useFetchDataEnum("VerifyShopType");
@@ -119,7 +119,7 @@ function initData(): AppUserTest {
     const fetchData = async () => {
       if (isEditMode) {
         const data = await itemQuery.getItem(parseInt(id as string, 10));
-        setUserData(data);
+        setItemData(data);
         const preparedData = prepareObject<AppUserTest>(data, initData());
         setItem(preparedData);
       }
@@ -127,34 +127,7 @@ function initData(): AppUserTest {
     fetchData();
   }, [isEditMode, prepareObject, id]);
 
-  
-this.lookupService.getDataEnum('VerifyType').subscribe(list => {
-      this.listVerifyShop = list;
-      if (this.item && this.item.verifyShop) {
-        const selectedList = list.filter(a => a.value === this.item.verifyShop);
-        if (selectedList.length) {
-            this.selectedVerifyShop = selectedList[0];
-        }
-      }
-    });
- this.lookupService.getDataEnum('RoleType').subscribe(list => {
-      this.listRole = list;
-      if (this.item && this.item.role) {
-        const selectedList = list.filter(a => a.value === this.item.role);
-        if (selectedList.length) {
-            this.selectedRole = selectedList[0];
-        }
-      }
-    });
- this.lookupService.getDataEnum('PublishType').subscribe(list => {
-      this.listPublish = list;
-      if (this.item && this.item.publish) {
-        const selectedList = list.filter(a => a.value === this.item.publish);
-        if (selectedList.length) {
-            this.selectedPublish = selectedList[0];
-        }
-      }
-    });
+ 
  
   const handleInputChange = (field: string, value: string) => {
     setItem((prev) => ({ ...prev, [field]: value }));
@@ -343,8 +316,8 @@ this.lookupService.getDataEnum('VerifyType').subscribe(list => {
       const cleanedPayload = removeEmptyFields(payload);
       let updatedItem;
 
-      if (itemStore?.id) {
-        updatedItem = { ...cleanedPayload, id: parseInt(itemStore?.id.toString(), 10) };
+      if (itemData?.id) {
+        updatedItem = { ...cleanedPayload, id: parseInt(itemData?.id.toString(), 10) };
         await itemQuery.updateItem(updatedItem);
         setDialogMessage(t('globals.updateDialogMsg', { model: 'AppUserTest' }));
       } else {
@@ -357,7 +330,7 @@ this.lookupService.getDataEnum('VerifyType').subscribe(list => {
       setShowDialog(true);
     } catch (error) {
       console.error("Error:", error);
-      if (itemStore?.id) {
+      if (itemData?.id) {
         alert("Failed to update AppUserTest. Please try again later.");
       } else {
         alert("Failed to add AppUserTest. Please try again later.");
@@ -484,7 +457,7 @@ this.lookupService.getDataEnum('VerifyType').subscribe(list => {
               <TooltipWithText text={t("appUserTests.columns.fields.mobileVerified")} />
             </div>
 
-            <Checkbox inputId='mobileVerified' checked={item.mobileVerified ?? false} onChange={(e) => handleCheckboxChange(e, 'mobileVerified')} id='mobileVerified' name='mobileVerified'  onChange={(e) => handleInputChange('mobileVerified', e.target.value)} required className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"/>
+            <Checkbox inputId='mobileVerified' name='mobileVerified' value='mobileVerified' checked={item.mobileVerified ?? false} onChange={(e) => handleCheckboxChange(e, 'mobileVerified')} className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"/>
             {errors.mobileVerified && (
               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                 {errors.mobileVerified}
@@ -533,7 +506,7 @@ this.lookupService.getDataEnum('VerifyType').subscribe(list => {
               <TooltipWithText text={t("appUserTests.columns.fields.emailVerified")} />
             </div>
 
-            <Checkbox inputId='emailVerified' checked={item.emailVerified ?? false} onChange={(e) => handleCheckboxChange(e, 'emailVerified')} id='emailVerified' name='emailVerified'  onChange={(e) => handleInputChange('emailVerified', e.target.value)}  className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"/>
+            <Checkbox inputId='emailVerified' name='emailVerified' value='emailVerified' checked={item.emailVerified ?? false} onChange={(e) => handleCheckboxChange(e, 'emailVerified')} className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"/>
             {errors.emailVerified && (
               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                 {errors.emailVerified}
@@ -862,7 +835,7 @@ this.lookupService.getDataEnum('VerifyType').subscribe(list => {
               <TooltipWithText text={t("appUserTests.columns.fields.isActive")} />
             </div>
 
-            <Checkbox inputId='isActive' checked={item.isActive ?? false} onChange={(e) => handleCheckboxChange(e, 'isActive')} id='isActive' name='isActive'  onChange={(e) => handleInputChange('isActive', e.target.value)} required className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"/>
+            <Checkbox inputId='isActive' name='isActive' value='isActive' checked={item.isActive ?? false} onChange={(e) => handleCheckboxChange(e, 'isActive')} className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"/>
             {errors.isActive && (
               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                 {errors.isActive}
@@ -883,7 +856,7 @@ this.lookupService.getDataEnum('VerifyType').subscribe(list => {
               <TooltipWithText text={t("appUserTests.columns.fields.isAdmin")} />
             </div>
 
-            <Checkbox inputId='isAdmin' checked={item.isAdmin ?? false} onChange={(e) => handleCheckboxChange(e, 'isAdmin')} id='isAdmin' name='isAdmin'  onChange={(e) => handleInputChange('isAdmin', e.target.value)} required className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"/>
+            <Checkbox inputId='isAdmin' name='isAdmin' value='isAdmin' checked={item.isAdmin ?? false} onChange={(e) => handleCheckboxChange(e, 'isAdmin')} className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"/>
             {errors.isAdmin && (
               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                 {errors.isAdmin}
@@ -904,7 +877,7 @@ this.lookupService.getDataEnum('VerifyType').subscribe(list => {
               <TooltipWithText text={t("appUserTests.columns.fields.hasImpersonateAccess")} />
             </div>
 
-            <Checkbox inputId='hasImpersonateAccess' checked={item.hasImpersonateAccess ?? false} onChange={(e) => handleCheckboxChange(e, 'hasImpersonateAccess')} id='hasImpersonateAccess' name='hasImpersonateAccess'  onChange={(e) => handleInputChange('hasImpersonateAccess', e.target.value)}  className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"/>
+            <Checkbox inputId='hasImpersonateAccess' name='hasImpersonateAccess' value='hasImpersonateAccess' checked={item.hasImpersonateAccess ?? false} onChange={(e) => handleCheckboxChange(e, 'hasImpersonateAccess')} className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"/>
             {errors.hasImpersonateAccess && (
               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                 {errors.hasImpersonateAccess}
@@ -1030,7 +1003,7 @@ this.lookupService.getDataEnum('VerifyType').subscribe(list => {
               <TooltipWithText text={t("appUserTests.columns.fields.isPremiumUser")} />
             </div>
 
-            <Checkbox inputId='isPremiumUser' checked={item.isPremiumUser ?? false} onChange={(e) => handleCheckboxChange(e, 'isPremiumUser')} id='isPremiumUser' name='isPremiumUser'  onChange={(e) => handleInputChange('isPremiumUser', e.target.value)}  className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"/>
+            <Checkbox inputId='isPremiumUser' name='isPremiumUser' value='isPremiumUser' checked={item.isPremiumUser ?? false} onChange={(e) => handleCheckboxChange(e, 'isPremiumUser')} className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"/>
             {errors.isPremiumUser && (
               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                 {errors.isPremiumUser}
