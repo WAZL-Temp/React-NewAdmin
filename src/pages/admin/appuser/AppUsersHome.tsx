@@ -73,7 +73,7 @@ export default function AppUsersHome() {
             <section className="p-2 flex items-center justify-center my-3">
               <div onClick={handleListClick}>
                 <Button
-                  label={t('globals.viewAll', { model: "AppUser's" })}
+                  label={t('globals.viewAll')}
                   className="rounded-md bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white p-2 border-none text-sm"
                 />
               </div>

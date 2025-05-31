@@ -34,7 +34,7 @@ const mobileFieldSchema = (fieldName: string, t: (key: string, params?: Record<s
 const date = (t: (key: string, params?: Record<string, unknown>) => string) =>
     z.string()
         .min(1, { message: t('validators.required', { field: 'Date' }) })
-        .regex(/^\d{4}-\d{2}-\d{2}$/, { message: t('validators.dateFormat', { field: 'Date' }) });
+        .regex(/^\d{2}-\d{2}-\d{4}$/, { message: t('validators.dateFormat', { field: 'Date' }) });
 
 const email = (t: (key: string, params?: Record<string, unknown>) => string) =>
     z.string()
@@ -43,7 +43,7 @@ const email = (t: (key: string, params?: Record<string, unknown>) => string) =>
 
 const password = (fieldName: string, t: (key: string, params?: Record<string, unknown>) => string, length?: number) =>
     z.string()
-        .min(2, { message: t('validators.requiredMinLength', { field: fieldName, length: 2}) })
+        .min(2, { message: t('validators.requiredMinLength', { field: fieldName, length: 2 }) })
         .max(length ?? 100, { message: t('validators.requiredMaxLength', { field: fieldName, length: length ?? 100 }) });
 
 const stringField2Schema = (fieldName: string, t: (key: string, params?: Record<string, unknown>) => string) =>
@@ -76,7 +76,7 @@ export const getGlobalSchema = (t: (key: string, params?: Record<string, unknown
     lastName: stringFieldSchema('Last Name', t, 2),
     name: stringFieldSchema('Name', t, 2),
     shopName: stringFieldSchema('Shop Name', t, 2),
-    password: password('Password', t,100),
+    password: password('Password', t, 100),
     // state: stringField3Schema('State', t),
     // district: stringField3Schema('District', t),
     mobile: mobileFieldSchema('Mobile number', t, 10),
