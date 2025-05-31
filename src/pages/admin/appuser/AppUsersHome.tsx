@@ -53,7 +53,7 @@ export default function AppUsersHome() {
         <div className="flex flex-col p-4">
           <div className="flex flex-col border-none mb-10">
             <div className="py-2">
-              {query?.homeHtmlData && (
+              {query?.homeHtmlData && Array.isArray(query.homeHtmlData.htmlData) && query.homeHtmlData.htmlData[0] && (
                 <div
                   className="text-lg sm:text-xl lg:text-2xl font-bold text-[var(--color-black)] text-center leading-tight max-w-3xl mx-auto tracking-wide"
                   dangerouslySetInnerHTML={{ __html: query?.homeHtmlData.htmlData[0].html }}
@@ -73,7 +73,7 @@ export default function AppUsersHome() {
             <section className="p-2 flex items-center justify-center my-3">
               <div onClick={handleListClick}>
                 <Button
-                  label={t("globals.viewAllAppUsers")}
+                  label={t('globals.viewAll', { model: "AppUser's" })}
                   className="rounded-md bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white p-2 border-none text-sm"
                 />
               </div>
@@ -113,7 +113,7 @@ export default function AppUsersHome() {
                               />
                             </div>
                             <h3 className="mt-3 text-sm sm:text-sm font-semibold text-gray-800 text-center min-h-[24px]">
-                              {item.name }
+                              {item.name}
                             </h3>
                           </div>
                         </div>
@@ -133,7 +133,7 @@ export default function AppUsersHome() {
             )}
 
             <div className="p-2 mt-5">
-              {query?.homeHtmlData && (
+              {query?.homeHtmlData && Array.isArray(query.homeHtmlData.htmlData) && query.homeHtmlData.htmlData[1] && (
                 <div
                   className="text-lg sm:text-xl lg:text-2xl font-bold text-[var(--color-black)] text-center leading-tight max-w-3xl mx-auto tracking-wide"
                   dangerouslySetInnerHTML={{ __html: query?.homeHtmlData.htmlData[1].html }}

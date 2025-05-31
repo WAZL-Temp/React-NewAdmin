@@ -60,7 +60,7 @@
     "noKeepIt": "No, Keep It",
     "yesDelete": "Yes, Delete",
     "recordDeleted": "Record Deleted Successfully",
-    "viewAllAppUsers": "View all AppUsers",
+     "viewAll": "View all {{model}}",
     "total": "Total",
     "average": "Average",
     "maxNo": "Max No",
@@ -199,7 +199,8 @@
         "statuses": "Statuses"
       }
     }
-  },
+  }
+,
 "appUserTests": {
     "columns": {
       "fields": {

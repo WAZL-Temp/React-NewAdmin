@@ -466,7 +466,7 @@ export default function AppUsersList() {
                                             <div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
                                                 {rowData.name}
                                             </div>
-                                            <Tooltip className="text-xs font-semibold hide-tooltip-mobile hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+                                            <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
                                         </>
                                     )}
                                 />

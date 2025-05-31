@@ -1,5 +1,5 @@
 import { useAuthStore } from "../store/auth.store";
-import { AiFillHome, Button, FiShoppingBag, RiLogoutCircleLine, RxCross2 } from "../sharedBase/globalImports";
+import { AiFillHome, Button, FiShoppingBag, FiUser, RiLogoutCircleLine, RxCross2 } from "../sharedBase/globalImports";
 import { useLocation, useNavigate, useTranslation } from '../sharedBase/globalUtils';
 import { UserInfo } from "../types/auth";
 // import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
@@ -99,13 +99,13 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
           {(!isMinimized) && <span className=" text-sm font-medium">{t("globals.homes")}</span>}
         </Button>
 
-        {/* <Button
+        <Button
           onClick={() => {
-            navigate("/appusertests");
+            navigate("/appUserTests");
             if (!isMinimized) toggleSidebar();
           }}
           className={`flex items-center ${isMinimized ? 'px-1' : 'px-2'} py-2 rounded
-          ${location.pathname === "/appusertests" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
+          ${location.pathname === "/appUserTests" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
           hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]`}
           tooltip={t("appUsers.form_detail.fields.modelname")}
           tooltipOptions={{
@@ -115,7 +115,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
         >
           <FiUser size={18} className={`${isMinimized ? '' : 'mr-3'}`} />
           {(!isMinimized) && <span className=" text-sm font-medium">AppuserTest</span>}
-        </Button> */}
+        </Button>
 
         {/* {hasAccess(roleData.find((r: any) => r.name.toLowerCase() === 'product'), "List") && ( */}
         <Button
