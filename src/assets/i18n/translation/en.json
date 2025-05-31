@@ -249,6 +249,13 @@
     },
     "form_detail": {
       "fields": {
+        "importAction": "Import Action",
+        "importRemark": "Import Remark",
+        "modelname": "model",
+        "accessDeatails": "Access Deatails",
+"shopDetails": "Shop Details",
+"shopAddress": "Shop Address",
+"verifyShop": "Verify Shop"
       }
     },
     "form_list": {

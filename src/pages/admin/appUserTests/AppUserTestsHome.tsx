@@ -163,7 +163,7 @@ const SummaryCard = ({ title, value, icon, bgColor, iconBgColor }: { title: stri
 
 const ItemSlider = ({ item }: { item: AppUserTest }) => {
   const navigate = useNavigate();
-  const baseModelName = 'appUserTest';
+  const baseModelName = 'appUserTests';
 
   return (
     <div className="flex justify-center h-full">
@@ -202,7 +202,7 @@ const ItemSlider = ({ item }: { item: AppUserTest }) => {
 
 const ItemList = ({ title, users }: { title: string; users: UserData[] }) => {
   const navigate = useNavigate();
-  const baseModelName = 'appUserTest';
+  const baseModelName = 'appUserTests';
 
   return (
     <div className='mt-3'>
