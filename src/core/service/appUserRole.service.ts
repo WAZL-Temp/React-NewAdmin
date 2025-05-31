@@ -2,7 +2,7 @@ import { AppUser } from "../model/appuser";
 import { useQuery } from "@tanstack/react-query";
 import { useBaseService } from "../../sharedBase/baseService";
 
-export const useAppuserRoleService = () => {
+export const AppuserRoleService = () => {
   const baseService = useBaseService<AppUser>("AppUser");
 
   const fetchRoleDataFn = async (): Promise<AppUser[]> => {

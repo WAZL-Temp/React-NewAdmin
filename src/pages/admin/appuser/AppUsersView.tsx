@@ -5,7 +5,7 @@ import { BsArrowLeft, Button, FaEdit, IoIosArrowBack, IoIosArrowForward, Stepper
 import { useTranslation, useParams, format } from '../../../sharedBase/globalUtils';
 import { AppUser } from "../../../core/model/appuser";
 import { useViewPage } from "../../../hooks/useViewPage";
-import { useAppUserService } from "../../../core/service/appUsers.service";
+import { AppUserService } from "../../../core/service/appUsers.service";
 import { useItemQuery } from "../../../store/useItemQuery";
 import Loader from "../../../components/Loader";
 
@@ -23,7 +23,7 @@ export default function AppUsersView() {
     t("appUsers.form_detail.fields.verifyShop"),
   ];
   const baseModelName = "appuser";
-  const userService = useAppUserService();
+  const userService = AppUserService();
   const query = useItemQuery<AppUser>(userService);
   const [userData, setUserData] = useState<AppUser | undefined>(initialData() || {});
 

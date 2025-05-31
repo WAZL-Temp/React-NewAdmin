@@ -7,7 +7,7 @@ import confirmImg from '../../../assets/images/are-you-sure.jpg';
 import { AppUser } from "../../../core/model/appuser";
 import { RowData } from "../../../types/listpage";
 import { useListQuery } from "../../../store/useListQuery";
-import { useAppUserService } from "../../../core/service/appUsers.service";
+import { AppUserService } from "../../../core/service/appUsers.service";
 import Loader from "../../../components/Loader";
 
 export default function AppUsersList() {
@@ -19,7 +19,7 @@ export default function AppUsersList() {
     // search
     const [calendarCreateDateFrom, setCalendarCreateDateFrom] = useState<Date | undefined | null>(null);
     const [calendarCreateDateTo, setCalendarCreateDateTo] = useState<Date | undefined | null>(null);
-    const userService = useAppUserService();
+    const userService = AppUserService();
     const query = useListQuery<AppUser>(userService);
     const {
         roleData, globalFilterValue, setGlobalFilterValue, onGlobalFilterChange, refreshItemData, isDeleteDialogVisible,

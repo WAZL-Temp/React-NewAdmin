@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { MultiSelect, MultiSelectChangeEvent, RadioButton, RadioButtonChangeEvent } from "../../../sharedBase/globalImports";
 import { selectMultiData, selectRadioEnum } from "../../../sharedBase/dropdownUtils";
-import { useAppUserService } from "../../../core/service/appUsers.service";
+import { AppUserService } from "../../../core/service/appUsers.service";
 import { useListQuery } from "../../../store/useListQuery";
 import { AppUser } from "../../../core/model/appuser";
 import { ProductLive } from "../../../core/model/productlive";
 import { getData } from "../../../sharedBase/lookupService";
-import { useProductService } from "../../../core/service/products.service";
+import { ProductService } from "../../../core/service/products.service";
 
 export default function FormControls() {
     const [model, setModel] = useState<{
@@ -17,9 +17,9 @@ export default function FormControls() {
         selectedProductLive?: string;
         selectedProductLiveLabel?: string;
     }>({});
-    const userService = useAppUserService();
+    const userService = AppUserService();
     const query = useListQuery<AppUser>(userService);
-    const productService = useProductService();
+    const productService = ProductService();
     const productQuery = useListQuery<ProductLive>(productService);
     const [listProductLive, setListProductLive] = useState<ProductLive[]>([]);
     // const [selectedProductLive, setSelectedProductLive] = useState<ProductLive[]>([]);
