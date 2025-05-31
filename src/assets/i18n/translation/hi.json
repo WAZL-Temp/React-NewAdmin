@@ -62,7 +62,7 @@
     "noKeepIt": "नहीं, इसे बनाए रखें",
     "yesDelete": "हाँ, हटाएं",
     "recordDeleted": "रिकॉर्ड सफलतापूर्वक हटाया गया",
-    "viewAllAppUsers": "सभी ऐप उपयोगकर्ताओं को देखें",
+     "viewAll": "सभी {{model}} को देखें",
     "total": "कुल",
     "average": "औसत",
     "maxNo": "अधिकतम संख्या",
