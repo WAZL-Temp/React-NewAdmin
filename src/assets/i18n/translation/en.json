@@ -60,7 +60,7 @@
     "noKeepIt": "No, Keep It",
     "yesDelete": "Yes, Delete",
     "recordDeleted": "Record Deleted Successfully",
-     "viewAll": "View all {{model}}",
+    "viewAllAppUsers": "View all AppUsers",
     "total": "Total",
     "average": "Average",
     "maxNo": "Max No",
@@ -250,6 +250,13 @@
     },
     "form_detail": {
       "fields": {
+        "importAction": "Import Action",
+        "importRemark": "Import Remark",
+        "modelname": "model",
+        "accessDeatails": "Access Deatails",
+"shopDetails": "Shop Details",
+"shopAddress": "Shop Address",
+"verifyShop": "Verify Shop"
       }
     },
     "form_list": {

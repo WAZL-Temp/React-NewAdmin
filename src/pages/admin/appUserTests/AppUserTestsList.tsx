@@ -11,7 +11,7 @@ import { AppUserTestsService } from "../../../core/service/appUserTests.service"
 
 export default function AppUserTestsList() {
     const navigate = useNavigate();
-    const baseModelName = "appUserTest";
+    const baseModelName = "appUserTests";
     const { t } = useTranslation();
     // const [visible, setVisible] = useState(false);
     const dtRef = useRef<DataTable<AppUserTest[]>>(null);
