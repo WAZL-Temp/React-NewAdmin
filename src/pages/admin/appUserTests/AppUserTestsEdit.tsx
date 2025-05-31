@@ -43,7 +43,6 @@ const [selectedVerifyShop, setSelectedVerifyShop] = useState<String | undefined>
  const [selectedRole, setSelectedRole] = useState<String | undefined>(undefined);
  const [selectedPublish, setSelectedPublish] = useState<String | undefined>(undefined);
 
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [dialogMessage, setDialogMessage] = useState('');
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -127,7 +126,34 @@ function initData(): AppUserTest {
     fetchData();
   }, [isEditMode, prepareObject, id]);
 
- 
+  
+this.lookupService.getDataEnum('VerifyType').subscribe(list => {
+      this.listVerifyShop = list;
+      if (this.item && this.item.verifyShop) {
+        const selectedList = list.filter(a => a.value === this.item.verifyShop);
+        if (selectedList.length) {
+            this.selectedVerifyShop = selectedList[0];
+        }
+      }
+    });
+ this.lookupService.getDataEnum('RoleType').subscribe(list => {
+      this.listRole = list;
+      if (this.item && this.item.role) {
+        const selectedList = list.filter(a => a.value === this.item.role);
+        if (selectedList.length) {
+            this.selectedRole = selectedList[0];
+        }
+      }
+    });
+ this.lookupService.getDataEnum('PublishType').subscribe(list => {
+      this.listPublish = list;
+      if (this.item && this.item.publish) {
+        const selectedList = list.filter(a => a.value === this.item.publish);
+        if (selectedList.length) {
+            this.selectedPublish = selectedList[0];
+        }
+      }
+    });
  
   const handleInputChange = (field: string, value: string) => {
     setItem((prev) => ({ ...prev, [field]: value }));
