@@ -197,7 +197,7 @@ function initData(): AppUserTest {
                       <span className="text-red-600">*</span>
                       <TooltipWithText text={t("appUserTests.columns.fields.mobileVerified")} />
                     </div>
-                    <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)] ">{item?.mobileVerified}</span>
+                    <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)] ">{item?.mobileVerified ?  'Yes': 'No'}</span>
                   </div>
                 )}
       </div>
@@ -232,7 +232,7 @@ function initData(): AppUserTest {
                       
                       <TooltipWithText text={t("appUserTests.columns.fields.emailVerified")} />
                     </div>
-                    <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)] ">{item?.emailVerified}</span>
+                    <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)] ">{item?.emailVerified ?  'Yes': 'No'}</span>
                   </div>
                 )}{!isFieldHidden("shopName") && (
                   <div className="flex flex-col   bg-[var(--color-white)] text-[var(--color-dark)] bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
@@ -450,7 +450,7 @@ function initData(): AppUserTest {
                       <span className="text-red-600">*</span>
                       <TooltipWithText text={t("appUserTests.columns.fields.isActive")} />
                     </div>
-                    <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)] ">{item?.isActive}</span>
+                    <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)] ">{item?.isActive ?  'Yes': 'No'}</span>
                   </div>
                 )}{!isFieldHidden("isAdmin") && (
                   <div className="flex flex-col   bg-[var(--color-white)] text-[var(--color-dark)] bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
@@ -464,7 +464,7 @@ function initData(): AppUserTest {
                       <span className="text-red-600">*</span>
                       <TooltipWithText text={t("appUserTests.columns.fields.isAdmin")} />
                     </div>
-                    <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)] ">{item?.isAdmin}</span>
+                    <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)] ">{item?.isAdmin ?  'Yes': 'No'}</span>
                   </div>
                 )}{!isFieldHidden("hasImpersonateAccess") && (
                   <div className="flex flex-col   bg-[var(--color-white)] text-[var(--color-dark)] bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
@@ -478,7 +478,7 @@ function initData(): AppUserTest {
                       
                       <TooltipWithText text={t("appUserTests.columns.fields.hasImpersonateAccess")} />
                     </div>
-                    <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)] ">{item?.hasImpersonateAccess}</span>
+                    <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)] ">{item?.hasImpersonateAccess ?  'Yes': 'No'}</span>
                   </div>
                 )}{!isFieldHidden("photoAttachment") && (
                   <div className="flex flex-col bg-[var(--color-white)] text-[var(--color-dark)]  bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md overflow-auto">
@@ -508,7 +508,7 @@ function initData(): AppUserTest {
                       
                       <TooltipWithText text={t("appUserTests.columns.fields.lastLogin")} />
                     </div>
-                    <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)] ">{item?.lastLogin}</span>
+                    <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)] ">{item?.lastLogin ? format(new Date(item?.lastLogin), "dd/MM/yyyy") : ""}</span>
                   </div>
                 )}{!isFieldHidden("defaultLanguage") && (
                   <div className="flex flex-col   bg-[var(--color-white)] text-[var(--color-dark)] bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
@@ -536,7 +536,7 @@ function initData(): AppUserTest {
                       
                       <TooltipWithText text={t("appUserTests.columns.fields.isPremiumUser")} />
                     </div>
-                    <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)] ">{item?.isPremiumUser}</span>
+                    <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)] ">{item?.isPremiumUser ?  'Yes': 'No'}</span>
                   </div>
                 )}{!isFieldHidden("totalPlot") && (
                   <div className="flex flex-col   bg-[var(--color-white)] text-[var(--color-dark)] bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
