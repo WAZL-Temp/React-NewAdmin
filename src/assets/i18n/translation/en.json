@@ -8,7 +8,7 @@
     "alphanumeric": "{{field}} must be alphanumeric and can include common punctuation",
     "numbersOnly": "{{field}} must contain only numbers",
     "characterLength": "{{field}} must be exactly {{length}} characters long",
-    "dateFormat": "{{field}} must be in YYYY-MM-DD format",
+    "dateFormat": "{{field}} must be in MM-DD-YYYY format",
     "stringRequired": "{{field}} must be a string",
     "requiredMinLength": "{{field}} should have minimum {{length}} characters!",
     "requiredMaxLength": "{{field}} should have maximum {{length}} characters!"
@@ -60,7 +60,7 @@
     "noKeepIt": "No, Keep It",
     "yesDelete": "Yes, Delete",
     "recordDeleted": "Record Deleted Successfully",
-    "viewAllAppUsers": "View all AppUsers",
+    "viewAll": "View all",
     "total": "Total",
     "average": "Average",
     "maxNo": "Max No",
@@ -199,7 +199,8 @@
         "statuses": "Statuses"
       }
     }
-  },
+  }
+,
 "appUserTests": {
     "columns": {
       "fields": {

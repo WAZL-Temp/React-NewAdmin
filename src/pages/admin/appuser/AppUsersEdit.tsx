@@ -1241,7 +1241,7 @@ export default function AppUsersEdit() {
                               </div>
                               <Calendar
                                 id="lastLogin"
-                                dateFormat="mm-dd-yy"
+                                dateFormat="dd-mm-yy"
                                 value={item.lastLogin ? new Date(item.lastLogin) : null}
                                 yearNavigator
                                 monthNavigator
