@@ -480,9 +480,9 @@ onChange={(e) => handleFilterChangeLocal("mobileVerified", e.target.value)}
 body={(rowData, { rowIndex }) => (
 <>
 <div id={`tooltip-mobileVerified-${rowIndex}`} className="text-left truncate font-medium">
- {rowData.mobileVerified}
+ {rowData.mobileVerified ? "true" : "false"}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-mobileVerified-${rowIndex}`} content={rowData.mobileVerified} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-mobileVerified-${rowIndex}`} content={rowData.mobileVerified ? "true" : "false"} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -518,9 +518,9 @@ onChange={(e) => handleFilterChangeLocal("emailVerified", e.target.value)}
 body={(rowData, { rowIndex }) => (
 <>
 <div id={`tooltip-emailVerified-${rowIndex}`} className="text-left truncate font-medium">
- {rowData.emailVerified}
+ {rowData.emailVerified ? "true" : "false"}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-emailVerified-${rowIndex}`} content={rowData.emailVerified} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-emailVerified-${rowIndex}`} content={rowData.emailVerified ? "true" : "false"} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -787,9 +787,9 @@ onChange={(e) => handleFilterChangeLocal("isActive", e.target.value)}
 body={(rowData, { rowIndex }) => (
 <>
 <div id={`tooltip-isActive-${rowIndex}`} className="text-left truncate font-medium">
- {rowData.isActive}
+ {rowData.isActive ? "true" : "false"}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isActive-${rowIndex}`} content={rowData.isActive} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isActive-${rowIndex}`} content={rowData.isActive ? "true" : "false"} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -806,9 +806,9 @@ onChange={(e) => handleFilterChangeLocal("isAdmin", e.target.value)}
 body={(rowData, { rowIndex }) => (
 <>
 <div id={`tooltip-isAdmin-${rowIndex}`} className="text-left truncate font-medium">
- {rowData.isAdmin}
+ {rowData.isAdmin ? "true" : "false"}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isAdmin-${rowIndex}`} content={rowData.isAdmin} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isAdmin-${rowIndex}`} content={rowData.isAdmin ? "true" : "false"} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -825,9 +825,9 @@ onChange={(e) => handleFilterChangeLocal("hasImpersonateAccess", e.target.value)
 body={(rowData, { rowIndex }) => (
 <>
 <div id={`tooltip-hasImpersonateAccess-${rowIndex}`} className="text-left truncate font-medium">
- {rowData.hasImpersonateAccess}
+ {rowData.hasImpersonateAccess ? "true" : "false"}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-hasImpersonateAccess-${rowIndex}`} content={rowData.hasImpersonateAccess} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-hasImpersonateAccess-${rowIndex}`} content={rowData.hasImpersonateAccess ? "true" : "false"} showDelay={200} position="top" />
 </>
 )}
  /> 
@@ -931,9 +931,9 @@ onChange={(e) => handleFilterChangeLocal("isPremiumUser", e.target.value)}
 body={(rowData, { rowIndex }) => (
 <>
 <div id={`tooltip-isPremiumUser-${rowIndex}`} className="text-left truncate font-medium">
- {rowData.isPremiumUser}
+ {rowData.isPremiumUser ? "true" : "false"}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isPremiumUser-${rowIndex}`} content={rowData.isPremiumUser} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isPremiumUser-${rowIndex}`} content={rowData.isPremiumUser ? "true" : "false"} showDelay={200} position="top" />
 </>
 )}
  /> 

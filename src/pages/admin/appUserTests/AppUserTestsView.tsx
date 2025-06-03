@@ -126,8 +126,8 @@ function initData(): AppUserTest {
 
       <div className="flex flex-col border-none mb-10 sm:mb-20">
         <Stepper ref={stepperRef} headerPosition="bottom">
-          <StepperPanel header={stepsData[1-1]}>
-    <div ref={(el) => { stepRefs.current[1-1] = el; }} className="p-2 mt-3 lg:mt-10 mb-12 md:mb-0 lg:mb-0 bg-[var(--color-white)] text-[var(--color-dark)]">
+          <StepperPanel header={stepsData[0]}>
+    <div ref={(el) => { stepRefs.current[0] = el; }} className="p-2 mt-3 lg:mt-10 mb-12 md:mb-0 lg:mb-0 bg-[var(--color-white)] text-[var(--color-dark)]">
       <div className="user-grid pb-4">
         {!isFieldHidden("name") && (
                   <div className="flex flex-col   bg-[var(--color-white)] text-[var(--color-dark)] bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
@@ -203,8 +203,8 @@ function initData(): AppUserTest {
       </div>
     </div>
   </StepperPanel>
-  <StepperPanel header={stepsData[2-1]}>
-    <div ref={(el) => { stepRefs.current[2-1] = el; }} className="p-2 mt-3 lg:mt-10 mb-12 md:mb-0 lg:mb-0 bg-[var(--color-white)] text-[var(--color-dark)]">
+  <StepperPanel header={stepsData[1]}>
+    <div ref={(el) => { stepRefs.current[1] = el; }} className="p-2 mt-3 lg:mt-10 mb-12 md:mb-0 lg:mb-0 bg-[var(--color-white)] text-[var(--color-dark)]">
       <div className="user-grid pb-4">
         {!isFieldHidden("emailId") && (
                   <div className="flex flex-col   bg-[var(--color-white)] text-[var(--color-dark)] bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
@@ -266,8 +266,8 @@ function initData(): AppUserTest {
       </div>
     </div>
   </StepperPanel>
-  <StepperPanel header={stepsData[3-1]}>
-    <div ref={(el) => { stepRefs.current[3-1] = el; }} className="p-2 mt-3 lg:mt-10 mb-12 md:mb-0 lg:mb-0 bg-[var(--color-white)] text-[var(--color-dark)]">
+  <StepperPanel header={stepsData[2]}>
+    <div ref={(el) => { stepRefs.current[2] = el; }} className="p-2 mt-3 lg:mt-10 mb-12 md:mb-0 lg:mb-0 bg-[var(--color-white)] text-[var(--color-dark)]">
       <div className="user-grid pb-4">
         {!isFieldHidden("pincode") && (
                   <div className="flex flex-col   bg-[var(--color-white)] text-[var(--color-dark)] bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
@@ -343,8 +343,8 @@ function initData(): AppUserTest {
       </div>
     </div>
   </StepperPanel>
-  <StepperPanel header={stepsData[4-1]}>
-    <div ref={(el) => { stepRefs.current[4-1] = el; }} className="p-2 mt-3 lg:mt-10 mb-12 md:mb-0 lg:mb-0 bg-[var(--color-white)] text-[var(--color-dark)]">
+  <StepperPanel header={stepsData[3]}>
+    <div ref={(el) => { stepRefs.current[3] = el; }} className="p-2 mt-3 lg:mt-10 mb-12 md:mb-0 lg:mb-0 bg-[var(--color-white)] text-[var(--color-dark)]">
       <div className="user-grid pb-4">
         {!isFieldHidden("gst") && (
                   <div className="flex flex-col   bg-[var(--color-white)] text-[var(--color-dark)] bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
