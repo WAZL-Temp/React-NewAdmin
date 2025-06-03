@@ -199,8 +199,7 @@
         "statuses": "Statuses"
       }
     }
-  }
-,
+  },
 "appUserTests": {
     "columns": {
       "fields": {
@@ -252,11 +251,11 @@
       "fields": {
         "importAction": "Import Action",
         "importRemark": "Import Remark",
-        "modelname": "model",
         "accessDeatails": "Access Deatails",
 "shopDetails": "Shop Details",
 "shopAddress": "Shop Address",
-"verifyShop": "Verify Shop"
+"verifyShop": "Verify Shop",
+"modelname": "AppUserTest"
       }
     },
     "form_list": {
