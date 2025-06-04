@@ -727,7 +727,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
               <TooltipWithText text={t("appUserTests.columns.fields.verifyShop")} />
             </div>
 
-            <Dropdown id='verifyShop' name='verifyShop' value={selectedVerifyShop} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "verifyShop"); setSelectedVerifyShop(e.value) }} options={listVerifyShop}  className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] dropdowndark"  />
+            <Dropdown id='verifyShop' name='verifyShop' value={selectedVerifyShop} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "verifyShop"); setSelectedVerifyShop(e.value) }} options={listVerifyShop} optionLabel='name' checkmark={true}  highlightOnSelect={false}  appendTo="self"  placeholder={t("appUserTests.columns.fields.verifyShop")}  className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] dropdowndark"  />
             {errors.verifyShop && (
               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                 {errors.verifyShop}
@@ -958,7 +958,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
               <TooltipWithText text={t("appUserTests.columns.fields.role")} />
             </div>
 
-            <Dropdown id='role' name='role' value={selectedRole} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "role"); setSelectedRole(e.value) }} options={listRole}  className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] dropdowndark"  />
+            <Dropdown id='role' name='role' value={selectedRole} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "role"); setSelectedRole(e.value) }} options={listRole} optionLabel='name' checkmark={true}  highlightOnSelect={false}  appendTo="self"  placeholder={t("appUserTests.columns.fields.role")}  className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] dropdowndark"  />
             {errors.role && (
               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                 {errors.role}
@@ -979,7 +979,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
               <TooltipWithText text={t("appUserTests.columns.fields.publish")} />
             </div>
 
-            <Dropdown id='publish' name='publish' value={selectedPublish} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "publish"); setSelectedPublish(e.value) }} options={listPublish}  className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] dropdowndark"  />
+            <Dropdown id='publish' name='publish' value={selectedPublish} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "publish"); setSelectedPublish(e.value) }} options={listPublish} optionLabel='name' checkmark={true}  highlightOnSelect={false}  appendTo="self"  placeholder={t("appUserTests.columns.fields.publish")}  className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] dropdowndark"  />
             {errors.publish && (
               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                 {errors.publish}
