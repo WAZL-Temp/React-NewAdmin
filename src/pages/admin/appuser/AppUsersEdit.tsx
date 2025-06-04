@@ -62,6 +62,7 @@ export default function AppUsersEdit() {
     selectedItemsLabel?: string;
     isAdmin?: string;
     isAdminLabel?: string;
+    selectedAppUser?: string;
   }>({});
   const appUserData = itemQuery.data;
   const [listAppUser, setListAppUser] = useState<AppUser[]>([]);
@@ -192,6 +193,16 @@ export default function AppUsersEdit() {
 
     fetchData();
   }, [appUserData]);
+
+
+  useEffect(() => {
+    if (item?.isAdmin !== undefined) {
+      setModel((prev) => ({
+        ...prev,
+        isAdmin: item.isAdmin ? 'true' : 'false',
+      }));
+    }
+  }, [item?.isAdmin]);
 
   const handleInputChange = (field: string, value: string) => {
     setItem((prev) => ({ ...prev, [field]: value }));
@@ -418,17 +429,43 @@ export default function AppUsersEdit() {
     setModel((prev) => ({ ...prev, ...updatedModel }));
   };
 
-  useEffect(() => {
-    if (item?.isAdmin !== undefined) {
-      setModel((prev) => ({
-        ...prev,
-        isAdmin: item.isAdmin ? 'true' : 'false',
-      }));
-    }
-  }, [item?.isAdmin]);
-
   const handleRadioChange = (e: RadioButtonChangeEvent) => {
     selectRadioEnum(e, 'isAdmin', model, setModel, false);
+  };
+
+  const handleAppUserDropdownChange = (e: DropdownChangeEvent, controlName: string) => {
+    const value = e.value || '';
+
+    const inputElement = document.querySelector(`[name="${controlName}"]`) as HTMLElement;
+    const isRequired = inputElement?.hasAttribute('required');
+
+    if (isRequired) {
+      const schema = globalschema[controlName as keyof typeof globalschema];
+
+      if (schema) {
+        const result = schema.safeParse(value);
+        if (!result.success) {
+          setErrors((prev) => ({
+            ...prev,
+            [controlName]: result.error.errors[0].message,
+          }));
+          return;
+        } else {
+          setErrors((prev) => ({ ...prev, [controlName]: '' }));
+        }
+      } else if (value === '' || value === false) {
+        setErrors((prev) => ({
+          ...prev,
+          [controlName]: 'This field is required',
+        }));
+        return;
+      }
+    } else {
+      setErrors((prev) => ({ ...prev, [controlName]: '' }));
+    }
+
+    const updatedFormData = selectDropdownEnum(e, controlName, false, item);
+    setModel(updatedFormData);
   };
 
   return (
@@ -1388,6 +1425,34 @@ export default function AppUsersEdit() {
                               placeholder="Select Names"
                               // className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] "
                               className="text-sm w-full lg:w-20rem flex items-center h-[40px]  border bg-[var(--color-white)] text-[var(--color-dark)] border-[var(--color-gray)] rounded-md shadow-sm"
+                            />
+                          </div>
+
+                          <div className="flex flex-col">
+                            <div className=" flex items-center">
+                              <label
+                                htmlFor="name"
+                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
+                              >
+                                AppUser Dropdown
+                              </label>
+                              <span className=" text-[var(--color-danger)] pl-2">*</span>
+                              <TooltipWithText text="AppUser Dropdown" />
+                            </div>
+                            <Dropdown
+                              id="name"
+                              name="name"
+                              value={model.selectedAppUser}
+                              placeholder="AppUser Dropdown"
+                              options={listAppUser}
+                              optionLabel="name"
+                              onChange={(e: DropdownChangeEvent) => { handleAppUserDropdownChange(e, "selectedAppUser"); setModel({ selectedAppUser: e.value }) }}
+                              filter
+                              className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] "
+                              required
+                              checkmark={true}
+                              highlightOnSelect={false}
+                              appendTo="self"
                             />
                           </div>
 
