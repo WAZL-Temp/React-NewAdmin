@@ -35,6 +35,9 @@ export interface AppUserTest {
 	defaultLanguage?: string;
 	isPremiumUser?: boolean;
 	totalPlot?: number;
+	reportedTo?: string;
+	reportedBy?: string;
+	appUserTestName?: string;
 	createDate?: Date;
 	updateDate?: Date;
 	deleteDate?: Date;
