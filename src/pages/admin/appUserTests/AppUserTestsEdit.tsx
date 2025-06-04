@@ -49,9 +49,9 @@ const [selectedVerifyShop, setSelectedVerifyShop] = useState<string | undefined>
   const [itemData, setItemData] = useState<AppUserTest>(initData());
 
     
-const VerifyShopData = useFetchDataEnum("VerifyShopType");
-const RoleData = useFetchDataEnum("RoleType");
-const PublishData = useFetchDataEnum("PublishType");
+const verifyShopData = useFetchDataEnum("VerifyShopType");
+const roleData = useFetchDataEnum("RoleType");
+const publishData = useFetchDataEnum("PublishType");
 
 
   
@@ -126,34 +126,47 @@ function initData(): AppUserTest {
     fetchData();
   }, [isEditMode, prepareObject, id]);
 
-  
-this.lookupService.getDataEnum('VerifyType').subscribe(list => {
-      this.listVerifyShop = list;
-      if (this.item && this.item.verifyShop) {
-        const selectedList = list.filter(a => a.value === this.item.verifyShop);
+   useEffect(() => {
+    const bindDropDownList = async () => {
+    
+setListVerifyShop(verifyShopData?.data);
+ setListRole(roleData?.data);
+ setListPublish(publishData?.data);
+
+      if (!itemData) return;
+
+       
+    if (itemData?.verifyShop) {
+        const selectedList = verifyShopData?.data.filter(
+          (a) => a.value === itemData?.verifyShop
+        );
         if (selectedList.length) {
-            this.selectedVerifyShop = selectedList[0];
+          setSelectedVerifyShop(selectedList[0].value);
         }
       }
-    });
- this.lookupService.getDataEnum('RoleType').subscribe(list => {
-      this.listRole = list;
-      if (this.item && this.item.role) {
-        const selectedList = list.filter(a => a.value === this.item.role);
+     if (itemData?.role) {
+        const selectedList = roleData?.data.filter(
+          (a) => a.value === itemData?.role
+        );
         if (selectedList.length) {
-            this.selectedRole = selectedList[0];
+          setSelectedRole(selectedList[0].value);
         }
       }
-    });
- this.lookupService.getDataEnum('PublishType').subscribe(list => {
-      this.listPublish = list;
-      if (this.item && this.item.publish) {
-        const selectedList = list.filter(a => a.value === this.item.publish);
+     if (itemData?.publish) {
+        const selectedList = publishData?.data.filter(
+          (a) => a.value === itemData?.publish
+        );
         if (selectedList.length) {
-            this.selectedPublish = selectedList[0];
+          setSelectedPublish(selectedList[0].value);
         }
-      }
-    });
+      }     
+    };
+
+    bindDropDownList();
+  }, [itemData, 
+verifyShopData?.data, roleData?.data, publishData?.data
+  ]);
+
  
   const handleInputChange = (field: string, value: string) => {
     setItem((prev) => ({ ...prev, [field]: value }));
@@ -399,7 +412,7 @@ this.lookupService.getDataEnum('VerifyType').subscribe(list => {
               <TooltipWithText text={t("appUserTests.columns.fields.name")} />
             </div>
 
-            <InputText id='name' name='name'  onChange={(e) => handleInputChange('name', e.target.value)} required minLength={2} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"  type='text'  value={item.name} placeholder={t("appUserTests.columns.fields.name")}/>
+            <InputText type='text' id='name' name='name'  onChange={(e) => handleInputChange('name', e.target.value)} required minLength={2} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.name} placeholder={t("appUserTests.columns.fields.name")}/>
             {errors.name && (
               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                 {errors.name}
@@ -420,7 +433,7 @@ this.lookupService.getDataEnum('VerifyType').subscribe(list => {
               <TooltipWithText text={t("appUserTests.columns.fields.firstName")} />
             </div>
 
-            <InputText id='firstName' name='firstName'  onChange={(e) => handleInputChange('firstName', e.target.value)} minLength={2} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"  type='text'  value={item.firstName} placeholder={t("appUserTests.columns.fields.firstName")}/>
+            <InputText type='text' id='firstName' name='firstName'  onChange={(e) => handleInputChange('firstName', e.target.value)} minLength={2} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.firstName} placeholder={t("appUserTests.columns.fields.firstName")}/>
             {errors.firstName && (
               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                 {errors.firstName}
@@ -441,7 +454,7 @@ this.lookupService.getDataEnum('VerifyType').subscribe(list => {
               <TooltipWithText text={t("appUserTests.columns.fields.lastName")} />
             </div>
 
-            <InputText id='lastName' name='lastName'  onChange={(e) => handleInputChange('lastName', e.target.value)} minLength={2} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"  type='text'  value={item.lastName} placeholder={t("appUserTests.columns.fields.lastName")}/>
+            <InputText type='text' id='lastName' name='lastName'  onChange={(e) => handleInputChange('lastName', e.target.value)} minLength={2} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.lastName} placeholder={t("appUserTests.columns.fields.lastName")}/>
             {errors.lastName && (
               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                 {errors.lastName}
@@ -462,7 +475,7 @@ this.lookupService.getDataEnum('VerifyType').subscribe(list => {
               <TooltipWithText text={t("appUserTests.columns.fields.mobile")} />
             </div>
 
-            <InputText id='mobile' name='mobile'  onChange={(e) => handleInputChange('mobile', e.target.value)} required minLength={2} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"  type='text'  value={item.mobile} placeholder={t("appUserTests.columns.fields.mobile")}/>
+            <InputText type='text' id='mobile' name='mobile'  onChange={(e) => handleInputChange('mobile', e.target.value)} required minLength={2} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.mobile} placeholder={t("appUserTests.columns.fields.mobile")}/>
             {errors.mobile && (
               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                 {errors.mobile}
@@ -511,7 +524,7 @@ this.lookupService.getDataEnum('VerifyType').subscribe(list => {
               <TooltipWithText text={t("appUserTests.columns.fields.emailId")} />
             </div>
 
-            <InputText id='emailId' name='emailId'  onChange={(e) => handleInputChange('emailId', e.target.value)} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"  type='text'  value={item.emailId} placeholder={t("appUserTests.columns.fields.emailId")}/>
+            <InputText type='text' id='emailId' name='emailId'  onChange={(e) => handleInputChange('emailId', e.target.value)} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.emailId} placeholder={t("appUserTests.columns.fields.emailId")}/>
             {errors.emailId && (
               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                 {errors.emailId}
@@ -553,7 +566,7 @@ this.lookupService.getDataEnum('VerifyType').subscribe(list => {
               <TooltipWithText text={t("appUserTests.columns.fields.shopName")} />
             </div>
 
-            <InputText id='shopName' name='shopName'  onChange={(e) => handleInputChange('shopName', e.target.value)} minLength={2} maxLength={200} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"  type='text'  value={item.shopName} placeholder={t("appUserTests.columns.fields.shopName")}/>
+            <InputText type='text' id='shopName' name='shopName'  onChange={(e) => handleInputChange('shopName', e.target.value)} minLength={2} maxLength={200} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.shopName} placeholder={t("appUserTests.columns.fields.shopName")}/>
             {errors.shopName && (
               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                 {errors.shopName}
@@ -574,7 +587,7 @@ this.lookupService.getDataEnum('VerifyType').subscribe(list => {
               <TooltipWithText text={t("appUserTests.columns.fields.password")} />
             </div>
 
-            <InputText id='password' name='password'  onChange={(e) => handleInputChange('password', e.target.value)} minLength={2} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"  type='text'  value={item.password} placeholder={t("appUserTests.columns.fields.password")}/>
+            <InputText type='text' id='password' name='password'  onChange={(e) => handleInputChange('password', e.target.value)} minLength={2} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.password} placeholder={t("appUserTests.columns.fields.password")}/>
             {errors.password && (
               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                 {errors.password}
@@ -602,7 +615,7 @@ this.lookupService.getDataEnum('VerifyType').subscribe(list => {
               <TooltipWithText text={t("appUserTests.columns.fields.pincode")} />
             </div>
 
-            <InputText id='pincode' name='pincode'  onChange={(e) => handleInputChange('pincode', e.target.value)} maxLength={6} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"  type='text'  value={item.pincode} placeholder={t("appUserTests.columns.fields.pincode")}/>
+            <InputText type='text' id='pincode' name='pincode'  onChange={(e) => handleInputChange('pincode', e.target.value)} maxLength={6} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.pincode} placeholder={t("appUserTests.columns.fields.pincode")}/>
             {errors.pincode && (
               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                 {errors.pincode}
@@ -623,7 +636,7 @@ this.lookupService.getDataEnum('VerifyType').subscribe(list => {
               <TooltipWithText text={t("appUserTests.columns.fields.state")} />
             </div>
 
-            <InputText id='state' name='state'  onChange={(e) => handleInputChange('state', e.target.value)} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"  type='text'  value={item.state} placeholder={t("appUserTests.columns.fields.state")}/>
+            <InputText type='text' id='state' name='state'  onChange={(e) => handleInputChange('state', e.target.value)} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.state} placeholder={t("appUserTests.columns.fields.state")}/>
             {errors.state && (
               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                 {errors.state}
@@ -644,7 +657,7 @@ this.lookupService.getDataEnum('VerifyType').subscribe(list => {
               <TooltipWithText text={t("appUserTests.columns.fields.district")} />
             </div>
 
-            <InputText id='district' name='district'  onChange={(e) => handleInputChange('district', e.target.value)} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"  type='text'  value={item.district} placeholder={t("appUserTests.columns.fields.district")}/>
+            <InputText type='text' id='district' name='district'  onChange={(e) => handleInputChange('district', e.target.value)} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.district} placeholder={t("appUserTests.columns.fields.district")}/>
             {errors.district && (
               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                 {errors.district}
@@ -714,7 +727,7 @@ this.lookupService.getDataEnum('VerifyType').subscribe(list => {
               <TooltipWithText text={t("appUserTests.columns.fields.verifyShop")} />
             </div>
 
-            <Dropdown id='verifyShop' name='verifyShop' value={selectedVerifyShop} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "verifyShop"); setSelectedVerifyShop(e.value) }}  className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] dropdowndark"  />
+            <Dropdown id='verifyShop' name='verifyShop' value={selectedVerifyShop} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "verifyShop"); setSelectedVerifyShop(e.value) }} options={listVerifyShop}  className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] dropdowndark"  />
             {errors.verifyShop && (
               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                 {errors.verifyShop}
@@ -735,7 +748,7 @@ this.lookupService.getDataEnum('VerifyType').subscribe(list => {
               <TooltipWithText text={t("appUserTests.columns.fields.gst")} />
             </div>
 
-            <InputText id='gst' name='gst'  onChange={(e) => handleInputChange('gst', e.target.value)} minLength={2} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"  type='text'  value={item.gst} placeholder={t("appUserTests.columns.fields.gst")}/>
+            <InputText type='text' id='gst' name='gst'  onChange={(e) => handleInputChange('gst', e.target.value)} minLength={2} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.gst} placeholder={t("appUserTests.columns.fields.gst")}/>
             {errors.gst && (
               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                 {errors.gst}
@@ -840,7 +853,7 @@ this.lookupService.getDataEnum('VerifyType').subscribe(list => {
               <TooltipWithText text={t("appUserTests.columns.fields.gstOtp")} />
             </div>
 
-            <InputText id='gstOtp' name='gstOtp'  onChange={(e) => handleInputChange('gstOtp', e.target.value)} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"  type='text'  value={item.gstOtp} placeholder={t("appUserTests.columns.fields.gstOtp")}/>
+            <InputText type='text' id='gstOtp' name='gstOtp'  onChange={(e) => handleInputChange('gstOtp', e.target.value)} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.gstOtp} placeholder={t("appUserTests.columns.fields.gstOtp")}/>
             {errors.gstOtp && (
               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                 {errors.gstOtp}
@@ -945,7 +958,7 @@ this.lookupService.getDataEnum('VerifyType').subscribe(list => {
               <TooltipWithText text={t("appUserTests.columns.fields.role")} />
             </div>
 
-            <Dropdown id='role' name='role' value={selectedRole} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "role"); setSelectedRole(e.value) }}  className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] dropdowndark"  />
+            <Dropdown id='role' name='role' value={selectedRole} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "role"); setSelectedRole(e.value) }} options={listRole}  className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] dropdowndark"  />
             {errors.role && (
               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                 {errors.role}
@@ -966,7 +979,7 @@ this.lookupService.getDataEnum('VerifyType').subscribe(list => {
               <TooltipWithText text={t("appUserTests.columns.fields.publish")} />
             </div>
 
-            <Dropdown id='publish' name='publish' value={selectedPublish} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "publish"); setSelectedPublish(e.value) }}  className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] dropdowndark"  />
+            <Dropdown id='publish' name='publish' value={selectedPublish} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "publish"); setSelectedPublish(e.value) }} options={listPublish}  className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] dropdowndark"  />
             {errors.publish && (
               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                 {errors.publish}
@@ -1008,7 +1021,7 @@ this.lookupService.getDataEnum('VerifyType').subscribe(list => {
               <TooltipWithText text={t("appUserTests.columns.fields.defaultLanguage")} />
             </div>
 
-            <InputText id='defaultLanguage' name='defaultLanguage'  onChange={(e) => handleInputChange('defaultLanguage', e.target.value)} maxLength={10} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"  type='text'  value={item.defaultLanguage} placeholder={t("appUserTests.columns.fields.defaultLanguage")}/>
+            <InputText type='text' id='defaultLanguage' name='defaultLanguage'  onChange={(e) => handleInputChange('defaultLanguage', e.target.value)} maxLength={10} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.defaultLanguage} placeholder={t("appUserTests.columns.fields.defaultLanguage")}/>
             {errors.defaultLanguage && (
               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                 {errors.defaultLanguage}
@@ -1050,7 +1063,7 @@ this.lookupService.getDataEnum('VerifyType').subscribe(list => {
               <TooltipWithText text={t("appUserTests.columns.fields.totalPlot")} />
             </div>
 
-            <InputText id='totalPlot' name='totalPlot'  onChange={(e) => handleInputChange('totalPlot', e.target.value)}  className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"  type='text'  value={item.totalPlot} placeholder={t("appUserTests.columns.fields.totalPlot")}/>
+            <InputText type='text' id='totalPlot' name='totalPlot'  onChange={(e) => handleInputChange('totalPlot', e.target.value)}  className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.totalPlot} placeholder={t("appUserTests.columns.fields.totalPlot")}/>
             {errors.totalPlot && (
               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                 {errors.totalPlot}

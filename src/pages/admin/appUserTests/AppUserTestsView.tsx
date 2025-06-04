@@ -373,7 +373,7 @@ function initData(): AppUserTest {
                     </div>
 
                     <div className="flex flex-col gap-2 mt-3">
-                      <ImgViewer files={item?.gstCertificate || null} modelName="AppUser" />
+                      <ImgViewer files={item?.gstCertificate || null} modelName="AppUserTest" />
                     </div>
                   </div>
                 )}{!isFieldHidden("photoShopFront") && (
@@ -389,7 +389,7 @@ function initData(): AppUserTest {
                     </div>
 
                     <div className="flex flex-col gap-2 mt-3">
-                      <ImgViewer files={item?.photoShopFront || null} modelName="AppUser" />
+                      <ImgViewer files={item?.photoShopFront || null} modelName="AppUserTest" />
                     </div>
                   </div>
                 )}{!isFieldHidden("visitingCard") && (
@@ -405,7 +405,7 @@ function initData(): AppUserTest {
                     </div>
 
                     <div className="flex flex-col gap-2 mt-3">
-                      <ImgViewer files={item?.visitingCard || null} modelName="AppUser" />
+                      <ImgViewer files={item?.visitingCard || null} modelName="AppUserTest" />
                     </div>
                   </div>
                 )}{!isFieldHidden("cheque") && (
@@ -421,7 +421,7 @@ function initData(): AppUserTest {
                     </div>
 
                     <div className="flex flex-col gap-2 mt-3">
-                      <ImgViewer files={item?.cheque || null} modelName="AppUser" />
+                      <ImgViewer files={item?.cheque || null} modelName="AppUserTest" />
                     </div>
                   </div>
                 )}{!isFieldHidden("gstOtp") && (
@@ -493,7 +493,7 @@ function initData(): AppUserTest {
                     </div>
 
                     <div className="flex flex-col gap-2 mt-3">
-                      <ImgViewer files={item?.photoAttachment || null} modelName="AppUser" />
+                      <ImgViewer files={item?.photoAttachment || null} modelName="AppUserTest" />
                     </div>
                   </div>
                 )}{!isFieldHidden("lastLogin") && (

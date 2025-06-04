@@ -146,23 +146,7 @@ export default function AppUsersEdit() {
         }
       }
 
-      if (itemData?.publish) {
-        const selectedList = publishData?.data.filter(
-          (a) => a.value === itemData?.publish
-        );
-        if (selectedList.length) {
-          setSelectedPublish(selectedList[0].value);
-        }
-      }
-
-      if (itemData?.verifyShop) {
-        const selectedList = verifyData?.data.filter(
-          (a) => a.value === itemData?.verifyShop
-        );
-        if (selectedList.length) {
-          setSelectedVerifyShop(selectedList[0].value);
-        }
-      }
+     
     };
 
     bindDropDownList();
