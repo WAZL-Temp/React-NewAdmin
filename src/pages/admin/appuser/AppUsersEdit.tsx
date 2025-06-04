@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import successImg from '../../../assets/images/success.gif'
-import { BsArrowLeft, Button, Calendar, Checkbox, Dialog, Dropdown, DropdownChangeEvent, FaSave, Image, InputText, InputTextarea, IoIosArrowBack, IoIosArrowForward, MultiSelect, MultiSelectChangeEvent, Stepper, StepperPanel, StepperRefAttributes, Toast } from '../../../sharedBase/globalImports';
+import { BsArrowLeft, Button, Calendar, Checkbox, Dialog, Dropdown, DropdownChangeEvent, FaSave, Image, InputText, InputTextarea, IoIosArrowBack, IoIosArrowForward, MultiSelect, MultiSelectChangeEvent, RadioButton, RadioButtonChangeEvent, Stepper, StepperPanel, StepperRefAttributes, Toast } from '../../../sharedBase/globalImports';
 import { useNavigate, useParams, useTranslation } from '../../../sharedBase/globalUtils';
 import { useEditPage } from '../../../hooks/useEditPage';
 import { AppUser } from '../../../core/model/appuser';
-import { selectDropdownEnum, selectMultiData } from '../../../sharedBase/dropdownUtils';
+import { selectDropdownEnum, selectMultiData, selectRadioEnum } from '../../../sharedBase/dropdownUtils';
 import { getGlobalSchema } from '../../../globalschema';
 import TooltipWithText from '../../../components/TooltipWithText';
 import FileUploadMain from '../../../components/FileUploadMain';
@@ -60,6 +60,8 @@ export default function AppUsersEdit() {
   const [model, setModel] = useState<{
     selectedItems?: string;
     selectedItemsLabel?: string;
+    isAdmin?: string;
+    isAdminLabel?: string;
   }>({});
   const appUserData = itemQuery.data;
   const [listAppUser, setListAppUser] = useState<AppUser[]>([]);
@@ -146,7 +148,24 @@ export default function AppUsersEdit() {
         }
       }
 
-     
+      if (itemData?.verifyShop) {
+        const selectedList = verifyData?.data.filter(
+          (a) => a.value === itemData?.verifyShop
+        );
+        if (selectedList.length) {
+          setSelectedVerifyShop(selectedList[0].value);
+        }
+      }
+
+      if (itemData?.publish) {
+        const selectedList = publishData?.data.filter(
+          (a) => a.value === itemData?.publish
+        );
+        if (selectedList.length) {
+          setSelectedPublish(selectedList[0].value);
+        }
+      }
+
     };
 
     bindDropDownList();
@@ -155,7 +174,6 @@ export default function AppUsersEdit() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-
         const userList = await getData(userService);
         setListAppUser(userList);
         if (appUserData && appUserData.appUserList) {
@@ -398,6 +416,19 @@ export default function AppUsersEdit() {
     const selectedData = listAppUser.filter((u) => selectedUserIds.includes(u.id));
     const updatedModel = selectMultiData(selectedData, 'selectedItems');
     setModel((prev) => ({ ...prev, ...updatedModel }));
+  };
+
+  useEffect(() => {
+    if (item?.isAdmin !== undefined) {
+      setModel((prev) => ({
+        ...prev,
+        isAdmin: item.isAdmin ? 'true' : 'false',
+      }));
+    }
+  }, [item?.isAdmin]);
+
+  const handleRadioChange = (e: RadioButtonChangeEvent) => {
+    selectRadioEnum(e, 'isAdmin', model, setModel, false);
   };
 
   return (
@@ -1321,7 +1352,7 @@ export default function AppUsersEdit() {
                                 type="text"
                                 id="totalPlot"
                                 name="totalPlot"
-                                value={item.totalPlot !== undefined ? String(item.totalPlot) : ''}
+                                value={item.totalPlot?.toString() ?? ''}
                                 placeholder={t("appUsers.columns.fields.totalPlot")}
                                 className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
                                 onChange={(e) => handleInputChange('totalPlot', e.target.value)}
@@ -1358,6 +1389,43 @@ export default function AppUsersEdit() {
                               // className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] "
                               className="text-sm w-full lg:w-20rem flex items-center h-[40px]  border bg-[var(--color-white)] text-[var(--color-dark)] border-[var(--color-gray)] rounded-md shadow-sm"
                             />
+                          </div>
+
+                          <div className="flex flex-col">
+                            <div className="flex items-center">
+                              <label
+                                htmlFor="isAdmin"
+                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]"
+                              >
+                                {t("appUsers.columns.fields.isAdmin")}
+                              </label>
+                              <span className="text-[var(--color-danger)] pl-2">*</span>
+                              <TooltipWithText text={t("appUsers.columns.fields.isAdmin")} />
+                            </div>
+
+                            <div className="flex flex-wrap gap-4">
+                              <div className="flex items-center">
+                                <RadioButton
+                                  inputId="isAdminTrue"
+                                  name="isAdmin"
+                                  value="true"
+                                  onChange={handleRadioChange}
+                                  checked={model.isAdmin === 'true'}
+                                  className='text-sm'
+                                />
+                                <label htmlFor="isAdminTrue" className="ml-2 text-gray-700 text-sm">True</label>
+                              </div>
+                              <div className="flex items-center">
+                                <RadioButton
+                                  inputId="isAdminFalse"
+                                  name="isAdmin"
+                                  value="false"
+                                  onChange={handleRadioChange}
+                                  checked={model.isAdmin === 'false'}
+                                />
+                                <label htmlFor="isAdminFalse" className="ml-2 text-gray-700 text-sm">False</label>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -1427,4 +1495,3 @@ export default function AppUsersEdit() {
     </div>
   )
 }
-
