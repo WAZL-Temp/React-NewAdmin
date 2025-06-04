@@ -71,6 +71,9 @@ const columnsConfigDefault = useMemo(() =>[
 			 {field: 'defaultLanguage', header: t("appUserTests.columns.fields.defaultLanguage"), isDefult: true, show: true }, 
 			 {field: 'isPremiumUser', header: t("appUserTests.columns.fields.isPremiumUser"), isDefult: true, show: true }, 
 			 {field: 'totalPlot', header: t("appUserTests.columns.fields.totalPlot"), isDefult: true, show: true }, 
+			 {field: 'reportedTo', header: t("appUserTests.columns.fields.reportedTo"), isDefult: true, show: true }, 
+			 {field: 'reportedBy', header: t("appUserTests.columns.fields.reportedBy"), isDefult: true, show: true }, 
+			 {field: 'appUserTestName', header: t("appUserTests.columns.fields.appUserTestName"), isDefult: true, show: true }, 
 			 {field: 'updateDate', header: t("appUserTests.columns.fields.updateDate"), isDefult: true, show: true }, 
 			 {field: 'deleteDate', header: t("appUserTests.columns.fields.deleteDate"), isDefult: true, show: true }, 
 			 {field: 'updateById', header: t("appUserTests.columns.fields.updateById"), isDefult: true, show: true }, 
@@ -953,6 +956,25 @@ body={(rowData, { rowIndex }) => (
  {rowData.totalPlot}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-totalPlot-${rowIndex}`} content={rowData.totalPlot} showDelay={200} position="top" />
+</>
+)}
+ /> 
+<Column field="appUserTestName" header={t("appUserTests.columns.fields.appUserTestName")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.appUserTestName || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("appUserTestName", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-appUserTestName-${rowIndex}`} className="text-left truncate font-medium">
+ {rowData.appUserTestName}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-appUserTestName-${rowIndex}`} content={rowData.appUserTestName} showDelay={200} position="top" />
 </>
 )}
  /> 

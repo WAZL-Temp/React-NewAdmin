@@ -62,6 +62,9 @@ function initData(): AppUserTest {
 		defaultLanguage: "",
 		isPremiumUser: false,
 		totalPlot: undefined,
+		reportedTo: "",
+		reportedBy: "",
+		appUserTestName: "",
 		createDate: undefined,
 		updateDate: undefined,
 		deleteDate: undefined,
@@ -551,6 +554,34 @@ function initData(): AppUserTest {
                       <TooltipWithText text={t("appUserTests.columns.fields.totalPlot")} />
                     </div>
                     <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)] ">{item?.totalPlot}</span>
+                  </div>
+                )}{!isFieldHidden("reportedTo") && (
+                  <div className="flex flex-col   bg-[var(--color-white)] text-[var(--color-dark)] bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
+                    <div className="flex items-center space-x-1 bg-[var(--color-white)] text-[var(--color-dark)]">
+                      <label
+                        htmlFor="reportedTo"
+                        className="text-sm font-bold  bg-[var(--color-white)] text-[var(--color-dark)]"
+                      >
+                      {t("appUserTests.columns.fields.reportedTo")}
+                      </label>
+                      <span className="text-red-600">*</span>
+                      <TooltipWithText text={t("appUserTests.columns.fields.reportedTo")} />
+                    </div>
+                    <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)] ">{item?.reportedTo}</span>
+                  </div>
+                )}{!isFieldHidden("reportedBy") && (
+                  <div className="flex flex-col   bg-[var(--color-white)] text-[var(--color-dark)] bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
+                    <div className="flex items-center space-x-1 bg-[var(--color-white)] text-[var(--color-dark)]">
+                      <label
+                        htmlFor="reportedBy"
+                        className="text-sm font-bold  bg-[var(--color-white)] text-[var(--color-dark)]"
+                      >
+                      {t("appUserTests.columns.fields.reportedBy")}
+                      </label>
+                      <span className="text-red-600">*</span>
+                      <TooltipWithText text={t("appUserTests.columns.fields.reportedBy")} />
+                    </div>
+                    <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)] ">{item?.reportedBy}</span>
                   </div>
                 )}
       </div>
