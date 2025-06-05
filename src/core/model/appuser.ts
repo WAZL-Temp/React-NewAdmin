@@ -43,6 +43,7 @@ export interface AppUser {
 	deleteById?: number;
 	isDelete?: boolean;
 	appUserList?: string;
-  }
-  
-  
+	reportedTo?: string;
+	reportedBy?: string;
+}
+

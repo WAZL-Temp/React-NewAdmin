@@ -66,7 +66,8 @@ export default function AppUsersEdit() {
   }>({});
   const appUserData = itemQuery.data;
   const [listAppUser, setListAppUser] = useState<AppUser[]>([]);
-  // const [selectedAppUser, setSelectedAppUser] = useState<AppUser[]>([]);
+  const [selectedAppUser, setSelectedAppUser] = useState<number | null>(null);
+  const [selectedMultiAppUsers, setSelectedMultiAppUsers] = useState<AppUser[]>([]);
 
   function initData(): AppUser {
     return {
@@ -102,6 +103,8 @@ export default function AppUsersEdit() {
       defaultLanguage: '',
       isPremiumUser: false,
       totalPlot: undefined,
+      reportedBy: "",
+      reportedTo: undefined,
     };
   }
 
@@ -131,6 +134,33 @@ export default function AppUsersEdit() {
   // } else {
   //   setCalendarLastLogin(null);
   // }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userList = await getData(userService);
+        setListAppUser(userList);
+        if (itemData.reportedBy) {
+          setSelectedAppUser(Number(itemData.reportedBy));
+        }
+
+        if (itemData.reportedTo) {
+          const arrList = itemData.reportedTo.split(",");
+          const selectedList = userList.filter((a: any) =>
+            arrList.includes("" + a.id)
+          );
+          if (selectedList.length) {
+            setSelectedMultiAppUsers(selectedList);
+          }
+        }
+
+      } catch (err) {
+        console.error('Error fetching data:', err);
+      }
+    };
+
+    fetchData();
+  }, [appUserData]);
 
   useEffect(() => {
     const bindDropDownList = async () => {
@@ -171,28 +201,6 @@ export default function AppUsersEdit() {
 
     bindDropDownList();
   }, [itemData, roleData?.data, publishData?.data, verifyData?.data]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const userList = await getData(userService);
-        setListAppUser(userList);
-        if (appUserData && appUserData.appUserList) {
-          // const arrList = appUserData.appUserList.split(',');
-          // const selectedList = userList.filter((a) => arrList.includes(String(a.id)));
-          // setSelectedAppUser(selectedList);
-        } else {
-          // setSelectedAppUser([]);
-        }
-      } catch (err) {
-        console.error('Error fetching data:', err);
-        setListAppUser([]);
-        // setSelectedAppUser([]);
-      }
-    };
-
-    fetchData();
-  }, [appUserData]);
 
 
   useEffect(() => {
@@ -384,14 +392,15 @@ export default function AppUsersEdit() {
     if (isSubmitting) return;
     setIsSubmitting(true);
     try {
-
       const payload = {
         ...item,
-        state: item.state || 0,
-        district: item.district || 0,
         verifyShopLabel: item.verifyShop,
         roleLabel: item.role,
         publishLabel: item.publish,
+        reportedBy: selectedAppUser || '',
+        reportedByLabel: selectedAppUser || '',
+        reportedTo: selectedMultiAppUsers.map((user: AppUser) => user.id).join(","),
+        reportedToLabel: selectedMultiAppUsers.map((user: AppUser) => user.id).join(",")
       };
 
       const cleanedPayload = removeEmptyFields(payload);
@@ -421,52 +430,36 @@ export default function AppUsersEdit() {
     }
   };
 
-  const handleMultiSelectChange = (e: MultiSelectChangeEvent) => {
-    const selectedUserIds = e.value;
+  // const handleMultiSelectChange = (e: MultiSelectChangeEvent, fieldName: string, setFieldValue: React.Dispatch<React.SetStateAction<AppUser[]>>) => {
+  //   const selectedUsers = e.value as AppUser[];
+  //   setFieldValue(selectedUsers);
 
-    const selectedData = listAppUser.filter((u) => selectedUserIds.includes(u.id));
-    const updatedModel = selectMultiData(selectedData, 'selectedItems');
-    setModel((prev) => ({ ...prev, ...updatedModel }));
+  //   const selectedIds = selectedUsers.map(user => user.id).filter(id => id !== undefined);
+  //   const updatedModel = selectMultiData(selectedUsers, fieldName);
+  //   setItem((prev) => ({
+  //     ...prev,
+  //     [fieldName]: selectedIds.join(',') || '',
+  //     [`${fieldName}Label`]: updatedModel[`${fieldName}Label`]?.toString() || '',
+  //   }));
+  // };
+
+  const handleMultiSelectChange = (e: MultiSelectChangeEvent, fieldName: string, setFieldValue: React.Dispatch<React.SetStateAction<AppUser[]>>) => {
+    const selectedUsers = e.value as AppUser[];
+    setFieldValue(selectedUsers);
+
+    const selectedIds = selectedUsers.map(user => user.id).filter(id => id !== undefined);
+    const updatedModel = selectMultiData(selectedUsers, fieldName);
+    setItem((prev) => ({
+      ...prev,
+      [fieldName]: selectedIds.join(',') || '',
+      [`${fieldName}Label`]: updatedModel[`${fieldName}Label`]?.toString() || '',
+    }));
   };
 
   const handleRadioChange = (e: RadioButtonChangeEvent) => {
     selectRadioEnum(e, 'isAdmin', model, setModel, false);
   };
 
-  const handleAppUserDropdownChange = (e: DropdownChangeEvent, controlName: string) => {
-    const value = e.value || '';
-
-    const inputElement = document.querySelector(`[name="${controlName}"]`) as HTMLElement;
-    const isRequired = inputElement?.hasAttribute('required');
-
-    if (isRequired) {
-      const schema = globalschema[controlName as keyof typeof globalschema];
-
-      if (schema) {
-        const result = schema.safeParse(value);
-        if (!result.success) {
-          setErrors((prev) => ({
-            ...prev,
-            [controlName]: result.error.errors[0].message,
-          }));
-          return;
-        } else {
-          setErrors((prev) => ({ ...prev, [controlName]: '' }));
-        }
-      } else if (value === '' || value === false) {
-        setErrors((prev) => ({
-          ...prev,
-          [controlName]: 'This field is required',
-        }));
-        return;
-      }
-    } else {
-      setErrors((prev) => ({ ...prev, [controlName]: '' }));
-    }
-
-    const updatedFormData = selectDropdownEnum(e, controlName, false, item);
-    setModel(updatedFormData);
-  };
 
   return (
     <div className='relative h-screen flex flex-col'>
@@ -1398,57 +1391,45 @@ export default function AppUsersEdit() {
                           )}
 
                           <div className="flex flex-col">
-                            <div className=" flex items-center">
-                              <label
-                                htmlFor="totalPlot"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
-                              >
+                            <div className="flex items-center">
+                              <label htmlFor="reportedTo" className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]">
                                 AppUser MultiSelect
                               </label>
                               <TooltipWithText text="AppUser MultiSelect" />
                             </div>
                             <MultiSelect
-                              name="selectedItems"
-                              value={
-                                model.selectedItems
-                                  ? model.selectedItems
-                                    .split(',')
-                                    .map((id) => parseInt(id))
-                                    .filter((id) => !isNaN(id))
-                                  : []
-                              }
+                              name="reportedTo"
+                              id="reportedTo"
+                              value={selectedMultiAppUsers}
                               options={listAppUser}
-                              onChange={handleMultiSelectChange}
+                              onChange={(e) => handleMultiSelectChange(e, 'reportedTo', setSelectedMultiAppUsers)}
                               optionLabel="name"
-                              optionValue="id"
+                              // optionValue="id"
                               filter
                               placeholder="Select Names"
-                              // className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] "
-                              className="text-sm w-full lg:w-20rem flex items-center h-[40px]  border bg-[var(--color-white)] text-[var(--color-dark)] border-[var(--color-gray)] rounded-md shadow-sm"
+                              className="text-sm w-full lg:w-20rem flex items-center h-[40px] border bg-[var(--color-white)] text-[var(--color-dark)] border-[var(--color-gray)] rounded-md shadow-sm"
                             />
                           </div>
 
                           <div className="flex flex-col">
-                            <div className=" flex items-center">
-                              <label
-                                htmlFor="name"
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)] "
-                              >
+                            <div className="flex items-center">
+                              <label htmlFor="reportedBy" className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]">
                                 AppUser Dropdown
                               </label>
-                              <span className=" text-[var(--color-danger)] pl-2">*</span>
+                              <span className="text-[var(--color-danger)] pl-2">*</span>
                               <TooltipWithText text="AppUser Dropdown" />
                             </div>
                             <Dropdown
-                              id="name"
-                              name="name"
-                              value={model.selectedAppUser}
-                              placeholder="AppUser Dropdown"
+                              id="reportedBy"
+                              name="reportedBy"
+                              value={selectedAppUser}
+                              placeholder="Select a User"
                               options={listAppUser}
                               optionLabel="name"
-                              onChange={(e: DropdownChangeEvent) => { handleAppUserDropdownChange(e, "selectedAppUser"); setModel({ selectedAppUser: e.value }) }}
+                              optionValue="id"
+                              onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "reportedBy"); setSelectedAppUser(Number(e.value)); }}
                               filter
-                              className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] "
+                              className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px] bg-[var(--color-white)] text-[var(--color-dark)]"
                               required
                               checkmark={true}
                               highlightOnSelect={false}
