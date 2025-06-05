@@ -8,6 +8,9 @@ export const selectDropdownEnum = (
 ) => {
   const updatedModel = { ...model };
 
+  
+  console.log("e.target.name:", e.target.name);
+  console.log("controlName:", controlName);
   updatedModel[controlName] = e.value;
   updatedModel[`${controlName}Label`] = e.target.name;
 
