@@ -599,6 +599,34 @@ export default function AppUsersView() {
                     )}
                   </div>
                 </div>
+
+                <div className="user-grid">
+                  <div className="flex flex-col bg-[var(--color-white)] text-[var(--color-dark)]  bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
+                    <div className="flex items-center space-x-2">
+                      <label
+                        htmlFor="gst"
+                        className="text-sm font-bold py-2  bg-[var(--color-white)] text-[var(--color-dark)]"
+                      >
+                        AppUser Dropdown
+                      </label>
+                      <TooltipWithText text="AppUser Dropdown" />
+                    </div>
+                    <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)]">{userData?.reportedBy}</span>
+                  </div>
+
+                  <div className="flex flex-col bg-[var(--color-white)] text-[var(--color-dark)]  bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
+                    <div className="flex items-center space-x-2">
+                      <label
+                        htmlFor="gst"
+                        className="text-sm font-bold py-2  bg-[var(--color-white)] text-[var(--color-dark)]"
+                      >
+                        AppUser Multiselect
+                      </label>
+                      <TooltipWithText text="AppUser Multiselect" />
+                    </div>
+                    <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)]">{userData?.reportedTo}</span>
+                  </div>
+                </div>
               </StepperPanel>
             </Stepper>
           </div>

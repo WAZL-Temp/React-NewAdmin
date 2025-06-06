@@ -146,7 +146,7 @@ export default function AppUsersEdit() {
 
         if (itemData.reportedTo) {
           const arrList = itemData.reportedTo.split(",");
-          const selectedList = userList.filter((a: any) =>
+          const selectedList = userList.filter((a: AppUser) =>
             arrList.includes("" + a.id)
           );
           if (selectedList.length) {
@@ -429,19 +429,6 @@ export default function AppUsersEdit() {
       setIsSubmitting(false);
     }
   };
-
-  // const handleMultiSelectChange = (e: MultiSelectChangeEvent, fieldName: string, setFieldValue: React.Dispatch<React.SetStateAction<AppUser[]>>) => {
-  //   const selectedUsers = e.value as AppUser[];
-  //   setFieldValue(selectedUsers);
-
-  //   const selectedIds = selectedUsers.map(user => user.id).filter(id => id !== undefined);
-  //   const updatedModel = selectMultiData(selectedUsers, fieldName);
-  //   setItem((prev) => ({
-  //     ...prev,
-  //     [fieldName]: selectedIds.join(',') || '',
-  //     [`${fieldName}Label`]: updatedModel[`${fieldName}Label`]?.toString() || '',
-  //   }));
-  // };
 
   const handleMultiSelectChange = (e: MultiSelectChangeEvent, fieldName: string, setFieldValue: React.Dispatch<React.SetStateAction<AppUser[]>>) => {
     const selectedUsers = e.value as AppUser[];
@@ -1404,7 +1391,6 @@ export default function AppUsersEdit() {
                               options={listAppUser}
                               onChange={(e) => handleMultiSelectChange(e, 'reportedTo', setSelectedMultiAppUsers)}
                               optionLabel="name"
-                              // optionValue="id"
                               filter
                               placeholder="Select Names"
                               className="text-sm w-full lg:w-20rem flex items-center h-[40px] border bg-[var(--color-white)] text-[var(--color-dark)] border-[var(--color-gray)] rounded-md shadow-sm"
