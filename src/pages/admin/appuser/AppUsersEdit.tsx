@@ -57,17 +57,10 @@ export default function AppUsersEdit() {
 
   // const [calendarLastLogin, setCalendarLastLogin] = useState<Date | null>(null);
 
-  const [model, setModel] = useState<{
-    selectedItems?: string;
-    selectedItemsLabel?: string;
-    isAdmin?: string;
-    isAdminLabel?: string;
-    selectedAppUser?: string;
-  }>({});
-  const appUserData = itemQuery.data;
-  const [listAppUser, setListAppUser] = useState<AppUser[]>([]);
-  const [selectedAppUser, setSelectedAppUser] = useState<number | null>(null);
-  const [selectedMultiAppUsers, setSelectedMultiAppUsers] = useState<AppUser[]>([]);
+  const [reportedByList, setReportedByList] = useState<AppUser[]>([]);
+  const [reportedToList, setReportedToList] = useState<AppUser[]>([]);
+  const [selectedReportedBy, setSelectedReportedBy] = useState<number | null>(null);
+  const [selectedReportedTo, setSelectedReportedTo] = useState<AppUser[]>([]);
 
   function initData(): AppUser {
     return {
@@ -138,19 +131,21 @@ export default function AppUsersEdit() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userList = await getData(userService);
-        setListAppUser(userList);
+        const listReportedBy = await getData(userService);
+        setReportedByList(listReportedBy);
         if (itemData.reportedBy) {
-          setSelectedAppUser(Number(itemData.reportedBy));
+          setSelectedReportedBy(Number(itemData.reportedBy));
         }
 
+        const listReportedTo = await getData(userService);
+        setReportedToList(listReportedTo);
         if (itemData.reportedTo) {
           const arrList = itemData.reportedTo.split(",");
-          const selectedList = userList.filter((a: AppUser) =>
+          const selectedList = listReportedTo.filter((a: AppUser) =>
             arrList.includes("" + a.id)
           );
           if (selectedList.length) {
-            setSelectedMultiAppUsers(selectedList);
+            setSelectedReportedTo(selectedList);
           }
         }
 
@@ -160,7 +155,7 @@ export default function AppUsersEdit() {
     };
 
     fetchData();
-  }, [appUserData]);
+  }, [itemData]);
 
   useEffect(() => {
     const bindDropDownList = async () => {
@@ -201,16 +196,6 @@ export default function AppUsersEdit() {
 
     bindDropDownList();
   }, [itemData, roleData?.data, publishData?.data, verifyData?.data]);
-
-
-  useEffect(() => {
-    if (item?.isAdmin !== undefined) {
-      setModel((prev) => ({
-        ...prev,
-        isAdmin: item.isAdmin ? 'true' : 'false',
-      }));
-    }
-  }, [item?.isAdmin]);
 
   const handleInputChange = (field: string, value: string) => {
     setItem((prev) => ({ ...prev, [field]: value }));
@@ -397,10 +382,10 @@ export default function AppUsersEdit() {
         verifyShopLabel: item.verifyShop,
         roleLabel: item.role,
         publishLabel: item.publish,
-        reportedBy: selectedAppUser || '',
-        reportedByLabel: selectedAppUser || '',
-        reportedTo: selectedMultiAppUsers.map((user: AppUser) => user.id).join(","),
-        reportedToLabel: selectedMultiAppUsers.map((user: AppUser) => user.id).join(",")
+        reportedBy: selectedReportedBy || '',
+        reportedByLabel: selectedReportedBy || '',
+        reportedTo: selectedReportedTo.map((user: AppUser) => user.id).join(","),
+        reportedToLabel: selectedReportedTo.map((user: AppUser) => user.id).join(",")
       };
 
       const cleanedPayload = removeEmptyFields(payload);
@@ -443,10 +428,9 @@ export default function AppUsersEdit() {
     }));
   };
 
-  const handleRadioChange = (e: RadioButtonChangeEvent) => {
-    selectRadioEnum(e, 'isAdmin', model, setModel, false);
+  const handleRadioChange = (e: RadioButtonChangeEvent, controlName: string, isBoolean = false) => {
+    selectRadioEnum(e, controlName, item, setItem, isBoolean);
   };
-
 
   return (
     <div className='relative h-screen flex flex-col'>
@@ -1125,7 +1109,7 @@ export default function AppUsersEdit() {
                                 <span className=" text-[var(--color-danger)] pl-2">*</span>
                                 <TooltipWithText text={t("appUsers.columns.fields.isAdmin")} />
                               </div>
-                              <Checkbox
+                              {/* <Checkbox
                                 inputId="isAdmin"
                                 name="isAdmin"
                                 value="isAdmin"
@@ -1133,7 +1117,29 @@ export default function AppUsersEdit() {
                                 onChange={(e) => handleCheckboxChange(e, "isAdmin")}
                                 className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
                                 required
-                              />
+                              /> */}
+                              <div className="flex">
+                                <div className="flex items-center px-2">
+                                  <RadioButton
+                                    inputId="isAdminTrue"
+                                    name="isAdmin"
+                                    value="true"
+                                    onChange={(e) => handleRadioChange(e, "isAdmin", true)}
+                                    checked={item.isAdmin === true}
+                                  />
+                                  <label htmlFor="isAdminTrue" className="ml-2 text-gray-700 text-sm">True</label>
+                                </div>
+                                <div className="flex items-center py-2">
+                                  <RadioButton
+                                    inputId="isAdminFalse"
+                                    name="isAdmin"
+                                    value="false"
+                                    onChange={(e) => handleRadioChange(e, "isAdmin", true)}
+                                    checked={item.isAdmin === false}
+                                  />
+                                  <label htmlFor="isAdminFalse" className="ml-2 text-gray-700 text-sm">False</label>
+                                </div>
+                              </div>
                               {errors.isAdmin && (
                                 <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                                   {errors.isAdmin}
@@ -1380,19 +1386,19 @@ export default function AppUsersEdit() {
                           <div className="flex flex-col">
                             <div className="flex items-center">
                               <label htmlFor="reportedTo" className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]">
-                                AppUser MultiSelect
+                                 ReportedTo
                               </label>
-                              <TooltipWithText text="AppUser MultiSelect" />
+                              <TooltipWithText text=" ReportedTo" />
                             </div>
                             <MultiSelect
                               name="reportedTo"
                               id="reportedTo"
-                              value={selectedMultiAppUsers}
-                              options={listAppUser}
-                              onChange={(e) => handleMultiSelectChange(e, 'reportedTo', setSelectedMultiAppUsers)}
+                              value={selectedReportedTo}
+                              options={reportedToList}
+                              onChange={(e) => handleMultiSelectChange(e, 'reportedTo', setSelectedReportedTo)}
                               optionLabel="name"
                               filter
-                              placeholder="Select Names"
+                              placeholder="Select ReportedTo"
                               className="text-sm w-full lg:w-20rem flex items-center h-[40px] border bg-[var(--color-white)] text-[var(--color-dark)] border-[var(--color-gray)] rounded-md shadow-sm"
                             />
                           </div>
@@ -1400,20 +1406,20 @@ export default function AppUsersEdit() {
                           <div className="flex flex-col">
                             <div className="flex items-center">
                               <label htmlFor="reportedBy" className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]">
-                                AppUser Dropdown
+                                ReportedBy
                               </label>
                               <span className="text-[var(--color-danger)] pl-2">*</span>
-                              <TooltipWithText text="AppUser Dropdown" />
+                              <TooltipWithText text=" ReportedBy" />
                             </div>
                             <Dropdown
                               id="reportedBy"
                               name="reportedBy"
-                              value={selectedAppUser}
-                              placeholder="Select a User"
-                              options={listAppUser}
+                              value={selectedReportedBy}
+                              placeholder="Select a ReportedBy"
+                              options={reportedByList}
                               optionLabel="name"
                               optionValue="id"
-                              onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "reportedBy"); setSelectedAppUser(Number(e.value)); }}
+                              onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "reportedBy"); setSelectedReportedBy(Number(e.value)); }}
                               filter
                               className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px] bg-[var(--color-white)] text-[var(--color-dark)]"
                               required
@@ -1426,38 +1432,42 @@ export default function AppUsersEdit() {
                           <div className="flex flex-col">
                             <div className="flex items-center">
                               <label
-                                htmlFor="isAdmin"
+                                htmlFor="gender"
                                 className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]"
                               >
-                                {t("appUsers.columns.fields.isAdmin")}
+                                Gender
                               </label>
                               <span className="text-[var(--color-danger)] pl-2">*</span>
-                              <TooltipWithText text={t("appUsers.columns.fields.isAdmin")} />
+                              <TooltipWithText text="Gender" />
                             </div>
+                            <div className='flex'>
+                              <div className="flex items-center px-2">
+                                <RadioButton
+                                  inputId="genderMale"
+                                  name="gender"
+                                  value="Male"
+                                  onChange={(e) => handleRadioChange(e, "gender")}
+                                  checked={item.gender === "Male"}
+                                />
+                                <label htmlFor="genderMale" className="ml-2 text-gray-700 text-sm">Male</label>
+                              </div>
+                              <div className="flex items-center py-2">
+                                <RadioButton
+                                  inputId="genderFemale"
+                                  name="gender"
+                                  value="Female"
+                                  onChange={(e) => handleRadioChange(e, "gender")}
+                                  checked={item.gender === "Female"}
+                                />
+                                <label htmlFor="genderFemale" className="ml-2 text-gray-700 text-sm">Female</label>
+                              </div>
+                            </div>
+                            {errors.gender && (
+                              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                                {errors.gender}
+                              </p>
+                            )}
 
-                            <div className="flex flex-wrap gap-4">
-                              <div className="flex items-center">
-                                <RadioButton
-                                  inputId="isAdminTrue"
-                                  name="isAdmin"
-                                  value="true"
-                                  onChange={handleRadioChange}
-                                  checked={model.isAdmin === 'true'}
-                                  className='text-sm'
-                                />
-                                <label htmlFor="isAdminTrue" className="ml-2 text-gray-700 text-sm">True</label>
-                              </div>
-                              <div className="flex items-center">
-                                <RadioButton
-                                  inputId="isAdminFalse"
-                                  name="isAdmin"
-                                  value="false"
-                                  onChange={handleRadioChange}
-                                  checked={model.isAdmin === 'false'}
-                                />
-                                <label htmlFor="isAdminFalse" className="ml-2 text-gray-700 text-sm">False</label>
-                              </div>
-                            </div>
                           </div>
                         </div>
                       </div>

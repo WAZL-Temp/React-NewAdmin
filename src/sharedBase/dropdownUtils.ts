@@ -8,7 +8,7 @@ export const selectDropdownEnum = (
 ) => {
   const updatedModel = { ...model };
 
-  
+
   console.log("e.target.name:", e.target.name);
   console.log("controlName:", controlName);
   updatedModel[controlName] = e.value;
@@ -26,20 +26,24 @@ export const selectRadioEnum = (
   controlName: string,
   model: any,
   setModel: (updatedModel: any) => void,
-  setName: boolean = false
+  isBoolean: boolean = false
 ) => {
   const updatedModel = { ...model };
-  updatedModel[controlName] = e.value;
+
+  let value: any = e.value;
+  if (isBoolean) {
+    value = e.value === "true";
+  }
+
+  updatedModel[controlName] = value;
 
   if (controlName + 'Label' in updatedModel) {
     updatedModel[controlName + 'Label'] = e.target.name;
   }
 
-  if (setName) {
-    updatedModel[controlName] = e.target.name;
-  }
   setModel(updatedModel);
 };
+
 
 interface Option {
   id: string | number;

@@ -45,5 +45,6 @@ export interface AppUser {
 	appUserList?: string;
 	reportedTo?: string;
 	reportedBy?: string;
+	gender?: string;
 }
 
