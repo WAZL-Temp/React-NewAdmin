@@ -107,14 +107,15 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
           className={`flex items-center ${isMinimized ? 'px-1' : 'px-2'} py-2 rounded
           ${location.pathname === "/appUserTests" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
           hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]`}
-          tooltip={t("appUsers.form_detail.fields.modelname")}
+          tooltip={t("appUserTests.form_detail.fields.modelname")}
           tooltipOptions={{
             position: 'right',
             className: 'font-normal rounded text-sm p-1'
           }}
         >
           <FiUser size={18} className={`${isMinimized ? '' : 'mr-3'}`} />
-          {(!isMinimized) && <span className=" text-sm font-medium">AppuserTest</span>}
+          {(!isMinimized) && <span className=" text-sm font-medium">
+            {t("appUserTests.form_detail.fields.modelname")}</span>}
         </Button>
 
         {/* {hasAccess(roleData.find((r: any) => r.name.toLowerCase() === 'product'), "List") && ( */}

@@ -597,34 +597,36 @@ export default function AppUsersView() {
                         </span>
                       </div>
                     )}
-                  </div>
 
-                  <div className="user-grid">
-                    <div className="flex flex-col bg-[var(--color-white)] text-[var(--color-dark)]  bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
-                      <div className="flex items-center space-x-2">
-                        <label
-                          htmlFor="gst"
-                          className="text-sm font-bold py-2  bg-[var(--color-white)] text-[var(--color-dark)]"
-                        >
-                          ReportedBy
-                        </label>
-                        <TooltipWithText text="ReportedBy" />
+                    {!isFieldHidden("reportedBy") && (
+                      <div className="flex flex-col bg-[var(--color-white)] text-[var(--color-dark)]  bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
+                        <div className="flex items-center space-x-2">
+                          <label
+                            htmlFor="gst"
+                            className="text-sm font-bold py-2  bg-[var(--color-white)] text-[var(--color-dark)]"
+                          >
+                            {t("appUsers.columns.fields.reportedBy")}
+                          </label>
+                          <TooltipWithText text={t("appUsers.columns.fields.reportedBy")} />
+                        </div>
+                        <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)]">{userData?.reportedBy}</span>
                       </div>
-                      <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)]">{userData?.reportedBy}</span>
-                    </div>
+                    )}
 
-                    <div className="flex flex-col bg-[var(--color-white)] text-[var(--color-dark)]  bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
-                      <div className="flex items-center space-x-2">
-                        <label
-                          htmlFor="gst"
-                          className="text-sm font-bold py-2  bg-[var(--color-white)] text-[var(--color-dark)]"
-                        >
-                          ReportedTo
-                        </label>
-                        <TooltipWithText text="ReportedTo" />
+                    {!isFieldHidden("reportedTo") && (
+                      <div className="flex flex-col bg-[var(--color-white)] text-[var(--color-dark)]  bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
+                        <div className="flex items-center space-x-2">
+                          <label
+                            htmlFor="gst"
+                            className="text-sm font-bold py-2  bg-[var(--color-white)] text-[var(--color-dark)]"
+                          >
+                            {t("appUsers.columns.fields.reportedTo")}
+                          </label>
+                          <TooltipWithText text={t("appUsers.columns.fields.reportedTo")} />
+                        </div>
+                        <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)]">{userData?.reportedTo}</span>
                       </div>
-                      <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)]">{userData?.reportedTo}</span>
-                    </div>
+                    )}
                   </div>
                 </div>
               </StepperPanel>
