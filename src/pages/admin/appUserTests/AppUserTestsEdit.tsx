@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import successImg from '../../../assets/images/success.gif'
-import { BsArrowLeft, Button, Calendar, Checkbox, Dialog, Dropdown, DropdownChangeEvent, FaSave, Image, InputText, InputTextarea, IoIosArrowBack, IoIosArrowForward, Stepper, StepperPanel, StepperRefAttributes, Toast } from '../../../sharedBase/globalImports';
+import { BsArrowLeft, Button, Calendar, Checkbox, Dialog, Dropdown, DropdownChangeEvent, FaSave, Image, InputText, InputTextarea, IoIosArrowBack, IoIosArrowForward, MultiSelect, MultiSelectChangeEvent,  RadioButtonChangeEvent, Stepper, StepperPanel, StepperRefAttributes, Toast } from '../../../sharedBase/globalImports';
 import { useNavigate, useParams, useTranslation } from '../../../sharedBase/globalUtils';
 import { useEditPage } from '../../../hooks/useEditPage';
 import { AppUserTest } from '../../../core/model/appUserTest';
-import { selectDropdownEnum } from '../../../sharedBase/dropdownUtils';
+import { selectDropdownEnum, selectMultiData, selectRadioEnum } from '../../../sharedBase/dropdownUtils';
 import { getGlobalSchema } from '../../../globalschema';
 import TooltipWithText from '../../../components/TooltipWithText';
 import FileUploadMain from '../../../components/FileUploadMain';
@@ -13,7 +13,7 @@ import { CustomFile } from '../../../core/model/customfile';
 import { useItemQuery } from '../../../store/useItemQuery';
 import { AppUserTestsService } from '../../../core/service/appUserTests.service';
 import { useListQuery } from '../../../store/useListQuery';
-import { useFetchDataEnum } from '../../../sharedBase/lookupService';
+import {getData, useFetchDataEnum } from '../../../sharedBase/lookupService';
 
 export default function AppUserTestsEdit() {
   const { id } = useParams<{ id: string }>();
@@ -22,9 +22,9 @@ export default function AppUserTestsEdit() {
   const globalschema = getGlobalSchema(t);
   const toast = useRef<Toast>(null);
   const baseModelName = "appUserTests";
-  const userService = AppUserTestsService();
-  const itemQuery = useItemQuery<AppUserTest>(userService);
-  const listQuery = useListQuery<AppUserTest>(userService);
+  const appUserTestService = AppUserTestsService();
+  const itemQuery = useItemQuery<AppUserTest>(appUserTestService);
+  const listQuery = useListQuery<AppUserTest>(appUserTestService);
   const isEditMode = Boolean(id);
   const stepperRef = useRef<StepperRefAttributes | null>(null);
   const [item, setItem] = useState<AppUserTest>(initData());
@@ -37,11 +37,15 @@ export default function AppUserTestsEdit() {
 const [listVerifyShop, setListVerifyShop] = useState<EnumDetail[]>([]);
  const [listRole, setListRole] = useState<EnumDetail[]>([]);
  const [listPublish, setListPublish] = useState<EnumDetail[]>([]);
+ const [reportedTolist, setReportedToList] = useState<AppUserTest[]>([]);
+ const [reportedBylist, setReportedByList] = useState<AppUserTest[]>([]);
 
     
 const [selectedVerifyShop, setSelectedVerifyShop] = useState<string | undefined>(undefined);
  const [selectedRole, setSelectedRole] = useState<string | undefined>(undefined);
  const [selectedPublish, setSelectedPublish] = useState<string | undefined>(undefined);
+ const [selectedReportedTo, setSelectedReportedTo] = useState<AppUserTest[]>([]);
+ const [selectedReportedBy, setSelectedReportedBy] = useState<number | null>(null);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [dialogMessage, setDialogMessage] = useState('');
@@ -49,7 +53,7 @@ const [selectedVerifyShop, setSelectedVerifyShop] = useState<string | undefined>
   const [itemData, setItemData] = useState<AppUserTest>(initData());
 
     
-const verifyShopData = useFetchDataEnum("VerifyShopType");
+const verifyShopData = useFetchDataEnum("VerifyType");
 const roleData = useFetchDataEnum("RoleType");
 const publishData = useFetchDataEnum("PublishType");
 
@@ -94,6 +98,9 @@ function initData(): AppUserTest {
 		defaultLanguage: "",
 		isPremiumUser: false,
 		totalPlot: undefined,
+		reportedTo: "",
+		reportedBy: "",
+		appUserTestName: "",
 		createDate: undefined,
 		updateDate: undefined,
 		deleteDate: undefined,
@@ -126,6 +133,37 @@ function initData(): AppUserTest {
     fetchData();
   }, [isEditMode, prepareObject, id]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        
+
+ 
+ 
+     const listReportedTo = await getData(appUserTestService);
+        setReportedToList(listReportedTo);
+        if (itemData.reportedTo) {
+          const arrList = itemData.reportedTo.split(",");
+          const selectedList = listReportedTo.filter((a: AppUserTest) =>
+            arrList.includes("" + a.id)
+          );
+          if (selectedList.length) {
+            setSelectedReportedTo(selectedList);
+          }
+        }
+     const listReportedBy = await getData(appUserTestService);
+        setReportedByList(listReportedBy);
+        if (itemData.reportedBy) {
+          setSelectedReportedBy(Number(itemData.reportedBy));
+        }
+
+      } catch (err) {
+        console.error('Error fetching data:', err);
+      }
+    };
+
+    fetchData();
+  }, [itemData]);
    useEffect(() => {
     const bindDropDownList = async () => {
     
@@ -159,7 +197,9 @@ setListVerifyShop(verifyShopData?.data);
         if (selectedList.length) {
           setSelectedPublish(selectedList[0].value);
         }
-      }     
+      }
+ 
+      
     };
 
     bindDropDownList();
@@ -377,6 +417,21 @@ verifyShopData?.data, roleData?.data, publishData?.data
     } finally {
       setIsSubmitting(false);
     }
+  };
+  const handleMultiSelectChange = (e: MultiSelectChangeEvent, fieldName: string, setFieldValue: React.Dispatch<React.SetStateAction<AppUserTest[]>>) => {
+    const selectedUsers = e.value as AppUserTest[];
+    setFieldValue(selectedUsers);
+
+    const selectedIds = selectedUsers.map(user => user.id).filter(id => id !== undefined);
+    const updatedModel = selectMultiData(selectedUsers, fieldName);
+    setItem((prev) => ({
+      ...prev,
+      [fieldName]: selectedIds.join(',') || '',
+      [`${fieldName}Label`]: updatedModel[`${fieldName}Label`]?.toString() || '',
+    }));
+  };
+  const handleRadioChange = (e: RadioButtonChangeEvent, controlName: string, isBoolean = false) => {
+    selectRadioEnum(e, controlName, item, setItem, isBoolean);
   };
 
   return (
@@ -1063,10 +1118,52 @@ verifyShopData?.data, roleData?.data, publishData?.data
               <TooltipWithText text={t("appUserTests.columns.fields.totalPlot")} />
             </div>
 
-            <InputText type='text' id='totalPlot' name='totalPlot'  onChange={(e) => handleInputChange('totalPlot', e.target.value)}  className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.totalPlot} placeholder={t("appUserTests.columns.fields.totalPlot")}/>
+            <InputText type='text' id='totalPlot' name='totalPlot'  onChange={(e) => handleInputChange('totalPlot', e.target.value)}  className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"     value={item.totalPlot?.toString() ?? ''} placeholder={t("appUserTests.columns.fields.totalPlot")}/>
             {errors.totalPlot && (
               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                 {errors.totalPlot}
+              </p>
+            )}
+          </div>
+        )}
+        {!isFieldHidden("reportedTo") && (
+          <div className="flex flex-col">
+            <div className=" flex items-center">
+              <label
+                htmlFor="reportedTo"
+                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]"
+              >
+              {t("appUserTests.columns.fields.reportedTo")}
+              </label>
+              <span className=" text-[var(--color-danger)] pl-2 ">*</span>
+              <TooltipWithText text={t("appUserTests.columns.fields.reportedTo")} />
+            </div>
+
+            <MultiSelect id='reportedTo' name='reportedTo' value={selectedReportedTo} options={reportedTolist} optionLabel='name' onChange={(e) => handleMultiSelectChange(e, 'reportedTo', setSelectedReportedTo)} filter placeholder={t("appUserTests.columns.fields.reportedTo")}/>
+            {errors.reportedTo && (
+              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                {errors.reportedTo}
+              </p>
+            )}
+          </div>
+        )}
+        {!isFieldHidden("reportedBy") && (
+          <div className="flex flex-col">
+            <div className=" flex items-center">
+              <label
+                htmlFor="reportedBy"
+                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]"
+              >
+              {t("appUserTests.columns.fields.reportedBy")}
+              </label>
+              <span className=" text-[var(--color-danger)] pl-2 ">*</span>
+              <TooltipWithText text={t("appUserTests.columns.fields.reportedBy")} />
+            </div>
+
+            <Dropdown id='reportedBy' name='reportedBy' value={selectedReportedBy} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "reportedBy"); setSelectedReportedBy(e.value) }}  options={reportedBylist} optionLabel='name' checkmark={true}  highlightOnSelect={false}  appendTo="self"  placeholder={t("appUserTests.columns.fields.reportedBy")} className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] dropdowndark" />
+            {errors.reportedBy && (
+              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                {errors.reportedBy}
               </p>
             )}
           </div>
