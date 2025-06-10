@@ -382,13 +382,9 @@ export default function AppUsersEdit() {
         verifyShopLabel: item.verifyShop,
         roleLabel: item.role,
         publishLabel: item.publish,
-        reportedBy: selectedReportedBy || '',
-        reportedByLabel: selectedReportedBy || '',
-        reportedTo: selectedReportedTo.map((user: AppUser) => user.id).join(","),
-        reportedToLabel: selectedReportedTo.map((user: AppUser) => user.id).join(",")
       };
 
-      const cleanedPayload = removeEmptyFields(payload);
+      const cleanedPayload = removeEmptyFields(payload);      
       let updatedItem;
 
       if (itemData?.id) {
@@ -1383,51 +1379,55 @@ export default function AppUsersEdit() {
                             </div>
                           )}
 
-                          <div className="flex flex-col">
-                            <div className="flex items-center">
-                              <label htmlFor="reportedTo" className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]">
-                                 ReportedTo
-                              </label>
-                              <TooltipWithText text=" ReportedTo" />
+                          {!isFieldHidden("reportedTo") && (
+                            <div className="flex flex-col">
+                              <div className="flex items-center">
+                                <label htmlFor={t("appUsers.columns.fields.reportedTo")} className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]">
+                                  {t("appUsers.columns.fields.reportedTo")}
+                                </label>
+                                <TooltipWithText text={t("appUsers.columns.fields.reportedTo")} />
+                              </div>
+                              <MultiSelect
+                                name="reportedTo"
+                                id="reportedTo"
+                                value={selectedReportedTo}
+                                options={reportedToList}
+                                onChange={(e) => handleMultiSelectChange(e, 'reportedTo', setSelectedReportedTo)}
+                                optionLabel="name"
+                                filter
+                                placeholder={t("appUsers.columns.fields.reportedTo")}
+                                className="text-sm w-full lg:w-20rem flex items-center h-[40px] border bg-[var(--color-white)] text-[var(--color-dark)] border-[var(--color-gray)] rounded-md shadow-sm"
+                              />
                             </div>
-                            <MultiSelect
-                              name="reportedTo"
-                              id="reportedTo"
-                              value={selectedReportedTo}
-                              options={reportedToList}
-                              onChange={(e) => handleMultiSelectChange(e, 'reportedTo', setSelectedReportedTo)}
-                              optionLabel="name"
-                              filter
-                              placeholder="Select ReportedTo"
-                              className="text-sm w-full lg:w-20rem flex items-center h-[40px] border bg-[var(--color-white)] text-[var(--color-dark)] border-[var(--color-gray)] rounded-md shadow-sm"
-                            />
-                          </div>
+                          )}
 
-                          <div className="flex flex-col">
-                            <div className="flex items-center">
-                              <label htmlFor="reportedBy" className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]">
-                                ReportedBy
-                              </label>
-                              <span className="text-[var(--color-danger)] pl-2">*</span>
-                              <TooltipWithText text=" ReportedBy" />
+                          {!isFieldHidden("reportedBy") && (
+                            <div className="flex flex-col">
+                              <div className="flex items-center">
+                                <label htmlFor={t("appUsers.columns.fields.reportedBy")} className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]">
+                                  {t("appUsers.columns.fields.reportedBy")}
+                                </label>
+                                <span className="text-[var(--color-danger)] pl-2">*</span>
+                                <TooltipWithText text={t("appUsers.columns.fields.reportedBy")} />
+                              </div>
+                              <Dropdown
+                                id="reportedBy"
+                                name="reportedBy"
+                                value={selectedReportedBy}
+                                placeholder={t("appUsers.columns.fields.reportedBy")}
+                                options={reportedByList}
+                                optionLabel="name"
+                                optionValue="id"
+                                onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "reportedBy"); setSelectedReportedBy(Number(e.value)); }}
+                                filter
+                                className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px] bg-[var(--color-white)] text-[var(--color-dark)]"
+                                required
+                                checkmark={true}
+                                highlightOnSelect={false}
+                                appendTo="self"
+                              />
                             </div>
-                            <Dropdown
-                              id="reportedBy"
-                              name="reportedBy"
-                              value={selectedReportedBy}
-                              placeholder="Select a ReportedBy"
-                              options={reportedByList}
-                              optionLabel="name"
-                              optionValue="id"
-                              onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "reportedBy"); setSelectedReportedBy(Number(e.value)); }}
-                              filter
-                              className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px] bg-[var(--color-white)] text-[var(--color-dark)]"
-                              required
-                              checkmark={true}
-                              highlightOnSelect={false}
-                              appendTo="self"
-                            />
-                          </div>
+                          )}
 
                           <div className="flex flex-col">
                             <div className="flex items-center">

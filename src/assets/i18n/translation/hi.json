@@ -111,6 +111,8 @@
         "defaultLanguage": "DefaultLanguage",
         "isPremiumUser": "IsPremiumUser",
         "totalPlot": "TotalPlot",
+        "reportedTo":"रिपोर्ट किया गया",
+        "reportedBy":"द्वारा रिपोर्ट किया गया",
         "updateDate": "अपडेट तिथि",
         "deleteDate": "डिलीट तिथि",
         "updateById": "अपडेट बाय आईडी",
