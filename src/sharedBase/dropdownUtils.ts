@@ -9,13 +9,11 @@ export const selectDropdownEnum = (
   const updatedModel = { ...model };
 
 
-  console.log("e.target.name:", e.target.name);
-  console.log("controlName:", controlName);
   updatedModel[controlName] = e.value;
-  updatedModel[`${controlName}Label`] = e.target.name;
+  updatedModel[`${controlName}Label`] = e.value;
 
   if (setName) {
-    updatedModel[controlName] = e.target.name;
+    updatedModel[controlName] = e.value;
   }
 
   return updatedModel;
@@ -38,7 +36,7 @@ export const selectRadioEnum = (
   updatedModel[controlName] = value;
 
   if (controlName + 'Label' in updatedModel) {
-    updatedModel[controlName + 'Label'] = e.target.name;
+    updatedModel[controlName + 'Label'] = e.value;
   }
 
   setModel(updatedModel);
