@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { BaseModel } from "../sharedBase/modelInterface";
 import { useBaseService } from "../sharedBase/baseService";
@@ -45,13 +45,19 @@ export const useListQuery = <T extends BaseModel>(
   );
   const [condition, setConditionState] = useState<ConditionParams>(cachedState?.condition || {});
   const [roleCondition, setRoleConditionState] = useState<RoleConditionParams>(cachedState?.roleCondition || {});
+  // const isRoleConditionReady = Object.keys(roleCondition).length > 0;
+  const hasSetRoleCondition = useRef(false);
 
   const payload = { ...condition, ...search, ...roleCondition };
+ const isPayloadEmpty = Object.keys(payload).length === 0;
+  const shouldWait = Object.keys(roleCondition).length === 0 && !hasSetRoleCondition.current;
+  const isQueryEnabled = !shouldWait || !isPayloadEmpty;
 
   const { data, isLoading, error, refetch } = useQuery({
-    queryKey: [`list-${service.type}`],
+    queryKey: [`list-${service.type}`, payload],
     queryFn: () => service.getAll(payload),
     staleTime: 1000 * 60 * 5,
+    enabled: isQueryEnabled,
   });
 
   const deleteMutation = useMutation({
@@ -132,6 +138,7 @@ export const useListQuery = <T extends BaseModel>(
   };
 
   const setRoleCondition = (newRoleCondition: RoleConditionParams) => {
+     hasSetRoleCondition.current = true;
     setRoleConditionState((prev: RoleConditionParams) => {
       const updated = { ...prev, ...newRoleCondition };
       queryClient.setQueryData([`list-${service.type}-state`], {

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "../sharedBase/globalUtils";
 import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
-import { RoleDetail } from "../core/model/roledetail";
 
 type UseEditPageProps = {
     props: {
@@ -20,19 +19,22 @@ export function useViewPage({ props }: UseEditPageProps) {
             if (!props.baseModelName) return;
 
             if (roleDetailsData && roleDetailsData.length > 0) {
-                const modelData = roleDetailsData.find(
-                    (r: RoleDetail) => r.name === props.baseModelName!.toLowerCase()
+               const modelData = roleDetailsData.find(
+                    (r) => r.name && r.name.toLowerCase() === props.baseModelName!.toLowerCase()
                 );
 
                 if (modelData?.hideColumn) {
+                    let parsedColumns: { value: string }[] = [];
+
                     try {
-                        const parsedColumns = JSON.parse(modelData.hideColumn);
-                        if (Array.isArray(parsedColumns)) {
-                            const hiddenFieldNames = parsedColumns.map((column: { value: string }) => column.value);
-                            setHiddenFields(hiddenFieldNames);
-                        }
-                    } catch (error) {
-                        console.error("Error parsing hideColumn:", error);
+                        parsedColumns = JSON.parse(modelData.hideColumn);
+                    } catch {
+                        console.error("Invalid JSON in hideColumn", modelData.hideColumn);
+                    }
+
+                    if (Array.isArray(parsedColumns)) {
+                        const hiddenFieldNames = parsedColumns.map((column) => column.value);
+                        setHiddenFields(hiddenFieldNames);
                     }
                 }
             }

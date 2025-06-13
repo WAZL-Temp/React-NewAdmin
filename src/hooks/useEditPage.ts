@@ -23,20 +23,22 @@ export function useEditPage<TItem>({ props }: UseEditPageProps<TItem>) {
             if (!props.baseModelName) return;
 
             if (roleDetailsData && roleDetailsData.length > 0) {
-
                 const modelData = roleDetailsData.find(
-                    (r: RoleDetail) => r.name  === props.baseModelName!.toLowerCase()
+                    (r) => r.name && r.name.toLowerCase() === props.baseModelName!.toLowerCase()
                 );
 
                 if (modelData?.hideColumn) {
+                    let parsedColumns: { value: string }[] = [];
+
                     try {
-                        const parsedColumns = JSON.parse(modelData.hideColumn);
-                        if (Array.isArray(parsedColumns)) {
-                            const hiddenFieldNames = parsedColumns.map((column: { value: string }) => column.value);
-                            setHiddenFields(hiddenFieldNames);
-                        }
-                    } catch (error) {
-                        console.error("Error parsing hideColumn:", error);
+                        parsedColumns = JSON.parse(modelData.hideColumn);
+                    } catch {
+                        console.error("Invalid JSON in hideColumn", modelData.hideColumn);
+                    }
+
+                    if (Array.isArray(parsedColumns)) {
+                        const hiddenFieldNames = parsedColumns.map((column) => column.value);
+                        setHiddenFields(hiddenFieldNames);
                     }
                 }
             }
@@ -71,7 +73,7 @@ export function useEditPage<TItem>({ props }: UseEditPageProps<TItem>) {
         return format(date, "MM-dd-yyyy");
     };
 
-    const removeEmptyFields = (obj:  Record<string, unknown>) => {
+    const removeEmptyFields = (obj: Record<string, unknown>) => {
         return Object.keys(obj).reduce((acc, key) => {
             if (obj[key] !== "" && obj[key] !== undefined && obj[key] !== null) {
                 acc[key] = obj[key];
