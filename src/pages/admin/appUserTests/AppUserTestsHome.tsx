@@ -73,7 +73,7 @@ export default function AppUserTestsHome() {
             <section className="p-2 flex items-center justify-center my-3">
               <div onClick={handleListClick}>
                 <Button
-                  label={t("globals.viewAll")}
+                  label={t('globals.viewAll')}
                   className="rounded-md bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white p-2 border-none text-sm"
                 />
               </div>
@@ -101,10 +101,10 @@ export default function AppUserTestsHome() {
                 <div className="container mx-auto px-4 sm:px-12">
                   <h2 className="text-xl sm:text-2xl font-bold text-gray-800 text-center">{t('globals.createdByMe')}</h2>
                   <div className="relative overflow-hidden">
-                    <div className="flex space-x-4 overflow-x-auto scrollbar-hide px-2 py-4 snap-x snap-mandatory justify-start sm:justify-center">
+                    <div className="flex space-x-4 overflow-x-auto scrollbar-hide px-4 py-4 snap-x snap-proximity justify-start">
                       {listHomeUserData.map((item, index) => (
-                        <div key={index} className="flex-none snap-center">
-                          <div className="bg-white shadow-xl rounded-2xl p-4 flex flex-col items-center max-w-xs min-h-[160px] sm:min-h-[180px]">
+                        <div key={index} className="flex-none snap-center w-[140px] sm:w-[160px]">
+                          <div className="bg-white shadow-xl rounded-2xl p-4 flex flex-col items-center h-[180px] sm:h-[200px]">
                             <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden">
                               <Image
                                 src={avatar}
@@ -112,8 +112,8 @@ export default function AppUserTestsHome() {
                                 className="w-full h-full object-cover"
                               />
                             </div>
-                            <h3 className="mt-3 text-sm sm:text-sm font-semibold text-gray-800 text-center min-h-[24px]">
-                              {item.name }
+                            <h3 className="mt-3 text-sm font-semibold text-gray-800 text-center min-h-[24px]">
+                              {item.name}
                             </h3>
                           </div>
                         </div>
@@ -133,7 +133,7 @@ export default function AppUserTestsHome() {
             )}
 
             <div className="p-2 mt-5">
-              {query?.homeHtmlData && Array.isArray(query.homeHtmlData.htmlData) && query.homeHtmlData.htmlData[0] && (
+              {query?.homeHtmlData && Array.isArray(query.homeHtmlData.htmlData) && query.homeHtmlData.htmlData[1] && (
                 <div
                   className="text-lg sm:text-xl lg:text-2xl font-bold text-[var(--color-black)] text-center leading-tight max-w-3xl mx-auto tracking-wide"
                   dangerouslySetInnerHTML={{ __html: query?.homeHtmlData.htmlData[1].html }}

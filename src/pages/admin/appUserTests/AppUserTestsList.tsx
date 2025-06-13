@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useListPage } from "../../../hooks/useListPage";
-import { BiSolidTrash, Button, Calendar, Column, DataTable, Dialog, HiOutlinePlus, Image, InputText, IoMdRefresh, MdOutlineUploadFile, MenuItem, RiPencilFill, SplitButton, TbFileExcel, TiEye, Toast, Tooltip,  FilterMatchMode } from "../../../sharedBase/globalImports";
+import { BiSolidTrash, Button, Calendar, Column, DataTable, Dialog, HiOutlinePlus, IoMdSettings ,Image, InputText, IoMdRefresh, MdOutlineUploadFile, MenuItem, RiPencilFill, SplitButton, TbFileExcel, TiEye, Toast, Tooltip, FilterMatchMode, Checkbox } from "../../../sharedBase/globalImports";
 import {useTranslation,useNavigate} from '../../../sharedBase/globalUtils';
 import successimg from '../../../assets/images/success.gif';
 import confirmImg from '../../../assets/images/are-you-sure.jpg';
@@ -8,20 +8,20 @@ import { AppUserTest } from "../../../core/model/appUserTest";
 import { RowData } from "../../../types/listpage";
 import { useListQuery } from "../../../store/useListQuery";
 import { AppUserTestsService } from "../../../core/service/appUserTests.service";
-
+import Loader from "../../../components/Loader";
 export default function AppUserTestsList() {
     const navigate = useNavigate();
     const baseModelName = "appUserTests";
     const { t } = useTranslation();
-    // const [visible, setVisible] = useState(false);
+    const [visible, setVisible] = useState(false);
     const dtRef = useRef<DataTable<AppUserTest[]>>(null);
     // search
     const [calendarCreateDateFrom, setCalendarCreateDateFrom] = useState<Date | undefined | null>(null);
     const [calendarCreateDateTo, setCalendarCreateDateTo] = useState<Date | undefined | null>(null);
-    const userService = AppUserTestsService();
-    const query = useListQuery<AppUserTest>(userService);
+    const appUserTestsService = AppUserTestsService();
+    const query = useListQuery<AppUserTest>(appUserTestsService);
     const {
-        roleData, globalFilterValue, setGlobalFilterValue, onGlobalFilterChange, refreshItemData, isDeleteDialogVisible,
+        roleData, hasAccess,globalFilterValue, setGlobalFilterValue, onGlobalFilterChange, refreshItemData, isDeleteDialogVisible,
         deleteItem, closeDeleteDialog, setFilters, onSort, onPage, first, rows, sortField, sortOrder, totalRecords,
         filters, setListSearch, clearListSearch, searchChange, openItem, confirmDeleteItem,
         toast, isSuccessDialogOpen, setIsSuccessDialogOpen, formatDate, exportToExcel,
@@ -31,7 +31,7 @@ export default function AppUserTestsList() {
             props: {
                 initialFilterValue: '',
                 baseModelName: baseModelName,
-                service:  userService
+                service: appUserTestsService
             }
         });
 const columnsConfigDefault = useMemo(() =>[
@@ -82,7 +82,7 @@ const columnsConfigDefault = useMemo(() =>[
  		].filter(col => col.field),
         [t]);
 
-    const { columnsConfig } = useColumnConfig(columnsConfigDefault, roleData);
+        const { columnsConfig, visibleColumns, handleSelectAll, handleColumnChange } = useColumnConfig(columnsConfigDefault, roleData);
 
     useEffect(() => {
         if (query.search) {
@@ -118,27 +118,27 @@ const columnsConfigDefault = useMemo(() =>[
     }, [columnsConfig, setFilters, setGlobalFilterValue, query.tableSearch]);
 
     const items: MenuItem[] = []
-    // if (hasAccess(roleData, "Add")) {
+    if (hasAccess(roleData, "Add")) {
     items.push({
         label: t("globals.add"),
         icon: 'pi pi-plus',
         command: () => addData(navigate, baseModelName)
     });
-    // }
+    }
 
     items.push({
         label: t("globals.exportExcel"),
         icon: 'pi pi-file-excel',
-        command: () => exportToExcel(userService, globalFilterValue || '', 'AppUserTest')
+        command: () => exportToExcel(appUserTestsService, globalFilterValue || '', 'AppUserTest')
     });
 
-    // if (hasAccess(roleData, "Import")) {
+    if (hasAccess(roleData, "Import")) {
     items.push({
         label: t("globals.import"),
         icon: 'pi pi-upload',
         command: () => importFromExcel(navigate, baseModelName)
     });
-    // }
+    }
 
     items.push({
         label: t("globals.refresh"),
@@ -162,25 +162,25 @@ const columnsConfigDefault = useMemo(() =>[
     const actionBodyTemplate = useCallback((rowData: AppUserTest, openItem: (item: AppUserTest, action: string) => void) => {
         return (
             <div className="flex items-center justify-start action-group gap-3">
-                {/* {hasAccess(roleData, "View") && ( */}
+                {hasAccess(roleData, "View") && (
                 <div id={`tooltip-view-${rowData.id}`} className="p-button-text text-xs w-2 text-center cursor-pointer" onClick={() => openItem(rowData, 'view')}>
                     <TiEye size={17} className="font-bold text-[var(--color-primary)]" />
                 </div>
-                {/* )} */}
+                )}
                 <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-view-${rowData.id}`} content="View Data" showDelay={200} position="top" />
 
-                {/* {hasAccess(roleData, "Edit") && ( */}
+                {hasAccess(roleData, "Edit") && (
                 <div id={`tooltip-edit-${rowData.id}`} className="p-button-text text-xs w-2 text-center cursor-pointer" onClick={() => openItem(rowData, 'edit')}>
                     <RiPencilFill size={17} className="font-bold" />
                 </div>
-                {/* )} */}
+                 )} 
                 <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-edit-${rowData.id}`} content="Edit Data" showDelay={200} position="top" />
 
-                {/* {hasAccess(roleData, "Delete") && ( */}
+                {hasAccess(roleData, "Delete") && (
                 <div id={`tooltip-delete-${rowData.id}`} className="p-button-text text-xs w-2 text-center cursor-pointer" onClick={() => handleDelete(deleteItem, rowData.id)} >
                     <BiSolidTrash size={17} className="font-bold text-[var(--color-danger)]" />
                 </div>
-                {/* )} */}
+                 )} 
                 <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-delete-${rowData.id}`} content="Delete Data" showDelay={200} position="top" />
             </div>
         );
@@ -212,9 +212,12 @@ const columnsConfigDefault = useMemo(() =>[
     return (
         <div className='relative h-screen flex flex-col overflow-auto'>
             <div className="flex justify-between items-center m-1">
-                <h1 className="font-bold text-[16px] lg:text-xl ml-2">{t("appUsers.form_detail.fields.modelname")}</h1>
+                <h1 className="font-bold text-[16px] lg:text-xl ml-2">{t("appUserTests.form_detail.fields.modelname")}</h1>
             </div>
-
+ {query.isLoading ? (
+                <Loader />
+            ) : (
+                <>
             <div className="flex mx-2 flex-wrap justify-between items-center gap-3 border text-[var(--color-dark)] border-[var(--color-border)] rounded-md p-1 lg:my-1">
                 <div className="flex sm:flex md:flex lg:hidden card justify-content-center">
                     <Toast ref={toast}></Toast>
@@ -225,7 +228,7 @@ const columnsConfigDefault = useMemo(() =>[
                 </div>
 
                 <div className="hidden lg:flex items-center space-x-2 flex-wrap  bg-[var(--color-white)] text-[var(--color-dark)]">
-                    {/* {hasAccess(roleData, "Add") && ( */}
+                    {hasAccess(roleData, "Add") && (
                     <Button
                         type="button"
                         className="bg-[var(--color-secondary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
@@ -238,12 +241,12 @@ const columnsConfigDefault = useMemo(() =>[
                     >
                         <HiOutlinePlus size={18} />
                     </Button>
-                    {/* )} */}
+                   )} 
 
                     <Button
                         type="button"
                         className="bg-[var(--color-success)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
-                        onClick={() => exportToExcel(userService, globalFilterValue || '', 'AppUserTest')}
+                        onClick={() => exportToExcel(appUserTestsService, globalFilterValue || '', 'AppUserTest')}
                         tooltip={t("globals.exportExcel")}
                         tooltipOptions={{
                             position: 'top',
@@ -253,7 +256,7 @@ const columnsConfigDefault = useMemo(() =>[
                         <TbFileExcel size={18} />
                     </Button>
 
-                    {/* {hasAccess(roleData, "Import") && ( */}
+                    {hasAccess(roleData, "Import") && (
                     <Button
                         type="button"
                         className="bg-[var(--color-info)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
@@ -266,7 +269,7 @@ const columnsConfigDefault = useMemo(() =>[
                     >
                         <MdOutlineUploadFile size={18} />
                     </Button>
-                    {/* )} */}
+                   )}
 
                     <Button
                         type="button"
@@ -340,16 +343,57 @@ const columnsConfigDefault = useMemo(() =>[
                     >
                         {t("globals.clearAll")}
                     </Button>
-                    {/* <Button
+                    <Button
                         onClick={() => setVisible(true)}
                         className="p-1 lg:p-2 bg-[var(--color-white)] text-[var(--color-primary)] border border-[var(--color-border)] text-xs lg:text-sm rounded-md"
                     >
                         <IoMdSettings size={20} />
-                    </Button> */}
+                    </Button>
                 </div>
-            </div>
+                <Dialog
+                            header={t("globals.columnVisibility")}
+                            visible={visible}
+                            onHide={() => setVisible(false)}
+                            className="w-full max-w-[95vw] sm:max-w-[70vw] md:max-w-[60vw] lg:max-w-[50vw] text-xs lg:text-sm"
+                            style={{
+                                position: "fixed",
+                                top: "10vh",
+                                left: "50%",
+                                transform: "translateX(-50%)",
+                                maxHeight: "80vh",
+                                overflowY: "auto"
+                            }}
+                        >
+                            <div className="my-2">
+                                <label className="flex items-center justify-end space-x-2 mb-2">
+                                    <Checkbox
+                                        onChange={handleSelectAll}
+                                        checked={visibleColumns.length === columnsConfig.length}
+                                    >
+                                    </Checkbox>
+                                    <span className=" text-sm font-normal text-black">{t("globals.selectAll")}</span>
+                                </label>
+                            </div>
 
-           
+                            <div className="selectable-columns-container">
+                                <div className="selectable-columns-grid">
+                                    {columnsConfigDefault.map((col) => (
+                                        <label key={col.field} className="flex items-center space-x-2">
+                                            <>
+                                                <Checkbox
+                                                    onChange={() => handleColumnChange(col.field)}
+                                                    checked={visibleColumns.includes(col.field)}
+                                                    disabled={col.isDefault}
+                                                >
+                                                </Checkbox>
+                                                <span className="text-base sm:text-sm font-normal text-black">{col.header}</span>
+                                            </>
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+                        </Dialog>
+            </div>          
 
             <div className="m-2">
                 {!query.isLoading && (
@@ -1048,6 +1092,8 @@ body={(rowData, { rowIndex }) => (
                     </div>
                 </div>
             </Dialog>
+            </>
+            )}
         </div >
     )
 }
