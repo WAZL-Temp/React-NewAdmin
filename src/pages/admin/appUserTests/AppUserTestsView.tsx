@@ -3,7 +3,7 @@ import TooltipWithText from "../../../components/TooltipWithText";
 import ImgViewer from "../../../components/ImgViewer";
 import { BsArrowLeft, Button, FaEdit, IoIosArrowBack, IoIosArrowForward, Stepper, StepperPanel, StepperRefAttributes } from "../../../sharedBase/globalImports";
 import { useTranslation, useParams, format } from '../../../sharedBase/globalUtils';
-import { AppUserTest } from "../../../core/model/appUserTest";
+import { AppUserTest } from "../../../core/model/appusertest";
 import { useViewPage } from "../../../hooks/useViewPage";
 import { AppUserTestsService } from "../../../core/service/appUserTests.service";
 import { useItemQuery } from "../../../store/useItemQuery";
@@ -16,7 +16,7 @@ export default function AppUserTestsView() {
   const [stepNo, setStepNo] = useState(0);
         
  const stepsData = [ t("appUserTests.form_detail.fields.accessDeatails"), t("appUserTests.form_detail.fields.shopDetails"), t("appUserTests.form_detail.fields.shopAddress"), t("appUserTests.form_detail.fields.verifyShop")];
-  const baseModelName = "appUserTests";
+  const baseModelName = "appUserTest";
   const appUserTestsService = AppUserTestsService();
   const query = useItemQuery<AppUserTest>(appUserTestsService);
    const stepRefs = useRef<(HTMLDivElement | null)[]>([]);

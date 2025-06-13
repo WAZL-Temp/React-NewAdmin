@@ -170,7 +170,7 @@ export default function AppUsersList() {
                 <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-delete-${rowData.id}`} content="Delete Data" showDelay={200} position="top" />
             </div>
         );
-    }, [deleteItem, handleDelete]);
+    }, [deleteItem, handleDelete,hasAccess,roleData]);
 
     const renderFileCell = (rowData: RowData, field: string, rowIndex: number) => {
         let fileName = "";
