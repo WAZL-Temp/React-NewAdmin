@@ -13,6 +13,10 @@ export const useFetchDataEnum = (type: string) => {
   const query = useListQuery<EnumDetail>(enumDetailService);
 
   useEffect(() => {
+    query.setRoleCondition({});
+  }, []);
+
+  useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {

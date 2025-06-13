@@ -147,7 +147,7 @@ const LoginPage = () => {
                                 type="email"
                                 value={email} onChange={(e) => setEmail(e.target.value)}
                                 placeholder="Enter Your Username / Email"
-                                className="w-full h-10 p-2 text-[#6B7280] mt-1 text-sm" />
+                                className="w-full h-10 p-2 mt-1 text-sm rounded-md  bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]" />
                         </div>
 
                         <div className="py-1">
@@ -158,13 +158,13 @@ const LoginPage = () => {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="Enter Your Password"
-                                className="w-full h-10 p-2 text-[#6B7280] mt-1 text-sm"
+                                className="w-full h-10 p-2 mt-1 text-sm rounded-md bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
                             />
                         </div>
                         <Button
                             type="submit"
                             disabled={loading}
-                            className="flex justify-center text-center w-full bg-[#059669] text-white h-10 rounded-md hover:bg-[#059669]">
+                            className="flex justify-center text-center w-full bg-[var(--color-primary)] text-white h-10 rounded-md hover:bg-[var(--color-primary)]">
                             {loading ? 'Logging in...' : 'Login'}
                         </Button>
                         {errorMessage && (
@@ -174,10 +174,10 @@ const LoginPage = () => {
                         )}
                     </form>
                     <GoogleButton
-                        className=" hover:border-[#DF4A32]"
+                        className=" hover:border-[var(--color-primary)]"
                         onClick={handleGoogleSignIn}
                         disabled={loading}
-                        style={{ width: '100%', backgroundColor: "#DF4A32" }}
+                        style={{ width: '100%', backgroundColor: "var(--color-primary)" }}
                     />
 
                     <div className=" text-center mt-4 font-medium text-[16px] text-[#4B5563]">© 2024 DIW. All rights reserved.</div>

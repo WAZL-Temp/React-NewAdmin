@@ -112,11 +112,22 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
         const fetchRoleDetails = async () => {
             if (roleDetailsData && roleDetailsData.length > 0) {
 
-                const appuserData = roleDetailsData.find((r: RoleDetail) => r.name === (props.baseModelName?.toLowerCase() ?? ""));
-                setRoleData(appuserData ?? null);
+                // const appuserData = roleDetailsData.find((r: RoleDetail) => r.name === (props.baseModelName?.toLowerCase() ?? ""));
+                // setRoleData(appuserData ?? null);
 
-                if (appuserData?.dbStatus) {
-                    query.setRoleCondition(JSON.parse(appuserData.dbStatus));
+                // if (appuserData?.dbStatus) {
+                //     query.setRoleCondition(JSON.parse(appuserData.dbStatus));
+                // }
+
+                const itemData = (roleDetailsData as RoleDetail[]).find(
+                    (r: RoleDetail) => typeof r.name === "string" && r.name.toLowerCase() === (props.baseModelName ?? "").toLowerCase()
+                );
+                setRoleData(itemData ?? null);
+
+
+                if (itemData?.dbStatus) {
+                    const parsedDbStatus = typeof itemData.dbStatus === "string" ? JSON.parse(itemData.dbStatus) : itemData.dbStatus;
+                    query?.setRoleCondition(parsedDbStatus);
                 }
                 // await query.load();
             }
@@ -154,7 +165,7 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
     }, [query.tableSearch, query.data, globalFilterValue]);
 
     useEffect(() => {
-        if(query?.search){
+        if (query?.search) {
             setSearchRowFilter(query.search?.searchRowFilter);
         }
     }, [searchRowFilter, query.search?.searchRowFilter, query.search]);

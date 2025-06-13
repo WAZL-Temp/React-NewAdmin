@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useListPage } from "../../../hooks/useListPage";
-import { BiSolidTrash, Button, Calendar, Column, DataTable, Dialog, HiOutlinePlus, Image, InputText, IoMdRefresh, MdOutlineUploadFile, MenuItem, RiPencilFill, SplitButton, TbFileExcel, TiEye, Toast, Tooltip, FilterMatchMode, Checkbox } from "../../../sharedBase/globalImports";
+import { BiSolidTrash, Button, Calendar, Column, DataTable, Dialog, HiOutlinePlus, IoMdSettings ,Image, InputText, IoMdRefresh, MdOutlineUploadFile, MenuItem, RiPencilFill, SplitButton, TbFileExcel, TiEye, Toast, Tooltip, FilterMatchMode, Checkbox } from "../../../sharedBase/globalImports";
 import { useTranslation, useNavigate } from '../../../sharedBase/globalUtils';
 import successimg from '../../../assets/images/success.gif';
 import confirmImg from '../../../assets/images/are-you-sure.jpg';
@@ -22,7 +22,7 @@ export default function AppUsersList() {
     const userService = AppUserService();
     const query = useListQuery<AppUser>(userService);
     const {
-        roleData, globalFilterValue, setGlobalFilterValue, onGlobalFilterChange, refreshItemData, isDeleteDialogVisible,
+        roleData, hasAccess,globalFilterValue, setGlobalFilterValue, onGlobalFilterChange, refreshItemData, isDeleteDialogVisible,
         deleteItem, closeDeleteDialog, setFilters, onSort, onPage, first, rows, sortField, sortOrder, totalRecords,
         filters, setListSearch, clearListSearch, searchChange, openItem, confirmDeleteItem,
         toast, isSuccessDialogOpen, setIsSuccessDialogOpen, formatDate, exportToExcel,
@@ -104,13 +104,13 @@ export default function AppUsersList() {
     }, [columnsConfig, setFilters, setGlobalFilterValue, query.tableSearch]);
 
     const items: MenuItem[] = []
-    // if (roleData && hasAccess(roleData, "Add")) {
+    if (roleData && hasAccess(roleData, "Add")) {
     items.push({
         label: t("globals.add"),
         icon: 'pi pi-plus',
         command: () => addData(navigate, baseModelName)
     });
-    // }
+    }
 
     items.push({
         label: t("globals.exportExcel"),
@@ -118,13 +118,13 @@ export default function AppUsersList() {
         command: () => exportToExcel(userService, globalFilterValue || '', 'AppUser')
     });
 
-    // if (roleData && hasAccess(roleData, "Import")) {
+    if (roleData && hasAccess(roleData, "Import")) {
     items.push({
         label: t("globals.import"),
         icon: 'pi pi-upload',
         command: () => importFromExcel(navigate, baseModelName)
     });
-    // }
+    }
 
     items.push({
         label: t("globals.refresh"),
@@ -148,25 +148,25 @@ export default function AppUsersList() {
     const actionBodyTemplate = useCallback((rowData: AppUser, openItem: (item: AppUser, action: string) => void) => {
         return (
             <div className="flex items-center justify-start action-group gap-3">
-                {/* {hasAccess(roleData, "View") && ( */}
+                {hasAccess(roleData, "View") && (
                 <div id={`tooltip-view-${rowData.id}`} className="p-button-text text-xs w-2 text-center cursor-pointer" onClick={() => openItem(rowData, 'view')}>
                     <TiEye size={17} className="font-bold text-[var(--color-primary)]" />
                 </div>
-                {/* )} */}
+                )}
                 <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-view-${rowData.id}`} content="View Data" showDelay={200} position="top" />
 
-                {/* {hasAccess(roleData, "Edit") && ( */}
+                {hasAccess(roleData, "Edit") && (
                 <div id={`tooltip-edit-${rowData.id}`} className="p-button-text text-xs w-2 text-center cursor-pointer" onClick={() => openItem(rowData, 'edit')}>
                     <RiPencilFill size={17} className="font-bold" />
                 </div>
-                {/* )} */}
+                )}
                 <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-edit-${rowData.id}`} content="Edit Data" showDelay={200} position="top" />
 
-                {/* {hasAccess(roleData, "Delete") && ( */}
+                {hasAccess(roleData, "Delete") && (
                 <div id={`tooltip-delete-${rowData.id}`} className="p-button-text text-xs w-2 text-center cursor-pointer" onClick={() => handleDelete(deleteItem, rowData.id)} >
                     <BiSolidTrash size={17} className="font-bold text-[var(--color-danger)]" />
                 </div>
-                {/* )} */}
+                )}
                 <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-delete-${rowData.id}`} content="Delete Data" showDelay={200} position="top" />
             </div>
         );
@@ -215,7 +215,7 @@ export default function AppUsersList() {
                         </div>
 
                         <div className="hidden lg:flex items-center space-x-2 flex-wrap  bg-[var(--color-white)] text-[var(--color-dark)]">
-                            {/* {hasAccess(roleData, "Add") && ( */}
+                            {hasAccess(roleData, "Add") && (
                             <Button
                                 type="button"
                                 className="bg-[var(--color-secondary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
@@ -228,7 +228,7 @@ export default function AppUsersList() {
                             >
                                 <HiOutlinePlus size={18} />
                             </Button>
-                            {/* )} */}
+                            )}
 
                             <Button
                                 type="button"
@@ -243,7 +243,7 @@ export default function AppUsersList() {
                                 <TbFileExcel size={18} />
                             </Button>
 
-                            {/* {hasAccess(roleData, "Import") && ( */}
+                            {hasAccess(roleData, "Import") && (
                             <Button
                                 type="button"
                                 className="bg-[var(--color-info)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
@@ -256,7 +256,7 @@ export default function AppUsersList() {
                             >
                                 <MdOutlineUploadFile size={18} />
                             </Button>
-                            {/* )} */}
+                            )}
 
                             <Button
                                 type="button"
@@ -340,12 +340,12 @@ export default function AppUsersList() {
                             >
                                 {t("globals.clearAll")}
                             </Button>
-                            {/* <Button
+                            <Button
                                 onClick={() => setVisible(true)}
                                 className="p-1 lg:p-2 bg-[var(--color-white)] text-[var(--color-primary)] border border-[var(--color-border)] text-xs lg:text-sm rounded-md"
                             >
                                 <IoMdSettings size={20} />
-                            </Button> */}
+                            </Button>
                         </div>
 
                         <Dialog
@@ -436,7 +436,7 @@ export default function AppUsersList() {
                                     alignFrozen="left"
                                     className="text-sm sticky bg-[var(--color-white)] text-[var(--color-dark)]  font-semibold whitespace-nowrap overflow-hidden text-ellipsis"
                                 />
-                                {/* {visibleColumns.includes('createDate') && ( */}
+                                {visibleColumns.includes('createDate') && (
                                 <Column
                                     field="createDate" header={t("appUsers.columns.fields.createDate")} sortable headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                                     style={{ width: "200px", backgroundColor: "var(--color-white)" }}
@@ -448,8 +448,8 @@ export default function AppUsersList() {
                                         </>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('name') && ( */}
+                                )}
+                                {visibleColumns.includes('name') && (
                                 <Column
                                     field="name" header={t("appUsers.columns.fields.name")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -470,8 +470,8 @@ export default function AppUsersList() {
                                         </>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('firstName') && ( */}
+                                )}
+                                {visibleColumns.includes('firstName') && (
                                 <Column
                                     field="firstName" header={t("appUsers.columns.fields.firstName")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -492,8 +492,8 @@ export default function AppUsersList() {
                                         </>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('lastName') && ( */}
+                                )}
+                                {visibleColumns.includes('lastName') && (
                                 <Column
                                     field="lastName" header={t("appUsers.columns.fields.lastName")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -514,8 +514,8 @@ export default function AppUsersList() {
                                         </>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('mobile') && ( */}
+                                )}
+                                {visibleColumns.includes('mobile') && (
                                 <Column
                                     field="mobile" header={t("appUsers.columns.fields.mobile")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -536,8 +536,8 @@ export default function AppUsersList() {
                                         </>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('mobileVerified') && ( */}
+                                )}
+                                {visibleColumns.includes('mobileVerified') && (
                                 <Column
                                     field="mobileVerified" header={t("appUsers.columns.fields.mobileVerified")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -558,8 +558,8 @@ export default function AppUsersList() {
                                         </>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('emailId') && ( */}
+                                )}
+                                {visibleColumns.includes('emailId') && (
                                 <Column
                                     field="emailId" header={t("appUsers.columns.fields.emailId")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -580,8 +580,8 @@ export default function AppUsersList() {
                                         </>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('emailVerified') && ( */}
+                                )}
+                                {visibleColumns.includes('emailVerified') && (
                                 <Column
                                     field="emailVerified" header={t("appUsers.columns.fields.emailVerified")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -602,8 +602,8 @@ export default function AppUsersList() {
                                         </>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('shopName') && ( */}
+                                )}
+                                {visibleColumns.includes('shopName') && (
                                 <Column
                                     field="shopName" header={t("appUsers.columns.fields.shopName")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -624,8 +624,8 @@ export default function AppUsersList() {
                                         </>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('password') && ( */}
+                                )}
+                                {visibleColumns.includes('password') && (
                                 <Column
                                     field="password" header={t("appUsers.columns.fields.password")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -646,8 +646,8 @@ export default function AppUsersList() {
                                         </>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('pincode') && ( */}
+                                )}
+                                {visibleColumns.includes('pincode') && (
                                 <Column
                                     field="pincode" header={t("appUsers.columns.fields.pincode")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -668,8 +668,8 @@ export default function AppUsersList() {
                                         </>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('state') && ( */}
+                                )}
+                                {visibleColumns.includes('state') && (
                                 <Column
                                     field="state" header={t("appUsers.columns.fields.state")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -690,8 +690,8 @@ export default function AppUsersList() {
                                         </>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('district') && ( */}
+                                )}
+                                {visibleColumns.includes('district') && (
                                 <Column
                                     field="district" header={t("appUsers.columns.fields.district")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -712,8 +712,8 @@ export default function AppUsersList() {
                                         </>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('address') && ( */}
+                                )}
+                                {visibleColumns.includes('address') && (
                                 <Column
                                     field="address" header={t("appUsers.columns.fields.address")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -734,8 +734,8 @@ export default function AppUsersList() {
                                         </>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('addressLine') && ( */}
+                                )}
+                                {visibleColumns.includes('addressLine') && (
                                 <Column
                                     field="addressLine" header={t("appUsers.columns.fields.addressLine")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -756,8 +756,8 @@ export default function AppUsersList() {
                                         </>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('gst') && ( */}
+                                )}
+                                {visibleColumns.includes('gst') && (
                                 <Column
                                     field="gst" header={t("appUsers.columns.fields.gst")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -778,8 +778,8 @@ export default function AppUsersList() {
                                         </>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('verifyShop') && ( */}
+                                )}
+                                {visibleColumns.includes('verifyShop') && (
                                 <Column
                                     field="verifyShop" header={t("appUsers.columns.fields.verifyShop")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -800,8 +800,8 @@ export default function AppUsersList() {
                                         </>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('gstCertificate') && ( */}
+                                )}
+                                {visibleColumns.includes('gstCertificate') && (
                                 <Column
                                     field="gstCertificate" header={t("appUsers.columns.fields.gstCertificate")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -819,8 +819,8 @@ export default function AppUsersList() {
                                         </div>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('photoShopFront') && ( */}
+                                )}
+                                {visibleColumns.includes('photoShopFront') && (
                                 <Column
                                     field="photoShopFront" header={t("appUsers.columns.fields.photoShopFront")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -838,8 +838,8 @@ export default function AppUsersList() {
                                         </div>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('visitingCard') && ( */}
+                                )}
+                                {visibleColumns.includes('visitingCard') && (
                                 <Column
                                     field="visitingCard" header={t("appUsers.columns.fields.visitingCard")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -857,8 +857,8 @@ export default function AppUsersList() {
                                         </div>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('cheque') && ( */}
+                                )}
+                                {visibleColumns.includes('cheque') && (
                                 <Column
                                     field="cheque" header={t("appUsers.columns.fields.cheque")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -876,8 +876,8 @@ export default function AppUsersList() {
                                         </div>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('gstOtp') && ( */}
+                                )}
+                                {visibleColumns.includes('gstOtp') && (
                                 <Column
                                     field="gstOtp" header={t("appUsers.columns.fields.gstOtp")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -898,8 +898,8 @@ export default function AppUsersList() {
                                         </>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('isActive') && ( */}
+                                )}
+                                {visibleColumns.includes('isActive') && (
                                 <Column
                                     field="isActive" header={t("appUsers.columns.fields.isActive")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -920,8 +920,8 @@ export default function AppUsersList() {
                                         </>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('isAdmin') && ( */}
+                                )}
+                                {visibleColumns.includes('isAdmin') && (
                                 <Column
                                     field="isAdmin" header={t("appUsers.columns.fields.isAdmin")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -942,8 +942,8 @@ export default function AppUsersList() {
                                         </>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('hasImpersonateAccess') && ( */}
+                                )}
+                                {visibleColumns.includes('hasImpersonateAccess') && (
                                 <Column
                                     field="hasImpersonateAccess" header={t("appUsers.columns.fields.hasImpersonateAccess")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -964,8 +964,8 @@ export default function AppUsersList() {
                                         </>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('photoAttachment') && ( */}
+                                )}
+                                {visibleColumns.includes('photoAttachment') && (
                                 <Column
                                     field="photoAttachment" header={t("appUsers.columns.fields.photoAttachment")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -983,8 +983,8 @@ export default function AppUsersList() {
                                         </div>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('roleLabel') && ( */}
+                                )}
+                                {visibleColumns.includes('roleLabel') && (
                                 <Column
                                     field="roleLabel" header={t("appUsers.columns.fields.roleLabel")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -1005,8 +1005,8 @@ export default function AppUsersList() {
                                         </>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('publishLabel') && ( */}
+                                )}
+                                {visibleColumns.includes('publishLabel') && (
                                 <Column
                                     field="publishLabel" header={t("appUsers.columns.fields.publishLabel")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -1027,8 +1027,8 @@ export default function AppUsersList() {
                                         </>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('lastLogin') && ( */}
+                                )}
+                                {visibleColumns.includes('lastLogin') && (
                                 <Column
                                     field="lastLogin" header={t("appUsers.columns.fields.lastLogin")} sortable
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -1042,8 +1042,8 @@ export default function AppUsersList() {
                                         </>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('totalPlot') && ( */}
+                                )}
+                                {visibleColumns.includes('totalPlot') && (
                                 <Column
                                     field="totalPlot" header={t("appUsers.columns.fields.totalPlot")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -1064,8 +1064,8 @@ export default function AppUsersList() {
                                         </>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('defaultLanguage') && ( */}
+                                )}
+                                {visibleColumns.includes('defaultLanguage') && (
                                 <Column
                                     field="defaultLanguage" header={t("appUsers.columns.fields.defaultLanguage")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -1086,8 +1086,8 @@ export default function AppUsersList() {
                                         </>
                                     )}
                                 />
-                                {/* )}
-                                {visibleColumns.includes('isPremiumUser') && (  */}
+                                )}
+                                {visibleColumns.includes('isPremiumUser') && ( 
                                 <Column
                                     field="isPremiumUser" header={t("appUsers.columns.fields.isPremiumUser")} sortable filter
                                     headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
@@ -1108,7 +1108,7 @@ export default function AppUsersList() {
                                         </>
                                     )}
                                 />
-                                {/* )} */}
+                                )}
                             </DataTable>
                         )}
                     </div>
