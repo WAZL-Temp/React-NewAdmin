@@ -1119,7 +1119,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
               <TooltipWithText text={t("appUserTests.columns.fields.totalPlot")} />
             </div>
 
-            <InputText type='text' id='totalPlot' name='totalPlot'  onChange={(e) => handleInputChange('totalPlot', e.target.value)}  className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.totalPlot} placeholder={t("appUserTests.columns.fields.totalPlot")}/>
+            <InputText type='text' id='totalPlot' name='totalPlot'  onChange={(e) => handleInputChange('totalPlot', e.target.value)}  className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.totalPlot?.toString() ?? ''} placeholder={t("appUserTests.columns.fields.totalPlot")}/>
             {errors.totalPlot && (
               <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                 {errors.totalPlot}
