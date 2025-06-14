@@ -83,11 +83,11 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
       >
         <Button
           onClick={() => {
-            navigate("/appuser/homes");
+            navigate("/appuser/home");
             if (!isMinimized) toggleSidebar();
           }}
           className={`flex items-center ${isMinimized ? 'px-1' : 'px-2'} py-2 rounded
-          ${location.pathname === "/appuser/homes" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
+          ${location.pathname === "/appuser/home" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
           hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]`}
           tooltip={t("globals.homes")}
           tooltipOptions={{
