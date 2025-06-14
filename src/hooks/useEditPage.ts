@@ -2,12 +2,12 @@ import { useCallback, useEffect, useState } from "react";
 import { format, parseISO, useNavigate } from "../sharedBase/globalUtils";
 import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
 import { UseListQueryResult } from "../store/useListQuery";
-import { RoleDetail } from "../core/model/roledetail";
 
 type UseEditPageProps<TItem> = {
     props: {
         id?: string;
         baseModelName?: string;
+        typeName?: string;
         listQuery?: UseListQueryResult<TItem>
     };
 };
@@ -20,11 +20,11 @@ export function useEditPage<TItem>({ props }: UseEditPageProps<TItem>) {
 
     useEffect(() => {
         const fetchRoleDetails = async () => {
-            if (!props.baseModelName) return;
+            if (!props.typeName) return;
 
             if (roleDetailsData && roleDetailsData.length > 0) {
                 const modelData = roleDetailsData.find(
-                    (r) => r.name && r.name.toLowerCase() === props.baseModelName!.toLowerCase()
+                    (r) => r.name && r.name.toLowerCase() === props.typeName!.toLowerCase()
                 );
 
                 if (modelData?.hideColumn) {
@@ -45,7 +45,7 @@ export function useEditPage<TItem>({ props }: UseEditPageProps<TItem>) {
         };
 
         fetchRoleDetails();
-    }, [props.baseModelName, roleDetailsData]);
+    }, [props.typeName, roleDetailsData]);
 
     const handleBackToUser = () => {
         if (props.baseModelName) {

@@ -10,6 +10,7 @@ import { RoleDetail } from "../core/model/roledetail";
 type UseListPageCommonProps = {
     initialFilterValue?: string;
     baseModelName?: string;
+    typeName?: string;
     service: ReturnType<typeof useBaseService>;
     onFilterChange?: (value: string) => void;
     onConfirmDelete?: (id: number) => void;
@@ -120,7 +121,7 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
                 // }
 
                 const itemData = (roleDetailsData as RoleDetail[]).find(
-                    (r: RoleDetail) => typeof r.name === "string" && r.name.toLowerCase() === (props.baseModelName ?? "").toLowerCase()
+                    (r: RoleDetail) => typeof r.name === "string" && r.name.toLowerCase() === (props.typeName ?? "").toLowerCase()
                 );
                 setRoleData(itemData ?? null);
 

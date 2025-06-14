@@ -16,7 +16,7 @@ export default function AppUserTestsView() {
   const [stepNo, setStepNo] = useState(0);
         
  const stepsData = [ t("appUserTests.form_detail.fields.accessDeatails"), t("appUserTests.form_detail.fields.shopDetails"), t("appUserTests.form_detail.fields.shopAddress"), t("appUserTests.form_detail.fields.verifyShop")];
-  // const baseModelName = "appUserTests";
+  const baseModelName = "appUserTests";
 const typeName= "appUserTest";
   const appUserTestsService = AppUserTestsService();
   const query = useItemQuery<AppUserTest>(appUserTestsService);
@@ -100,7 +100,8 @@ function initData(): AppUserTest {
   const { isFieldHidden, handleEdit, handleBack } = useViewPage({
     props: {
       id: id,
-      baseModelName: typeName,
+      baseModelName: baseModelName,
+      typeName: typeName,
     }
   });
 
