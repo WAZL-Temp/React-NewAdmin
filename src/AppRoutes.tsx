@@ -18,7 +18,7 @@ import AppUserTestsView from './pages/admin/appUserTests/AppUserTestsView';
 import AppUserTestsEdit from './pages/admin/appUserTests/AppUserTestsEdit';
 import AppUserTestsImport from './pages/admin/appUserTests/AppUserTestsImport';
 
-{/* <!--router-link-admin-Import--> */ }
+{/* <!--router-link-admin-Import--> */}
 const AppRoutes = () => {
   return (
     <Routes>
@@ -38,126 +38,6 @@ const AppRoutes = () => {
       <Route path="/appUserTests/add" element={<Layout><AppUserTestsEdit /></Layout>} />
       <Route path="/appUserTests/edit/:id" element={<Layout><AppUserTestsEdit /></Layout>} />
       <Route path="/appUserTests/import" element={<Layout><AppUserTestsImport /></Layout>} />
-
-
-<Route path="/appUserTests" element={<Layout><AppUserTestsList /></Layout>} />
-<Route path="/appUserTests/homes" element={<Layout><AppUserTestsHome /></Layout>} />
-<Route path="/appUserTests/:id" element={<Layout><AppUserTestsView /></Layout>} />
-<Route path="/appUserTests/add" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/edit/:id" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/import" element={<Layout><AppUserTestsImport /></Layout>} />
-
-<Route path="/appUserTests" element={<Layout><AppUserTestsList /></Layout>} />
-<Route path="/appUserTests/homes" element={<Layout><AppUserTestsHome /></Layout>} />
-<Route path="/appUserTests/:id" element={<Layout><AppUserTestsView /></Layout>} />
-<Route path="/appUserTests/add" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/edit/:id" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/import" element={<Layout><AppUserTestsImport /></Layout>} />
-
-<Route path="/appUserTests" element={<Layout><AppUserTestsList /></Layout>} />
-<Route path="/appUserTests/homes" element={<Layout><AppUserTestsHome /></Layout>} />
-<Route path="/appUserTests/:id" element={<Layout><AppUserTestsView /></Layout>} />
-<Route path="/appUserTests/add" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/edit/:id" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/import" element={<Layout><AppUserTestsImport /></Layout>} />
-
-<Route path="/appUserTests" element={<Layout><AppUserTestsList /></Layout>} />
-<Route path="/appUserTests/homes" element={<Layout><AppUserTestsHome /></Layout>} />
-<Route path="/appUserTests/:id" element={<Layout><AppUserTestsView /></Layout>} />
-<Route path="/appUserTests/add" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/edit/:id" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/import" element={<Layout><AppUserTestsImport /></Layout>} />
-
-<Route path="/appUserTests" element={<Layout><AppUserTestsList /></Layout>} />
-<Route path="/appUserTests/homes" element={<Layout><AppUserTestsHome /></Layout>} />
-<Route path="/appUserTests/:id" element={<Layout><AppUserTestsView /></Layout>} />
-<Route path="/appUserTests/add" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/edit/:id" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/import" element={<Layout><AppUserTestsImport /></Layout>} />
-
-<Route path="/appUserTests" element={<Layout><AppUserTestsList /></Layout>} />
-<Route path="/appUserTests/homes" element={<Layout><AppUserTestsHome /></Layout>} />
-<Route path="/appUserTests/:id" element={<Layout><AppUserTestsView /></Layout>} />
-<Route path="/appUserTests/add" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/edit/:id" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/import" element={<Layout><AppUserTestsImport /></Layout>} />
-
-<Route path="/appUserTests" element={<Layout><AppUserTestsList /></Layout>} />
-<Route path="/appUserTests/homes" element={<Layout><AppUserTestsHome /></Layout>} />
-<Route path="/appUserTests/:id" element={<Layout><AppUserTestsView /></Layout>} />
-<Route path="/appUserTests/add" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/edit/:id" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/import" element={<Layout><AppUserTestsImport /></Layout>} />
-
-<Route path="/appUserTests" element={<Layout><AppUserTestsList /></Layout>} />
-<Route path="/appUserTests/homes" element={<Layout><AppUserTestsHome /></Layout>} />
-<Route path="/appUserTests/:id" element={<Layout><AppUserTestsView /></Layout>} />
-<Route path="/appUserTests/add" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/edit/:id" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/import" element={<Layout><AppUserTestsImport /></Layout>} />
-
-<Route path="/appUserTests" element={<Layout><AppUserTestsList /></Layout>} />
-<Route path="/appUserTests/homes" element={<Layout><AppUserTestsHome /></Layout>} />
-<Route path="/appUserTests/:id" element={<Layout><AppUserTestsView /></Layout>} />
-<Route path="/appUserTests/add" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/edit/:id" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/import" element={<Layout><AppUserTestsImport /></Layout>} />
-
-<Route path="/appUserTests" element={<Layout><AppUserTestsList /></Layout>} />
-<Route path="/appUserTests/homes" element={<Layout><AppUserTestsHome /></Layout>} />
-<Route path="/appUserTests/:id" element={<Layout><AppUserTestsView /></Layout>} />
-<Route path="/appUserTests/add" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/edit/:id" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/import" element={<Layout><AppUserTestsImport /></Layout>} />
-
-<Route path="/appUserTests" element={<Layout><AppUserTestsList /></Layout>} />
-<Route path="/appUserTests/homes" element={<Layout><AppUserTestsHome /></Layout>} />
-<Route path="/appUserTests/:id" element={<Layout><AppUserTestsView /></Layout>} />
-<Route path="/appUserTests/add" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/edit/:id" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/import" element={<Layout><AppUserTestsImport /></Layout>} />
-
-<Route path="/appUserTests" element={<Layout><AppUserTestsList /></Layout>} />
-<Route path="/appUserTests/homes" element={<Layout><AppUserTestsHome /></Layout>} />
-<Route path="/appUserTests/:id" element={<Layout><AppUserTestsView /></Layout>} />
-<Route path="/appUserTests/add" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/edit/:id" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/import" element={<Layout><AppUserTestsImport /></Layout>} />
-
-<Route path="/appUserTests" element={<Layout><AppUserTestsList /></Layout>} />
-<Route path="/appUserTests/homes" element={<Layout><AppUserTestsHome /></Layout>} />
-<Route path="/appUserTests/:id" element={<Layout><AppUserTestsView /></Layout>} />
-<Route path="/appUserTests/add" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/edit/:id" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/import" element={<Layout><AppUserTestsImport /></Layout>} />
-
-<Route path="/appUserTests" element={<Layout><AppUserTestsList /></Layout>} />
-<Route path="/appUserTests/homes" element={<Layout><AppUserTestsHome /></Layout>} />
-<Route path="/appUserTests/:id" element={<Layout><AppUserTestsView /></Layout>} />
-<Route path="/appUserTests/add" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/edit/:id" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/import" element={<Layout><AppUserTestsImport /></Layout>} />
-
-<Route path="/appUserTests" element={<Layout><AppUserTestsList /></Layout>} />
-<Route path="/appUserTests/homes" element={<Layout><AppUserTestsHome /></Layout>} />
-<Route path="/appUserTests/:id" element={<Layout><AppUserTestsView /></Layout>} />
-<Route path="/appUserTests/add" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/edit/:id" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/import" element={<Layout><AppUserTestsImport /></Layout>} />
-
-<Route path="/appUserTests" element={<Layout><AppUserTestsList /></Layout>} />
-<Route path="/appUserTests/homes" element={<Layout><AppUserTestsHome /></Layout>} />
-<Route path="/appUserTests/:id" element={<Layout><AppUserTestsView /></Layout>} />
-<Route path="/appUserTests/add" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/edit/:id" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/import" element={<Layout><AppUserTestsImport /></Layout>} />
-
-<Route path="/appUserTests" element={<Layout><AppUserTestsList /></Layout>} />
-<Route path="/appUserTests/homes" element={<Layout><AppUserTestsHome /></Layout>} />
-<Route path="/appUserTests/:id" element={<Layout><AppUserTestsView /></Layout>} />
-<Route path="/appUserTests/add" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/edit/:id" element={<Layout><AppUserTestsEdit /></Layout>} />
-<Route path="/appUserTests/import" element={<Layout><AppUserTestsImport /></Layout>} />
 
 {/* <!--router-link-admin--> */}
 
