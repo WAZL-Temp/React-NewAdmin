@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { AppUserTest } from '../../../core/model/appusertest';
+import { AppUserTest } from '../../../core/model/appUserTest';
 import teambanner from '../../../assets/images/team-banner.png';
 import prodilimg from '../../../assets/images/prodil.jpg';
 import avatar from '../../../assets/images/avatar.svg';
@@ -42,7 +42,7 @@ export default function AppUserTestsHome() {
   }, [query?.homeCommonData, query?.homeUserData]);
 
   const handleListClick = () => {
-    navigate('/appUserTest')
+    navigate('/appUserTests')
   }
 
   return (
@@ -286,7 +286,7 @@ const ItemCard = ({ item }: { item: AppUserTest }) => {
           label={t('globals.view')}
           icon="pi pi-arrow-right"
           className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white py-2 px-5 rounded-full hover:bg-[var(--color-primary)] transition duration-300 text-sm"
-          onClick={() => navigate(`/appUserTest/${item.id}`)}
+          onClick={() => navigate(`/appUserTests/${item.id}`)}
         />
       </div>
     </Card>
