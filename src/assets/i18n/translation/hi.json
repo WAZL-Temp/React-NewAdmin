@@ -111,8 +111,8 @@
         "defaultLanguage": "DefaultLanguage",
         "isPremiumUser": "IsPremiumUser",
         "totalPlot": "TotalPlot",
-        "reportedTo":"रिपोर्ट किया गया",
-        "reportedBy":"द्वारा रिपोर्ट किया गया",
+        "reportedTo": "रिपोर्ट किया गया",
+        "reportedBy": "द्वारा रिपोर्ट किया गया",
         "updateDate": "अपडेट तिथि",
         "deleteDate": "डिलीट तिथि",
         "updateById": "अपडेट बाय आईडी",
@@ -201,6 +201,70 @@
         "hideColumns": "स्तंभ छिपाएँ",
         "statuses": "स्थितियाँ"
       }
+    }
+  },
+  "appUserTests": {
+    "columns": {
+      "fields": {
+        "createDate": "बनाई गई तिथि",
+        "id": "आईडी",
+        "name": "नाम",
+        "firstName": "पहला नाम",
+        "lastName": "अंतिम नाम",
+        "mobile": "मोबाइल",
+        "mobileVerified": "मोबाइल सत्यापित",
+        "emailId": "ईमेल आईडी",
+        "emailVerified": "ईमेल सत्यापित",
+        "shopName": "दुकान का नाम",
+        "password": "पासवर्ड",
+        "pincode": "पिनकोड",
+        "state": "राज्य",
+        "district": "जिला",
+        "address": "पता पंक्ति 1",
+        "addressLine": "पता पंक्ति 2",
+        "verifyShop": "VerifyShop",
+        "verifyShopLabel": "VerifyShop",
+        "gst": "जीएसटी नंबर",
+        "gstCertificate": "जीएसटी सर्टिफिकेट",
+        "photoShopFront": "फोटो शॉप फ्रॉम फ्रंट",
+        "visitingCard": "VisitingCard",
+        "cheque": "चेक",
+        "gstOtp": "जीएसटी ओटीपी",
+        "isActive": "सक्रिय",
+        "isAdmin": "व्यवस्थापक है",
+        "hasImpersonateAccess": "प्रतिरूपण एक्सेस है",
+        "photoAttachment": "फोटो",
+        "role": "भूमिका",
+        "roleLabel": "भूमिका",
+        "publish": "प्रकाशित करें",
+        "publishLabel": "प्रकाशित करें",
+        "importDataId": "आयात डेटा आईडी",
+        "lastLogin": "अंतिम लॉगिन",
+        "defaultLanguage": "DefaultLanguage",
+        "isPremiumUser": "IsPremiumUser",
+        "totalPlot": "TotalPlot",
+        "reportedTo": "रिपोर्ट किया गया",
+        "reportedBy": "द्वारा रिपोर्ट किया गया",
+        "updateDate": "अपडेट तिथि",
+        "deleteDate": "डिलीट तिथि",
+        "updateById": "अपडेट बाय आईडी",
+        "deleteById": "डिलीट बाय आईडी",
+        "isDelete": "क्या डिलीट है"
+      }
+    },
+    "form_detail": {
+      "fields": {
+        "modelname": "ऐप्लिकेशन उपयोगकर्ता परीक्षण",
+        "importAction": "आयात कार्रवाई",
+        "importRemark": "आयात टिप्पणी",
+        "accessDetails": "पहुँच विवरण",
+        "shopDetails": "दुकान विवरण",
+        "shopAddress": "दुकान का पता",
+        "verifyShop": "दुकान सत्यापित करें"
+      }
+    },
+    "form_list": {
+      "fields": {}
     }
   }
 }

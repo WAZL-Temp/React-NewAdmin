@@ -200,5 +200,69 @@
         "statuses": "स्थिती"
       }
     }
+  },
+  "appUserTests": {
+    "columns": {
+      "fields": {
+        "createDate": "तयार केलेली तारीख",
+        "id": "आयडी",
+        "name": "नाव",
+        "firstName": "पहिले नाव",
+        "lastName": "आडनाव",
+        "mobile": "मोबाइल",
+        "mobileVerified": "मोबाइल सत्यापित",
+        "emailId": "ई-मेल आयडी",
+        "emailVerified": "ई-मेल सत्यापित",
+        "shopName": "दुकानाचे नाव",
+        "password": "पासवर्ड",
+        "pincode": "पिनकोड",
+        "state": "राज्य",
+        "district": "जिल्हा",
+        "address": "पत्ता ओळ 1",
+        "addressLine": "पत्ता ओळ 2",
+        "verifyShop": "दुकान सत्यापित करा",
+        "verifyShopLabel": "दुकान सत्यापन",
+        "gst": "GST क्रमांक",
+        "gstCertificate": "GST प्रमाणपत्र",
+        "photoShopFront": "दुकानाचा समोरील फोटो",
+        "visitingCard": "व्हिजिटिंग कार्ड",
+        "cheque": "धनादेश",
+        "gstOtp": "GST OTP",
+        "isActive": "सक्रिय",
+        "isAdmin": "प्रशासक आहे",
+        "hasImpersonateAccess": "अनुकरण प्रवेश आहे",
+        "photoAttachment": "फोटो",
+        "role": "भूमिका",
+        "roleLabel": "भूमिका",
+        "publish": "प्रकाशित करा",
+        "publishLabel": "प्रकाशित",
+        "importDataId": "डेटा आयात आयडी",
+        "lastLogin": "शेवटचे लॉगिन",
+        "defaultLanguage": "मूलभूत भाषा",
+        "isPremiumUser": "प्रिमियम वापरकर्ता आहे",
+        "totalPlot": "एकूण प्लॉट",
+        "reportedTo": "कोणाला अहवाल दिला",
+        "reportedBy": "कोणीतर्फे अहवाल दिला",
+        "updateDate": "अद्यतन तारीख",
+        "deleteDate": "हटवण्याची तारीख",
+        "updateById": "अद्यतन करणाऱ्याचा आयडी",
+        "deleteById": "हटवणाऱ्याचा आयडी",
+        "isDelete": "हटविले आहे"
+      }
+    },
+    "form_detail": {
+      "fields": {
+        "modelname": "अ‍ॅप वापरकर्ता परीक्षण",
+        "importAction": "आयात कृती",
+        "importRemark": "इम्पोर्ट रिमार्क",
+        "accessDetails": "प्रवेश तपशील",
+        "shopDetails": "दुकानाचे तपशील",
+        "shopAddress": "दुकानाचा पत्ता",
+        "verifyShop": "दुकान सत्यापित करा"
+      }
+    },
+    "form_list": {
+      "fields": {}
+    }
   }
 }

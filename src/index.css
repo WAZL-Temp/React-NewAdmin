@@ -470,7 +470,7 @@ code {
   justify-content: end !important;
   font-size: 13px;
   position: sticky;
-  bottom: 0;
+  bottom: 40px !important;
   padding: 0 !important;
   margin: 0 !important;
   background-color: var(--color-white) !important;
@@ -669,7 +669,7 @@ code {
 }
 
 .selectable-columns-container {
-  max-height: 60vh;
+  max-height: calc(80vh - 120px);
   overflow-y: auto;
   padding-right: 8px;
 }
@@ -787,6 +787,9 @@ code {
     grid-template-columns: repeat(4, 1fr);
   }
 }
+.p-dialog-content{
+  overflow: hidden !important;
+}
 
 @media (max-width: 639px) {
   .p-dialog {
@@ -797,11 +800,17 @@ code {
     left: 50% !important;
     transform: translateX(-50%) !important;
     max-height: 80vh !important;
-    overflow-y: auto !important;
+    overflow: hidden !important;
+    /* overflow-y: auto !important; */
+  }
+
+  .columnVisibility .p-dialog-content{
+    overflow:  hidden !important;
   }
 
   .selectable-columns-container {
-    max-height: 50vh;
+    max-height: calc(80vh - 150px);
+    overflow-y: auto;
   }
 }
 
@@ -836,7 +845,7 @@ code {
   font-size: 0.75rem !important;
 }
 
-.p-calendar:not(.p-calendar-disabled).p-focus > .p-inputtext{
+.p-calendar:not(.p-calendar-disabled).p-focus>.p-inputtext {
   box-shadow: none !important;
 }
 
