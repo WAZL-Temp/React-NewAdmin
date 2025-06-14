@@ -1214,7 +1214,6 @@ verifyShopData?.data, roleData?.data, publishData?.data
                 <span>{t("globals.save")}</span> <FaSave size={15} />
               </Button>
             )}
-          </div>
         </div>
       </div>
 
@@ -1237,6 +1236,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
       </Dialog>
        </>
         )}
+    </div>
     </div>
   )
 }
