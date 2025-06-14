@@ -32,12 +32,12 @@ const AppRoutes = () => {
 
 
 
-      <Route path="/appUserTests" element={<Layout><AppUserTestsList /></Layout>} />
-      <Route path="/appUserTests/homes" element={<Layout><AppUserTestsHome /></Layout>} />
-      <Route path="/appUserTests/:id" element={<Layout><AppUserTestsView /></Layout>} />
-      <Route path="/appUserTests/add" element={<Layout><AppUserTestsEdit /></Layout>} />
-      <Route path="/appUserTests/edit/:id" element={<Layout><AppUserTestsEdit /></Layout>} />
-      <Route path="/appUserTests/import" element={<Layout><AppUserTestsImport /></Layout>} />
+      <Route path="/appUserTest" element={<Layout><AppUserTestsList /></Layout>} />
+      <Route path="/appUserTest/homes" element={<Layout><AppUserTestsHome /></Layout>} />
+      <Route path="/appUserTest/:id" element={<Layout><AppUserTestsView /></Layout>} />
+      <Route path="/appUserTest/add" element={<Layout><AppUserTestsEdit /></Layout>} />
+      <Route path="/appUserTest/edit/:id" element={<Layout><AppUserTestsEdit /></Layout>} />
+      <Route path="/appUserTest/import" element={<Layout><AppUserTestsImport /></Layout>} />
 
 {/* <!--router-link-admin--> */}
 

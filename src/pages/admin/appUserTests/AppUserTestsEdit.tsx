@@ -3,7 +3,7 @@ import successImg from '../../../assets/images/success.gif'
 import { BsArrowLeft, Button, Calendar, Checkbox, Dialog, Dropdown, DropdownChangeEvent, FaSave, Image, InputText, InputTextarea, IoIosArrowBack, IoIosArrowForward, MultiSelect, MultiSelectChangeEvent, RadioButton, RadioButtonChangeEvent, Stepper, StepperPanel, StepperRefAttributes, Toast } from '../../../sharedBase/globalImports';
 import { useNavigate, useParams, useTranslation } from '../../../sharedBase/globalUtils';
 import { useEditPage } from '../../../hooks/useEditPage';
-import { AppUserTest } from '../../../core/model/appUserTest';
+import { AppUserTest } from '../../../core/model/appusertest';
 import { selectDropdownEnum, selectMultiData, selectRadioEnum } from '../../../sharedBase/dropdownUtils';
 import { getGlobalSchema } from '../../../globalschema';
 import TooltipWithText from '../../../components/TooltipWithText';
@@ -235,7 +235,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
   };
 
   const handleBack = () => {
-    navigate("/appUserTests");
+    navigate("/appUserTest");
   };
 
   const handleCheckboxChange = (e: { checked?: boolean }, key: string) => {
