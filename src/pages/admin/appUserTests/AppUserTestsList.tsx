@@ -32,7 +32,7 @@ const typeName= "appUserTest";
             props: {
                 initialFilterValue: '',
                 baseModelName: baseModelName,
-                typeName:typeName,
+                typeName: typeName,
                 service: appUserTestsService
             }
         });
