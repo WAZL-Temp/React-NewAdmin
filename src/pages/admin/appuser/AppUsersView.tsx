@@ -23,6 +23,7 @@ export default function AppUsersView() {
     t("appUsers.form_detail.fields.verifyShop"),
   ];
   const baseModelName = "appuser";
+   const typeName = "appuser";
   const userService = AppUserService();
   const query = useItemQuery<AppUser>(userService);
   const [userData, setUserData] = useState<AppUser | undefined>(initialData() || {});
@@ -87,6 +88,7 @@ export default function AppUsersView() {
     props: {
       id: id,
       baseModelName: baseModelName,
+      typeName: typeName,
     }
   });
 

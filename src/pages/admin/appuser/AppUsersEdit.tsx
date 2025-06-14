@@ -23,6 +23,7 @@ export default function AppUsersEdit() {
   const globalschema = getGlobalSchema(t);
   const toast = useRef<Toast>(null);
   const baseModelName = "appuser";
+  const typeName = "appuser";
   const userService = AppUserService();
   const itemQuery = useItemQuery<AppUser>(userService);
   const listQuery = useListQuery<AppUser>(userService);
@@ -106,6 +107,7 @@ export default function AppUsersEdit() {
       props: {
         id: id,
         baseModelName: baseModelName,
+        typeName: typeName,
         listQuery: listQuery
       }
     });
@@ -384,7 +386,7 @@ export default function AppUsersEdit() {
         publishLabel: item.publish,
       };
 
-      const cleanedPayload = removeEmptyFields(payload);      
+      const cleanedPayload = removeEmptyFields(payload);
       let updatedItem;
 
       if (itemData?.id) {
@@ -911,7 +913,7 @@ export default function AppUsersEdit() {
                                 checkmark={true}
                                 highlightOnSelect={false}
                                 appendTo="self"
-                                className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] dropdowndark"
+                                className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)]"
                               />
                             </div>
                           )}
