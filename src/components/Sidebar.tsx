@@ -101,11 +101,11 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
 
         <Button
           onClick={() => {
-            navigate("/appUserTest");
+            navigate("/appUserTests");
             if (!isMinimized) toggleSidebar();
           }}
           className={`flex items-center ${isMinimized ? 'px-1' : 'px-2'} py-2 rounded
-          ${location.pathname === "/appUserTest" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
+          ${location.pathname === "/appUserTests" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
           hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]`}
           tooltip={t("appUserTests.form_detail.fields.modelname")}
           tooltipOptions={{

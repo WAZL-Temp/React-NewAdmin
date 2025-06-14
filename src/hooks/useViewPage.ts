@@ -6,6 +6,7 @@ type UseEditPageProps = {
     props: {
         id?: string;
         baseModelName?: string;
+        typeName?: string;
     };
 };
 
@@ -16,11 +17,11 @@ export function useViewPage({ props }: UseEditPageProps) {
 
     useEffect(() => {
         const fetchRoleDetails = async () => {
-            if (!props.baseModelName) return;
+            if (!props.typeName) return;
 
             if (roleDetailsData && roleDetailsData.length > 0) {
                const modelData = roleDetailsData.find(
-                    (r) => r.name && r.name.toLowerCase() === props.baseModelName!.toLowerCase()
+                    (r) => r.name && r.name.toLowerCase() === props.typeName!.toLowerCase()
                 );
 
                 if (modelData?.hideColumn) {
@@ -41,7 +42,7 @@ export function useViewPage({ props }: UseEditPageProps) {
         };
 
         fetchRoleDetails();
-    }, [props.baseModelName, roleDetailsData]);
+    }, [props.typeName, roleDetailsData]);
 
     const isFieldHidden = (fieldName: string) => {
         return hiddenFields.includes(fieldName)

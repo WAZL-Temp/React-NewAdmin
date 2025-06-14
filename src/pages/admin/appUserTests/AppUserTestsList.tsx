@@ -31,7 +31,8 @@ const typeName= "appUserTest";
             query: query,
             props: {
                 initialFilterValue: '',
-                baseModelName: typeName,
+                baseModelName: baseModelName,
+                typeName:typeName,
                 service: appUserTestsService
             }
         });

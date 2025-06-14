@@ -22,7 +22,7 @@ export default function AppUserTestsEdit() {
   const { t } = useTranslation();
   const globalschema = getGlobalSchema(t);
   const toast = useRef<Toast>(null);
-  // const baseModelName = "appUserTests";
+  const baseModelName = "appUserTests";
 const typeName= "appUserTest";
   const appUserTestService = AppUserTestsService();
   const itemQuery = useItemQuery<AppUserTest>(appUserTestService);
@@ -118,7 +118,8 @@ function initData(): AppUserTest {
     = useEditPage<AppUserTest>({
       props: {
         id: id,
-        baseModelName: typeName,
+        baseModelName: baseModelName,
+        typeName: typeName,
         listQuery: listQuery
       }
     });
