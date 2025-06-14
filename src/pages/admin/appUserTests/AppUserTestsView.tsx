@@ -7,7 +7,7 @@ import { AppUserTest } from "../../../core/model/appUserTest";
 import { useViewPage } from "../../../hooks/useViewPage";
 import { AppUserTestsService } from "../../../core/service/appUserTests.service";
 import { useItemQuery } from "../../../store/useItemQuery";
-
+import Loader from "../../../components/Loader";
 
 export default function AppUserTestsView() {
   const { t } = useTranslation();
@@ -16,7 +16,8 @@ export default function AppUserTestsView() {
   const [stepNo, setStepNo] = useState(0);
         
  const stepsData = [ t("appUserTests.form_detail.fields.accessDeatails"), t("appUserTests.form_detail.fields.shopDetails"), t("appUserTests.form_detail.fields.shopAddress"), t("appUserTests.form_detail.fields.verifyShop")];
-  const baseModelName = "appUserTests";
+  // const baseModelName = "appUserTests";
+const typeName= "appUserTest";
   const appUserTestsService = AppUserTestsService();
   const query = useItemQuery<AppUserTest>(appUserTestsService);
    const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -99,7 +100,7 @@ function initData(): AppUserTest {
   const { isFieldHidden, handleEdit, handleBack } = useViewPage({
     props: {
       id: id,
-      baseModelName: baseModelName,
+      baseModelName: typeName,
     }
   });
 
@@ -126,7 +127,10 @@ function initData(): AppUserTest {
         </Button>
         <h1 className="capitalize text-[14px] font-semibold ">{t("globals.backto")} {t("appUserTests.form_detail.fields.modelname")}</h1>
       </div>
-
+{query.isLoading ? (
+        <Loader />
+      ) : (
+        <>
       <div className="flex flex-col border-none mb-10 sm:mb-20">
         <Stepper ref={stepperRef} headerPosition="bottom">
           <StepperPanel header={stepsData[0]}>
@@ -626,6 +630,8 @@ function initData(): AppUserTest {
           )}
         </div>
       </div>
+       </>
+      )}
     </div>
   );
 }
