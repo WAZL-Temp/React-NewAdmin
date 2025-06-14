@@ -11,7 +11,7 @@ import AppUsersImport from "./pages/admin/appuser/AppUsersImport";
 import FormControls from './pages/admin/role/FormControls';
 
 
-                    
+       
 
                     import AppUserTestsList from './pages/admin/appUserTests/AppUserTestsList';
                     import AppUserTestsHome from './pages/admin/appUserTests/AppUserTestsHome';
@@ -25,7 +25,7 @@ const AppRoutes = () => {
     <Routes>
       <Route path="/" element={<LoginPage />} />
       <Route path="/appuser" element={<Layout><AppUsersList /></Layout>} />
-      <Route path="/appuser/homes" element={<Layout><AppUsersHome /></Layout>} />
+      <Route path="/appuser/home" element={<Layout><AppUsersHome /></Layout>} />
       <Route path="/appuser/:id" element={<Layout><AppUsersView /></Layout>} />
       <Route path="/appuser/add" element={<Layout><AppUsersEdit /></Layout>} />
       <Route path="/appuser/edit/:id" element={<Layout><AppUsersEdit /></Layout>} />
@@ -33,8 +33,9 @@ const AppRoutes = () => {
 
 
 
+
 <Route path="/appUserTests" element={<Layout><AppUserTestsList /></Layout>} />
-<Route path="/appUserTests/homes" element={<Layout><AppUserTestsHome /></Layout>} />
+<Route path="/appUserTests/home" element={<Layout><AppUserTestsHome /></Layout>} />
 <Route path="/appUserTests/:id" element={<Layout><AppUserTestsView /></Layout>} />
 <Route path="/appUserTests/add" element={<Layout><AppUserTestsEdit /></Layout>} />
 <Route path="/appUserTests/edit/:id" element={<Layout><AppUserTestsEdit /></Layout>} />
