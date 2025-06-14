@@ -24,14 +24,15 @@ const AppUserTestsImport = () => {
   const [totalRecords, setTotalRecords] = useState<number>(0);
   const [importSyncComplete, setImportSyncComplete] = useState(false);
   const [loadingSync, setLoadingSync] = useState(false);
-  const baseModelName = "appUserTests";
+  // const baseModelName = "appUserTests";
+const typeName= "appUserTest";
   const appUserTestsService = AppUserTestsService();
   const [filters, setFilters] = useState<DataTableFilterMeta>({ global: { value: null, matchMode: FilterMatchMode.CONTAINS } });
 
   const { onPage, first, rows, handleDownloadTemplate, downloading, importAllow, formatDate }
     = useImportPage({
       props: {
-        baseModelName: baseModelName,
+        baseModelName: typeName,
         service: appUserTestsService
       }
     });
@@ -113,50 +114,50 @@ const AppUserTestsImport = () => {
     setUploadedFile(files);
   };
 const columnsConfigDefault = useMemo(() =>[
-			 {field: 'id', header: t("appUserTests.columns.fields.id"), isDefult: true, show: true }, 
-			 {field: 'name', header: t("appUserTests.columns.fields.name"), isDefult: true, show: true }, 
-			 {field: 'firstName', header: t("appUserTests.columns.fields.firstName"), isDefult: true, show: true }, 
-			 {field: 'lastName', header: t("appUserTests.columns.fields.lastName"), isDefult: true, show: true }, 
-			 {field: 'mobile', header: t("appUserTests.columns.fields.mobile"), isDefult: true, show: true }, 
-			 {field: 'mobileVerified', header: t("appUserTests.columns.fields.mobileVerified"), isDefult: true, show: true }, 
-			 {field: 'emailId', header: t("appUserTests.columns.fields.emailId"), isDefult: true, show: true }, 
-			 {field: 'emailVerified', header: t("appUserTests.columns.fields.emailVerified"), isDefult: true, show: true }, 
-			 {field: 'shopName', header: t("appUserTests.columns.fields.shopName"), isDefult: true, show: true }, 
-			 {field: 'password', header: t("appUserTests.columns.fields.password"), isDefult: true, show: true }, 
-			 {field: 'pincode', header: t("appUserTests.columns.fields.pincode"), isDefult: true, show: true }, 
-			 {field: 'state', header: t("appUserTests.columns.fields.state"), isDefult: true, show: true }, 
-			 {field: 'district', header: t("appUserTests.columns.fields.district"), isDefult: true, show: true }, 
-			 {field: 'address', header: t("appUserTests.columns.fields.address"), isDefult: true, show: true }, 
-			 {field: 'addressLine', header: t("appUserTests.columns.fields.addressLine"), isDefult: true, show: true }, 
-			 {field: 'verifyShop', header: t("appUserTests.columns.fields.verifyShop"), isDefult: true, show: true }, 
-			 {field: 'verifyShopLabel', header: t("appUserTests.columns.fields.verifyShopLabel"), isDefult: true, show: true }, 
-			 {field: 'gst', header: t("appUserTests.columns.fields.gst"), isDefult: true, show: true }, 
-			 {field: 'gstCertificate', header: t("appUserTests.columns.fields.gstCertificate"), isDefult: true, show: true }, 
-			 {field: 'photoShopFront', header: t("appUserTests.columns.fields.photoShopFront"), isDefult: true, show: true }, 
-			 {field: 'visitingCard', header: t("appUserTests.columns.fields.visitingCard"), isDefult: true, show: true }, 
-			 {field: 'cheque', header: t("appUserTests.columns.fields.cheque"), isDefult: true, show: true }, 
-			 {field: 'gstOtp', header: t("appUserTests.columns.fields.gstOtp"), isDefult: true, show: true }, 
-			 {field: 'isActive', header: t("appUserTests.columns.fields.isActive"), isDefult: true, show: true }, 
-			 {field: 'isAdmin', header: t("appUserTests.columns.fields.isAdmin"), isDefult: true, show: true }, 
-			 {field: 'hasImpersonateAccess', header: t("appUserTests.columns.fields.hasImpersonateAccess"), isDefult: true, show: true }, 
-			 {field: 'photoAttachment', header: t("appUserTests.columns.fields.photoAttachment"), isDefult: true, show: true }, 
-			 {field: 'role', header: t("appUserTests.columns.fields.role"), isDefult: true, show: true }, 
-			 {field: 'roleLabel', header: t("appUserTests.columns.fields.roleLabel"), isDefult: true, show: true }, 
-			 {field: 'publish', header: t("appUserTests.columns.fields.publish"), isDefult: true, show: true }, 
-			 {field: 'publishLabel', header: t("appUserTests.columns.fields.publishLabel"), isDefult: true, show: true }, 
-			 {field: 'importDataId', header: t("appUserTests.columns.fields.importDataId"), isDefult: true, show: true }, 
-			 {field: 'lastLogin', header: t("appUserTests.columns.fields.lastLogin"), isDefult: true, show: true }, 
-			 {field: 'defaultLanguage', header: t("appUserTests.columns.fields.defaultLanguage"), isDefult: true, show: true }, 
-			 {field: 'isPremiumUser', header: t("appUserTests.columns.fields.isPremiumUser"), isDefult: true, show: true }, 
-			 {field: 'totalPlot', header: t("appUserTests.columns.fields.totalPlot"), isDefult: true, show: true }, 
-			 {field: 'reportedTo', header: t("appUserTests.columns.fields.reportedTo"), isDefult: true, show: true }, 
-			 {field: 'reportedBy', header: t("appUserTests.columns.fields.reportedBy"), isDefult: true, show: true }, 
-			 {field: 'appUserTestName', header: t("appUserTests.columns.fields.appUserTestName"), isDefult: true, show: true }, 
-			 {field: 'updateDate', header: t("appUserTests.columns.fields.updateDate"), isDefult: true, show: true }, 
-			 {field: 'deleteDate', header: t("appUserTests.columns.fields.deleteDate"), isDefult: true, show: true }, 
-			 {field: 'updateById', header: t("appUserTests.columns.fields.updateById"), isDefult: true, show: true }, 
-			 {field: 'deleteById', header: t("appUserTests.columns.fields.deleteById"), isDefult: true, show: true }, 
-			 {field: 'isDelete', header: t("appUserTests.columns.fields.isDelete"), isDefult: true, show: true }, 
+			 {field: 'id', header: t("appUserTests.columns.fields.id"), isDefault: true, show: true }, 
+			 {field: 'name', header: t("appUserTests.columns.fields.name"), isDefault: true, show: true }, 
+			 {field: 'firstName', header: t("appUserTests.columns.fields.firstName"), isDefault: true, show: true }, 
+			 {field: 'lastName', header: t("appUserTests.columns.fields.lastName"), isDefault: true, show: true }, 
+			 {field: 'mobile', header: t("appUserTests.columns.fields.mobile"), isDefault: true, show: true }, 
+			 {field: 'mobileVerified', header: t("appUserTests.columns.fields.mobileVerified"), isDefault: true, show: true }, 
+			 {field: 'emailId', header: t("appUserTests.columns.fields.emailId"), isDefault: true, show: true }, 
+			 {field: 'emailVerified', header: t("appUserTests.columns.fields.emailVerified"), isDefault: true, show: true }, 
+			 {field: 'shopName', header: t("appUserTests.columns.fields.shopName"), isDefault: true, show: true }, 
+			 {field: 'password', header: t("appUserTests.columns.fields.password"), isDefault: true, show: true }, 
+			 {field: 'pincode', header: t("appUserTests.columns.fields.pincode"), isDefault: true, show: true }, 
+			 {field: 'state', header: t("appUserTests.columns.fields.state"), isDefault: true, show: true }, 
+			 {field: 'district', header: t("appUserTests.columns.fields.district"), isDefault: true, show: true }, 
+			 {field: 'address', header: t("appUserTests.columns.fields.address"), isDefault: true, show: true }, 
+			 {field: 'addressLine', header: t("appUserTests.columns.fields.addressLine"), isDefault: true, show: true }, 
+			 {field: 'verifyShop', header: t("appUserTests.columns.fields.verifyShop"), isDefault: true, show: true }, 
+			 {field: 'verifyShopLabel', header: t("appUserTests.columns.fields.verifyShopLabel"), isDefault: true, show: true }, 
+			 {field: 'gst', header: t("appUserTests.columns.fields.gst"), isDefault: true, show: true }, 
+			 {field: 'gstCertificate', header: t("appUserTests.columns.fields.gstCertificate"), isDefault: true, show: true }, 
+			 {field: 'photoShopFront', header: t("appUserTests.columns.fields.photoShopFront"), isDefault: true, show: true }, 
+			 {field: 'visitingCard', header: t("appUserTests.columns.fields.visitingCard"), isDefault: true, show: true }, 
+			 {field: 'cheque', header: t("appUserTests.columns.fields.cheque"), isDefault: true, show: true }, 
+			 {field: 'gstOtp', header: t("appUserTests.columns.fields.gstOtp"), isDefault: true, show: true }, 
+			 {field: 'isActive', header: t("appUserTests.columns.fields.isActive"), isDefault: true, show: true }, 
+			 {field: 'isAdmin', header: t("appUserTests.columns.fields.isAdmin"), isDefault: true, show: true }, 
+			 {field: 'hasImpersonateAccess', header: t("appUserTests.columns.fields.hasImpersonateAccess"), isDefault: true, show: true }, 
+			 {field: 'photoAttachment', header: t("appUserTests.columns.fields.photoAttachment"), isDefault: true, show: true }, 
+			 {field: 'role', header: t("appUserTests.columns.fields.role"), isDefault: true, show: true }, 
+			 {field: 'roleLabel', header: t("appUserTests.columns.fields.roleLabel"), isDefault: true, show: true }, 
+			 {field: 'publish', header: t("appUserTests.columns.fields.publish"), isDefault: true, show: true }, 
+			 {field: 'publishLabel', header: t("appUserTests.columns.fields.publishLabel"), isDefault: true, show: true }, 
+			 {field: 'importDataId', header: t("appUserTests.columns.fields.importDataId"), isDefault: true, show: true }, 
+			 {field: 'lastLogin', header: t("appUserTests.columns.fields.lastLogin"), isDefault: true, show: true }, 
+			 {field: 'defaultLanguage', header: t("appUserTests.columns.fields.defaultLanguage"), isDefault: true, show: true }, 
+			 {field: 'isPremiumUser', header: t("appUserTests.columns.fields.isPremiumUser"), isDefault: true, show: true }, 
+			 {field: 'totalPlot', header: t("appUserTests.columns.fields.totalPlot"), isDefault: true, show: true }, 
+			 {field: 'reportedTo', header: t("appUserTests.columns.fields.reportedTo"), isDefault: true, show: true }, 
+			 {field: 'reportedBy', header: t("appUserTests.columns.fields.reportedBy"), isDefault: true, show: true }, 
+			 {field: 'appUserTestName', header: t("appUserTests.columns.fields.appUserTestName"), isDefault: true, show: true }, 
+			 {field: 'updateDate', header: t("appUserTests.columns.fields.updateDate"), isDefault: true, show: true }, 
+			 {field: 'deleteDate', header: t("appUserTests.columns.fields.deleteDate"), isDefault: true, show: true }, 
+			 {field: 'updateById', header: t("appUserTests.columns.fields.updateById"), isDefault: true, show: true }, 
+			 {field: 'deleteById', header: t("appUserTests.columns.fields.deleteById"), isDefault: true, show: true }, 
+			 {field: 'isDelete', header: t("appUserTests.columns.fields.isDelete"), isDefault: true, show: true }, 
  		].filter(col => col.field),
         [t]);
   
@@ -311,7 +312,8 @@ const columnsConfigDefault = useMemo(() =>[
                         </>
                       )}
                     />
-                     <Column field="name" header={t("appUserTests.columns.fields.name")} sortable filter
+                      
+<Column field="name" header={t("appUserTests.columns.fields.name")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
@@ -330,6 +332,7 @@ body={(rowData, { rowIndex }) => (
 </>
 )}
  /> 
+ 
 <Column field="firstName" header={t("appUserTests.columns.fields.firstName")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -349,6 +352,7 @@ body={(rowData, { rowIndex }) => (
 </>
 )}
  /> 
+ 
 <Column field="lastName" header={t("appUserTests.columns.fields.lastName")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -368,6 +372,7 @@ body={(rowData, { rowIndex }) => (
 </>
 )}
  /> 
+ 
 <Column field="mobile" header={t("appUserTests.columns.fields.mobile")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -387,6 +392,7 @@ body={(rowData, { rowIndex }) => (
 </>
 )}
  /> 
+ 
 <Column field="mobileVerified" header={t("appUserTests.columns.fields.mobileVerified")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -405,7 +411,8 @@ body={(rowData, { rowIndex }) => (
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-mobileVerified-${rowIndex}`} content={rowData.mobileVerified ? "true" : "false"} showDelay={200} position="top" />
 </>
 )}
- /> 
+ />
+ 
 <Column field="emailId" header={t("appUserTests.columns.fields.emailId")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -425,6 +432,7 @@ body={(rowData, { rowIndex }) => (
 </>
 )}
  /> 
+ 
 <Column field="emailVerified" header={t("appUserTests.columns.fields.emailVerified")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -443,7 +451,8 @@ body={(rowData, { rowIndex }) => (
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-emailVerified-${rowIndex}`} content={rowData.emailVerified ? "true" : "false"} showDelay={200} position="top" />
 </>
 )}
- /> 
+ />
+ 
 <Column field="shopName" header={t("appUserTests.columns.fields.shopName")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -463,6 +472,7 @@ body={(rowData, { rowIndex }) => (
 </>
 )}
  /> 
+ 
 <Column field="password" header={t("appUserTests.columns.fields.password")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -482,6 +492,7 @@ body={(rowData, { rowIndex }) => (
 </>
 )}
  /> 
+ 
 <Column field="pincode" header={t("appUserTests.columns.fields.pincode")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -501,6 +512,7 @@ body={(rowData, { rowIndex }) => (
 </>
 )}
  /> 
+ 
 <Column field="state" header={t("appUserTests.columns.fields.state")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -520,6 +532,7 @@ body={(rowData, { rowIndex }) => (
 </>
 )}
  /> 
+ 
 <Column field="district" header={t("appUserTests.columns.fields.district")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -539,6 +552,7 @@ body={(rowData, { rowIndex }) => (
 </>
 )}
  /> 
+ 
 <Column field="address" header={t("appUserTests.columns.fields.address")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -558,6 +572,7 @@ body={(rowData, { rowIndex }) => (
 </>
 )}
  /> 
+ 
 <Column field="addressLine" header={t("appUserTests.columns.fields.addressLine")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -577,6 +592,7 @@ body={(rowData, { rowIndex }) => (
 </>
 )}
  /> 
+ 
 <Column field="verifyShopLabel" header={t("appUserTests.columns.fields.verifyShopLabel")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -596,6 +612,7 @@ body={(rowData, { rowIndex }) => (
 </>
 )}
  /> 
+ 
 <Column field="gst" header={t("appUserTests.columns.fields.gst")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -615,6 +632,7 @@ body={(rowData, { rowIndex }) => (
 </>
 )}
  /> 
+ 
 <Column field="gstCertificate" header={t("appUserTests.columns.fields.gstCertificate")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -630,6 +648,7 @@ body={(rowData, { rowIndex }) => (
  {renderFileCell(rowData, 'gstCertificate', rowIndex)}
  </div>
 )} /> 
+ 
 <Column field="photoShopFront" header={t("appUserTests.columns.fields.photoShopFront")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -645,6 +664,7 @@ body={(rowData, { rowIndex }) => (
  {renderFileCell(rowData, 'photoShopFront', rowIndex)}
  </div>
 )} /> 
+ 
 <Column field="visitingCard" header={t("appUserTests.columns.fields.visitingCard")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -660,6 +680,7 @@ body={(rowData, { rowIndex }) => (
  {renderFileCell(rowData, 'visitingCard', rowIndex)}
  </div>
 )} /> 
+ 
 <Column field="cheque" header={t("appUserTests.columns.fields.cheque")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -675,6 +696,7 @@ body={(rowData, { rowIndex }) => (
  {renderFileCell(rowData, 'cheque', rowIndex)}
  </div>
 )} /> 
+ 
 <Column field="gstOtp" header={t("appUserTests.columns.fields.gstOtp")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -694,6 +716,7 @@ body={(rowData, { rowIndex }) => (
 </>
 )}
  /> 
+ 
 <Column field="isActive" header={t("appUserTests.columns.fields.isActive")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -712,7 +735,8 @@ body={(rowData, { rowIndex }) => (
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isActive-${rowIndex}`} content={rowData.isActive ? "true" : "false"} showDelay={200} position="top" />
 </>
 )}
- /> 
+ />
+ 
 <Column field="isAdmin" header={t("appUserTests.columns.fields.isAdmin")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -731,7 +755,8 @@ body={(rowData, { rowIndex }) => (
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isAdmin-${rowIndex}`} content={rowData.isAdmin ? "true" : "false"} showDelay={200} position="top" />
 </>
 )}
- /> 
+ />
+ 
 <Column field="hasImpersonateAccess" header={t("appUserTests.columns.fields.hasImpersonateAccess")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -750,7 +775,8 @@ body={(rowData, { rowIndex }) => (
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-hasImpersonateAccess-${rowIndex}`} content={rowData.hasImpersonateAccess ? "true" : "false"} showDelay={200} position="top" />
 </>
 )}
- /> 
+ />
+ 
 <Column field="photoAttachment" header={t("appUserTests.columns.fields.photoAttachment")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -766,6 +792,7 @@ body={(rowData, { rowIndex }) => (
  {renderFileCell(rowData, 'photoAttachment', rowIndex)}
  </div>
 )} /> 
+ 
 <Column field="roleLabel" header={t("appUserTests.columns.fields.roleLabel")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -785,6 +812,7 @@ body={(rowData, { rowIndex }) => (
 </>
 )}
  /> 
+ 
 <Column field="publishLabel" header={t("appUserTests.columns.fields.publishLabel")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -804,6 +832,7 @@ body={(rowData, { rowIndex }) => (
 </>
 )}
  /> 
+ 
 <Column field="lastLogin" header={t("appUserTests.columns.fields.lastLogin")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -819,6 +848,7 @@ body={(rowData, { rowIndex }) => (
  {formatDate(rowData.lastLogin)}
  </div>
 )} /> 
+ 
 <Column field="defaultLanguage" header={t("appUserTests.columns.fields.defaultLanguage")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -838,6 +868,7 @@ body={(rowData, { rowIndex }) => (
 </>
 )}
  /> 
+ 
 <Column field="isPremiumUser" header={t("appUserTests.columns.fields.isPremiumUser")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -856,7 +887,8 @@ body={(rowData, { rowIndex }) => (
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isPremiumUser-${rowIndex}`} content={rowData.isPremiumUser ? "true" : "false"} showDelay={200} position="top" />
 </>
 )}
- /> 
+ />
+ 
 <Column field="totalPlot" header={t("appUserTests.columns.fields.totalPlot")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -876,6 +908,7 @@ body={(rowData, { rowIndex }) => (
 </>
 )}
  /> 
+ 
 <Column field="appUserTestName" header={t("appUserTests.columns.fields.appUserTestName")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}

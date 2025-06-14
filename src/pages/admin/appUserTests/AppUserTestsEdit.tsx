@@ -14,6 +14,7 @@ import { useItemQuery } from '../../../store/useItemQuery';
 import { AppUserTestsService } from '../../../core/service/appUserTests.service';
 import { useListQuery } from '../../../store/useListQuery';
 import {getData, useFetchDataEnum } from '../../../sharedBase/lookupService';
+import Loader from '../../../components/Loader';
 
 export default function AppUserTestsEdit() {
   const { id } = useParams<{ id: string }>();
@@ -21,7 +22,8 @@ export default function AppUserTestsEdit() {
   const { t } = useTranslation();
   const globalschema = getGlobalSchema(t);
   const toast = useRef<Toast>(null);
-  const baseModelName = "appUserTest";
+  // const baseModelName = "appUserTests";
+const typeName= "appUserTest";
   const appUserTestService = AppUserTestsService();
   const itemQuery = useItemQuery<AppUserTest>(appUserTestService);
   const listQuery = useListQuery<AppUserTest>(appUserTestService);
@@ -112,11 +114,11 @@ function initData(): AppUserTest {
 }
 
 
-  const { showDialog, setShowDialog, isFieldHidden, handleCloseDialog, formatDate, removeEmptyFields, prepareObject }
+ const { showDialog, setShowDialog, isFieldHidden, handleCloseDialog, formatDate, removeEmptyFields, prepareObject }
     = useEditPage<AppUserTest>({
       props: {
         id: id,
-        baseModelName: baseModelName,
+        baseModelName: typeName,
         listQuery: listQuery
       }
     });
@@ -384,12 +386,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
     try {
 
       const payload = {
-        ...item,
-        state: item.state || 0,
-        district: item.district || 0,
-        verifyShopLabel: item.verifyShop,
-        roleLabel: item.role,
-        publishLabel: item.publish,
+        ...item
       };
 
       const cleanedPayload = removeEmptyFields(payload);
@@ -446,7 +443,10 @@ verifyShopData?.data, roleData?.data, publishData?.data
           </Button>
           <h1 className=" capitalize text-[14px] font-semibold ">{t("globals.backto")} {t("appUserTests.form_detail.fields.modelname")}</h1>
         </div>
-
+{itemQuery.isLoading ? (
+          <Loader />
+        ) : (
+          <>
         <div className="flex flex-col  border-none bg-[var(--color-white)] text-[var(--color-dark)] mb-10 sm:mb-20">
           <form id="myForm" onSubmit={handleSubmit} noValidate>
             <div className="w-full bg-[var(--color-white)] text-[var(--color-dark)]">
@@ -1235,6 +1235,8 @@ verifyShopData?.data, roleData?.data, publishData?.data
           </div>
         </div>
       </Dialog>
+       </>
+        )}
     </div>
   )
 }
