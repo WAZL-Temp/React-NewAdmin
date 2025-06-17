@@ -46,18 +46,17 @@ const password = (fieldName: string, t: (key: string, params?: Record<string, un
         .min(2, { message: t('validators.requiredMinLength', { field: fieldName, length: 2 }) })
         .max(length ?? 100, { message: t('validators.requiredMaxLength', { field: fieldName, length: length ?? 100 }) });
 
-const stringField2Schema = (fieldName: string, t: (key: string, params?: Record<string, unknown>) => string) =>
+const dropdownSchema = (fieldName: string, t: (key: string, params?: Record<string, unknown>) => string) =>
     z.string({
         required_error: t('validators.required', { field: fieldName }),
-        invalid_type_error: t('validators.stringRequired', { field: fieldName }),
     })
         .min(1, { message: t('validators.required', { field: fieldName }) })
-        .regex(/^[A-Za-z\s]+$/, { message: t('validators.alphabetsOnly', { field: fieldName }) });
 
-// const stringField3Schema = (fieldName: string, t: (key: string, params?: Record<string, unknown>) => string) =>
-//     z.string()
-//         .min(1, { message: t('validators.required', { field: fieldName }) })
-//         .regex(/^[A-Za-z\s]+$/, { message: t('validators.alphabetsOnly', { field: fieldName }) });
+const multiSelectFieldSchema = (fieldName: string, t: (key: string, params?: Record<string, unknown>) => string) =>
+    z.string({
+        required_error: t('validators.required', { field: fieldName }),
+    })
+        .min(1, { message: t('validators.required', { field: fieldName }) });
 
 const booleanField = (
     fieldName: string,
@@ -82,8 +81,10 @@ export const getGlobalSchema = (t: (key: string, params?: Record<string, unknown
     mobile: mobileFieldSchema('Mobile number', t, 10),
     emailId: email(t),
     pincode: numericFieldSchema('Pincode', t, 6),
-    role: stringField2Schema("Role", t),
-    publish: stringField2Schema('Publish', t),
+    role: dropdownSchema("Role", t),
+    publish: dropdownSchema('Publish', t),
+    reportedTo: multiSelectFieldSchema("Reported To", t),
+    reportedBy: dropdownSchema("Reported By", t),
     gst: gstSchema(t),
     address: alphanumeric('Address', t, 2),
     addressLine: alphanumeric('Address Line', t, 2),
@@ -92,8 +93,6 @@ export const getGlobalSchema = (t: (key: string, params?: Record<string, unknown
     lastLogin: date(t),
     mobileVerified: booleanField('Mobile Verified', t),
     emailVerified: booleanField('Email Verified', t),
-    // isAdmin: z.boolean(),
-    // isActive: z.boolean(),
     isAdmin: booleanField('Admin Status', t),
     isActive: booleanField('Active Status', t),
 });

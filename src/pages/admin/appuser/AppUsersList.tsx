@@ -423,7 +423,7 @@ export default function AppUsersList() {
                                 emptyMessage={t('globals.emptyMessage')}
                                 resizableColumns
                                 scrollable
-                                scrollHeight="flex"
+                                scrollHeight="68vh"
                             >
                                 <Column
                                     header={t('globals.headerActions')}

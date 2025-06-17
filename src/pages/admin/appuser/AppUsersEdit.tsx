@@ -60,7 +60,7 @@ export default function AppUsersEdit() {
 
   const [reportedByList, setReportedByList] = useState<AppUser[]>([]);
   const [reportedToList, setReportedToList] = useState<AppUser[]>([]);
-  const [selectedReportedBy, setSelectedReportedBy] = useState<number | null>(null);
+  const [selectedReportedBy, setSelectedReportedBy] = useState<string | null>(null);
   const [selectedReportedTo, setSelectedReportedTo] = useState<AppUser[]>([]);
 
   function initData(): AppUser {
@@ -76,11 +76,12 @@ export default function AppUsersEdit() {
       shopName: '',
       password: '',
       pincode: '',
-      state: '',
-      district: '',
+      state: '0',
+      district: '0',
       address: '',
       addressLine: '',
       verifyShop: '',
+      verifyShopLabel: '',
       gst: '',
       gstCertificate: undefined,
       photoShopFront: undefined,
@@ -92,12 +93,15 @@ export default function AppUsersEdit() {
       hasImpersonateAccess: false,
       photoAttachment: undefined,
       role: '',
+      roleLabel: '',
       publish: '',
+      publishLabel: '',
       lastLogin: undefined,
       defaultLanguage: '',
       isPremiumUser: false,
       totalPlot: undefined,
       reportedBy: "",
+      reportedByLabel: '',
       reportedTo: undefined,
     };
   }
@@ -134,9 +138,12 @@ export default function AppUsersEdit() {
     const fetchData = async () => {
       try {
         const listReportedBy = await getData(userService);
-        setReportedByList(listReportedBy);
+        const options = listReportedBy.map((item) => ({
+          ...item, id: item.id?.toString()
+        }));
+        setReportedByList(options);
         if (itemData.reportedBy) {
-          setSelectedReportedBy(Number(itemData.reportedBy));
+          setSelectedReportedBy(itemData.reportedBy);
         }
 
         const listReportedTo = await getData(userService);
@@ -257,46 +264,37 @@ export default function AppUsersEdit() {
 
   const validateStepFields = (step: number) => {
     const container = stepRefs.current[step];
-    if (!container) return true;
-
-    const inputs = container.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
-      'input, select, textarea'
-    );
-
     let hasError = false;
     const newErrors: Record<string, string> = { ...errors };
 
-    inputs.forEach((input) => {
-      const fieldName = input.name;
-      const value = item[fieldName as keyof typeof item];
-      const schema = globalschema[fieldName as keyof typeof globalschema];
-      const isRequired = input.hasAttribute('required');
-      const isEmpty = value === '' || value === null || value === undefined;
+    if (container) {
+      const nativeInputs = container.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
+        'input, select, textarea'
+      );
 
-      if (isRequired) {
-        if (schema) {
-          const result = schema.safeParse(value);
+      nativeInputs.forEach((input) => {
+        const fieldName = input.name;
+        const value = item[fieldName as keyof typeof item];
+        const schema = globalschema[fieldName as keyof typeof globalschema];
+        const isRequired = input.hasAttribute('required');
+        const isEmpty = value === '' || value === null || value === undefined;
 
-          if (!result.success) {
-            newErrors[fieldName] = result.error.errors[0].message;
-            hasError = true;
-          } else {
-            newErrors[fieldName] = '';
-          }
-        } else {
-          if (isEmpty) {
+        if (isRequired) {
+          if (schema) {
+            const result = schema.safeParse(value);
+            if (!result.success) {
+              newErrors[fieldName] = result.error.errors[0].message;
+              hasError = true;
+            } else {
+              newErrors[fieldName] = '';
+            }
+          } else if (isEmpty) {
             newErrors[fieldName] = 'This field is required';
             hasError = true;
           } else {
             newErrors[fieldName] = '';
           }
-        }
-      }
-
-      else if (schema) {
-        if (isEmpty) {
-          newErrors[fieldName] = '';
-        } else {
+        } else if (schema && !isEmpty) {
           const result = schema.safeParse(value);
           if (!result.success) {
             newErrors[fieldName] = result.error.errors[0].message;
@@ -304,10 +302,40 @@ export default function AppUsersEdit() {
           } else {
             newErrors[fieldName] = '';
           }
+        } else {
+          newErrors[fieldName] = '';
         }
-      }
+      });
 
-    });
+      const multiSelectInputs = container.querySelectorAll('.p-multiselect');
+      multiSelectInputs.forEach((input) => {
+        const fieldName = input.getAttribute('data-name');
+        const schema = globalschema[fieldName as keyof typeof globalschema];
+
+        const isRequired = input.getAttribute('data-required') === 'true';
+        if (fieldName) {
+          const value = item[fieldName as keyof typeof item];
+          const isEmpty = value === '' || value === null || value === undefined || (Array.isArray(value) && value.length === 0);
+
+          if (isRequired) {
+            if (schema) {
+              const result = schema.safeParse(value);
+              if (!result.success) {
+                newErrors[fieldName] = result.error.errors[0].message;
+                hasError = true;
+              } else {
+                newErrors[fieldName] = '';
+              }
+            } else if (isEmpty) {
+              newErrors[fieldName] = 'This field is required';
+              hasError = true;
+            }
+          } else {
+            newErrors[fieldName] = '';
+          }
+        }
+      });
+    }
 
     setErrors(newErrors);
     return !hasError;
@@ -349,7 +377,8 @@ export default function AppUsersEdit() {
       const schema = globalschema[controlName as keyof typeof globalschema];
 
       if (schema) {
-        const result = schema.safeParse(value);
+        const result = schema.safeParse(value.toString());
+
         if (!result.success) {
           setErrors((prev) => ({
             ...prev,
@@ -379,11 +408,9 @@ export default function AppUsersEdit() {
     if (isSubmitting) return;
     setIsSubmitting(true);
     try {
+
       const payload = {
         ...item,
-        verifyShopLabel: item.verifyShop,
-        roleLabel: item.role,
-        publishLabel: item.publish,
       };
 
       const cleanedPayload = removeEmptyFields(payload);
@@ -414,14 +441,41 @@ export default function AppUsersEdit() {
   };
 
   const handleMultiSelectChange = (e: MultiSelectChangeEvent, fieldName: string, setFieldValue: React.Dispatch<React.SetStateAction<AppUser[]>>) => {
-    const selectedUsers = e.value as AppUser[];
-    setFieldValue(selectedUsers);
+    const selectedValues = e.value as AppUser[];
+    setFieldValue(selectedValues);
 
-    const selectedIds = selectedUsers.map(user => user.id).filter(id => id !== undefined);
-    const updatedModel = selectMultiData(selectedUsers, fieldName);
+    const inputElement = document.querySelector(`[name="${fieldName}"]`) as HTMLElement;
+    const isRequired = inputElement?.hasAttribute('required') || inputElement?.getAttribute('aria-required') === 'true';
+    const selectedIds = selectedValues.map((user) => user.id).filter((id) => id !== undefined).join(',');
+
+    if (isRequired) {
+      const schema = globalschema[fieldName as keyof typeof globalschema];
+      if (schema) {
+        const result = schema.safeParse(selectedIds);
+        if (!result.success) {
+          setErrors((prev) => ({
+            ...prev,
+            [fieldName]: result.error.errors[0].message,
+          }));
+          return;
+        } else {
+          setErrors((prev) => ({ ...prev, [fieldName]: '' }));
+        }
+      } else if (!selectedValues || selectedValues.length === 0) {
+        setErrors((prev) => ({
+          ...prev,
+          [fieldName]: 'This field is required',
+        }));
+        return;
+      }
+    } else {
+      setErrors((prev) => ({ ...prev, [fieldName]: '' }));
+    }
+
+    const updatedModel = selectMultiData(selectedValues, fieldName);
     setItem((prev) => ({
       ...prev,
-      [fieldName]: selectedIds.join(',') || '',
+      [fieldName]: updatedModel[fieldName] || '',
       [`${fieldName}Label`]: updatedModel[`${fieldName}Label`]?.toString() || '',
     }));
   };
@@ -1387,6 +1441,7 @@ export default function AppUsersEdit() {
                                 <label htmlFor={t("appUsers.columns.fields.reportedTo")} className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]">
                                   {t("appUsers.columns.fields.reportedTo")}
                                 </label>
+                                <span className=" text-[var(--color-danger)] pl-2">*</span>
                                 <TooltipWithText text={t("appUsers.columns.fields.reportedTo")} />
                               </div>
                               <MultiSelect
@@ -1398,8 +1453,15 @@ export default function AppUsersEdit() {
                                 optionLabel="name"
                                 filter
                                 placeholder={t("appUsers.columns.fields.reportedTo")}
-                                className="text-sm w-full lg:w-20rem flex items-center h-[40px] border bg-[var(--color-white)] text-[var(--color-dark)] border-[var(--color-gray)] rounded-md shadow-sm"
+                                className="p-multiselect text-sm w-full lg:w-20rem flex items-center h-[40px] border bg-[var(--color-white)] text-[var(--color-dark)] border-[var(--color-gray)] rounded-md shadow-sm"
+                                data-name="reportedTo"
+                                data-required="true"
                               />
+                              {errors.reportedTo && (
+                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                                  {errors.reportedTo}
+                                </p>
+                              )}
                             </div>
                           )}
 
@@ -1420,14 +1482,19 @@ export default function AppUsersEdit() {
                                 options={reportedByList}
                                 optionLabel="name"
                                 optionValue="id"
-                                onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "reportedBy"); setSelectedReportedBy(Number(e.value)); }}
+                                onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "reportedBy"); setSelectedReportedBy(e.value); }}
                                 filter
                                 className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px] bg-[var(--color-white)] text-[var(--color-dark)]"
-                                required
                                 checkmark={true}
                                 highlightOnSelect={false}
                                 appendTo="self"
+                                required
                               />
+                              {errors.reportedBy && (
+                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                                  {errors.reportedBy}
+                                </p>
+                              )}
                             </div>
                           )}
 
