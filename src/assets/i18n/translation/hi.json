@@ -12,7 +12,9 @@
     "stringRequired": "{{field}} एक स्ट्रिंग होना चाहिए",
     "minLength": "{{field}} में कम से कम {{length}} अक्षर होने चाहिए",
     "maxLength": "{{field}} में अधिकतम {{length}} अक्षर होने चाहिए",
-    "specialCharsOnly": "{{field}} में केवल विशेष वर्ण होने चाहिए"
+    "specialCharsOnly": "{{field}} में केवल विशेष वर्ण होने चाहिए",
+    "minFiles": "{{field}} के लिए कम से कम {{count}} फ़ाइलें अपलोड करें",
+    "maxFiles": "{{field}} के लिए अधिकतम {{count}} फ़ाइलें अपलोड करें"
   },
   "globals": {
     "english": "अंग्रेजी",

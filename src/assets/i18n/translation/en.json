@@ -12,7 +12,9 @@
     "stringRequired": "{{field}} must be a string",
     "minLength": "{{field}} should have minimum {{length}} characters",
     "maxLength": "{{field}} should have maximum {{length}} characters",
-    "specialCharsOnly": "{{field}} must contain only special characters"
+    "specialCharsOnly": "{{field}} must contain only special characters",
+    "minFiles": "Please upload at least {{count}} files for {{field}}",
+    "maxFiles": "Please upload maximimum {{count}} files for {{field}}"
   },
   "globals": {
     "english": "English",
@@ -202,56 +204,55 @@
         "statuses": "Statuses"
       }
     }
-  }
-,
-"appUserTests": {
+  },
+  "appUserTests": {
     "columns": {
       "fields": {
-         "id": "Id",
-"name": "Name ",
-"firstName": "First Name",
-"lastName": "Last Name",
-"mobile": "Mobile",
-"mobileVerified": "Mobile Verified",
-"emailId": "Email Id",
-"emailVerified": "Email Verified",
-"shopName": "Shop Name",
-"password": "Password",
-"pincode": "Pincode",
-"state": "State",
-"district": "District",
-"address": "Address Line 1",
-"addressLine": "Address Line 2",
-"verifyShop": "VerifyShop",
-"verifyShopLabel": "VerifyShop",
-"gst": "GST Number",
-"gstCertificate": "GstCertificate",
-"photoShopFront": "Photo Shop From Front",
-"visitingCard": "VisitingCard",
-"cheque": "Cheque",
-"gstOtp": "Gst Otp",
-"isActive": "Active",
-"isAdmin": "Is Admin",
-"hasImpersonateAccess": "Has Impersonate Access",
-"photoAttachment": "Photo",
-"role": "Role",
-"roleLabel": "Role",
-"publish": "Publish",
-"publishLabel": "Publish",
-"importDataId": "Import Data Id",
-"lastLogin": "Last Login",
-"lastLoginCalendar": "Last Login",
-"defaultLanguage": "DefaultLanguage",
-"isPremiumUser": "IsPremiumUser",
-"totalPlot": "TotalPlot",
-"reportedTo": "ReportedTo",
-"reportedBy": "ReportedBy",
-"appUserTestName": "ReportedBy",
-"updateDate": "Update Date",
-"deleteDate": "Delete Date",
-"updateById": "Update By Id",
-"deleteById": "Delete By Id",
-"isDelete": "Is Delete"
+        "id": "Id",
+        "name": "Name ",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "mobile": "Mobile",
+        "mobileVerified": "Mobile Verified",
+        "emailId": "Email Id",
+        "emailVerified": "Email Verified",
+        "shopName": "Shop Name",
+        "password": "Password",
+        "pincode": "Pincode",
+        "state": "State",
+        "district": "District",
+        "address": "Address Line 1",
+        "addressLine": "Address Line 2",
+        "verifyShop": "VerifyShop",
+        "verifyShopLabel": "VerifyShop",
+        "gst": "GST Number",
+        "gstCertificate": "GstCertificate",
+        "photoShopFront": "Photo Shop From Front",
+        "visitingCard": "VisitingCard",
+        "cheque": "Cheque",
+        "gstOtp": "Gst Otp",
+        "isActive": "Active",
+        "isAdmin": "Is Admin",
+        "hasImpersonateAccess": "Has Impersonate Access",
+        "photoAttachment": "Photo",
+        "role": "Role",
+        "roleLabel": "Role",
+        "publish": "Publish",
+        "publishLabel": "Publish",
+        "importDataId": "Import Data Id",
+        "lastLogin": "Last Login",
+        "lastLoginCalendar": "Last Login",
+        "defaultLanguage": "DefaultLanguage",
+        "isPremiumUser": "IsPremiumUser",
+        "totalPlot": "TotalPlot",
+        "reportedTo": "ReportedTo",
+        "reportedBy": "ReportedBy",
+        "appUserTestName": "ReportedBy",
+        "updateDate": "Update Date",
+        "deleteDate": "Delete Date",
+        "updateById": "Update By Id",
+        "deleteById": "Delete By Id",
+        "isDelete": "Is Delete"
       }
     },
     "form_detail": {
@@ -259,15 +260,14 @@
         "importAction": "Import Action",
         "importRemark": "Import Remark",
         "accessDeatails": "Access Deatails",
-"shopDetails": "Shop Details",
-"shopAddress": "Shop Address",
-"verifyShop": "Verify Shop",
-"modelname": "AppUserTest"
+        "shopDetails": "Shop Details",
+        "shopAddress": "Shop Address",
+        "verifyShop": "Verify Shop",
+        "modelname": "AppUserTest"
       }
     },
     "form_list": {
-      "fields": {        
-      }
+      "fields": {}
     }
   }
 }
