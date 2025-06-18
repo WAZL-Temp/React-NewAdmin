@@ -193,8 +193,8 @@ export default function FileUploadMain({
               className="hidden"
               multiple={multiple}
               maxLength={maxFileNumber}
+              required={required}
               minLength={minFileNumber}
-
             />
           </label>
         </div>

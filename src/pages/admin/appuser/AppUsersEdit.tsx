@@ -1025,7 +1025,7 @@ export default function AppUsersEdit() {
                                 accept=".jpg,.jpeg,.png,.pdf"
                                 initialData={item.gstCertificate ?? null}
                                 maxFileNumber={2}
-                                error={errors.gstCertificate}
+                                error={errors.gstCertificate}                                
                               />
                             </div>
                           )}
@@ -1049,6 +1049,7 @@ export default function AppUsersEdit() {
                                 accept=".jpg,.jpeg,.png,.pdf"
                                 initialData={item.photoShopFront ?? null}
                                 maxFileNumber={2}
+                                error={errors.photoShopFront}
                               />
                             </div>
                           )}
@@ -1066,13 +1067,13 @@ export default function AppUsersEdit() {
                               </div>
                               <FileUploadMain
                                 modelName="AppUser"
-                                propName="visitingCard"
+                                propName="VisitingCard"
                                 onFileUpload={(files) => handleFileUpload(files, 'visitingCard')}
                                 accept=".jpg,.jpeg,.png,.pdf"
                                 initialData={item.visitingCard ?? null}
                                 maxFileNumber={2}
+                                error={errors.visitingCard}
                                 minFileNumber={2}
-                                required
                               />
                             </div>
                           )}
@@ -1091,11 +1092,12 @@ export default function AppUsersEdit() {
 
                               <FileUploadMain
                                 modelName="AppUser"
-                                propName="cheque"
+                                propName="Cheque"
                                 onFileUpload={(files) => handleFileUpload(files, 'cheque')}
                                 accept=".jpg,.jpeg,.png,.pdf"
                                 initialData={item.cheque ?? null}
                                 maxFileNumber={1}
+                                error={errors.cheque}
                               />
                             </div>
                           )}
@@ -1258,6 +1260,7 @@ export default function AppUsersEdit() {
                                 accept=".jpg,.jpeg,.png,.pdf"
                                 initialData={item.photoAttachment ?? null}
                                 maxFileNumber={2}
+                                error={errors.photoAttachment}
                               />
                             </div>
                           )}
