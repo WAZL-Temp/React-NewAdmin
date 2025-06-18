@@ -1073,6 +1073,7 @@ export default function AppUsersEdit() {
                                 initialData={item.visitingCard ?? null}
                                 maxFileNumber={2}
                                 error={errors.visitingCard}
+                                minFileNumber={2}
                               />
                             </div>
                           )}
@@ -1121,7 +1122,13 @@ export default function AppUsersEdit() {
                                 className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
                                 maxLength={100}
                                 onChange={(e) => handleInputChange('gstOtp', e.target.value)}
+                                required={item.isActive}
                               />
+                              {errors.gstOtp && (
+                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                                  {errors.gstOtp}
+                                </p>
+                              )}
                             </div>
                           )}
 
