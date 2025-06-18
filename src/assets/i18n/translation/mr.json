@@ -1,17 +1,18 @@
 {
   "validators": {
-    "required": "{{field}} आवश्यक आहे!",
-    "invalid": "अवैध {{field}}",
-    "minDigits": "{{field}} नक्कीच {{length}} अंकांचा असावा",
-    "maxDigits": "{{field}} कमाल {{length}} अंकांचा असावा",
-    "alphabetsOnly": "{{field}} मध्ये फक्त अक्षरे असावीत",
-    "alphanumeric": "{{field}} अल्फान्यूमेरिक असावे आणि सामान्य विरामचिन्हांचा समावेश करू शकते",
-    "numbersOnly": "{{field}} मध्ये फक्त संख्या असाव्यात",
-    "exactLength": "{{field}} नक्कीच {{length}} अक्षरांचे असावे",
-    "dateFormat": "{{field}} हा MM-DD-YYYY स्वरूपात असावा",
-    "stringRequired": "{{field}} स्ट्रिंग स्वरूपात असावे",
-    "minLength": "{{field}} किमान {{length}} अक्षरे असावी!",
-    "maxLength": "{{field}} कमाल {{length}} अक्षरे असावी!"
+    "required": "{{field}} आवश्यक आहे",
+  "invalid": "अवैध {{field}}",
+  "minDigits": "{{field}} मध्ये किमान {{length}} अंक असावेत",
+  "maxDigits": "{{field}} मध्ये जास्तीत जास्त {{length}} अंक असावेत",
+  "alphabetsOnly": "{{field}} मध्ये फक्त अक्षरे असावीत",
+  "alphanumeric": "{{field}} मध्ये फक्त अक्षरे, अंक आणि विशेष चिन्हे असावीत",
+  "numbersOnly": "{{field}} मध्ये फक्त अंक असावेत",
+  "exactLength": "{{field}} नेमके {{length}} वर्णांचे असावे",
+  "dateFormat": "{{field}} चा फॉर्मॅट MM-DD-YYYY असावा",
+  "stringRequired": "{{field}} एक स्ट्रिंग असावी",
+  "minLength": "{{field}} मध्ये किमान {{length}} अक्षरे असावीत",
+  "maxLength": "{{field}} मध्ये जास्तीत जास्त {{length}} अक्षरे असावीत",
+  "specialCharsOnly": "{{field}} मध्ये फक्त विशेष चिन्हे असावीत"
   },
   "globals": {
     "english": "इंग्रजी",
