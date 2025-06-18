@@ -5,7 +5,6 @@ import { useNavigate, useParams, useTranslation } from '../../../sharedBase/glob
 import { useEditPage } from '../../../hooks/useEditPage';
 import { AppUser } from '../../../core/model/appuser';
 import { selectDropdownEnum, selectMultiData, selectRadioEnum } from '../../../sharedBase/dropdownUtils';
-import { getGlobalSchema } from '../../../globalschema';
 import TooltipWithText from '../../../components/TooltipWithText';
 import FileUploadMain from '../../../components/FileUploadMain';
 import { EnumDetail } from '../../../core/model/enumdetail';
@@ -15,12 +14,13 @@ import { AppUserService } from '../../../core/service/appUsers.service';
 import { useListQuery } from '../../../store/useListQuery';
 import { getData, useFetchDataEnum } from '../../../sharedBase/lookupService';
 import Loader from '../../../components/Loader';
+import { appUser } from '../../../schema/appuser';
 
 export default function AppUsersEdit() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const globalschema = getGlobalSchema(t);
+  const appUserSchema = appUser(t);
   const toast = useRef<Toast>(null);
   const baseModelName = "appuser";
   const typeName = "appuser";
@@ -208,7 +208,7 @@ export default function AppUsersEdit() {
 
   const handleInputChange = (field: string, value: string) => {
     setItem((prev) => ({ ...prev, [field]: value }));
-    const schema = globalschema[field as keyof typeof globalschema];
+    const schema = appUserSchema[field as keyof typeof appUserSchema];
 
     if (schema) {
       const result = schema.safeParse(value);
@@ -248,7 +248,7 @@ export default function AppUsersEdit() {
       [key]: value,
     }));
 
-    const schema = globalschema[key as keyof typeof globalschema];
+    const schema = appUserSchema[key as keyof typeof appUserSchema];
     if (schema) {
       const result = schema.safeParse(value);
       if (result.success) {
@@ -275,7 +275,7 @@ export default function AppUsersEdit() {
       nativeInputs.forEach((input) => {
         const fieldName = input.name;
         const value = item[fieldName as keyof typeof item];
-        const schema = globalschema[fieldName as keyof typeof globalschema];
+        const schema = appUserSchema[fieldName as keyof typeof appUserSchema];
         const isRequired = input.hasAttribute('required');
         const isEmpty = value === '' || value === null || value === undefined;
 
@@ -310,7 +310,7 @@ export default function AppUsersEdit() {
       const multiSelectInputs = container.querySelectorAll('.p-multiselect');
       multiSelectInputs.forEach((input) => {
         const fieldName = input.getAttribute('data-name');
-        const schema = globalschema[fieldName as keyof typeof globalschema];
+        const schema = appUserSchema[fieldName as keyof typeof appUserSchema];
 
         const isRequired = input.getAttribute('data-required') === 'true';
         if (fieldName) {
@@ -374,7 +374,7 @@ export default function AppUsersEdit() {
     const isRequired = inputElement?.hasAttribute('required');
 
     if (isRequired) {
-      const schema = globalschema[controlName as keyof typeof globalschema];
+      const schema = appUserSchema[controlName as keyof typeof appUserSchema];
 
       if (schema) {
         const result = schema.safeParse(value.toString());
@@ -449,7 +449,7 @@ export default function AppUsersEdit() {
     const selectedIds = selectedValues.map((user) => user.id).filter((id) => id !== undefined).join(',');
 
     if (isRequired) {
-      const schema = globalschema[fieldName as keyof typeof globalschema];
+      const schema = appUserSchema[fieldName as keyof typeof appUserSchema];
       if (schema) {
         const result = schema.safeParse(selectedIds);
         if (!result.success) {
@@ -1432,6 +1432,11 @@ export default function AppUsersEdit() {
                                 className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
                                 onChange={(e) => handleInputChange('totalPlot', e.target.value)}
                               />
+                               {errors.totalPlot && (
+                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                                  {errors.totalPlot}
+                                </p>
+                              )}
                             </div>
                           )}
 
