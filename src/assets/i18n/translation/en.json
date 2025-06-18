@@ -2,16 +2,16 @@
   "validators": {
     "required": "{{field}} is required",
     "invalid": "Invalid {{field}}",
-    "minlength": "{{field}} must be exactly {{length}} digits",
-    "maxLength": "{{field}} must be at most {{length}} digits",
+    "minDigits": "{{field}} must be exactly {{length}} digits",
+    "maxDigits": "{{field}} must be at most {{length}} digits",
     "alphabetsOnly": "{{field}} must contain only alphabets",
     "alphanumeric": "{{field}} must be alphanumeric and can include common punctuation",
     "numbersOnly": "{{field}} must contain only numbers",
-    "characterLength": "{{field}} must be exactly {{length}} characters long",
+    "exactLength": "{{field}} must be exactly {{length}} characters long",
     "dateFormat": "{{field}} must be in MM-DD-YYYY format",
     "stringRequired": "{{field}} must be a string",
-    "requiredMinLength": "{{field}} should have minimum {{length}} characters!",
-    "requiredMaxLength": "{{field}} should have maximum {{length}} characters!"
+    "minLength": "{{field}} should have minimum {{length}} characters!",
+    "maxLength": "{{field}} should have maximum {{length}} characters!"
   },
   "globals": {
     "english": "English",
@@ -201,7 +201,8 @@
         "statuses": "Statuses"
       }
     }
-  },
+  }
+,
 "appUserTests": {
     "columns": {
       "fields": {
