@@ -5,13 +5,14 @@
     "minDigits": "{{field}} must be exactly {{length}} digits",
     "maxDigits": "{{field}} must be at most {{length}} digits",
     "alphabetsOnly": "{{field}} must contain only alphabets",
-    "alphanumeric": "{{field}} must be alphanumeric and can include common punctuation",
+    "alphanumeric": "{{field}} must be alphanumeric and can include special characters",
     "numbersOnly": "{{field}} must contain only numbers",
     "exactLength": "{{field}} must be exactly {{length}} characters long",
     "dateFormat": "{{field}} must be in MM-DD-YYYY format",
     "stringRequired": "{{field}} must be a string",
-    "minLength": "{{field}} should have minimum {{length}} characters!",
-    "maxLength": "{{field}} should have maximum {{length}} characters!"
+    "minLength": "{{field}} should have minimum {{length}} characters",
+    "maxLength": "{{field}} should have maximum {{length}} characters",
+    "specialCharsOnly": "{{field}} must contain only special characters"
   },
   "globals": {
     "english": "English",

@@ -69,7 +69,7 @@ export const fileUploadField = (fieldName: string, t: TransFn) =>
         required_error: t('validators.required', { field: fieldName }),
     }).min(1, { message: t('validators.required', { field: fieldName }) });
 
-type TransFn = (key: string, params?: Record<string, unknown>) => string;;
+type TransFn = (key: string, params?: Record<string, unknown>) => string;
 
 
 export const appUser = (t: TransFn) => ({
@@ -85,8 +85,8 @@ export const appUser = (t: TransFn) => ({
     pincode: stringNumeric('Pincode', t, 6),
     state: stringOnlyAlphabets('State', t, 2),
     district: stringOnlyAlphabets('District', t, 2),
-    address: stringAlphanumeric('Address Line 1', t, 2),
-    addressLine: stringAlphanumeric('Address Line 2', t, 2),
+    address: stringAlphanumericWithSpecialChars('Address Line 1', t, 2),
+    addressLine: stringAlphanumericWithSpecialChars('Address Line 2', t, 2),
     defaultLanguage: stringOnlyAlphabets('Default Language', t,2),
     verifyShop: requiredStringField('Verify Shop', t),
     gst: gstField(t),
