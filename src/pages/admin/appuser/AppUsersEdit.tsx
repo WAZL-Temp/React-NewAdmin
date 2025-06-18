@@ -969,6 +969,11 @@ export default function AppUsersEdit() {
                                 appendTo="self"
                                 className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)]"
                               />
+                              {errors.verifyShop && (
+                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                                  {errors.verifyShop}
+                                </p>
+                              )}
                             </div>
                           )}
 
@@ -1020,7 +1025,7 @@ export default function AppUsersEdit() {
                                 accept=".jpg,.jpeg,.png,.pdf"
                                 initialData={item.gstCertificate ?? null}
                                 maxFileNumber={2}
-                              />
+                              />                             
                             </div>
                           )}
 

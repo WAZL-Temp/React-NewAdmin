@@ -1,61 +1,86 @@
 import { z } from "../sharedBase/globalUtils";
+type TransFn = (key: string, params?: Record<string, unknown>) => string;
+
+const baseStringField = (fieldName: string, t: TransFn) =>
+    z.string({
+        required_error: t('validators.required', { field: fieldName }),
+        invalid_type_error: t('validators.required', { field: fieldName }),
+    }).min(1, { message: t('validators.required', { field: fieldName }) });
 
 
-const stringOnlyAlphabets = (fieldName: string, t: TransFn, length?: number) =>
-    z.string()
-        .min(length ?? 1, { message: t('validators.minLength', { field: fieldName, length: length }) })
-        .regex(/^[A-Za-z\s]+$/, { message: t('validators.alphabetsOnly', { field: fieldName }) });
+const stringOnlyAlphabets = (fieldName: string, t: TransFn, minLength: number, maxLength: number) =>
+    baseStringField(fieldName, t)
+        .regex(/^[A-Za-z\s]+$/, { message: t('validators.alphabetsOnly', { field: fieldName }) })
+        .min(minLength, { message: t('validators.minLength', { field: fieldName, length: minLength }) })
+        .max(maxLength, { message: t('validators.maxLength', { field: fieldName, length: maxLength }) });
 
-const stringAlphanumeric = (fieldName: string, t: TransFn, length?: number) =>
-    z.string()
-        .min(length ?? 1, { message: t('validators.minLength', { field: fieldName, length: length }) })
+const stringAlphanumeric = (fieldName: string, t: TransFn, minLength: number, maxLength: number) =>
+    baseStringField(fieldName, t)
+        .min(minLength, { message: t('validators.minLength', { field: fieldName, length: minLength }) })
+        .max(maxLength, { message: t('validators.maxLength', { field: fieldName, length: maxLength }) })
         .regex(/^[a-zA-Z0-9\s]+$/, { message: t('validators.alphanumeric', { field: fieldName }) });
 
-const stringAlphanumericWithSpecialChars = (fieldName: string, t: TransFn, minLength = 1) =>
-    z.string()
+const stringAlphanumericWithSpecialChars = (fieldName: string, t: TransFn, minLength: number, maxLength: number) =>
+    baseStringField(fieldName, t)
         .min(minLength, { message: t('validators.minLength', { field: fieldName, length: minLength }) })
+        .max(maxLength, { message: t('validators.maxLength', { field: fieldName, length: maxLength }) })
         .regex(/^[a-zA-Z0-9\s.,'-/()&@#]+$/, { message: t('validators.alphanumeric', { field: fieldName }) });
 
-const stringOnlySpecialChars = (fieldName: string, t: TransFn) =>
-    z.string()
+const stringOnlySpecialChars = (fieldName: string, t: TransFn, minLength: number, maxLength: number) =>
+    baseStringField(fieldName, t)
+        .min(minLength, { message: t('validators.minLength', { field: fieldName, length: minLength }) })
+        .max(maxLength, { message: t('validators.maxLength', { field: fieldName, length: maxLength }) })
         .regex(/^[^a-zA-Z0-9]+$/, { message: t('validators.specialCharsOnly', { field: fieldName }) });
 
-const gstField = (t: TransFn) =>
-    z.string()
-        .length(15, { message: t('validators.exactLength', { field: "GST number", length: 15 }) })
-        .regex(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[0-9]{1}[A-Z]{1}[0-9]{1}$/, { message: t('validators.invalid', { field: 'GST Number' }) });
+const gstField = (t: TransFn, minLength: number, maxLength: number) =>
+    z.string({
+        required_error: t('validators.required', { field: 'GST number' }),
+        invalid_type_error: t('validators.required', { field: 'GST number' }),
+    }).min(1, { message: t('validators.required', { field: 'GST number' }) })
+        .min(minLength, { message: t('validators.minDigits', { field: 'GST number', length: minLength }), })
+        .max(maxLength, { message: t('validators.maxDigits', { field: 'GST number', length: maxLength }), })
+        .regex(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[0-9]{1}[A-Z]{1}[0-9]{1}$/, {
+            message: t('validators.invalid', { field: 'GST number' }),
+        });
 
-const stringNumeric = (fieldName: string, t: TransFn, length?: number) =>
-    z.string()
-        .min(1, { message: t('validators.required', { field: fieldName }) })
-        .regex(/^\d*$/, { message: t('validators.numbersOnly', { field: fieldName }) })
-        .refine((val) => (length ? val.length === length : true), { message: t('validators.minDigits', { field: fieldName, length: length }) });
+const stringNumeric = (fieldName: string, t: TransFn, minLength: number, maxLength: number) =>
+    baseStringField(fieldName, t)
+        .regex(/^\d+$/, { message: t('validators.numbersOnly', { field: fieldName }), })
+        .min(minLength, { message: t('validators.minDigits', { field: fieldName, length: minLength }), })
+        .max(maxLength, { message: t('validators.maxDigits', { field: fieldName, length: maxLength }), });
 
-const stringMobileNumber = (fieldName: string, t: TransFn, length?: number) =>
-    z.string()
-        .min(1, { message: t('validators.required', { field: fieldName }) })
-        .max(length || Infinity, { message: t('validators.maxDigits', { field: fieldName, length: length }) })
-        .regex(/^\d*$/, { message: t('validators.numbersOnly', { field: fieldName }) })
-        .refine((val) => (length ? val.length === length : true), { message: t('validators.minDigits', { field: fieldName, length: length }) });
+
+const stringMobileNumber = (fieldName: string, t: TransFn, minLength: number, maxLength: number) =>
+    baseStringField(fieldName, t)
+        .regex(/^\d+$/, { message: t('validators.numbersOnly', { field: fieldName }), })
+        .min(minLength, { message: t('validators.minDigits', { field: fieldName, length: minLength }), })
+        .max(maxLength, { message: t('validators.maxDigits', { field: fieldName, length: maxLength }), });
 
 const stringDateFormat = (t: TransFn) =>
-    z.string()
-        .min(1, { message: t('validators.required', { field: 'Date' }) })
+    z.string({
+        required_error: t('validators.required', { field: 'Date' }),
+        invalid_type_error: t('validators.required', { field: 'Date' }),
+    }).min(1, { message: t('validators.required', { field: 'Date' }) })
         .regex(/^\d{2}-\d{2}-\d{4}$/, { message: t('validators.dateFormat', { field: 'Date' }) });
 
-const stringEmail = (t: TransFn) =>
-    z.string()
-        .min(1, { message: t('validators.required', { field: 'Email' }) })
-        .email({ message: t('validators.invalid', { field: 'Email Address' }) });
+const stringEmail = (t: TransFn, minLength: number, maxLength: number) =>
+    z.string({
+        required_error: t('validators.required', { field: 'Email' }),
+        invalid_type_error: t('validators.required', { field: 'Email' }),
+    }).min(1, { message: t('validators.required', { field: 'Email' }) })
+        .min(minLength, { message: t('validators.minLength', { field: 'Email', length: minLength }), })
+        .max(maxLength, { message: t('validators.maxLength', { field: 'Email', length: maxLength }), })
+        .email({ message: t('validators.invalid', { field: 'Email Address' }), });
 
-const stringPassword = (fieldName: string, t: TransFn, length?: number) =>
-    z.string()
-        .min(2, { message: t('validators.minLength', { field: fieldName, length: 2 }) })
-        .max(length ?? 100, { message: t('validators.maxLength', { field: fieldName, length: length ?? 100 }) });
+const stringPassword = (fieldName: string, t: TransFn, minLength: number, maxLength: number) =>
+    baseStringField(fieldName, t)
+        .min(minLength, { message: t('validators.minLength', { field: fieldName, length: minLength }) })
+        .max(maxLength, { message: t('validators.maxLength', { field: fieldName, length: maxLength }) });
 
-const requiredStringField = (fieldName: string, t: TransFn) =>
-    z.string({ required_error: t('validators.required', { field: fieldName }) })
-        .min(1, { message: t('validators.required', { field: fieldName }) });
+const requiredStringField = (fieldName: string, t: TransFn, minLength: number, maxLength: number) =>
+    baseStringField(fieldName, t)
+        .min(minLength, { message: t('validators.minLength', { field: fieldName, length: minLength }) })
+        .max(maxLength, { message: t('validators.maxLength', { field: fieldName, length: maxLength }) });
 
 const booleanField = (fieldName: string, t: TransFn, required = false) =>
     required
@@ -64,43 +89,44 @@ const booleanField = (fieldName: string, t: TransFn, required = false) =>
         })
         : z.literal(true).or(z.literal(false));
 
-export const fileUploadField = (fieldName: string, t: TransFn) =>
-    z.string({
+const fileUploadField = (fieldName: string, t: TransFn) =>
+    z.array(z.string({
         required_error: t('validators.required', { field: fieldName }),
-    }).min(1, { message: t('validators.required', { field: fieldName }) });
+        invalid_type_error: t('validators.required', { field: fieldName }),
+    })).min(1, { message: t('validators.required', { field: fieldName }) });
 
-type TransFn = (key: string, params?: Record<string, unknown>) => string;
 
-
+    
 export const appUser = (t: TransFn) => ({
-    name: stringOnlyAlphabets('Name', t, 2),
-    firstName: stringOnlyAlphabets('First Name', t, 2),
-    lastName: stringOnlyAlphabets('Last Name', t, 2),
-    mobile: stringMobileNumber('Mobile number', t, 10),
+    name: stringOnlyAlphabets('Name', t, 2, 100),
+    firstName: stringOnlyAlphabets('First Name', t, 2, 100),
+    lastName: stringOnlyAlphabets('Last Name', t, 2, 100),
+    mobile: stringMobileNumber('Mobile number', t, 10, 10),
     mobileVerified: booleanField('Mobile Verified', t),
-    emailId: stringEmail(t),
+    emailId: stringEmail(t, 5, 100),
     emailVerified: booleanField('Email Verified', t),
-    shopName: stringOnlyAlphabets('Shop Name', t, 2),
-    password: stringPassword('Password', t, 100),
-    pincode: stringNumeric('Pincode', t, 6),
-    state: stringOnlyAlphabets('State', t, 2),
-    district: stringOnlyAlphabets('District', t, 2),
-    address: stringAlphanumericWithSpecialChars('Address Line 1', t, 2),
-    addressLine: stringAlphanumericWithSpecialChars('Address Line 2', t, 2),
-    defaultLanguage: stringOnlyAlphabets('Default Language', t,2),
-    verifyShop: requiredStringField('Verify Shop', t),
-    gst: gstField(t),
+    shopName: stringOnlyAlphabets('Shop Name', t, 2, 100),
+    password: stringPassword('Password', t, 2, 100),
+    pincode: stringNumeric('Pincode', t, 6, 6),
+    state: stringAlphanumeric('State', t, 0, 100),
+    district: stringAlphanumeric('District', t, 0, 100),
+    address: stringAlphanumericWithSpecialChars('Address Line 1', t, 2, 10000),
+    addressLine: stringAlphanumericWithSpecialChars('Address Line 2', t, 2, 10000),
+    defaultLanguage: stringOnlyAlphabets('Default Language', t, 2, 10),
+    verifyShop: requiredStringField('Verify Shop', t, 2, 100),
+    gst: gstField(t, 15, 15),
     gstCertificate: fileUploadField('GST Certificate', t),
     photoShopFront: fileUploadField('Photo of Shop Front', t),
     visitingCard: fileUploadField('Visiting Card', t),
     cheque: fileUploadField('Cancelled Cheque', t),
+    gstOtp: stringOnlyAlphabets('GST OTP', t, 0, 100),
     isActive: booleanField('Active Status', t),
     isAdmin: booleanField('Admin Status', t),
     photoAttachment: fileUploadField('Photo Attachment', t),
-    role: requiredStringField("Role", t),
-    publish: requiredStringField('Publish', t),
-    reportedTo: requiredStringField("Reported To", t),
-    reportedBy: requiredStringField("Reported By", t),
+    role: requiredStringField("Role", t, 2, 100),
+    publish: requiredStringField('Publish', t, 2, 100),
+    reportedTo: requiredStringField("Reported To", t, 2, 100),
+    reportedBy: requiredStringField("Reported By", t, 2, 100),
     lastLogin: stringDateFormat(t),
-    totalPlot: stringNumeric('Total Plot', t),
+    totalPlot: stringNumeric('Total Plot', t, 1, 100),
 });
