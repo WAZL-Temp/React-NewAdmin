@@ -1020,12 +1020,13 @@ export default function AppUsersEdit() {
                               </div>
                               <FileUploadMain
                                 modelName="AppUser"
-                                propName="gstCertificate"
+                                propName="GstCertificate"
                                 onFileUpload={(files) => handleFileUpload(files, 'gstCertificate')}
                                 accept=".jpg,.jpeg,.png,.pdf"
                                 initialData={item.gstCertificate ?? null}
                                 maxFileNumber={2}
-                              />                             
+                                error={errors.gstCertificate}
+                              />
                             </div>
                           )}
 

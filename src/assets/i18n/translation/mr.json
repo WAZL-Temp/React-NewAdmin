@@ -1,18 +1,20 @@
 {
   "validators": {
     "required": "{{field}} आवश्यक आहे",
-  "invalid": "अवैध {{field}}",
-  "minDigits": "{{field}} मध्ये किमान {{length}} अंक असावेत",
-  "maxDigits": "{{field}} मध्ये जास्तीत जास्त {{length}} अंक असावेत",
-  "alphabetsOnly": "{{field}} मध्ये फक्त अक्षरे असावीत",
-  "alphanumeric": "{{field}} मध्ये फक्त अक्षरे, अंक आणि विशेष चिन्हे असावीत",
-  "numbersOnly": "{{field}} मध्ये फक्त अंक असावेत",
-  "exactLength": "{{field}} नेमके {{length}} वर्णांचे असावे",
-  "dateFormat": "{{field}} चा फॉर्मॅट MM-DD-YYYY असावा",
-  "stringRequired": "{{field}} एक स्ट्रिंग असावी",
-  "minLength": "{{field}} मध्ये किमान {{length}} अक्षरे असावीत",
-  "maxLength": "{{field}} मध्ये जास्तीत जास्त {{length}} अक्षरे असावीत",
-  "specialCharsOnly": "{{field}} मध्ये फक्त विशेष चिन्हे असावीत"
+    "invalid": "अवैध {{field}}",
+    "minDigits": "{{field}} मध्ये किमान {{length}} अंक असावेत",
+    "maxDigits": "{{field}} मध्ये जास्तीत जास्त {{length}} अंक असावेत",
+    "alphabetsOnly": "{{field}} मध्ये फक्त अक्षरे असावीत",
+    "alphanumeric": "{{field}} मध्ये फक्त अक्षरे, अंक आणि विशेष चिन्हे असावीत",
+    "numbersOnly": "{{field}} मध्ये फक्त अंक असावेत",
+    "exactLength": "{{field}} नेमके {{length}} वर्णांचे असावे",
+    "dateFormat": "{{field}} चा फॉर्मॅट MM-DD-YYYY असावा",
+    "stringRequired": "{{field}} एक स्ट्रिंग असावी",
+    "minLength": "{{field}} मध्ये किमान {{length}} अक्षरे असावीत",
+    "maxLength": "{{field}} मध्ये जास्तीत जास्त {{length}} अक्षरे असावीत",
+    "specialCharsOnly": "{{field}} मध्ये फक्त विशेष चिन्हे असावीत",
+    "minFiles": "{{field}} साठी किमान {{count}} फाईल्स अपलोड करा",
+    "maxFiles": "{{field}} साठी कमाल {{count}} फाईली अपलोड करा"
   },
   "globals": {
     "english": "इंग्रजी",

@@ -12,29 +12,36 @@ interface FileUploadProps {
   multiple?: boolean
   accept?: string
   maxFileNumber?: number
+  error?: string;
+  required?: boolean;
 }
 
 export default function FileUploadMain({
   initialData,
   onFileUpload,
   modelName,
+  propName,
   multiple = false,
   accept = "",
   maxFileNumber = 100,
+  error,
+  required = false
 }: FileUploadProps) {
   const { t } = useTranslation();
   const [uploadedFiles, setUploadedFiles] = useState<CustomFile[]>([]);
-  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(error ?? null);
   const [isLoadComplete, setIsLoadComplete] = useState<boolean>(false);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const fileUploadService = useFileUploadService(modelName);
-  
+
   useEffect(() => {
     if (!isLoadComplete) {
       if (!initialData || initialData === "[]") {
-        // setUploadedFiles([]);
         setIsLoadComplete(true);
+        if (required) {
+          setUploadError(t("validators.required", { field: propName }));
+        }
         return
       }
 
@@ -47,16 +54,15 @@ export default function FileUploadMain({
             filePath: img.filePath,
             type: img.type,
           }));
-          
+
           setUploadedFiles(formattedFiles);
-        } 
-        // else {
-        //   setUploadedFiles([]);
-        // }
+          if (required && formattedFiles.length === 0) {
+            setUploadError(t("validators.required", { field: propName }));
+          }
+        }
         setIsLoadComplete(true);
       } catch (error) {
         console.error("Failed to parse image JSON:", error);
-        // setUploadedFiles([]);
         setIsLoadComplete(true);
       }
     }
@@ -102,9 +108,16 @@ export default function FileUploadMain({
       }
     }
 
-    const allFiles = [...uploadedFiles, ...newUploadedFiles];    
+    const allFiles = [...uploadedFiles, ...newUploadedFiles];
     setUploadedFiles(allFiles);
     onFileUpload(allFiles);
+
+    if (required && allFiles.length === 0) {
+      setUploadError(t("validators.required", { field: propName }));
+    } else {
+      setUploadError(null);
+    }
+
     if (event.target) {
       event.target.value = ""
     }
@@ -223,7 +236,13 @@ export default function FileUploadMain({
         ))}
       </ul>
 
-      {uploadError && <p className="text-sm text-[var(--color-danger)] mt-2">{uploadError}</p>}
+      {uploadError && <p className="text-xs text-[var(--color-danger)] mt-2">{uploadError}</p>}
+
+      {/* {error && (
+        <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+          {error}
+        </p>
+      )} */}
     </div>
   )
 }
