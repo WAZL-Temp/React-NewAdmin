@@ -12,6 +12,7 @@ interface FileUploadProps {
   multiple?: boolean
   accept?: string
   maxFileNumber?: number
+  minFileNumber?:number
   error?: string;
   required?: boolean;
 }
@@ -24,6 +25,7 @@ export default function FileUploadMain({
   multiple = false,
   accept = "",
   maxFileNumber = 100,
+  minFileNumber = 0,
   error,
   required = false
 }: FileUploadProps) {
@@ -42,11 +44,11 @@ export default function FileUploadMain({
         if (required) {
           setUploadError(t("validators.required", { field: propName }));
         }
-        return
+        // return
       }
 
       try {
-        const parsedFiles = Array.isArray(initialData) ? initialData : JSON.parse(initialData);
+        const parsedFiles = Array.isArray(initialData) ? initialData :  JSON.parse(initialData || "[]");
 
         if (Array.isArray(parsedFiles)) {
           const formattedFiles = parsedFiles.map((img) => ({
@@ -58,6 +60,12 @@ export default function FileUploadMain({
           setUploadedFiles(formattedFiles);
           if (required && formattedFiles.length === 0) {
             setUploadError(t("validators.required", { field: propName }));
+          }
+          if (required && minFileNumber>0 && formattedFiles.length < minFileNumber) {
+            setUploadError(t("validators.minFiles", { field: propName }));
+          }
+          if (required && maxFileNumber>0 && formattedFiles.length > maxFileNumber) {
+            setUploadError(t("validators.maxFiles", { field: propName }));
           }
         }
         setIsLoadComplete(true);
@@ -185,6 +193,32 @@ export default function FileUploadMain({
               className="hidden"
               multiple={multiple}
               maxLength={maxFileNumber}
+              minLength={minFileNumber}
+
+            />
+          </label>
+        </div>
+      )}
+      {minFileNumber < uploadedFiles.length && (
+        <div
+          className={`relative border-2 border-dashed rounded-lg p-2 w-full transition-colors flex justify-center ${isDragging ? "border-blue-500 bg-[#eff6ff]" : "border-[var(--color-border)] hover-border-custom"
+            }`}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+        >
+          <label className="flex items-center gap-1 cursor-pointer">
+            <FiUploadCloud className="w-5 h-5 text-[var(--color-primary)]" />
+            <span className="text-[10px] w-[180px] text-[var(--color-primary)]">{t("globals.browseFileToUpload")}</span>
+            <InputText
+              ref={fileInputRef}
+              type="file"
+              accept={accept}
+              onChange={handleFileUpload}
+              className="hidden"
+              multiple={multiple}
+              maxLength={maxFileNumber}
+              minLength={minFileNumber}
             />
           </label>
         </div>
@@ -238,11 +272,11 @@ export default function FileUploadMain({
 
       {uploadError && <p className="text-xs text-[var(--color-danger)] mt-2">{uploadError}</p>}
 
-      {/* {error && (
+      {error && (
         <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
           {error}
         </p>
-      )} */}
+      )}
     </div>
   )
 }
