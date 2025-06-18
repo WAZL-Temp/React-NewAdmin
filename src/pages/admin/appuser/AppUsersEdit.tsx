@@ -1359,6 +1359,11 @@ export default function AppUsersEdit() {
                                 placeholder={t("appUsers.columns.fields.lastLogin")}
                                 className="calendardark text-sm rounded-md py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
                               /> */}
+                              {errors.lastLogin && (
+                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                                  {errors.lastLogin}
+                                </p>
+                              )}
                             </div>
                           )}
 
@@ -1383,6 +1388,11 @@ export default function AppUsersEdit() {
                                 maxLength={10}
                                 onChange={(e) => handleInputChange('defaultLanguage', e.target.value)}
                               />
+                              {errors.defaultLanguage && (
+                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
+                                  {errors.defaultLanguage}
+                                </p>
+                              )}
                             </div>
                           )}
 
@@ -1432,7 +1442,7 @@ export default function AppUsersEdit() {
                                 className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
                                 onChange={(e) => handleInputChange('totalPlot', e.target.value)}
                               />
-                               {errors.totalPlot && (
+                              {errors.totalPlot && (
                                 <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
                                   {errors.totalPlot}
                                 </p>
