@@ -14,7 +14,9 @@
     "maxLength": "{{field}} मध्ये जास्तीत जास्त {{length}} अक्षरे असावीत",
     "specialCharsOnly": "{{field}} मध्ये फक्त विशेष चिन्हे असावीत",
     "minFiles": "{{field}} साठी किमान {{count}} फाईल्स अपलोड करा",
-    "maxFiles": "{{field}} साठी कमाल {{count}} फाईली अपलोड करा"
+    "maxFiles": "{{field}} साठी कमाल {{count}} फाईली अपलोड करा",
+    "fileSizeExceedsMax": "{{filename}} अनुमत कमाल आकार {{maxFileSize}}MB पेक्षा मोठा आहे.",
+    "fileSizeBelowMin": "{{filename}} आवश्यक किमान आकार {{minFileSize}}KB पेक्षा लहान आहे."
   },
   "globals": {
     "english": "इंग्रजी",

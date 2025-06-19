@@ -493,7 +493,7 @@ export default function AppUsersEdit() {
     const schema = appUserSchema[controlName as keyof typeof appUserSchema];
 
     if (schema) {
-      const result = schema.safeParse(e.value);
+      const result = schema.safeParse(updatedValue);
 
       if (result.success) {
         setErrors((prev) => ({ ...prev, [controlName]: '' }));
@@ -1146,7 +1146,7 @@ export default function AppUsersEdit() {
                                     onChange={(e) => handleRadioChange(e, "isAdmin", true)}
                                     checked={item.isAdmin === true}
                                   />
-                                  <label htmlFor="isAdminTrue" className="ml-2 text-gray-700 text-sm">True</label>
+                                  <label htmlFor="isAdminTrue" className="ml-2 text-[var(--color-dark)] text-sm">True</label>
                                 </div>
                                 <div className="flex items-center py-2">
                                   <RadioButton
@@ -1156,7 +1156,7 @@ export default function AppUsersEdit() {
                                     onChange={(e) => handleRadioChange(e, "isAdmin", true)}
                                     checked={item.isAdmin === false}
                                   />
-                                  <label htmlFor="isAdminFalse" className="ml-2 text-gray-700 text-sm">False</label>
+                                  <label htmlFor="isAdminFalse" className="ml-2 text-[var(--color-dark)] text-sm">False</label>
                                 </div>
                               </div>
                               <FormFieldError field="isAdmin" errors={errors} />
@@ -1450,34 +1450,32 @@ export default function AppUsersEdit() {
                           <div className="flex flex-col">
                             <div className="flex items-center">
                               <label
-                                htmlFor="gender"
+                                htmlFor={t("appUsers.columns.fields.gender")}
                                 className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]"
                               >
-                                Gender
+                                {t("appUsers.columns.fields.gender")}
                               </label>
-                              <span className="text-[var(--color-danger)] pl-2">*</span>
-                              <TooltipWithText text="Gender" />
+                              <TooltipWithText text={t("appUsers.columns.fields.gender")} />
                             </div>
                             <div className='flex'>
                               <div className="flex items-center px-2">
-                                <RadioButton
-                                  inputId="genderMale"
-                                  name="gender"
-                                  value="Male"
-                                  onChange={(e) => handleRadioChange(e, "gender")}
-                                  checked={item.gender === "Male"}
-                                />
-                                <label htmlFor="genderMale" className="ml-2 text-gray-700 text-sm">Male</label>
-                              </div>
-                              <div className="flex items-center py-2">
-                                <RadioButton
-                                  inputId="genderFemale"
-                                  name="gender"
-                                  value="Female"
-                                  onChange={(e) => handleRadioChange(e, "gender")}
-                                  checked={item.gender === "Female"}
-                                />
-                                <label htmlFor="genderFemale" className="ml-2 text-gray-700 text-sm">Female</label>
+                                {["Male", "Female", "Other"].map((genderValue) => (
+                                  <div key={genderValue} className="flex items-center">
+                                    <RadioButton
+                                      inputId={`gender-${genderValue}`}
+                                      name="gender"
+                                      value={genderValue}
+                                      onChange={(e) => handleRadioChange(e, "gender")}
+                                      checked={item.gender === genderValue}
+                                    />
+                                    <label
+                                      htmlFor={`gender-${genderValue}`}
+                                      className="mx-2 text-[var(--color-dark)] text-sm"
+                                    >
+                                      {genderValue}
+                                    </label>
+                                  </div>
+                                ))}
                               </div>
                             </div>
                             <FormFieldError field="gender" errors={errors} />

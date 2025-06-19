@@ -859,7 +859,7 @@ code {
 
 .dropdowndark .p-dropdown-label {
   /* background: var(--color-white) !important; */
-  /* color: var(--color-dark) !important; */
+  color: var(--color-dark) !important;
   /* color: #9CA3AF !important; */
 }
 
