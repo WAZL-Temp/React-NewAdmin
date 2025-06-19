@@ -11,8 +11,10 @@ interface FileUploadProps {
   propName: string
   multiple?: boolean
   accept?: string
+  maxFileSize?: number
+  minFileSize?: number
   maxFileNumber?: number
-  minFileNumber?:number
+  minFileNumber?: number
   error?: string;
   required?: boolean;
 }
@@ -24,6 +26,8 @@ export default function FileUploadMain({
   propName,
   multiple = false,
   accept = "",
+  maxFileSize = 52428800,
+  minFileSize = 1000,
   maxFileNumber = 100,
   minFileNumber = 0,
   error,
@@ -38,17 +42,34 @@ export default function FileUploadMain({
   const fileUploadService = useFileUploadService(modelName);
 
   useEffect(() => {
+    const isEmpty = uploadedFiles.length === 0;
+
+    if (required && isEmpty) {
+      setUploadError(t("validators.required", { field: propName }));
+    } else {
+      setUploadError(null);
+    }
+
+    if (required && minFileNumber > 0 && uploadedFiles.length < minFileNumber) {
+      setUploadError(t("validators.minFiles", { field: propName, count: minFileNumber }));
+    }
+    if (required && maxFileNumber > 0 && uploadedFiles.length > maxFileNumber) {
+      setUploadError(t("validators.maxFiles", { field: propName, count: maxFileNumber }));
+    }
+  }, [uploadedFiles, required, propName, t, minFileNumber, maxFileNumber]);
+
+
+  useEffect(() => {
     if (!isLoadComplete) {
       if (!initialData || initialData === "[]") {
         setIsLoadComplete(true);
         if (required) {
           setUploadError(t("validators.required", { field: propName }));
         }
-        // return
       }
 
       try {
-        const parsedFiles = Array.isArray(initialData) ? initialData :  JSON.parse(initialData || "[]");
+        const parsedFiles = Array.isArray(initialData) ? initialData : JSON.parse(initialData || "[]");
 
         if (Array.isArray(parsedFiles)) {
           const formattedFiles = parsedFiles.map((img) => ({
@@ -58,15 +79,6 @@ export default function FileUploadMain({
           }));
 
           setUploadedFiles(formattedFiles);
-          if (required && formattedFiles.length === 0) {
-            setUploadError(t("validators.required", { field: propName }));
-          }
-          if (required && minFileNumber>0 && formattedFiles.length < minFileNumber) {
-            setUploadError(t("validators.minFiles", { field: propName }));
-          }
-          if (required && maxFileNumber>0 && formattedFiles.length > maxFileNumber) {
-            setUploadError(t("validators.maxFiles", { field: propName }));
-          }
         }
         setIsLoadComplete(true);
       } catch (error) {
@@ -74,7 +86,7 @@ export default function FileUploadMain({
         setIsLoadComplete(true);
       }
     }
-  }, [initialData, isLoadComplete])
+  }, [initialData, isLoadComplete, propName, required, t])
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -84,6 +96,15 @@ export default function FileUploadMain({
     const newUploadedFiles: CustomFile[] = [];
 
     for (const file of filesArray) {
+      if (file.size > maxFileSize) {
+        setUploadError(`"${file.name}" exceeds the maximum allowed size of ${Math.floor(maxFileSize / 1024 / 1024)}MB.`);
+        continue;
+      }
+      if (file.size < minFileSize) {
+        setUploadError(`"${file.name}" is smaller than the minimum required size of ${Math.ceil(minFileSize / 1024)}KB.`);
+        continue;
+      }
+      
       try {
         const tempFile: CustomFile = {
           fileName: file.name,
@@ -174,7 +195,7 @@ export default function FileUploadMain({
 
   return (
     <div className="file-attachments space-y-4">
-      {maxFileNumber > uploadedFiles.length && (
+      {uploadedFiles.length < maxFileNumber && (
         <div
           className={`relative border-2 border-dashed rounded-lg p-2 w-full transition-colors flex justify-center ${isDragging ? "border-blue-500 bg-[#eff6ff]" : "border-[var(--color-border)] hover-border-custom"
             }`}
@@ -192,31 +213,7 @@ export default function FileUploadMain({
               onChange={handleFileUpload}
               className="hidden"
               multiple={multiple}
-              maxLength={maxFileNumber}
               required={required}
-              minLength={minFileNumber}
-            />
-          </label>
-        </div>
-      )}
-      {minFileNumber < uploadedFiles.length && (
-        <div
-          className={`relative border-2 border-dashed rounded-lg p-2 w-full transition-colors flex justify-center ${isDragging ? "border-blue-500 bg-[#eff6ff]" : "border-[var(--color-border)] hover-border-custom"
-            }`}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-        >
-          <label className="flex items-center gap-1 cursor-pointer">
-            <FiUploadCloud className="w-5 h-5 text-[var(--color-primary)]" />
-            <span className="text-[10px] w-[180px] text-[var(--color-primary)]">{t("globals.browseFileToUpload")}</span>
-            <InputText
-              ref={fileInputRef}
-              type="file"
-              accept={accept}
-              onChange={handleFileUpload}
-              className="hidden"
-              multiple={multiple}
               maxLength={maxFileNumber}
               minLength={minFileNumber}
             />
@@ -271,12 +268,6 @@ export default function FileUploadMain({
       </ul>
 
       {uploadError && <p className="text-xs text-[var(--color-danger)] mt-2">{uploadError}</p>}
-
-      {error && (
-        <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-          {error}
-        </p>
-      )}
     </div>
   )
 }

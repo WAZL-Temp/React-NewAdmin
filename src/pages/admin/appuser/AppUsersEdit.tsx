@@ -15,6 +15,7 @@ import { useListQuery } from '../../../store/useListQuery';
 import { getData, useFetchDataEnum } from '../../../sharedBase/lookupService';
 import Loader from '../../../components/Loader';
 import { appUser } from '../../../schema/appuser';
+import FormFieldError from '../../../components/FormFieldError';
 
 export default function AppUsersEdit() {
   const { id } = useParams<{ id: string }>();
@@ -103,6 +104,7 @@ export default function AppUsersEdit() {
       reportedBy: "",
       reportedByLabel: '',
       reportedTo: undefined,
+      gender: undefined
     };
   }
 
@@ -481,7 +483,27 @@ export default function AppUsersEdit() {
   };
 
   const handleRadioChange = (e: RadioButtonChangeEvent, controlName: string, isBoolean = false) => {
-    selectRadioEnum(e, controlName, item, setItem, isBoolean);
+    const updatedValue = selectRadioEnum(e, controlName, item, setItem, isBoolean);
+
+    setItem((prev) => ({
+      ...prev,
+      [controlName]: updatedValue,
+    }));
+
+    const schema = appUserSchema[controlName as keyof typeof appUserSchema];
+
+    if (schema) {
+      const result = schema.safeParse(e.value);
+
+      if (result.success) {
+        setErrors((prev) => ({ ...prev, [controlName]: '' }));
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          [controlName]: result.error.errors[0].message,
+        }));
+      }
+    }
   };
 
   return (
@@ -532,11 +554,7 @@ export default function AppUsersEdit() {
                                 maxLength={100}
                                 required
                               />
-                              {errors.name && (
-                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                  {errors.name}
-                                </p>
-                              )}
+                              <FormFieldError field="name" errors={errors} />
                             </div>
                           )}
 
@@ -562,11 +580,7 @@ export default function AppUsersEdit() {
                                 maxLength={100}
                                 onChange={(e) => handleInputChange('firstName', e.target.value)}
                               />
-                              {errors.firstName && (
-                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                  {errors.firstName}
-                                </p>
-                              )}
+                              <FormFieldError field="firstName" errors={errors} />
                             </div>
                           )}
 
@@ -592,11 +606,7 @@ export default function AppUsersEdit() {
                                 maxLength={100}
                                 onChange={(e) => handleInputChange('lastName', e.target.value)}
                               />
-                              {errors.lastName && (
-                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                  {errors.lastName}
-                                </p>
-                              )}
+                              <FormFieldError field="lastName" errors={errors} />
                             </div>
                           )}
 
@@ -624,11 +634,7 @@ export default function AppUsersEdit() {
                                 onChange={(e) => handleInputChange('mobile', e.target.value)}
                                 required
                               />
-                              {errors.mobile && (
-                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                  {errors.mobile}
-                                </p>
-                              )}
+                              <FormFieldError field="mobile" errors={errors} />
                             </div>
                           )}
 
@@ -655,11 +661,7 @@ export default function AppUsersEdit() {
                                 className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
                                 required
                               />
-                              {errors.mobileVerified && (
-                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                  {errors.mobileVerified}
-                                </p>
-                              )}
+                              <FormFieldError field="mobileVerified" errors={errors} />
                             </div>
                           )}
                         </div>
@@ -690,11 +692,7 @@ export default function AppUsersEdit() {
                                 maxLength={100}
                                 onChange={(e) => handleInputChange('emailId', e.target.value)}
                               />
-                              {errors.emailId && (
-                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                  {errors.emailId}
-                                </p>
-                              )}
+                              <FormFieldError field="emailId" errors={errors} />
                             </div>
                           )}
 
@@ -719,11 +717,7 @@ export default function AppUsersEdit() {
                                 }
                                 className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
                               />
-                              {errors.emailVerified && (
-                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                  {errors.emailVerified}
-                                </p>
-                              )}
+                              <FormFieldError field="emailVerified" errors={errors} />
                             </div>
                           )}
 
@@ -749,11 +743,7 @@ export default function AppUsersEdit() {
                                 maxLength={100}
                                 onChange={(e) => handleInputChange('shopName', e.target.value)}
                               />
-                              {errors.shopName && (
-                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                  {errors.shopName}
-                                </p>
-                              )}
+                              <FormFieldError field="shopName" errors={errors} />
                             </div>
                           )}
 
@@ -779,11 +769,7 @@ export default function AppUsersEdit() {
                                 maxLength={100}
                                 onChange={(e) => handleInputChange('password', e.target.value)}
                               />
-                              {errors.password && (
-                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                  {errors.password}
-                                </p>
-                              )}
+                              <FormFieldError field="password" errors={errors} />
                             </div>
                           )}
                         </div>
@@ -814,11 +800,7 @@ export default function AppUsersEdit() {
                                 maxLength={6}
                                 onChange={(e) => handleInputChange('pincode', e.target.value)}
                               />
-                              {errors.pincode && (
-                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                  {errors.pincode}
-                                </p>
-                              )}
+                              <FormFieldError field="pincode" errors={errors} />
                             </div>
                           )}
 
@@ -843,11 +825,7 @@ export default function AppUsersEdit() {
                                 maxLength={100}
                                 onChange={(e) => handleInputChange('state', e.target.value)}
                               />
-                              {errors.state && (
-                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                  {errors.state}
-                                </p>
-                              )}
+                              <FormFieldError field="state" errors={errors} />
                             </div>
                           )}
 
@@ -872,11 +850,7 @@ export default function AppUsersEdit() {
                                 maxLength={100}
                                 onChange={(e) => handleInputChange('district', e.target.value)}
                               />
-                              {errors.district && (
-                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                  {errors.district}
-                                </p>
-                              )}
+                              <FormFieldError field="district" errors={errors} />
                             </div>
                           )}
 
@@ -901,11 +875,7 @@ export default function AppUsersEdit() {
                                 maxLength={10000}
                                 onChange={(e) => handleInputChange('address', e.target.value)}
                               />
-                              {errors.address && (
-                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                  {errors.address}
-                                </p>
-                              )}
+                              <FormFieldError field="address" errors={errors} />
                             </div>
                           )}
 
@@ -930,11 +900,7 @@ export default function AppUsersEdit() {
                                 maxLength={10000}
                                 onChange={(e) => handleInputChange('addressLine', e.target.value)}
                               />
-                              {errors.addressLine && (
-                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                  {errors.addressLine}
-                                </p>
-                              )}
+                              <FormFieldError field="addressLine" errors={errors} />
                             </div>
                           )}
                         </div>
@@ -969,11 +935,7 @@ export default function AppUsersEdit() {
                                 appendTo="self"
                                 className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)]"
                               />
-                              {errors.verifyShop && (
-                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                  {errors.verifyShop}
-                                </p>
-                              )}
+                              <FormFieldError field="verifyShop" errors={errors} />
                             </div>
                           )}
 
@@ -999,11 +961,7 @@ export default function AppUsersEdit() {
                                 maxLength={100}
                                 onChange={(e) => handleInputChange('gst', e.target.value)}
                               />
-                              {errors.gst && (
-                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                  {errors.gst}
-                                </p>
-                              )}
+                              <FormFieldError field="gst" errors={errors} />
                             </div>
                           )}
 
@@ -1025,7 +983,7 @@ export default function AppUsersEdit() {
                                 accept=".jpg,.jpeg,.png,.pdf"
                                 initialData={item.gstCertificate ?? null}
                                 maxFileNumber={2}
-                                error={errors.gstCertificate}                                
+                                error={errors.gstCertificate}
                               />
                             </div>
                           )}
@@ -1074,6 +1032,7 @@ export default function AppUsersEdit() {
                                 maxFileNumber={2}
                                 error={errors.visitingCard}
                                 minFileNumber={2}
+                                required
                               />
                             </div>
                           )}
@@ -1124,11 +1083,7 @@ export default function AppUsersEdit() {
                                 onChange={(e) => handleInputChange('gstOtp', e.target.value)}
                                 required={item.isActive}
                               />
-                              {errors.gstOtp && (
-                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                  {errors.gstOtp}
-                                </p>
-                              )}
+                              <FormFieldError field="gstOtp" errors={errors} />
                             </div>
                           )}
 
@@ -1157,11 +1112,7 @@ export default function AppUsersEdit() {
                                   required
                                 />
                               </div>
-                              {errors.isActive && (
-                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                  {errors.isActive}
-                                </p>
-                              )}
+                              <FormFieldError field="isActive" errors={errors} />
                             </div>
                           )}
 
@@ -1208,11 +1159,7 @@ export default function AppUsersEdit() {
                                   <label htmlFor="isAdminFalse" className="ml-2 text-gray-700 text-sm">False</label>
                                 </div>
                               </div>
-                              {errors.isAdmin && (
-                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                  {errors.isAdmin}
-                                </p>
-                              )}
+                              <FormFieldError field="isAdmin" errors={errors} />
                             </div>
                           )}
 
@@ -1227,18 +1174,17 @@ export default function AppUsersEdit() {
                                 </label>
                                 <TooltipWithText text={t("appUsers.columns.fields.hasImpersonateAccess")} />
                               </div>
-                              <div className="">
-                                <Checkbox
-                                  inputId="hasImpersonateAccess"
-                                  name="hasImpersonateAccess"
-                                  value="hasImpersonateAccess"
-                                  checked={item.hasImpersonateAccess ?? false}
-                                  onChange={(e) =>
-                                    handleCheckboxChange(e, "hasImpersonateAccess")
-                                  }
-                                  className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
-                                />
-                              </div>
+                              <Checkbox
+                                inputId="hasImpersonateAccess"
+                                name="hasImpersonateAccess"
+                                value="hasImpersonateAccess"
+                                checked={item.hasImpersonateAccess ?? false}
+                                onChange={(e) =>
+                                  handleCheckboxChange(e, "hasImpersonateAccess")
+                                }
+                                className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                              />
+                              <FormFieldError field="hasImpersonateAccess" errors={errors} />
                             </div>
                           )}
 
@@ -1292,11 +1238,7 @@ export default function AppUsersEdit() {
                                 highlightOnSelect={false}
                                 appendTo="self"
                               />
-                              {errors.role && (
-                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                  {errors.role}
-                                </p>
-                              )}
+                              <FormFieldError field="role" errors={errors} />
                             </div>
                           )}
 
@@ -1327,11 +1269,7 @@ export default function AppUsersEdit() {
                                 required
                                 appendTo="self"
                               />
-                              {errors.publish && (
-                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                  {errors.publish}
-                                </p>
-                              )}
+                              <FormFieldError field="publish" errors={errors} />
                             </div>
                           )}
 
@@ -1376,11 +1314,7 @@ export default function AppUsersEdit() {
                                 placeholder={t("appUsers.columns.fields.lastLogin")}
                                 className="calendardark text-sm rounded-md py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
                               /> */}
-                              {errors.lastLogin && (
-                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                  {errors.lastLogin}
-                                </p>
-                              )}
+                              <FormFieldError field="lastLogin" errors={errors} />
                             </div>
                           )}
 
@@ -1405,11 +1339,7 @@ export default function AppUsersEdit() {
                                 maxLength={10}
                                 onChange={(e) => handleInputChange('defaultLanguage', e.target.value)}
                               />
-                              {errors.defaultLanguage && (
-                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                  {errors.defaultLanguage}
-                                </p>
-                              )}
+                              <FormFieldError field="defaultLanguage" errors={errors} />
                             </div>
                           )}
 
@@ -1424,18 +1354,17 @@ export default function AppUsersEdit() {
                                 </label>
                                 <TooltipWithText text="IsPremiumUser" />
                               </div>
-                              <div className="">
-                                <Checkbox
-                                  inputId="isPremiumUser"
-                                  name="isPremiumUser"
-                                  value="isPremiumUser"
-                                  checked={item.isPremiumUser ?? false}
-                                  onChange={(e) =>
-                                    handleCheckboxChange(e, "isPremiumUser")
-                                  }
-                                  className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
-                                />
-                              </div>
+                              <Checkbox
+                                inputId="isPremiumUser"
+                                name="isPremiumUser"
+                                value="isPremiumUser"
+                                checked={item.isPremiumUser ?? false}
+                                onChange={(e) =>
+                                  handleCheckboxChange(e, "isPremiumUser")
+                                }
+                                className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                              />
+                              <FormFieldError field="isPremiumUser" errors={errors} />
                             </div>
                           )}
 
@@ -1459,11 +1388,7 @@ export default function AppUsersEdit() {
                                 className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"
                                 onChange={(e) => handleInputChange('totalPlot', e.target.value)}
                               />
-                              {errors.totalPlot && (
-                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                  {errors.totalPlot}
-                                </p>
-                              )}
+                              <FormFieldError field="totalPlot" errors={errors} />
                             </div>
                           )}
 
@@ -1489,11 +1414,7 @@ export default function AppUsersEdit() {
                                 data-name="reportedTo"
                                 data-required="true"
                               />
-                              {errors.reportedTo && (
-                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                  {errors.reportedTo}
-                                </p>
-                              )}
+                              <FormFieldError field="reportedTo" errors={errors} />
                             </div>
                           )}
 
@@ -1522,11 +1443,7 @@ export default function AppUsersEdit() {
                                 appendTo="self"
                                 required
                               />
-                              {errors.reportedBy && (
-                                <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                  {errors.reportedBy}
-                                </p>
-                              )}
+                              <FormFieldError field="reportedBy" errors={errors} />
                             </div>
                           )}
 
@@ -1563,12 +1480,7 @@ export default function AppUsersEdit() {
                                 <label htmlFor="genderFemale" className="ml-2 text-gray-700 text-sm">Female</label>
                               </div>
                             </div>
-                            {errors.gender && (
-                              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                                {errors.gender}
-                              </p>
-                            )}
-
+                            <FormFieldError field="gender" errors={errors} />
                           </div>
                         </div>
                       </div>
