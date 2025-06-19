@@ -43,10 +43,16 @@ export default function AppUsersEdit() {
   const [listVerifyShop, setListVerifyShop] = useState<EnumDetail[]>([]);
   const [listRole, setListRole] = useState<EnumDetail[]>([]);
   const [listPublish, setListPublish] = useState<EnumDetail[]>([]);
+  const [reportedByList, setReportedByList] = useState<AppUser[]>([]);
+  const [reportedToList, setReportedToList] = useState<AppUser[]>([]);
+  const [genderlist, setGenderList] = useState<EnumDetail[]>([]);
 
   const [selectedVerifyShop, setSelectedVerifyShop] = useState<string | undefined>(undefined);
   const [selectedRole, setSelectedRole] = useState<string | undefined>(undefined);
   const [selectedPublish, setSelectedPublish] = useState<string | undefined>(undefined);
+  const [selectedReportedBy, setSelectedReportedBy] = useState<string | null>(null);
+  const [selectedReportedTo, setSelectedReportedTo] = useState<AppUser[]>([]);
+  const [selectedGender, setSelectedGender] = useState<string | undefined>(undefined);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [dialogMessage, setDialogMessage] = useState('');
@@ -56,13 +62,8 @@ export default function AppUsersEdit() {
   const roleData = useFetchDataEnum("RoleType");
   const publishData = useFetchDataEnum("PublishType");
   const verifyData = useFetchDataEnum("VerifyType");
-
+  const genderData = useFetchDataEnum('Gender');
   // const [calendarLastLogin, setCalendarLastLogin] = useState<Date | null>(null);
-
-  const [reportedByList, setReportedByList] = useState<AppUser[]>([]);
-  const [reportedToList, setReportedToList] = useState<AppUser[]>([]);
-  const [selectedReportedBy, setSelectedReportedBy] = useState<string | null>(null);
-  const [selectedReportedTo, setSelectedReportedTo] = useState<AppUser[]>([]);
 
   function initData(): AppUser {
     return {
@@ -173,6 +174,7 @@ export default function AppUsersEdit() {
       setListRole(roleData?.data);
       setListPublish(publishData?.data);
       setListVerifyShop(verifyData?.data);
+      setGenderList(genderData?.data);
 
       if (!itemData) return;
 
@@ -203,10 +205,19 @@ export default function AppUsersEdit() {
         }
       }
 
+      if (itemData?.gender) {
+        const selectedList = genderData?.data.filter(
+          (a) => a.value === itemData?.gender
+        );
+        if (selectedList.length) {
+          setSelectedGender(selectedList[0].value);
+        }
+      }
+
     };
 
     bindDropDownList();
-  }, [itemData, roleData?.data, publishData?.data, verifyData?.data]);
+  }, [itemData, roleData?.data, publishData?.data, verifyData?.data, genderData?.data]);
 
   const handleInputChange = (field: string, value: string) => {
     setItem((prev) => ({ ...prev, [field]: value }));
@@ -1457,26 +1468,27 @@ export default function AppUsersEdit() {
                               </label>
                               <TooltipWithText text={t("appUsers.columns.fields.gender")} />
                             </div>
-                            <div className='flex'>
-                              <div className="flex items-center px-2">
-                                {["Male", "Female", "Other"].map((genderValue) => (
-                                  <div key={genderValue} className="flex items-center">
-                                    <RadioButton
-                                      inputId={`gender-${genderValue}`}
-                                      name="gender"
-                                      value={genderValue}
-                                      onChange={(e) => handleRadioChange(e, "gender")}
-                                      checked={item.gender === genderValue}
-                                    />
-                                    <label
-                                      htmlFor={`gender-${genderValue}`}
-                                      className="mx-2 text-[var(--color-dark)] text-sm"
-                                    >
-                                      {genderValue}
-                                    </label>
-                                  </div>
-                                ))}
-                              </div>
+                            <div className="flex flex-wrap gap-4 px-2">
+                              {genderlist.map((gender) => (
+                                <div key={gender.id} className="flex items-center space-x-2">
+                                  <RadioButton
+                                    inputId={`gender-${gender.id}`}
+                                    name="gender"
+                                    value={gender.value}
+                                    onChange={(e) => {
+                                      handleRadioChange(e, "gender");
+                                      setSelectedGender(gender.value);
+                                    }}
+                                    checked={selectedGender?.toUpperCase() === (gender.value ?? '').toUpperCase()}
+                                  />
+                                  <label
+                                    htmlFor={`gender-${gender.id}`}
+                                    className="text-sm text-[var(--color-dark)] capitalize"
+                                  >
+                                    {gender.name ? gender.name.toLowerCase().replace(/^\w/, (c) => c.toUpperCase()) : ''}
+                                  </label>
+                                </div>
+                              ))}
                             </div>
                             <FormFieldError field="gender" errors={errors} />
                           </div>
