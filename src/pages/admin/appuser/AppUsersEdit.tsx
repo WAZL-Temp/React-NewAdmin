@@ -1458,40 +1458,42 @@ export default function AppUsersEdit() {
                             </div>
                           )}
 
-                          <div className="flex flex-col">
-                            <div className="flex items-center">
-                              <label
-                                htmlFor={t("appUsers.columns.fields.gender")}
-                                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]"
-                              >
-                                {t("appUsers.columns.fields.gender")}
-                              </label>
-                              <TooltipWithText text={t("appUsers.columns.fields.gender")} />
+                          {!isFieldHidden("gender") && (
+                            <div className="flex flex-col">
+                              <div className="flex items-center">
+                                <label
+                                  htmlFor={t("appUsers.columns.fields.gender")}
+                                  className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]"
+                                >
+                                  {t("appUsers.columns.fields.gender")}
+                                </label>
+                                <TooltipWithText text={t("appUsers.columns.fields.gender")} />
+                              </div>
+                              <div className="flex flex-wrap gap-4 px-2">
+                                {genderlist.map((item) => (
+                                  <div key={item.id} className="flex items-center space-x-2">
+                                    <RadioButton
+                                      inputId={`gender-${item.id}`}
+                                      name="gender"
+                                      value={item.value}
+                                      onChange={(e) => {
+                                        handleRadioChange(e, "gender");
+                                        setSelectedGender(item.value);
+                                      }}
+                                      checked={selectedGender?.toUpperCase() === (item.value ?? '').toUpperCase()}
+                                    />
+                                    <label
+                                      htmlFor={`gender-${item.id}`}
+                                      className="text-sm text-[var(--color-dark)] capitalize"
+                                    >
+                                      {item.name}
+                                    </label>
+                                  </div>
+                                ))}
+                              </div>
+                              <FormFieldError field="gender" errors={errors} />
                             </div>
-                            <div className="flex flex-wrap gap-4 px-2">
-                              {genderlist.map((gender) => (
-                                <div key={gender.id} className="flex items-center space-x-2">
-                                  <RadioButton
-                                    inputId={`gender-${gender.id}`}
-                                    name="gender"
-                                    value={gender.value}
-                                    onChange={(e) => {
-                                      handleRadioChange(e, "gender");
-                                      setSelectedGender(gender.value);
-                                    }}
-                                    checked={selectedGender?.toUpperCase() === (gender.value ?? '').toUpperCase()}
-                                  />
-                                  <label
-                                    htmlFor={`gender-${gender.id}`}
-                                    className="text-sm text-[var(--color-dark)] capitalize"
-                                  >
-                                    {gender.name ? gender.name.toLowerCase().replace(/^\w/, (c) => c.toUpperCase()) : ''}
-                                  </label>
-                                </div>
-                              ))}
-                            </div>
-                            <FormFieldError field="gender" errors={errors} />
-                          </div>
+                          )}
                         </div>
                       </div>
                     </StepperPanel>
