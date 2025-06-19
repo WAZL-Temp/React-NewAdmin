@@ -99,7 +99,7 @@ export default function AppUsersHome() {
             {listHomeUserData && (
               <section className="py-10 flex items-center justify-center">
                 <div className="container mx-auto px-4 sm:px-12">
-                  <h2 className="text-xl sm:text-2xl font-bold text-gray-800 text-center">{t('globals.createdByMe')}</h2>
+                  <h2 className="text-xl sm:text-2xl font-bold text-[var(--color-dark)] text-center">{t('globals.createdByMe')}</h2>
                   <div className="relative overflow-hidden">
                     <div className="flex space-x-4 overflow-x-auto scrollbar-hide px-4 py-4 snap-x snap-proximity justify-start">
                       {listHomeUserData.map((item, index) => (
@@ -112,7 +112,7 @@ export default function AppUsersHome() {
                                 className="w-full h-full object-cover"
                               />
                             </div>
-                            <h3 className="mt-3 text-sm font-semibold text-gray-800 text-center min-h-[24px]">
+                            <h3 className="mt-3 text-sm font-semibold text-[var(--color-dark)] text-center min-h-[24px]">
                               {item.name}
                             </h3>
                           </div>
@@ -207,7 +207,7 @@ const ItemList = ({ title, users }: { title: string; users: UserData[] }) => {
   return (
     <div className='mt-3'>
       <div className="container mx-auto px-2 sm:px-4">
-        <h5 className="text-xl sm:text-2xl font-semibold text-center text-gray-800 mb-3">{title}</h5>
+        <h5 className="text-xl sm:text-2xl font-semibold text-center text-[var(--color-dark)] mb-3">{title}</h5>
         <Carousel
           value={users}
           numVisible={2}
@@ -277,7 +277,7 @@ const ItemCard = ({ user }: { user: AppUser }) => {
         />
       </div>
 
-      <h3 className="text-lg font-semibold text-gray-800">{user.name}</h3>
+      <h3 className="text-lg font-semibold text-[var(--color-dark)]">{user.name}</h3>
       <p className="text-gray-600 text-xs leading-relaxed mt-2">
         Nunc mi ipsum faucibus vitae aliquet nec. Lacus sed viverra tellus in hac habitasse platea dictumst.
       </p>
