@@ -115,6 +115,13 @@ const genderField = (fieldName: string, t: TransFn) =>
     z.string({ required_error: t('validators.required', { field: fieldName }) })
         .min(1, { message: t('validators.required', { field: fieldName }) });
 
+const booleanRadioField = (fieldName: string, t: TransFn, required = false) =>
+  required
+    ? z.boolean({
+        required_error: t("validators.required", { field: fieldName }),
+        invalid_type_error: t("validators.invalid", { field: fieldName }),
+      })
+    : z.boolean().optional();
 
 const numberOrDoubleField = (fieldName: string, t: TransFn) =>
     z.number({
@@ -148,7 +155,7 @@ export const appUser = (t: TransFn) => ({
     cheque: fileUploadField(t("appUsers.columns.fields.cheque"), t, 1, 2),
     gstOtp: stringAlphanumeric(t("appUsers.columns.fields.gstOtp"), t, 0, 100),
     isActive: booleanField(t("appUsers.columns.fields.isActive"), t),
-    isAdmin: booleanField(t("appUsers.columns.fields.isAdmin"), t),
+    isAdmin: booleanRadioField(t("appUsers.columns.fields.isAdmin"), t),
     photoAttachment: fileUploadField(t("appUsers.columns.fields.photoAttachment"), t, 1, 2),
     role: requiredStringField(t("appUsers.columns.fields.role"), t, 2, 100),
     publish: requiredStringField(t("appUsers.columns.fields.publish"), t, 2, 100),

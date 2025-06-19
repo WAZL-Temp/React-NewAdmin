@@ -40,9 +40,11 @@ export default function FileUploadMain({
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const fileUploadService = useFileUploadService(modelName);
+  const [isUploadError, setIsUploadError] = useState<boolean>(false);
 
   useEffect(() => {
     const isEmpty = uploadedFiles.length === 0;
+    if (isUploadError) return;
 
     if (required && isEmpty) {
       setUploadError(t("validators.required", { field: propName }));
@@ -56,7 +58,7 @@ export default function FileUploadMain({
     if (required && maxFileNumber > 0 && uploadedFiles.length > maxFileNumber) {
       setUploadError(t("validators.maxFiles", { field: propName, count: maxFileNumber }));
     }
-  }, [uploadedFiles, required, propName, t, minFileNumber, maxFileNumber]);
+  }, [uploadedFiles, required, propName, t, minFileNumber, maxFileNumber, isUploadError]);
 
 
   useEffect(() => {
@@ -97,14 +99,18 @@ export default function FileUploadMain({
 
     for (const file of filesArray) {
       if (file.size > maxFileSize) {
-        setUploadError(`"${file.name}" exceeds the maximum allowed size of ${Math.floor(maxFileSize / 1024 / 1024)}MB.`);
+        const maxSize = Math.floor(maxFileSize / 1024 / 1024);
+        setUploadError(t("validators.fileSizeExceedsMax", { filename: file.name, maxFileSize: maxSize }));
+        setIsUploadError(true);
         continue;
       }
       if (file.size < minFileSize) {
-        setUploadError(`"${file.name}" is smaller than the minimum required size of ${Math.ceil(minFileSize / 1024)}KB.`);
+        const minSize = Math.ceil(minFileSize / 1024);
+        setUploadError(t("validators.fileSizeBelowMin", { filename: file.name, maxFileSize: minSize }));
+        setIsUploadError(true);
         continue;
       }
-      
+
       try {
         const tempFile: CustomFile = {
           fileName: file.name,
@@ -130,9 +136,11 @@ export default function FileUploadMain({
         }
         newUploadedFiles.push(uploadedFile);
         setUploadedFiles((prev) => prev.map((f) => (f.fileName === file.name ? uploadedFile : f)));
+        setIsUploadError(false);
       } catch (error) {
         console.error("Upload failed:", error);
         setUploadError("Upload failed. Please try again.");
+        setIsUploadError(true);
         setUploadedFiles((prev) => prev.filter((f) => f.fileName !== file.name));
       }
     }
@@ -143,10 +151,7 @@ export default function FileUploadMain({
 
     if (required && allFiles.length === 0) {
       setUploadError(t("validators.required", { field: propName }));
-    } else {
-      setUploadError(null);
     }
-
     if (event.target) {
       event.target.value = ""
     }
