@@ -16,7 +16,6 @@ export const selectDropdownEnum = (
   }
   return updatedModel;
 };
-
 export const selectRadioEnum = (
   e: RadioButtonChangeEvent,
   controlName: string,
@@ -38,7 +37,10 @@ export const selectRadioEnum = (
   }
 
   setModel(updatedModel);
+
+  return value;
 };
+
 
 
 interface Option {

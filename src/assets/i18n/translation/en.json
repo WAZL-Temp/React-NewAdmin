@@ -114,6 +114,7 @@
         "totalPlot": "TotalPlot",
         "reportedTo": "ReportedTo",
         "reportedBy": "ReportedBy",
+        "gender": "gender",
         "updateDate": "Update Date",
         "deleteDate": "Delete Date",
         "updateById": "Update By Id",
