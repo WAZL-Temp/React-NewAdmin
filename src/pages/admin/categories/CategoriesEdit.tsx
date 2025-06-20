@@ -389,8 +389,29 @@ function initData(): Category {
   };
 
   const handleRadioChange = (e: RadioButtonChangeEvent, controlName: string, isBoolean = false) => {
-    selectRadioEnum(e, controlName, item, setItem, isBoolean);
+    const updatedValue = selectRadioEnum(e, controlName, item, setItem, isBoolean);
+
+    setItem((prev) => ({
+      ...prev,
+      [controlName]: updatedValue,
+    }));
+
+    const schema = categorySchema[controlName as keyof typeof categorySchema];
+
+    if (schema) {
+      const result = schema.safeParse(updatedValue);
+
+      if (result.success) {
+        setErrors((prev) => ({ ...prev, [controlName]: '' }));
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          [controlName]: result.error.errors[0].message,
+        }));
+      }
+    }
   };
+  
 
   return (
     <div className='relative h-screen flex flex-col'>
