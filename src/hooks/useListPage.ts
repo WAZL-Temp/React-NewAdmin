@@ -112,15 +112,11 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
     useEffect(() => {
         const fetchRoleDetails = async () => {
             if (roleDetailsData && roleDetailsData.length > 0) {
-console.log("roleDetailsData",roleDetailsData);
 
                 const itemData = (roleDetailsData as RoleDetail[]).find(
                     (r: RoleDetail) => typeof r.name === "string" && r.name.toLowerCase() === (props.typeName ?? "").toLowerCase()
                 );
-                console.log("itemData",itemData);
-                
                 setRoleData(itemData ?? null);
-
 
                 if (itemData?.dbStatus) {
                     const parsedDbStatus = typeof itemData.dbStatus === "string" ? JSON.parse(itemData.dbStatus) : itemData.dbStatus;
