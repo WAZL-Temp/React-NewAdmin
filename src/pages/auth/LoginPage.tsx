@@ -36,7 +36,7 @@ const LoginPage = () => {
             const response = await loginUser(payload);
             if (response) {
                 const userInfoData = response?.userInfo[0];
-                login(response.token);                
+                login(response.token);
                 userInfo(userInfoData);
                 setEmail("");
                 setPassword("");
@@ -59,8 +59,8 @@ const LoginPage = () => {
             const user = await signInWithGoogle() as unknown as FirebaseUser;
 
             if (!user || !user.email) throw new Error("Google Sign-In data is incomplete.");
-            
-            const idToken =  user.stsTokenManager?.accessToken;
+
+            const idToken = user.stsTokenManager?.accessToken;
 
             if (selectedValue) {
                 await validateRegisterEmail(user.email, idToken);
@@ -145,7 +145,8 @@ const LoginPage = () => {
                             <InputText
                                 id="email"
                                 type="email"
-                                value={email} onChange={(e) => setEmail(e.target.value)}
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                                 placeholder="Enter Your Username / Email"
                                 className="w-full h-10 p-2 mt-1 text-sm rounded-md  bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]" />
                         </div>

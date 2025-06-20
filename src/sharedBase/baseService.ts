@@ -9,9 +9,12 @@ export const useBaseService = <T extends BaseModel>(type: string) => {
         throw new Error('VITE_API_URL is not defined');
     }
     const apiUrl = `${apiBaseUrl}/${type}`;
+    let language = localStorage.getItem("app_language") || "en";
+    language = language == 'en' ? '' : language == 'mr' ? 'Mr' : 'Hi';
 
     const getHeaders = (): HeadersInit => {
         const headers: HeadersInit = {
+            'Lang': language,
             "Content-Type": "application/json",
         };
         const token = getToken();
@@ -324,10 +327,10 @@ export const useBaseService = <T extends BaseModel>(type: string) => {
     const getRoleData = async (): Promise<any> => {
         try {
             const userInfo = getUserInfo();
-            
+
             if (userInfo) {
                 const form = { role: userInfo?.role, id: 0 }
-                
+
                 const response = await fetch(`${apiUrl}/GetRoleData`, {
                     method: 'POST',
                     headers: {
