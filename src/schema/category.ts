@@ -125,18 +125,18 @@ const numberOrDoubleField = (fieldName: string, t: TransFn) =>
     });
 
 export const categoryValidate = (t: TransFn) => ({
-	id:stringNumeric(t('category.columns.fields.id'),t,0,0),
-	name:stringOnlyAlphabets(t('category.columns.fields.name'),t,1,200),
-	slug:stringOnlyAlphabets(t('category.columns.fields.slug'),t,0,200),
-	icon:stringOnlyAlphabets(t('category.columns.fields.icon'),t,0,0),
-	importDataId:stringNumeric(t('category.columns.fields.importDataId'),t,0,0),
-	createDate:stringDateFormat(t('category.columns.fields.createDate'),t),
-	updateDate:stringDateFormat(t('category.columns.fields.updateDate'),t),
-	deleteDate:stringDateFormat(t('category.columns.fields.deleteDate'),t),
-	createById:stringNumeric(t('category.columns.fields.createById'),t,0,0),
-	updateById:stringNumeric(t('category.columns.fields.updateById'),t,0,0),
-	deleteById:stringNumeric(t('category.columns.fields.deleteById'),t,0,0),
-	isDelete:booleanField(t('category.columns.fields.isDelete'),t),
+	id:stringNumeric(t('categorys.columns.fields.id'),t,0,0),
+	name:stringOnlyAlphabets(t('categorys.columns.fields.name'),t,1,200),
+	slug:stringOnlyAlphabets(t('categorys.columns.fields.slug'),t,0,200),
+	icon:stringOnlyAlphabets(t('categorys.columns.fields.icon'),t,0,0),
+	importDataId:stringNumeric(t('categorys.columns.fields.importDataId'),t,0,0),
+	createDate:stringDateFormat(t('categorys.columns.fields.createDate'),t),
+	updateDate:stringDateFormat(t('categorys.columns.fields.updateDate'),t),
+	deleteDate:stringDateFormat(t('categorys.columns.fields.deleteDate'),t),
+	createById:stringNumeric(t('categorys.columns.fields.createById'),t,0,0),
+	updateById:stringNumeric(t('categorys.columns.fields.updateById'),t,0,0),
+	deleteById:stringNumeric(t('categorys.columns.fields.deleteById'),t,0,0),
+	isDelete:booleanField(t('categorys.columns.fields.isDelete'),t),
 
 // <!--validate-Data-->
 });

@@ -827,7 +827,7 @@ verifyShopData?.data, roleData?.data, publishData?.data, genderData?.data
               <TooltipWithText text={t("appUserTests.columns.fields.gstCertificate")} />
             </div>
 
-            <FileUploadMain modelName='AppUserTest' propName="" onFileUpload={(files) => handleFileUpload(files, 'gstCertificate')} accept=".jpg,.jpeg,.png,.pdf" initialData={item.gstCertificate ?? null}  error={errors.gstCertificate} maxFileNumber={1}/>
+            <FileUploadMain modelName='AppUserTest' propName="gstCertificate" onFileUpload={(files) => handleFileUpload(files, 'gstCertificate')} accept=".jpg,.jpeg,.png,.pdf" initialData={item.gstCertificate ?? null}  error={errors.gstCertificate} maxFileNumber={1}/>
             <FormFieldError field="gstCertificate" errors={errors} />
           </div>
         )}
@@ -844,7 +844,7 @@ verifyShopData?.data, roleData?.data, publishData?.data, genderData?.data
               <TooltipWithText text={t("appUserTests.columns.fields.photoShopFront")} />
             </div>
 
-            <FileUploadMain modelName='AppUserTest' propName="" onFileUpload={(files) => handleFileUpload(files, 'photoShopFront')} accept=".jpg,.jpeg,.png,.pdf" initialData={item.photoShopFront ?? null}  error={errors.photoShopFront} maxFileNumber={1}/>
+            <FileUploadMain modelName='AppUserTest' propName="photoShopFront" onFileUpload={(files) => handleFileUpload(files, 'photoShopFront')} accept=".jpg,.jpeg,.png,.pdf" initialData={item.photoShopFront ?? null}  error={errors.photoShopFront} maxFileNumber={1}/>
             <FormFieldError field="photoShopFront" errors={errors} />
           </div>
         )}
@@ -861,7 +861,7 @@ verifyShopData?.data, roleData?.data, publishData?.data, genderData?.data
               <TooltipWithText text={t("appUserTests.columns.fields.visitingCard")} />
             </div>
 
-            <FileUploadMain modelName='AppUserTest' propName="" onFileUpload={(files) => handleFileUpload(files, 'visitingCard')} accept=".jpg,.jpeg,.png,.pdf" initialData={item.visitingCard ?? null}  error={errors.visitingCard} maxFileNumber={1}/>
+            <FileUploadMain modelName='AppUserTest' propName="visitingCard" onFileUpload={(files) => handleFileUpload(files, 'visitingCard')} accept=".jpg,.jpeg,.png,.pdf" initialData={item.visitingCard ?? null}  error={errors.visitingCard} maxFileNumber={1}/>
             <FormFieldError field="visitingCard" errors={errors} />
           </div>
         )}
@@ -878,7 +878,7 @@ verifyShopData?.data, roleData?.data, publishData?.data, genderData?.data
               <TooltipWithText text={t("appUserTests.columns.fields.cheque")} />
             </div>
 
-            <FileUploadMain modelName='AppUserTest' propName="" onFileUpload={(files) => handleFileUpload(files, 'cheque')} accept=".jpg,.jpeg,.png,.pdf" initialData={item.cheque ?? null}  error={errors.cheque} maxFileNumber={1}/>
+            <FileUploadMain modelName='AppUserTest' propName="cheque" onFileUpload={(files) => handleFileUpload(files, 'cheque')} accept=".jpg,.jpeg,.png,.pdf" initialData={item.cheque ?? null}  error={errors.cheque} maxFileNumber={1}/>
             <FormFieldError field="cheque" errors={errors} />
           </div>
         )}
@@ -963,7 +963,7 @@ verifyShopData?.data, roleData?.data, publishData?.data, genderData?.data
               <TooltipWithText text={t("appUserTests.columns.fields.photoAttachment")} />
             </div>
 
-            <FileUploadMain modelName='AppUserTest' propName="" onFileUpload={(files) => handleFileUpload(files, 'photoAttachment')} accept=".jpg,.jpeg,.png,.pdf" initialData={item.photoAttachment ?? null}  error={errors.photoAttachment} maxFileNumber={1}/>
+            <FileUploadMain modelName='AppUserTest' propName="photoAttachment" onFileUpload={(files) => handleFileUpload(files, 'photoAttachment')} accept=".jpg,.jpeg,.png,.pdf" initialData={item.photoAttachment ?? null}  error={errors.photoAttachment} maxFileNumber={1}/>
             <FormFieldError field="photoAttachment" errors={errors} />
           </div>
         )}
