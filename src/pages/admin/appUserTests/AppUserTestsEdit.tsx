@@ -50,7 +50,7 @@ const [selectedVerifyShop, setSelectedVerifyShop] = useState<string | undefined>
  const [selectedRole, setSelectedRole] = useState<string | undefined>(undefined);
  const [selectedPublish, setSelectedPublish] = useState<string | undefined>(undefined);
  const [selectedReportedTo, setSelectedReportedTo] = useState<AppUserTest[]>([]);
- const [selectedReportedBy, setSelectedReportedBy] = useState<number | null>(null);
+ const [selectedReportedBy, setSelectedReportedBy] = useState<string | null>(null);
  const [selectedGender, setSelectedGender] = useState<string | undefined>(undefined);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -162,7 +162,10 @@ function initData(): AppUserTest {
           }
         }
      const listReportedBy = await getData(appUserTestService);
-        setReportedByList(listReportedBy);
+    const options = listReportedBy.map((item) => ({
+          ...item, id: item.id?.toString()
+        }));
+        setReportedByList(options);
         if (itemData.reportedBy) {
           setSelectedReportedBy(Number(itemData.reportedBy));
         }
@@ -495,8 +498,29 @@ verifyShopData?.data, roleData?.data, publishData?.data, genderData?.data
   };
 
   const handleRadioChange = (e: RadioButtonChangeEvent, controlName: string, isBoolean = false) => {
-    selectRadioEnum(e, controlName, item, setItem, isBoolean);
+    const updatedValue = selectRadioEnum(e, controlName, item, setItem, isBoolean);
+
+    setItem((prev) => ({
+      ...prev,
+      [controlName]: updatedValue,
+    }));
+
+    const schema = appUserTestSchema[controlName as keyof typeof appUserTestSchema];
+
+    if (schema) {
+      const result = schema.safeParse(updatedValue);
+
+      if (result.success) {
+        setErrors((prev) => ({ ...prev, [controlName]: '' }));
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          [controlName]: result.error.errors[0].message,
+        }));
+      }
+    }
   };
+  
 
   return (
     <div className='relative h-screen flex flex-col'>
@@ -793,7 +817,7 @@ verifyShopData?.data, roleData?.data, publishData?.data, genderData?.data
               <TooltipWithText text={t("appUserTests.columns.fields.verifyShop")} />
             </div>
 
-            <Dropdown id='verifyShop' name='verifyShop' value={selectedVerifyShop} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "verifyShop"); setSelectedVerifyShop(e.value) }} options={listVerifyShop} filter optionLabel='name'  checkmark={true}  highlightOnSelect={false}  appendTo="self"  placeholder={t("appUserTests.columns.fields.verifyShop")}  className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)]"  />
+            <Dropdown id='verifyShop' name='verifyShop' value={selectedVerifyShop} minLength={2} maxLength={100} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "verifyShop"); setSelectedVerifyShop(e.value) }} options={listVerifyShop} filter optionLabel='name'  checkmark={true}  highlightOnSelect={false}  appendTo="self"  placeholder={t("appUserTests.columns.fields.verifyShop")}  className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)]"  />
             <FormFieldError field="verifyShop" errors={errors} />
           </div>
         )}
@@ -980,7 +1004,7 @@ verifyShopData?.data, roleData?.data, publishData?.data, genderData?.data
               <TooltipWithText text={t("appUserTests.columns.fields.role")} />
             </div>
 
-            <Dropdown id='role' name='role' value={selectedRole} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "role"); setSelectedRole(e.value) }} options={listRole} filter optionLabel='name'  checkmark={true}  highlightOnSelect={false}  appendTo="self"  placeholder={t("appUserTests.columns.fields.role")}  className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)]"  />
+            <Dropdown id='role' name='role' value={selectedRole} required minLength={2} maxLength={100} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "role"); setSelectedRole(e.value) }} options={listRole} filter optionLabel='name'  checkmark={true}  highlightOnSelect={false}  appendTo="self"  placeholder={t("appUserTests.columns.fields.role")}  className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)]"  />
             <FormFieldError field="role" errors={errors} />
           </div>
         )}
@@ -997,7 +1021,7 @@ verifyShopData?.data, roleData?.data, publishData?.data, genderData?.data
               <TooltipWithText text={t("appUserTests.columns.fields.publish")} />
             </div>
 
-            <Dropdown id='publish' name='publish' value={selectedPublish} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "publish"); setSelectedPublish(e.value) }} options={listPublish} filter optionLabel='name'  checkmark={true}  highlightOnSelect={false}  appendTo="self"  placeholder={t("appUserTests.columns.fields.publish")}  className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)]"  />
+            <Dropdown id='publish' name='publish' value={selectedPublish} required minLength={2} maxLength={100} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "publish"); setSelectedPublish(e.value) }} options={listPublish} filter optionLabel='name'  checkmark={true}  highlightOnSelect={false}  appendTo="self"  placeholder={t("appUserTests.columns.fields.publish")}  className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)]"  />
             <FormFieldError field="publish" errors={errors} />
           </div>
         )}
@@ -1101,7 +1125,7 @@ verifyShopData?.data, roleData?.data, publishData?.data, genderData?.data
               <TooltipWithText text={t("appUserTests.columns.fields.reportedBy")} />
             </div>
 
-            <Dropdown id='reportedBy' name='reportedBy' value={selectedReportedBy} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "reportedBy"); setSelectedReportedBy(e.value) }} filter options={reportedBylist} optionLabel='name' optionValue="id" checkmark={true}  highlightOnSelect={false}  appendTo="self"  placeholder={t("appUserTests.columns.fields.reportedBy")} className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] " />
+            <Dropdown id='reportedBy' name='reportedBy' value={selectedReportedBy} required maxLength={100} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "reportedBy"); setSelectedReportedBy(e.value) }} filter options={reportedBylist} optionLabel='name' optionValue="id" checkmark={true}  highlightOnSelect={false}  appendTo="self"  placeholder={t("appUserTests.columns.fields.reportedBy")} className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] " />
             <FormFieldError field="reportedBy" errors={errors} />
           </div>
         )}
