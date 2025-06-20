@@ -112,23 +112,21 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
     useEffect(() => {
         const fetchRoleDetails = async () => {
             if (roleDetailsData && roleDetailsData.length > 0) {
-
-                // const appuserData = roleDetailsData.find((r: RoleDetail) => r.name === (props.baseModelName?.toLowerCase() ?? ""));
-                // setRoleData(appuserData ?? null);
-
-                // if (appuserData?.dbStatus) {
-                //     query.setRoleCondition(JSON.parse(appuserData.dbStatus));
-                // }
+console.log("roleDetailsData",roleDetailsData);
 
                 const itemData = (roleDetailsData as RoleDetail[]).find(
                     (r: RoleDetail) => typeof r.name === "string" && r.name.toLowerCase() === (props.typeName ?? "").toLowerCase()
                 );
+                console.log("itemData",itemData);
+                
                 setRoleData(itemData ?? null);
 
 
                 if (itemData?.dbStatus) {
                     const parsedDbStatus = typeof itemData.dbStatus === "string" ? JSON.parse(itemData.dbStatus) : itemData.dbStatus;
                     query?.setRoleCondition(parsedDbStatus);
+                } else {
+                    query?.setRoleCondition({});
                 }
                 // await query.load();
             }

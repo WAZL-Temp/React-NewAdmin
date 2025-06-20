@@ -36,12 +36,11 @@ const gstField = (fieldName: string, t: TransFn, minLength: number, maxLength: n
     z.string({
         required_error: t('validators.required', { field: fieldName }),
         invalid_type_error: t('validators.required', { field: fieldName }),
-    }).min(1, { message: t('validators.required', { field: fieldName }) })
+    })
+        .min(1, { message: t('validators.required', { field: fieldName }) })
         .min(minLength, { message: t('validators.minDigits', { field: fieldName, length: minLength }), })
         .max(maxLength, { message: t('validators.maxDigits', { field: fieldName, length: maxLength }), })
-        .regex(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[0-9]{1}[A-Z]{1}[0-9]{1}$/, {
-            message: t('validators.invalid', { field: fieldName }),
-        });
+        .regex(/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}[A-Z0-9]{1}[A-Z0-9]{1}$/, { message: t('validators.invalid', { field: fieldName }), });
 
 const numericField = (fieldName: string, t: TransFn, minLength: number, maxLength: number) =>
     baseStringField(fieldName, t)
@@ -116,12 +115,12 @@ const genderField = (fieldName: string, t: TransFn) =>
         .min(1, { message: t('validators.required', { field: fieldName }) });
 
 const booleanRadioField = (fieldName: string, t: TransFn, required = false) =>
-  required
-    ? z.boolean({
-        required_error: t("validators.required", { field: fieldName }),
-        invalid_type_error: t("validators.invalid", { field: fieldName }),
-      })
-    : z.boolean().optional();
+    required
+        ? z.boolean({
+            required_error: t("validators.required", { field: fieldName }),
+            invalid_type_error: t("validators.invalid", { field: fieldName }),
+        })
+        : z.boolean().optional();
 
 const numberOrDoubleField = (fieldName: string, t: TransFn) =>
     z.number({
@@ -142,8 +141,8 @@ export const appUser = (t: TransFn) => ({
     shopName: stringOnlyAlphabets(t("appUsers.columns.fields.shopName"), t, 2, 100),
     password: stringPassword(t("appUsers.columns.fields.password"), t, 2, 100),
     pincode: numericField(t("appUsers.columns.fields.pincode"), t, 6, 6),
-    state: stringAlphanumeric(t("appUsers.columns.fields.state"), t, 0, 100),
-    district: stringAlphanumeric(t("appUsers.columns.fields.district"), t, 0, 100),
+    state: stringAlphanumeric(t("appUsers.columns.fields.state"), t,1, 100),
+    district: stringAlphanumeric(t("appUsers.columns.fields.district"), t, 1, 100),
     address: stringAlphanumericWithSpecialChars(t("appUsers.columns.fields.address"), t, 2, 10000),
     addressLine: stringAlphanumericWithSpecialChars(t("appUsers.columns.fields.addressLine"), t, 2, 10000),
     defaultLanguage: stringOnlyAlphabets(t("appUsers.columns.fields.defaultLanguage"), t, 2, 10),
@@ -153,9 +152,9 @@ export const appUser = (t: TransFn) => ({
     photoShopFront: fileUploadField(t("appUsers.columns.fields.photoShopFront"), t, 1, 2),
     visitingCard: fileUploadField(t("appUsers.columns.fields.visitingCard"), t, 2, 2),
     cheque: fileUploadField(t("appUsers.columns.fields.cheque"), t, 1, 2),
-    gstOtp: stringAlphanumeric(t("appUsers.columns.fields.gstOtp"), t, 0, 100),
+    gstOtp: stringAlphanumeric(t("appUsers.columns.fields.gstOtp"), t, 1, 100),
     isActive: booleanField(t("appUsers.columns.fields.isActive"), t),
-    isAdmin: booleanRadioField(t("appUsers.columns.fields.isAdmin"), t),
+    isAdmin: booleanField(t("appUsers.columns.fields.isAdmin"), t),
     photoAttachment: fileUploadField(t("appUsers.columns.fields.photoAttachment"), t, 1, 2),
     role: requiredStringField(t("appUsers.columns.fields.role"), t, 2, 100),
     publish: requiredStringField(t("appUsers.columns.fields.publish"), t, 2, 100),
