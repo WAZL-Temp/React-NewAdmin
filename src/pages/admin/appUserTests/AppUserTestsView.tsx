@@ -65,7 +65,9 @@ function initData(): AppUserTest {
 		totalPlot: undefined,
 		reportedTo: '',
 		reportedBy: '',
-		appUserTestName: '',
+		appUserName: '',
+		gender: '',
+		genderLabel: '',
 		createDate: undefined,
 		updateDate: undefined,
 		deleteDate: undefined,
@@ -587,6 +589,20 @@ function initData(): AppUserTest {
                       <TooltipWithText text={t("appUserTests.columns.fields.reportedBy")} />
                     </div>
                     <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)] ">{item?.reportedBy}</span>
+                  </div>
+                )}{!isFieldHidden("gender") && (
+                  <div className="flex flex-col   bg-[var(--color-white)] text-[var(--color-dark)] bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
+                    <div className="flex items-center space-x-1 bg-[var(--color-white)] text-[var(--color-dark)]">
+                      <label
+                        htmlFor="gender"
+                        className="text-sm font-bold  bg-[var(--color-white)] text-[var(--color-dark)]"
+                      >
+                      {t("appUserTests.columns.fields.gender")}
+                      </label>
+                      
+                      <TooltipWithText text={t("appUserTests.columns.fields.gender")} />
+                    </div>
+                    <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)] ">{item?.gender}</span>
                   </div>
                 )}
       </div>

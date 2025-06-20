@@ -19,6 +19,13 @@ import FormControls from './pages/admin/role/FormControls';
                     import AppUserTestsEdit from './pages/admin/appUserTests/AppUserTestsEdit';
                     import AppUserTestsImport from './pages/admin/appUserTests/AppUserTestsImport';
                     
+
+                    import CategoriesList from './pages/admin/categories/CategoriesList';
+                    import CategoriesHome from './pages/admin/categories/CategoriesHome';
+                    import CategoriesView from './pages/admin/categories/CategoriesView';
+                    import CategoriesEdit from './pages/admin/categories/CategoriesEdit';
+                    import CategoriesImport from './pages/admin/categories/CategoriesImport';
+                    
 {/* <!--router-link-admin-Import--> */}
 const AppRoutes = () => {
   return (
@@ -40,6 +47,13 @@ const AppRoutes = () => {
 <Route path="/appUserTests/add" element={<Layout><AppUserTestsEdit /></Layout>} />
 <Route path="/appUserTests/edit/:id" element={<Layout><AppUserTestsEdit /></Layout>} />
 <Route path="/appUserTests/import" element={<Layout><AppUserTestsImport /></Layout>} />
+
+<Route path="/categories" element={<Layout><CategoriesList /></Layout>} />
+<Route path="/categories/home" element={<Layout><CategoriesHome /></Layout>} />
+<Route path="/categories/:id" element={<Layout><CategoriesView /></Layout>} />
+<Route path="/categories/add" element={<Layout><CategoriesEdit /></Layout>} />
+<Route path="/categories/edit/:id" element={<Layout><CategoriesEdit /></Layout>} />
+<Route path="/categories/import" element={<Layout><CategoriesImport /></Layout>} />
 
 {/* <!--router-link-admin--> */}
 

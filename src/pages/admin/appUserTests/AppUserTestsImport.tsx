@@ -152,7 +152,9 @@ const columnsConfigDefault = useMemo(() =>[
 			 {field: 'totalPlot', header: t("appUserTests.columns.fields.totalPlot"), isDefault: true, show: true }, 
 			 {field: 'reportedTo', header: t("appUserTests.columns.fields.reportedTo"), isDefault: true, show: true }, 
 			 {field: 'reportedBy', header: t("appUserTests.columns.fields.reportedBy"), isDefault: true, show: true }, 
-			 {field: 'appUserTestName', header: t("appUserTests.columns.fields.appUserTestName"), isDefault: true, show: true }, 
+			 {field: 'appUserName', header: t("appUserTests.columns.fields.appUserName"), isDefault: true, show: true }, 
+			 {field: 'gender', header: t("appUserTests.columns.fields.gender"), isDefault: true, show: true }, 
+			 {field: 'genderLabel', header: t("appUserTests.columns.fields.genderLabel"), isDefault: true, show: true }, 
 			 {field: 'updateDate', header: t("appUserTests.columns.fields.updateDate"), isDefault: true, show: true }, 
 			 {field: 'deleteDate', header: t("appUserTests.columns.fields.deleteDate"), isDefault: true, show: true }, 
 			 {field: 'updateById', header: t("appUserTests.columns.fields.updateById"), isDefault: true, show: true }, 
@@ -909,22 +911,42 @@ body={(rowData, { rowIndex }) => (
 )}
  /> 
  
-<Column field="appUserTestName" header={t("appUserTests.columns.fields.appUserTestName")} sortable filter
+<Column field="appUserName" header={t("appUserTests.columns.fields.appUserName")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
  
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-onChange={(e) => handleFilterChangeLocal("appUserTestName", e.target.value)}
+onChange={(e) => handleFilterChangeLocal("appUserName", e.target.value)}
 /> 
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-appUserTestName-${rowIndex}`} className="text-left truncate font-medium">
- {rowData.appUserTestName}
+<div id={`tooltip-appUserName-${rowIndex}`} className="text-left truncate font-medium">
+ {rowData.appUserName}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-appUserTestName-${rowIndex}`} content={rowData.appUserTestName} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-appUserName-${rowIndex}`} content={rowData.appUserName} showDelay={200} position="top" />
+</>
+)}
+ /> 
+ 
+<Column field="genderLabel" header={t("appUserTests.columns.fields.genderLabel")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+ 
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("genderLabel", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-genderLabel-${rowIndex}`} className="text-left truncate font-medium">
+ {rowData.genderLabel}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-genderLabel-${rowIndex}`} content={rowData.genderLabel} showDelay={200} position="top" />
 </>
 )}
  /> 

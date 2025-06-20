@@ -5,7 +5,6 @@ import { useNavigate, useParams, useTranslation } from '../../../sharedBase/glob
 import { useEditPage } from '../../../hooks/useEditPage';
 import { AppUserTest } from '../../../core/model/appUserTest';
 import { selectDropdownEnum, selectMultiData, selectRadioEnum } from '../../../sharedBase/dropdownUtils';
-import { getGlobalSchema } from '../../../globalschema';
 import TooltipWithText from '../../../components/TooltipWithText';
 import FileUploadMain from '../../../components/FileUploadMain';
 import { EnumDetail } from '../../../core/model/enumdetail';
@@ -15,13 +14,16 @@ import { AppUserTestsService } from '../../../core/service/appUserTests.service'
 import { useListQuery } from '../../../store/useListQuery';
 import {getData, useFetchDataEnum } from '../../../sharedBase/lookupService';
 import Loader from '../../../components/Loader';
-
+import { appUserTestValidate } from '../../../schema/appUserTest';
+import FormFieldError from '../../../components/FormFieldError';
+import {AppUser} from "../../../core/model/appuser";
+//<<addModelData>>
 export default function AppUserTestsEdit() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const globalschema = getGlobalSchema(t);
   const toast = useRef<Toast>(null);
+  const appUserTestSchema = appUserTestValidate(t);
   const baseModelName = "appUserTests";
 const typeName= "appUserTest";
   const appUserTestService = AppUserTestsService();
@@ -40,7 +42,8 @@ const [listVerifyShop, setListVerifyShop] = useState<EnumDetail[]>([]);
  const [listRole, setListRole] = useState<EnumDetail[]>([]);
  const [listPublish, setListPublish] = useState<EnumDetail[]>([]);
  const [reportedTolist, setReportedToList] = useState<AppUserTest[]>([]);
- const [reportedBylist, setReportedByList] = useState<AppUserTest[]>([]);
+ const [reportedBylist, setReportedByList] = useState<AppUser[]>([]);
+ const [listGender, setListGender] = useState<EnumDetail[]>([]);
 
     
 const [selectedVerifyShop, setSelectedVerifyShop] = useState<string | undefined>(undefined);
@@ -48,6 +51,7 @@ const [selectedVerifyShop, setSelectedVerifyShop] = useState<string | undefined>
  const [selectedPublish, setSelectedPublish] = useState<string | undefined>(undefined);
  const [selectedReportedTo, setSelectedReportedTo] = useState<AppUserTest[]>([]);
  const [selectedReportedBy, setSelectedReportedBy] = useState<number | null>(null);
+ const [selectedGender, setSelectedGender] = useState<string | undefined>(undefined);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [dialogMessage, setDialogMessage] = useState('');
@@ -58,6 +62,7 @@ const [selectedVerifyShop, setSelectedVerifyShop] = useState<string | undefined>
 const verifyShopData = useFetchDataEnum('VerifyType');
 const roleData = useFetchDataEnum('RoleType');
 const publishData = useFetchDataEnum('PublishType');
+const genderData = useFetchDataEnum('Gender');
 
 
   
@@ -102,7 +107,9 @@ function initData(): AppUserTest {
 		totalPlot: undefined,
 		reportedTo: '',
 		reportedBy: '',
-		appUserTestName: '',
+		appUserName: '',
+		gender: '',
+		genderLabel: '',
 		createDate: undefined,
 		updateDate: undefined,
 		deleteDate: undefined,
@@ -159,6 +166,7 @@ function initData(): AppUserTest {
         if (itemData.reportedBy) {
           setSelectedReportedBy(Number(itemData.reportedBy));
         }
+ 
 
       } catch (err) {
         console.error('Error fetching data:', err);
@@ -167,12 +175,14 @@ function initData(): AppUserTest {
 
     fetchData();
   }, [itemData]);
+
    useEffect(() => {
     const bindDropDownList = async () => {
     
 setListVerifyShop(verifyShopData?.data);
  setListRole(roleData?.data);
  setListPublish(publishData?.data);
+ setListGender(genderData?.data);
 
       if (!itemData) return;
 
@@ -202,18 +212,28 @@ setListVerifyShop(verifyShopData?.data);
         }
       }
  
-      
+ 
+     if (itemData?.gender) {
+        const selectedList = genderData?.data.filter(
+          (a) => a.value === itemData?.gender
+        );
+        if (selectedList.length) {
+          setSelectedGender(selectedList[0].value);
+        }
+      }     
     };
 
     bindDropDownList();
   }, [itemData, 
-verifyShopData?.data, roleData?.data, publishData?.data
+verifyShopData?.data, roleData?.data, publishData?.data, genderData?.data
   ]);
 
- 
+  const handleBack = () => {
+    navigate("/appUserTests");
+  };
   const handleInputChange = (field: string, value: string) => {
     setItem((prev) => ({ ...prev, [field]: value }));
-    const schema = globalschema[field as keyof typeof globalschema];
+    const schema = appUserTestSchema[field as keyof typeof appUserTestSchema];
 
     if (schema) {
       const result = schema.safeParse(value);
@@ -228,18 +248,8 @@ verifyShopData?.data, roleData?.data, publishData?.data
     }
   };
 
-  const handleFileUpload = (files: CustomFile[], inputName: string) => {
-    setItem(prevData => ({
-      ...prevData,
-      [inputName]: JSON.stringify(files)
-    }));
-  };
 
-  const handleBack = () => {
-    navigate("/appUserTests");
-  };
-
-  const handleCheckboxChange = (e: { checked?: boolean }, key: string) => {
+   const handleCheckboxChange = (e: { checked?: boolean }, key: string) => {
     const value = e.checked ?? false;
 
     setItem((prev) => ({
@@ -247,7 +257,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
       [key]: value,
     }));
 
-    const schema = globalschema[key as keyof typeof globalschema];
+    const schema = appUserTestSchema[key as keyof typeof appUserTestSchema];
     if (schema) {
       const result = schema.safeParse(value);
       if (result.success) {
@@ -261,48 +271,46 @@ verifyShopData?.data, roleData?.data, publishData?.data
     }
   };
 
-  const validateStepFields = (step: number) => {
+  const handleFileUpload = (files: CustomFile[], inputName: string) => {
+    setItem(prevData => ({
+      ...prevData,
+      [inputName]: JSON.stringify(files)
+    }));
+  };
+
+    const validateStepFields = (step: number) => {
     const container = stepRefs.current[step];
-    if (!container) return true;
-
-    const inputs = container.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
-      'input, select, textarea'
-    );
-
     let hasError = false;
     const newErrors: Record<string, string> = { ...errors };
 
-    inputs.forEach((input) => {
-      const fieldName = input.name;
-      const value = item[fieldName as keyof typeof item];
-      const schema = globalschema[fieldName as keyof typeof globalschema];
-      const isRequired = input.hasAttribute('required');
-      const isEmpty = value === '' || value === null || value === undefined;
+    if (container) {
+      const nativeInputs = container.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
+        'input, select, textarea'
+      );
 
-      if (isRequired) {
-        if (schema) {
-          const result = schema.safeParse(value);
+      nativeInputs.forEach((input) => {
+        const fieldName = input.name;
+        const value = item[fieldName as keyof typeof item];
+        const schema = appUserTestSchema[fieldName as keyof typeof appUserTestSchema];
+        const isRequired = input.hasAttribute('required');
+        const isEmpty = value === '' || value === null || value === undefined;
 
-          if (!result.success) {
-            newErrors[fieldName] = result.error.errors[0].message;
-            hasError = true;
-          } else {
-            newErrors[fieldName] = '';
-          }
-        } else {
-          if (isEmpty) {
+        if (isRequired) {
+          if (schema) {
+            const result = schema.safeParse(value);
+            if (!result.success) {
+              newErrors[fieldName] = result.error.errors[0].message;
+              hasError = true;
+            } else {
+              newErrors[fieldName] = '';
+            }
+          } else if (isEmpty) {
             newErrors[fieldName] = 'This field is required';
             hasError = true;
           } else {
             newErrors[fieldName] = '';
           }
-        }
-      }
-
-      else if (schema) {
-        if (isEmpty) {
-          newErrors[fieldName] = '';
-        } else {
+        } else if (schema && !isEmpty) {
           const result = schema.safeParse(value);
           if (!result.success) {
             newErrors[fieldName] = result.error.errors[0].message;
@@ -310,10 +318,40 @@ verifyShopData?.data, roleData?.data, publishData?.data
           } else {
             newErrors[fieldName] = '';
           }
+        } else {
+          newErrors[fieldName] = '';
         }
-      }
+      });
 
-    });
+      const multiSelectInputs = container.querySelectorAll('.p-multiselect');
+      multiSelectInputs.forEach((input) => {
+        const fieldName = input.getAttribute('data-name');
+        const schema = appUserTestSchema[fieldName as keyof typeof appUserTestSchema];
+
+        const isRequired = input.getAttribute('data-required') === 'true';
+        if (fieldName) {
+          const value = item[fieldName as keyof typeof item];
+          const isEmpty = value === '' || value === null || value === undefined || (Array.isArray(value) && value.length === 0);
+
+          if (isRequired) {
+            if (schema) {
+              const result = schema.safeParse(value);
+              if (!result.success) {
+                newErrors[fieldName] = result.error.errors[0].message;
+                hasError = true;
+              } else {
+                newErrors[fieldName] = '';
+              }
+            } else if (isEmpty) {
+              newErrors[fieldName] = 'This field is required';
+              hasError = true;
+            }
+          } else {
+            newErrors[fieldName] = '';
+          }
+        }
+      });
+    }
 
     setErrors(newErrors);
     return !hasError;
@@ -352,7 +390,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
     const isRequired = inputElement?.hasAttribute('required');
 
     if (isRequired) {
-      const schema = globalschema[controlName as keyof typeof globalschema];
+      const schema = appUserTestSchema[controlName as keyof typeof appUserTestSchema];
 
       if (schema) {
         const result = schema.safeParse(value);
@@ -416,18 +454,46 @@ verifyShopData?.data, roleData?.data, publishData?.data
       setIsSubmitting(false);
     }
   };
-  const handleMultiSelectChange = (e: MultiSelectChangeEvent, fieldName: string, setFieldValue: React.Dispatch<React.SetStateAction<AppUserTest[]>>) => {
-    const selectedUsers = e.value as AppUserTest[];
-    setFieldValue(selectedUsers);
+    const handleMultiSelectChange = (e: MultiSelectChangeEvent, fieldName: string, setFieldValue: React.Dispatch<React.SetStateAction<AppUserTest[]>>) => {
+    const selectedValues = e.value as AppUserTest[];
+    setFieldValue(selectedValues);
 
-    const selectedIds = selectedUsers.map(user => user.id).filter(id => id !== undefined);
-    const updatedModel = selectMultiData(selectedUsers, fieldName);
+    const inputElement = document.querySelector(`[name="${fieldName}"]`) as HTMLElement;
+    const isRequired = inputElement?.hasAttribute('required') || inputElement?.getAttribute('aria-required') === 'true';
+    const selectedIds = selectedValues.map((user) => user.id).filter((id) => id !== undefined).join(',');
+
+    if (isRequired) {
+      const schema = appUserTestSchema[fieldName as keyof typeof appUserTestSchema];
+      if (schema) {
+        const result = schema.safeParse(selectedIds);
+        if (!result.success) {
+          setErrors((prev) => ({
+            ...prev,
+            [fieldName]: result.error.errors[0].message,
+          }));
+          return;
+        } else {
+          setErrors((prev) => ({ ...prev, [fieldName]: '' }));
+        }
+      } else if (!selectedValues || selectedValues.length === 0) {
+        setErrors((prev) => ({
+          ...prev,
+          [fieldName]: 'This field is required',
+        }));
+        return;
+      }
+    } else {
+      setErrors((prev) => ({ ...prev, [fieldName]: '' }));
+    }
+
+    const updatedModel = selectMultiData(selectedValues, fieldName);
     setItem((prev) => ({
       ...prev,
-      [fieldName]: selectedIds.join(',') || '',
+      [fieldName]: updatedModel[fieldName] || '',
       [`${fieldName}Label`]: updatedModel[`${fieldName}Label`]?.toString() || '',
     }));
   };
+
   const handleRadioChange = (e: RadioButtonChangeEvent, controlName: string, isBoolean = false) => {
     selectRadioEnum(e, controlName, item, setItem, isBoolean);
   };
@@ -469,11 +535,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
             </div>
 
             <InputText type='text' id='name' name='name'  onChange={(e) => handleInputChange('name', e.target.value)} required minLength={2} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.name} placeholder={t("appUserTests.columns.fields.name")}/>
-            {errors.name && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.name}
-              </p>
-            )}
+            <FormFieldError field="name" errors={errors} />
           </div>
         )}
         {!isFieldHidden("firstName") && (
@@ -490,11 +552,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
             </div>
 
             <InputText type='text' id='firstName' name='firstName'  onChange={(e) => handleInputChange('firstName', e.target.value)} minLength={2} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.firstName} placeholder={t("appUserTests.columns.fields.firstName")}/>
-            {errors.firstName && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.firstName}
-              </p>
-            )}
+            <FormFieldError field="firstName" errors={errors} />
           </div>
         )}
         {!isFieldHidden("lastName") && (
@@ -511,11 +569,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
             </div>
 
             <InputText type='text' id='lastName' name='lastName'  onChange={(e) => handleInputChange('lastName', e.target.value)} minLength={2} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.lastName} placeholder={t("appUserTests.columns.fields.lastName")}/>
-            {errors.lastName && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.lastName}
-              </p>
-            )}
+            <FormFieldError field="lastName" errors={errors} />
           </div>
         )}
         {!isFieldHidden("mobile") && (
@@ -532,11 +586,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
             </div>
 
             <InputText type='text' id='mobile' name='mobile'  onChange={(e) => handleInputChange('mobile', e.target.value)} required minLength={2} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.mobile} placeholder={t("appUserTests.columns.fields.mobile")}/>
-            {errors.mobile && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.mobile}
-              </p>
-            )}
+            <FormFieldError field="mobile" errors={errors} />
           </div>
         )}
         {!isFieldHidden("mobileVerified") && (
@@ -553,11 +603,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
             </div>
 
             <Checkbox id='mobileVerified' required inputId='mobileVerified' name='mobileVerified' value='mobileVerified' checked={item.mobileVerified ?? false} onChange={(e) => handleCheckboxChange(e, 'mobileVerified')} className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"/>
-            {errors.mobileVerified && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.mobileVerified}
-              </p>
-            )}
+            <FormFieldError field="mobileVerified" errors={errors} />
           </div>
         )}
 
@@ -581,11 +627,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
             </div>
 
             <InputText type='text' id='emailId' name='emailId'  onChange={(e) => handleInputChange('emailId', e.target.value)} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.emailId} placeholder={t("appUserTests.columns.fields.emailId")}/>
-            {errors.emailId && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.emailId}
-              </p>
-            )}
+            <FormFieldError field="emailId" errors={errors} />
           </div>
         )}
         {!isFieldHidden("emailVerified") && (
@@ -602,11 +644,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
             </div>
 
             <Checkbox id='emailVerified'  inputId='emailVerified' name='emailVerified' value='emailVerified' checked={item.emailVerified ?? false} onChange={(e) => handleCheckboxChange(e, 'emailVerified')} className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"/>
-            {errors.emailVerified && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.emailVerified}
-              </p>
-            )}
+            <FormFieldError field="emailVerified" errors={errors} />
           </div>
         )}
         {!isFieldHidden("shopName") && (
@@ -623,11 +661,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
             </div>
 
             <InputText type='text' id='shopName' name='shopName'  onChange={(e) => handleInputChange('shopName', e.target.value)} minLength={2} maxLength={200} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.shopName} placeholder={t("appUserTests.columns.fields.shopName")}/>
-            {errors.shopName && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.shopName}
-              </p>
-            )}
+            <FormFieldError field="shopName" errors={errors} />
           </div>
         )}
         {!isFieldHidden("password") && (
@@ -644,11 +678,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
             </div>
 
             <InputText type='text' id='password' name='password'  onChange={(e) => handleInputChange('password', e.target.value)} minLength={2} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.password} placeholder={t("appUserTests.columns.fields.password")}/>
-            {errors.password && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.password}
-              </p>
-            )}
+            <FormFieldError field="password" errors={errors} />
           </div>
         )}
 
@@ -672,11 +702,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
             </div>
 
             <InputText type='text' id='pincode' name='pincode'  onChange={(e) => handleInputChange('pincode', e.target.value)} maxLength={6} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.pincode} placeholder={t("appUserTests.columns.fields.pincode")}/>
-            {errors.pincode && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.pincode}
-              </p>
-            )}
+            <FormFieldError field="pincode" errors={errors} />
           </div>
         )}
         {!isFieldHidden("state") && (
@@ -693,11 +719,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
             </div>
 
             <InputText type='text' id='state' name='state'  onChange={(e) => handleInputChange('state', e.target.value)} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.state} placeholder={t("appUserTests.columns.fields.state")}/>
-            {errors.state && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.state}
-              </p>
-            )}
+            <FormFieldError field="state" errors={errors} />
           </div>
         )}
         {!isFieldHidden("district") && (
@@ -714,11 +736,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
             </div>
 
             <InputText type='text' id='district' name='district'  onChange={(e) => handleInputChange('district', e.target.value)} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.district} placeholder={t("appUserTests.columns.fields.district")}/>
-            {errors.district && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.district}
-              </p>
-            )}
+            <FormFieldError field="district" errors={errors} />
           </div>
         )}
         {!isFieldHidden("address") && (
@@ -735,11 +753,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
             </div>
 
             <InputTextarea id='address' name='address'  onChange={(e) => handleInputChange('address', e.target.value)} minLength={2} maxLength={10000}className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)]  border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"  value={item.address} placeholder={t("appUserTests.columns.fields.address")}/>
-            {errors.address && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.address}
-              </p>
-            )}
+            <FormFieldError field="address" errors={errors} />
           </div>
         )}
         {!isFieldHidden("addressLine") && (
@@ -756,11 +770,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
             </div>
 
             <InputTextarea id='addressLine' name='addressLine'  onChange={(e) => handleInputChange('addressLine', e.target.value)} minLength={2} maxLength={10000}className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)]  border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"  value={item.addressLine} placeholder={t("appUserTests.columns.fields.addressLine")}/>
-            {errors.addressLine && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.addressLine}
-              </p>
-            )}
+            <FormFieldError field="addressLine" errors={errors} />
           </div>
         )}
 
@@ -784,11 +794,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
             </div>
 
             <Dropdown id='verifyShop' name='verifyShop' value={selectedVerifyShop} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "verifyShop"); setSelectedVerifyShop(e.value) }} options={listVerifyShop} filter optionLabel='name'  checkmark={true}  highlightOnSelect={false}  appendTo="self"  placeholder={t("appUserTests.columns.fields.verifyShop")}  className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)]"  />
-            {errors.verifyShop && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.verifyShop}
-              </p>
-            )}
+            <FormFieldError field="verifyShop" errors={errors} />
           </div>
         )}
         {!isFieldHidden("gst") && (
@@ -805,11 +811,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
             </div>
 
             <InputText type='text' id='gst' name='gst'  onChange={(e) => handleInputChange('gst', e.target.value)} minLength={2} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.gst} placeholder={t("appUserTests.columns.fields.gst")}/>
-            {errors.gst && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.gst}
-              </p>
-            )}
+            <FormFieldError field="gst" errors={errors} />
           </div>
         )}
         {!isFieldHidden("gstCertificate") && (
@@ -825,12 +827,8 @@ verifyShopData?.data, roleData?.data, publishData?.data
               <TooltipWithText text={t("appUserTests.columns.fields.gstCertificate")} />
             </div>
 
-            <FileUploadMain modelName='AppUserTest' propName="gstCertificate" onFileUpload={(files) => handleFileUpload(files, 'gstCertificate')} accept=".jpg,.jpeg,.png,.pdf" initialData={item.gstCertificate ?? null} maxFileNumber={1}/>
-            {errors.gstCertificate && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.gstCertificate}
-              </p>
-            )}
+            <FileUploadMain modelName='AppUserTest' propName="" onFileUpload={(files) => handleFileUpload(files, 'gstCertificate')} accept=".jpg,.jpeg,.png,.pdf" initialData={item.gstCertificate ?? null}  error={errors.gstCertificate} maxFileNumber={1}/>
+            <FormFieldError field="gstCertificate" errors={errors} />
           </div>
         )}
         {!isFieldHidden("photoShopFront") && (
@@ -846,12 +844,8 @@ verifyShopData?.data, roleData?.data, publishData?.data
               <TooltipWithText text={t("appUserTests.columns.fields.photoShopFront")} />
             </div>
 
-            <FileUploadMain modelName='AppUserTest' propName="photoShopFront" onFileUpload={(files) => handleFileUpload(files, 'photoShopFront')} accept=".jpg,.jpeg,.png,.pdf" initialData={item.photoShopFront ?? null} maxFileNumber={1}/>
-            {errors.photoShopFront && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.photoShopFront}
-              </p>
-            )}
+            <FileUploadMain modelName='AppUserTest' propName="" onFileUpload={(files) => handleFileUpload(files, 'photoShopFront')} accept=".jpg,.jpeg,.png,.pdf" initialData={item.photoShopFront ?? null}  error={errors.photoShopFront} maxFileNumber={1}/>
+            <FormFieldError field="photoShopFront" errors={errors} />
           </div>
         )}
         {!isFieldHidden("visitingCard") && (
@@ -867,12 +861,8 @@ verifyShopData?.data, roleData?.data, publishData?.data
               <TooltipWithText text={t("appUserTests.columns.fields.visitingCard")} />
             </div>
 
-            <FileUploadMain modelName='AppUserTest' propName="visitingCard" onFileUpload={(files) => handleFileUpload(files, 'visitingCard')} accept=".jpg,.jpeg,.png,.pdf" initialData={item.visitingCard ?? null} maxFileNumber={1}/>
-            {errors.visitingCard && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.visitingCard}
-              </p>
-            )}
+            <FileUploadMain modelName='AppUserTest' propName="" onFileUpload={(files) => handleFileUpload(files, 'visitingCard')} accept=".jpg,.jpeg,.png,.pdf" initialData={item.visitingCard ?? null}  error={errors.visitingCard} maxFileNumber={1}/>
+            <FormFieldError field="visitingCard" errors={errors} />
           </div>
         )}
         {!isFieldHidden("cheque") && (
@@ -888,12 +878,8 @@ verifyShopData?.data, roleData?.data, publishData?.data
               <TooltipWithText text={t("appUserTests.columns.fields.cheque")} />
             </div>
 
-            <FileUploadMain modelName='AppUserTest' propName="cheque" onFileUpload={(files) => handleFileUpload(files, 'cheque')} accept=".jpg,.jpeg,.png,.pdf" initialData={item.cheque ?? null} maxFileNumber={1}/>
-            {errors.cheque && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.cheque}
-              </p>
-            )}
+            <FileUploadMain modelName='AppUserTest' propName="" onFileUpload={(files) => handleFileUpload(files, 'cheque')} accept=".jpg,.jpeg,.png,.pdf" initialData={item.cheque ?? null}  error={errors.cheque} maxFileNumber={1}/>
+            <FormFieldError field="cheque" errors={errors} />
           </div>
         )}
         {!isFieldHidden("gstOtp") && (
@@ -910,11 +896,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
             </div>
 
             <InputText type='text' id='gstOtp' name='gstOtp'  onChange={(e) => handleInputChange('gstOtp', e.target.value)} maxLength={100} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.gstOtp} placeholder={t("appUserTests.columns.fields.gstOtp")}/>
-            {errors.gstOtp && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.gstOtp}
-              </p>
-            )}
+            <FormFieldError field="gstOtp" errors={errors} />
           </div>
         )}
         {!isFieldHidden("isActive") && (
@@ -931,11 +913,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
             </div>
 
             <Checkbox id='isActive' required inputId='isActive' name='isActive' value='isActive' checked={item.isActive ?? false} onChange={(e) => handleCheckboxChange(e, 'isActive')} className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"/>
-            {errors.isActive && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.isActive}
-              </p>
-            )}
+            <FormFieldError field="isActive" errors={errors} />
           </div>
         )}
         {!isFieldHidden("isAdmin") && (
@@ -952,11 +930,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
             </div>
 
             <Checkbox id='isAdmin' required inputId='isAdmin' name='isAdmin' value='isAdmin' checked={item.isAdmin ?? false} onChange={(e) => handleCheckboxChange(e, 'isAdmin')} className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"/>
-            {errors.isAdmin && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.isAdmin}
-              </p>
-            )}
+            <FormFieldError field="isAdmin" errors={errors} />
           </div>
         )}
         {!isFieldHidden("hasImpersonateAccess") && (
@@ -973,11 +947,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
             </div>
 
             <Checkbox id='hasImpersonateAccess'  inputId='hasImpersonateAccess' name='hasImpersonateAccess' value='hasImpersonateAccess' checked={item.hasImpersonateAccess ?? false} onChange={(e) => handleCheckboxChange(e, 'hasImpersonateAccess')} className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"/>
-            {errors.hasImpersonateAccess && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.hasImpersonateAccess}
-              </p>
-            )}
+            <FormFieldError field="hasImpersonateAccess" errors={errors} />
           </div>
         )}
         {!isFieldHidden("photoAttachment") && (
@@ -993,12 +963,8 @@ verifyShopData?.data, roleData?.data, publishData?.data
               <TooltipWithText text={t("appUserTests.columns.fields.photoAttachment")} />
             </div>
 
-            <FileUploadMain modelName='AppUserTest' propName="photoAttachment" onFileUpload={(files) => handleFileUpload(files, 'photoAttachment')} accept=".jpg,.jpeg,.png,.pdf" initialData={item.photoAttachment ?? null} maxFileNumber={1}/>
-            {errors.photoAttachment && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.photoAttachment}
-              </p>
-            )}
+            <FileUploadMain modelName='AppUserTest' propName="" onFileUpload={(files) => handleFileUpload(files, 'photoAttachment')} accept=".jpg,.jpeg,.png,.pdf" initialData={item.photoAttachment ?? null}  error={errors.photoAttachment} maxFileNumber={1}/>
+            <FormFieldError field="photoAttachment" errors={errors} />
           </div>
         )}
         {!isFieldHidden("role") && (
@@ -1015,11 +981,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
             </div>
 
             <Dropdown id='role' name='role' value={selectedRole} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "role"); setSelectedRole(e.value) }} options={listRole} filter optionLabel='name'  checkmark={true}  highlightOnSelect={false}  appendTo="self"  placeholder={t("appUserTests.columns.fields.role")}  className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)]"  />
-            {errors.role && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.role}
-              </p>
-            )}
+            <FormFieldError field="role" errors={errors} />
           </div>
         )}
         {!isFieldHidden("publish") && (
@@ -1036,11 +998,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
             </div>
 
             <Dropdown id='publish' name='publish' value={selectedPublish} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "publish"); setSelectedPublish(e.value) }} options={listPublish} filter optionLabel='name'  checkmark={true}  highlightOnSelect={false}  appendTo="self"  placeholder={t("appUserTests.columns.fields.publish")}  className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)]"  />
-            {errors.publish && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.publish}
-              </p>
-            )}
+            <FormFieldError field="publish" errors={errors} />
           </div>
         )}
         {!isFieldHidden("lastLogin") && (
@@ -1057,11 +1015,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
             </div>
 
              <Calendar id='lastLogin' dateFormat="dd-mm-yy" value={item.lastLogin? new Date(item.lastLogin) : null } yearNavigator monthNavigator yearRange="1920:2040" onChange={(e) => handleInputChange('lastLogin', e.value ? formatDate(e.value) : '')}  placeholder={t("appUserTests.columns.fields.lastLogin")} showIcon className="calendardark text-sm rounded-md py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]" />
-            {errors.lastLogin && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.lastLogin}
-              </p>
-            )}
+            <FormFieldError field="lastLogin" errors={errors} />
           </div>
         )}
         {!isFieldHidden("defaultLanguage") && (
@@ -1078,11 +1032,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
             </div>
 
             <InputText type='text' id='defaultLanguage' name='defaultLanguage'  onChange={(e) => handleInputChange('defaultLanguage', e.target.value)} maxLength={10} className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.defaultLanguage} placeholder={t("appUserTests.columns.fields.defaultLanguage")}/>
-            {errors.defaultLanguage && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.defaultLanguage}
-              </p>
-            )}
+            <FormFieldError field="defaultLanguage" errors={errors} />
           </div>
         )}
         {!isFieldHidden("isPremiumUser") && (
@@ -1099,11 +1049,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
             </div>
 
             <Checkbox id='isPremiumUser'  inputId='isPremiumUser' name='isPremiumUser' value='isPremiumUser' checked={item.isPremiumUser ?? false} onChange={(e) => handleCheckboxChange(e, 'isPremiumUser')} className="bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"/>
-            {errors.isPremiumUser && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.isPremiumUser}
-              </p>
-            )}
+            <FormFieldError field="isPremiumUser" errors={errors} />
           </div>
         )}
         {!isFieldHidden("totalPlot") && (
@@ -1120,11 +1066,7 @@ verifyShopData?.data, roleData?.data, publishData?.data
             </div>
 
             <InputText type='text' id='totalPlot' name='totalPlot'  onChange={(e) => handleInputChange('totalPlot', e.target.value)}  className="rounded-md text-sm py-2 px-3 bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]"    value={item.totalPlot?.toString() ?? ''} placeholder={t("appUserTests.columns.fields.totalPlot")}/>
-            {errors.totalPlot && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.totalPlot}
-              </p>
-            )}
+            <FormFieldError field="totalPlot" errors={errors} />
           </div>
         )}
         {!isFieldHidden("reportedTo") && (
@@ -1140,12 +1082,10 @@ verifyShopData?.data, roleData?.data, publishData?.data
               <TooltipWithText text={t("appUserTests.columns.fields.reportedTo")} />
             </div>
 
-            <MultiSelect id='reportedTo' name='reportedTo' value={selectedReportedTo} options={reportedTolist} optionLabel='name' onChange={(e) => handleMultiSelectChange(e, 'reportedTo', setSelectedReportedTo)} filter placeholder={t("appUserTests.columns.fields.reportedTo")}/>
-            {errors.reportedTo && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.reportedTo}
-              </p>
-            )}
+            <MultiSelect id='reportedTo' name='reportedTo' value={selectedReportedTo} options={reportedTolist} optionLabel='name' onChange={(e) => handleMultiSelectChange(e, 'reportedTo', setSelectedReportedTo)} filter placeholder={t("appUserTests.columns.fields.reportedTo")} className="p-multiselect text-sm w-full lg:w-20rem flex items-center h-[40px] border bg-[var(--color-white)] text-[var(--color-dark)] border-[var(--color-gray)] rounded-md shadow-sm"
+                                data-name="reportedTo"
+ data-required="true"/>
+            <FormFieldError field="reportedTo" errors={errors} />
           </div>
         )}
         {!isFieldHidden("reportedBy") && (
@@ -1162,11 +1102,45 @@ verifyShopData?.data, roleData?.data, publishData?.data
             </div>
 
             <Dropdown id='reportedBy' name='reportedBy' value={selectedReportedBy} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "reportedBy"); setSelectedReportedBy(e.value) }} filter options={reportedBylist} optionLabel='name' optionValue="id" checkmark={true}  highlightOnSelect={false}  appendTo="self"  placeholder={t("appUserTests.columns.fields.reportedBy")} className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] " />
-            {errors.reportedBy && (
-              <p className="text-[var(--color-danger)] text-xs py-2 pl-2">
-                {errors.reportedBy}
-              </p>
-            )}
+            <FormFieldError field="reportedBy" errors={errors} />
+          </div>
+        )}
+        {!isFieldHidden("gender") && (
+          <div className="flex flex-col">
+            <div className=" flex items-center">
+              <label
+                htmlFor="gender"
+                className="text-sm font-bold py-2 bg-[var(--color-white)] text-[var(--color-dark)]"
+              >
+              {t("appUserTests.columns.fields.gender")}
+              </label>
+              
+              <TooltipWithText text={t("appUserTests.columns.fields.gender")} />
+            </div>
+
+            <div className="flex flex-wrap gap-4 px-2">
+                                {listGender.map((item) => (
+                                  <div key={item.id} className="flex items-center space-x-2">
+                                    <RadioButton
+                                      inputId={`gender-${item.id}`}
+                                      name="gender"
+                                      value={item.value}
+                                      onChange={(e) => {
+                                        handleRadioChange(e, "gender");
+                                        setSelectedGender(item.value);
+                                      }}
+                                      checked={selectedGender?.toUpperCase() === (item.value ?? '').toUpperCase()}
+                                    />
+                                    <label
+                                      htmlFor={`gender-${item.id}`}
+                                      className="text-sm text-[var(--color-dark)] capitalize"
+                                    >
+                                      {item.name}
+                                    </label>
+                                  </div>
+                                ))}
+                              </div>
+            <FormFieldError field="gender" errors={errors} />
           </div>
         )}
 
