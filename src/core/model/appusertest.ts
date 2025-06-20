@@ -37,7 +37,9 @@ export interface AppUserTest {
 	totalPlot?: number;
 	reportedTo?: string;
 	reportedBy?: string;
-	appUserTestName?: string;
+	appUserName?: string;
+	gender?: string;
+	genderLabel?: string;
 	createDate?: Date;
 	updateDate?: Date;
 	deleteDate?: Date;
