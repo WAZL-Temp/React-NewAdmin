@@ -361,8 +361,7 @@ const columnsConfigDefault = useMemo(() =>[
                                 </div>
                             </div>
                         </Dialog>
-            </div>
-            </div>          
+            </div>         
 
             <div className="m-2">
                 {!query.isLoading && (

@@ -462,7 +462,7 @@ function initData(): Category {
               <TooltipWithText text={t("categories.columns.fields.icon")} />
             </div>
 
-            <FileUploadMain modelName='Category' propName="" onFileUpload={(files) => handleFileUpload(files, 'icon')} accept=".jpg,.jpeg,.png,.pdf" initialData={item.icon ?? null}  error={errors.icon} maxFileNumber={1}/>
+            <FileUploadMain modelName='Category' propName="icon" onFileUpload={(files) => handleFileUpload(files, 'icon')} accept=".jpg,.jpeg,.png,.pdf" initialData={item.icon ?? null}  error={errors.icon} maxFileNumber={1}/>
             <FormFieldError field="icon" errors={errors} />
           </div>
         )}
