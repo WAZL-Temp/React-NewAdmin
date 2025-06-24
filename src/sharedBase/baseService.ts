@@ -9,12 +9,9 @@ export const useBaseService = <T extends BaseModel>(type: string) => {
         throw new Error('VITE_API_URL is not defined');
     }
     const apiUrl = `${apiBaseUrl}/${type}`;
-    let language = localStorage.getItem("app_language") || "en";
-    language = language == 'en' ? '' : language == 'mr' ? 'Mr' : 'Hi';
 
     const getHeaders = (): HeadersInit => {
         const headers: HeadersInit = {
-            'Lang': language,
             "Content-Type": "application/json",
         };
         const token = getToken();

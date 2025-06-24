@@ -112,7 +112,7 @@ export default function AppUsersHome() {
                                 className="w-full h-full object-cover"
                               />
                             </div>
-                            <h3 className="mt-3 text-sm font-semibold text-[var(--color-dark)] text-center min-h-[24px]">
+                            <h3 className="mt-3 text-sm font-semibold text-black text-center min-h-[24px]">
                               {item.name}
                             </h3>
                           </div>
@@ -277,8 +277,8 @@ const ItemCard = ({ user }: { user: AppUser }) => {
         />
       </div>
 
-      <h3 className="text-lg font-semibold text-[var(--color-dark)]">{user.name}</h3>
-      <p className="text-gray-600 text-xs leading-relaxed mt-2">
+      <h3 className="text-lg font-semibold text-black">{user.name}</h3>
+      <p className="text-black text-xs leading-relaxed mt-2">
         Nunc mi ipsum faucibus vitae aliquet nec. Lacus sed viverra tellus in hac habitasse platea dictumst.
       </p>
       <div className="mt-4">

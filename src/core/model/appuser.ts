@@ -1,5 +1,4 @@
-export interface AppUser {
-	createDate?: Date;
+export interface AppUser {	
 	id?: number;
 	name?: string;
 	firstName?: string;
@@ -36,16 +35,18 @@ export interface AppUser {
 	defaultLanguage?: string;
 	isPremiumUser?: boolean;
 	totalPlot?: number;
+	reportedTo?: string;
+	reportedBy?: string;
+	reportedByLabel?: string;
+	appUserName?: string;
+	gender?: string;
+	genderLabel?: string;
+	createDate?: Date;
 	updateDate?: Date;
 	deleteDate?: Date;
 	createById?: number;
 	updateById?: number;
 	deleteById?: number;
 	isDelete?: boolean;
-	appUserList?: string;
-	reportedTo?: string;
-	reportedBy?: string;
-	reportedByLabel?: string;
-	gender?: string;
 }
 

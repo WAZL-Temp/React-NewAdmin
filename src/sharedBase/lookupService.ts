@@ -107,7 +107,7 @@ export const useFetchRoleDetailsData = () => {
 };
 
 interface Service {
-  getAll: (condition: any) => Promise<unknown[]>;
+  getAll: (condition: any) => Promise<any[]>;
 }
 
 export function getService(): Service | null {
