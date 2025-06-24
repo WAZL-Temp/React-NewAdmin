@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { AiFillCloseCircle, MdDownloadForOffline, Tooltip } from '../sharedBase/globalImports';
 import { CustomFile } from '../core/model/customfile';
 import { useTranslation } from '../sharedBase/globalUtils';
+import pdfIcon from '../assets/images/pdf-icon.png';
 
 interface ImageViewerProps {
   files: string | null;
@@ -71,7 +72,6 @@ export default function ImgViewer({ files, modelName }: ImageViewerProps) {
           <ul className="uploaded-files-grid">
             {uploadedFiles.map((file) => (
               <li key={file.filePath} className="flex items-center space-x-4">
-                {/* p-1 shadow-md rounded */}
                 {!file.filePath.includes('pdf') ? (
                   <>
                     <div
@@ -90,8 +90,13 @@ export default function ImgViewer({ files, modelName }: ImageViewerProps) {
                   </>
                 ) : (
                   <>
-                    <div className="flex flex-col items-start justify-center">
-                      <span className="font-medium truncate text-xs text-[var(--color-dark)]">{file.fileName}</span>
+                    <div className="flex flex-col items-start justify-center" onClick={() => downloadFile(file)}>
+                       <img
+                        src={pdfIcon}
+                        alt={file.fileName}
+                        className="h-14 w-12 object-cover rounded cursor-pointer"
+                      />
+                      {/* <span className="font-medium truncate text-xs text-[var(--color-dark)]">{file.fileName}</span> */}
                     </div>
                   </>
                 )}
