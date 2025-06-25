@@ -1,5 +1,5 @@
 import { useAuthStore } from "../store/auth.store";
-import { AiFillHome, Button, FiShoppingBag, FiUser, RiLogoutCircleLine, RxCross2 } from "../sharedBase/globalImports";
+import { AiFillHome, Button, FiShoppingBag, FiUser, IoPersonSharp, RiLogoutCircleLine, RxCross2 } from "../sharedBase/globalImports";
 import { useLocation, useNavigate, useTranslation } from '../sharedBase/globalUtils';
 import { UserInfo } from "../types/auth";
 // import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
@@ -139,7 +139,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
         </Button>
         {/* )} */}
 
-        {/* <Button
+        <Button
           onClick={() => {
             navigate("/role");
             if (!isMinimized) toggleSidebar();
@@ -155,7 +155,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
         >
           <IoPersonSharp size={18} className={`${isMinimized ? '' : 'mr-3'}`} />
           {(!isMinimized) && <span className=" text-sm font-medium">{t("appUsers.columns.fields.role")}</span>}
-        </Button> */}
+        </Button>
       </nav>
 
       <footer className="flex justify-center items-center p-2 border-t bg-[var(--color-primary)] text-[var(--color-white)] ">

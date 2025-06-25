@@ -114,11 +114,13 @@ export default function AppUsersList() {
         });
     }
 
-    items.push({
-        label: t("globals.exportExcel"),
-        icon: 'pi pi-file-excel',
-        command: () => exportToExcel(userService, globalFilterValue || '', 'AppUser')
-    });
+    if (roleData && hasAccess(roleData, "Export")) {
+        items.push({
+            label: t("globals.exportExcel"),
+            icon: 'pi pi-file-excel',
+            command: () => exportToExcel(userService, globalFilterValue || '', 'AppUser')
+        });
+    }
 
     if (roleData && hasAccess(roleData, "Import")) {
         items.push({
@@ -356,7 +358,7 @@ export default function AppUsersList() {
                             onHide={() => setVisible(false)}
                             className="columnVisibility w-full max-w-[95vw] sm:max-w-[70vw] md:max-w-[60vw] lg:max-w-[50vw] text-xs lg:text-sm"
                             style={{
-                               position: "fixed",
+                                position: "fixed",
                                 top: "10vh",
                                 left: "50%",
                                 transform: "translateX(-50%)",
