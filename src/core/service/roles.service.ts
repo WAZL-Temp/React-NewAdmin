@@ -3,13 +3,13 @@ import { getToken } from "../../sharedBase/baseServiceVar";
 import { Role } from "../model/role";
 import { RoleData } from "../model/roledata";
 
-export const createRoleService = (Role: typeof useBaseService) => {
+export const createRoleService = (resourceName: string) => {
 
     const apiBaseUrl = import.meta.env.VITE_API_URL || "";
     if (!apiBaseUrl) {
         throw new Error('VITE_API_URL is not defined');
     }
-    const apiUrl = `${apiBaseUrl}/${Role}`;
+    const apiUrl = `${apiBaseUrl}/${resourceName}`;
 
     const getHeaders = (): HeadersInit => {
         const headers: HeadersInit = {
@@ -43,9 +43,13 @@ export const createRoleService = (Role: typeof useBaseService) => {
         }
     }
 
-    return{
+    return {
         addData
     }
 }
 
-export const roleService = createRoleService(useBaseService);
+export const roleAddService = createRoleService("Role");
+
+export const RoleService = () => {
+    return useBaseService<Role>("Role");
+};
