@@ -37,7 +37,6 @@ export interface AppUserTest {
 	totalPlot?: number;
 	reportedTo?: string;
 	reportedBy?: string;
-	reportedByLabel?:string;
 	appUserName?: string;
 	gender?: string;
 	genderLabel?: string;

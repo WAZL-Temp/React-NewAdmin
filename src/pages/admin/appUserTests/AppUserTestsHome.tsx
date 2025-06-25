@@ -89,17 +89,17 @@ export default function AppUserTestsHome() {
                 itemTemplate={(item) => <ItemSlider item={item} />}
               />
             ) : (
-              <p className="text-center text-[var(--color-dark)]">No users available</p>
+              <p className="text-center text-[var(--color-dark)]">No items available</p>
             )}
 
             <section>
-              <ItemList title={t('globals.topUsers', { length: topData?.length })} users={listHomeUserData ?? []} />
+              <ItemList title={t('globals.topUsers', { length: topData?.length })} items={listHomeUserData ?? []} />
             </section>
 
             {listHomeUserData && (
               <section className="py-10 flex items-center justify-center">
                 <div className="container mx-auto px-4 sm:px-12">
-                  <h2 className="text-xl sm:text-2xl font-bold text-gray-800 text-center">{t('globals.createdByMe')}</h2>
+                  <h2 className="text-xl sm:text-2xl font-bold text-[var(--color-dark)] text-center">{t('globals.createdByMe')}</h2>
                   <div className="relative overflow-hidden">
                     <div className="flex space-x-4 overflow-x-auto scrollbar-hide px-4 py-4 snap-x snap-proximity justify-start">
                       {listHomeUserData.map((item, index) => (
@@ -112,7 +112,7 @@ export default function AppUserTestsHome() {
                                 className="w-full h-full object-cover"
                               />
                             </div>
-                            <h3 className="mt-3 text-sm font-semibold text-gray-800 text-center min-h-[24px]">
+                            <h3 className="mt-3 text-sm font-semibold text-black text-center min-h-[24px]">
                               {item.name}
                             </h3>
                           </div>
@@ -200,16 +200,16 @@ const ItemSlider = ({ item }: { item: AppUserTest }) => {
   );
 };
 
-const ItemList = ({ title, users }: { title: string; users: UserData[] }) => {
+const ItemList = ({ title, items }: { title: string; items: UserData[] }) => {
   const navigate = useNavigate();
   const baseModelName = 'appUserTests';
 
   return (
     <div className='mt-3'>
       <div className="container mx-auto px-2 sm:px-4">
-        <h5 className="text-xl sm:text-2xl font-semibold text-center text-gray-800 mb-3">{title}</h5>
+        <h5 className="text-xl sm:text-2xl font-semibold text-center text-[var(--color-dark)] mb-3">{title}</h5>
         <Carousel
-          value={users}
+          value={items}
           numVisible={2}
           numScroll={1}
           showIndicators={false}
@@ -277,8 +277,8 @@ const ItemCard = ({ item }: { item: AppUserTest }) => {
         />
       </div>
 
-      <h3 className="text-lg font-semibold text-gray-800">{item.name}</h3>
-      <p className="text-gray-600 text-xs leading-relaxed mt-2">
+      <h3 className="text-lg font-semibold text-black">{item.name}</h3>
+      <p className="text-black text-xs leading-relaxed mt-2">
         Nunc mi ipsum faucibus vitae aliquet nec. Lacus sed viverra tellus in hac habitasse platea dictumst.
       </p>
       <div className="mt-4">
