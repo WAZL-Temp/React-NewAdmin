@@ -122,26 +122,26 @@ const columnsConfigDefault = useMemo(() =>[
     }, [columnsConfig, setFilters, setGlobalFilterValue, query.tableSearch]);
 
     const items: MenuItem[] = []
-    if (hasAccess(roleData, "Add")) {
-    items.push({
-        label: t("globals.add"),
-        icon: 'pi pi-plus',
-        command: () => addData(navigate, baseModelName)
-    });
+    if (roleData && hasAccess(roleData, "Add")) {
+        items.push({
+            label: t("globals.add"),
+            icon: 'pi pi-plus',
+            command: () => addData(navigate, baseModelName)
+        });
     }
-
+if (roleData && hasAccess(roleData, "Export")) {
     items.push({
         label: t("globals.exportExcel"),
         icon: 'pi pi-file-excel',
         command: () => exportToExcel(appUserTestsService, globalFilterValue || '', 'AppUserTest')
     });
-
-    if (hasAccess(roleData, "Import")) {
-    items.push({
-        label: t("globals.import"),
-        icon: 'pi pi-upload',
-        command: () => importFromExcel(navigate, baseModelName)
-    });
+}
+    if (roleData && hasAccess(roleData, "Import")) {
+        items.push({
+            label: t("globals.import"),
+            icon: 'pi pi-upload',
+            command: () => importFromExcel(navigate, baseModelName)
+        });
     }
 
     items.push({
