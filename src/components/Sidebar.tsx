@@ -31,16 +31,20 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
         status: item.status ? JSON.parse(item.status) : [],
         dbStatus: item.dbStatus ? JSON.parse(item.dbStatus) : {},
       }));
+
       setRoleData(parsedData);
     }
   }, [roleDetailsData]);
 
   const hasAccess = (roleData: any, requiredAction: string) => {
     if (!roleData) return false;
-    
-    const actions = roleData.action;
-    
-    const newAction = actions.some((action: Action) => action.name.toLowerCase() === requiredAction.toLowerCase());
+
+    const actions = roleData?.action;
+    let newAction = false;
+
+    if (actions.length) {
+      newAction = actions?.some((action: Action) => action.name.toLowerCase() === requiredAction.toLowerCase());
+    }
     return newAction;
   }
 
@@ -51,11 +55,11 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
     toggleSidebar();
   };
 
-  const hasAccessToPage = (actionName:string) => {
+  const hasAccessToPage = (actionName: string) => {
     return roleData?.some((action: any) => action.name.toLowerCase() === actionName.toLowerCase()) ?? false;
   }
 
-  const handleNavigation = (path: string,actionName:string) => {
+  const handleNavigation = (path: string, actionName: string) => {
     if (hasAccessToPage(actionName)) {
       navigate(path);
     } else {
@@ -110,7 +114,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
             //   navigate("/appUserTests");
             //   if (!isMinimized) toggleSidebar();
             // }}
-            onClick={() => handleNavigation("/appUserTests","AppUserTest")}
+            onClick={() => handleNavigation("/appUserTests", "AppUserTest")}
             className={`flex items-center ${isMinimized ? 'px-1' : 'px-2'} py-2 rounded
               ${location.pathname === "/appUserTests" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
               hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]`}
@@ -128,7 +132,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
 
         {roleData && hasAccess(roleData.find((r: any) => r.name.toLowerCase() === 'product'), "List") && (
           <Button
-            onClick={() => handleNavigation("/product","Product")}
+            onClick={() => handleNavigation("/product", "Product")}
             // onClick={() => {
             //   navigate("/product");
             //   if (!isMinimized) toggleSidebar();
