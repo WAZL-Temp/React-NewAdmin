@@ -77,7 +77,6 @@
   "appUsers": {
     "columns": {
       "fields": {
-        "createDate": "तयार केलेली तारीख",
         "id": "आयडी",
         "name": "नाव",
         "firstName": "पहिले नाव",
@@ -117,6 +116,7 @@
         "reportedTo": "कोणाला अहवाल दिला",
         "reportedBy": "कोणीतर्फे अहवाल दिला",
         "gender": "लिंग",
+        "createDate": "निर्मिती दिनांक",
         "updateDate": "अद्यतन तारीख",
         "deleteDate": "हटवण्याची तारीख",
         "updateById": "अद्यतन करणाऱ्याचा आयडी",
@@ -210,7 +210,6 @@
   "appUserTests": {
     "columns": {
       "fields": {
-        "createDate": "तयार केलेली तारीख",
         "id": "आयडी",
         "name": "नाव",
         "firstName": "पहिले नाव",
@@ -249,6 +248,8 @@
         "totalPlot": "एकूण प्लॉट",
         "reportedTo": "कोणाला अहवाल दिला",
         "reportedBy": "कोणीतर्फे अहवाल दिला",
+        "createDate": "निर्मिती दिनांक",
+        "createById": "यांनी तयार केले",
         "updateDate": "अद्यतन तारीख",
         "deleteDate": "हटवण्याची तारीख",
         "updateById": "अद्यतन करणाऱ्याचा आयडी",

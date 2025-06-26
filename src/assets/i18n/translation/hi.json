@@ -79,7 +79,6 @@
   "appUsers": {
     "columns": {
       "fields": {
-        "createDate": "बनाई गई तिथि",
         "id": "आईडी",
         "name": "नाम",
         "firstName": "पहला नाम",
@@ -119,6 +118,7 @@
         "reportedTo": "रिपोर्ट किया गया",
         "reportedBy": "द्वारा रिपोर्ट किया गया",
         "gender": "लिंग",
+        "createDate": "निर्माण दिनांक",
         "updateDate": "अपडेट तिथि",
         "deleteDate": "डिलीट तिथि",
         "updateById": "अपडेट बाय आईडी",
@@ -212,7 +212,6 @@
   "appUserTests": {
     "columns": {
       "fields": {
-        "createDate": "बनाई गई तिथि",
         "id": "आईडी",
         "name": "नाम",
         "firstName": "पहला नाम",
@@ -228,12 +227,12 @@
         "district": "जिला",
         "address": "पता पंक्ति 1",
         "addressLine": "पता पंक्ति 2",
-        "verifyShop": "VerifyShop",
-        "verifyShopLabel": "VerifyShop",
+        "verifyShop": "दुकान सत्यापित करें",
+        "verifyShopLabel": "दुकान सत्यापित करें",
         "gst": "जीएसटी नंबर",
         "gstCertificate": "जीएसटी सर्टिफिकेट",
         "photoShopFront": "फोटो शॉप फ्रॉम फ्रंट",
-        "visitingCard": "VisitingCard",
+        "visitingCard": "विजिटिंग कार्ड",
         "cheque": "चेक",
         "gstOtp": "जीएसटी ओटीपी",
         "isActive": "सक्रिय",
@@ -246,11 +245,13 @@
         "publishLabel": "प्रकाशित करें",
         "importDataId": "आयात डेटा आईडी",
         "lastLogin": "अंतिम लॉगिन",
-        "defaultLanguage": "DefaultLanguage",
-        "isPremiumUser": "IsPremiumUser",
-        "totalPlot": "TotalPlot",
+        "defaultLanguage": "डिफ़ॉल्ट भाषा",
+        "isPremiumUser": "प्रीमियम उपयोगकर्ता",
+        "totalPlot": "कुल भूखंड",
         "reportedTo": "रिपोर्ट किया गया",
         "reportedBy": "द्वारा रिपोर्ट किया गया",
+        "createDate": "निर्माण दिनांक",
+        "createById": "द्वारा बनाया गया",
         "updateDate": "अपडेट तिथि",
         "deleteDate": "डिलीट तिथि",
         "updateById": "अपडेट बाय आईडी",

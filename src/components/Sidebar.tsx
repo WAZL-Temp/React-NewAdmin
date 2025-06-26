@@ -2,9 +2,10 @@ import { useAuthStore } from "../store/auth.store";
 import { AiFillHome, Button, FiShoppingBag, FiUser, IoPersonSharp, RiLogoutCircleLine, RxCross2 } from "../sharedBase/globalImports";
 import { useLocation, useNavigate, useTranslation } from '../sharedBase/globalUtils';
 import { UserInfo } from "../types/auth";
-// import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
-// import { useEffect, useState } from "react";
-// import { Action } from "../types/listpage";
+import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
+import { useEffect, useState } from "react";
+import { Action } from "../types/listpage";
+import { RoleDetail } from "../core/model/roledetail";
 
 interface SidebarProps {
   isSidebarOpen: boolean;
@@ -16,28 +17,32 @@ interface SidebarProps {
 const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) => {
   const { t } = useTranslation();
   const { login, userInfo } = useAuthStore();
-  // const [roleData, setRoleData] = useState<RoleDetail | null>(null);
+  const [roleData, setRoleData] = useState<RoleDetail[] | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
-  // const { data: roleDetailsData } = useFetchRoleDetailsData();
+  const { data: roleDetailsData } = useFetchRoleDetailsData();
 
-  // useEffect(() => {
-  //   const getRoleData = async () => {
-  //     if (roleDetailsData && roleDetailsData.length > 0) {
-  //       setRoleData(roleDetailsData ?? null);
-  //     }
-  //   };
+  useEffect(() => {
+    if (roleDetailsData && Array.isArray(roleDetailsData)) {
+      const parsedData = roleDetailsData.map((item: RoleDetail) => ({
+        ...item,
+        action: item.action ? JSON.parse(item.action) : [],
+        hideColumn: item.hideColumn ? JSON.parse(item.hideColumn) : [],
+        status: item.status ? JSON.parse(item.status) : [],
+        dbStatus: item.dbStatus ? JSON.parse(item.dbStatus) : {},
+      }));
+      setRoleData(parsedData);
+    }
+  }, [roleDetailsData]);
 
-  //   getRoleData();
-  // }, []);
-
-  // const hasAccess = (roleData: any, requiredAction: string) => {
-  //   if (!roleData) return false;
-
-  //   const actions = typeof roleData.action === "string" ? JSON.parse(roleData.action) : [];
-
-  //   return actions.some((action: Action) => action.name.toLowerCase() === requiredAction.toLowerCase());
-  // }
+  const hasAccess = (roleData: any, requiredAction: string) => {
+    if (!roleData) return false;
+    
+    const actions = roleData.action;
+    
+    const newAction = actions.some((action: Action) => action.name.toLowerCase() === requiredAction.toLowerCase());
+    return newAction;
+  }
 
   const handleLogout = () => {
     login("");
@@ -46,20 +51,20 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
     toggleSidebar();
   };
 
-  // const hasAccessToPage = (pageName: string) => {
-  //   return roleData.some((action: any) => action.name.toLowerCase() === pageName.toLowerCase());
-  // }
+  const hasAccessToPage = (actionName:string) => {
+    return roleData?.some((action: any) => action.name.toLowerCase() === actionName.toLowerCase()) ?? false;
+  }
 
-  // const handleNavigation = (path: string) => {
-  //   if (hasAccessToPage(path.slice(1))) {
-  //     navigate(path);
-  //   } else {
-  //     navigate("/404");
-  //   }
-  //   if (!isMinimized) {
-  //     toggleSidebar();
-  //   }
-  // }
+  const handleNavigation = (path: string,actionName:string) => {
+    if (hasAccessToPage(actionName)) {
+      navigate(path);
+    } else {
+      navigate("/404");
+    }
+    if (!isMinimized) {
+      toggleSidebar();
+    }
+  }
 
   return (
     <aside
@@ -99,45 +104,48 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
           {(!isMinimized) && <span className=" text-sm font-medium">{t("globals.homes")}</span>}
         </Button>
 
-        <Button
-          onClick={() => {
-            navigate("/appUserTests");
-            if (!isMinimized) toggleSidebar();
-          }}
-          className={`flex items-center ${isMinimized ? 'px-1' : 'px-2'} py-2 rounded
-          ${location.pathname === "/appUserTests" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
-          hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]`}
-          tooltip={t("appUserTests.form_detail.fields.modelname")}
-          tooltipOptions={{
-            position: 'right',
-            className: 'font-normal rounded text-sm p-1'
-          }}
-        >
-          <FiUser size={18} className={`${isMinimized ? '' : 'mr-3'}`} />
-          {(!isMinimized) && <span className=" text-sm font-medium">
-            {t("appUserTests.form_detail.fields.modelname")}</span>}
-        </Button>
+        {roleData && hasAccess(roleData.find((r: any) => r.name.toLowerCase() == 'appusertest'), "List") && (
+          <Button
+            // onClick={() => {
+            //   navigate("/appUserTests");
+            //   if (!isMinimized) toggleSidebar();
+            // }}
+            onClick={() => handleNavigation("/appUserTests","AppUserTest")}
+            className={`flex items-center ${isMinimized ? 'px-1' : 'px-2'} py-2 rounded
+              ${location.pathname === "/appUserTests" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
+              hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]`}
+            tooltip={t("appUserTests.form_detail.fields.modelname")}
+            tooltipOptions={{
+              position: 'right',
+              className: 'font-normal rounded text-sm p-1'
+            }}
+          >
+            <FiUser size={18} className={`${isMinimized ? '' : 'mr-3'}`} />
+            {(!isMinimized) && <span className=" text-sm font-medium">
+              {t("appUserTests.form_detail.fields.modelname")}</span>}
+          </Button>
+        )}
 
-        {/* {hasAccess(roleData.find((r: any) => r.name.toLowerCase() === 'product'), "List") && ( */}
-        <Button
-          // onClick={() => handleNavigation("/product")}
-          onClick={() => {
-            navigate("/product");
-            if (!isMinimized) toggleSidebar();
-          }}
-          className={`flex items-center ${isMinimized ? 'px-1' : 'px-2'} py-2 rounded
+        {roleData && hasAccess(roleData.find((r: any) => r.name.toLowerCase() === 'product'), "List") && (
+          <Button
+            onClick={() => handleNavigation("/product","Product")}
+            // onClick={() => {
+            //   navigate("/product");
+            //   if (!isMinimized) toggleSidebar();
+            // }}
+            className={`flex items-center ${isMinimized ? 'px-1' : 'px-2'} py-2 rounded
             ${location.pathname === "/product" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
             hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]`}
-          tooltip={t("products.form_detail.fields.modelname")}
-          tooltipOptions={{
-            position: 'right',
-            className: 'font-normal rounded text-sm p-1'
-          }}
-        >
-          <FiShoppingBag size={18} className={`${isMinimized ? '' : 'mr-3'}`} />
-          {(!isMinimized) && <span className=" text-sm font-medium">{t("products.form_detail.fields.modelname")}</span>}
-        </Button>
-        {/* )} */}
+            tooltip={t("products.form_detail.fields.modelname")}
+            tooltipOptions={{
+              position: 'right',
+              className: 'font-normal rounded text-sm p-1'
+            }}
+          >
+            <FiShoppingBag size={18} className={`${isMinimized ? '' : 'mr-3'}`} />
+            {(!isMinimized) && <span className=" text-sm font-medium">{t("products.form_detail.fields.modelname")}</span>}
+          </Button>
+        )}
 
         <Button
           onClick={() => {
