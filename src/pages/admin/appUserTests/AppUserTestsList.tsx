@@ -129,7 +129,7 @@ const columnsConfigDefault = useMemo(() =>[
             command: () => addData(navigate, baseModelName)
         });
     }
-if (roleData && hasAccess(roleData, "Export")) {
+if (roleData && hasAccess(roleData, "Export")){
     items.push({
         label: t("globals.exportExcel"),
         icon: 'pi pi-file-excel',

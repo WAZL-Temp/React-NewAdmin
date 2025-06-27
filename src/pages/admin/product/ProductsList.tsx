@@ -99,11 +99,11 @@ const ProductsList = () => {
 
   const items: MenuItem[] = []
   if (hasAccess(roleData, "Add")) {
-  items.push({
-    label: t("globals.add"),
-    icon: 'pi pi-plus',
-    command: () => addData(navigate, baseModelName)
-  });
+    items.push({
+      label: t("globals.add"),
+      icon: 'pi pi-plus',
+      command: () => addData(navigate, baseModelName)
+    });
   }
 
   items.push({
@@ -113,11 +113,11 @@ const ProductsList = () => {
   });
 
   if (hasAccess(roleData, "Import")) {
-  items.push({
-    label: t("globals.import"),
-    icon: 'pi pi-upload',
-    command: () => importFromExcel(navigate, baseModelName)
-  });
+    items.push({
+      label: t("globals.import"),
+      icon: 'pi pi-upload',
+      command: () => importFromExcel(navigate, baseModelName)
+    });
   }
 
   items.push({
@@ -143,23 +143,23 @@ const ProductsList = () => {
     return (
       <div className="flex items-center justify-start action-group gap-3">
         {hasAccess(roleData, "View") && (
-        <Button id={`tooltip-view-${rowData.id}`} className="p-button-text text-xs w-3 text-center" onClick={() => openItem(rowData, 'view')}>
-          <TiEye size={17} className="font-bold text-[var(--color-primary)]" />
-        </Button>
+          <Button id={`tooltip-view-${rowData.id}`} className="p-button-text text-xs w-3 text-center" onClick={() => openItem(rowData, 'view')}>
+            <TiEye size={17} className="font-bold text-[var(--color-primary)]" />
+          </Button>
         )}
         <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-view-${rowData.id}`} content="View Data" showDelay={200} position="top" />
 
         {hasAccess(roleData, "Edit") && (
-        <Button id={`tooltip-edit-${rowData.id}`} className="p-button-text text-xs w-3 text-center" onClick={() => openItem(rowData, 'edit')}>
-          <RiPencilFill size={17} className="font-bold" />
-        </Button>
+          <Button id={`tooltip-edit-${rowData.id}`} className="p-button-text text-xs w-3 text-center" onClick={() => openItem(rowData, 'edit')}>
+            <RiPencilFill size={17} className="font-bold" />
+          </Button>
         )}
         <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-edit-${rowData.id}`} content="Edit Data" showDelay={200} position="top" />
 
         {hasAccess(roleData, "Delete") && (
-        <Button id={`tooltip-delete-${rowData.id}`} className="p-button-text text-xs w-3 text-center text-[var(--color-danger)]" onClick={() => handleDelete(deleteItem, rowData.id)} >
-          <BiSolidTrash size={17} className="font-bold" />
-        </Button>
+          <Button id={`tooltip-delete-${rowData.id}`} className="p-button-text text-xs w-3 text-center text-[var(--color-danger)]" onClick={() => handleDelete(deleteItem, rowData.id)} >
+            <BiSolidTrash size={17} className="font-bold" />
+          </Button>
         )}
         <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-delete-${rowData.id}`} content="Delete Data" showDelay={200} position="top" />
       </div>
@@ -187,46 +187,48 @@ const ProductsList = () => {
 
             <div className="hidden lg:flex items-center space-x-2 flex-wrap  text-[var(--color-white)] bg-[var(--color-white)]">
               {hasAccess(roleData, "Add") && (
-              <Button
-                type="button"
-                className="bg-[var(--color-secondary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
-                onClick={() => addData(navigate, baseModelName)}
-                tooltip={t("globals.add")}
-                tooltipOptions={{
-                  position: 'top',
-                  className: 'font-normal rounded text-sm p-1'
-                }}
-              >
-                <HiOutlinePlus size={18} />
-              </Button>
+                <Button
+                  type="button"
+                  className="bg-[var(--color-secondary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
+                  onClick={() => addData(navigate, baseModelName)}
+                  tooltip={t("globals.add")}
+                  tooltipOptions={{
+                    position: 'top',
+                    className: 'font-normal rounded text-sm p-1'
+                  }}
+                >
+                  <HiOutlinePlus size={18} />
+                </Button>
               )}
 
-              <Button
-                type="button"
-                className="bg-[var(--color-success)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
-                onClick={() => exportToExcel(productService, globalFilterValue || '', 'Product')}
-                tooltip={t("globals.exportExcel")}
-                tooltipOptions={{
-                  position: 'top',
-                  className: 'font-normal rounded text-sm p-1'
-                }}
-              >
-                <TbFileExcel size={18} />
-              </Button>
+              {hasAccess(roleData, "Export") && (
+                <Button
+                  type="button"
+                  className="bg-[var(--color-success)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
+                  onClick={() => exportToExcel(productService, globalFilterValue || '', 'Product')}
+                  tooltip={t("globals.exportExcel")}
+                  tooltipOptions={{
+                    position: 'top',
+                    className: 'font-normal rounded text-sm p-1'
+                  }}
+                >
+                  <TbFileExcel size={18} />
+                </Button>
+              )}
 
               {hasAccess(roleData, "Import") && (
-              <Button
-                type="button"
-                className="bg-[var(--color-info)]  text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
-                tooltip={t("globals.import")}
-                onClick={() => importFromExcel(navigate, baseModelName)}
-                tooltipOptions={{
-                  position: 'top',
-                  className: 'font-normal rounded text-sm p-1'
-                }}
-              >
-                <MdOutlineUploadFile size={18} />
-              </Button>
+                <Button
+                  type="button"
+                  className="bg-[var(--color-info)]  text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
+                  tooltip={t("globals.import")}
+                  onClick={() => importFromExcel(navigate, baseModelName)}
+                  tooltipOptions={{
+                    position: 'top',
+                    className: 'font-normal rounded text-sm p-1'
+                  }}
+                >
+                  <MdOutlineUploadFile size={18} />
+                </Button>
               )}
 
               <Button
@@ -389,525 +391,527 @@ const ProductsList = () => {
               scrollable
               scrollHeight="68vh"
             >
-              <Column
-                header={t('globals.headerActions')}
-                headerStyle={{
-                  backgroundColor: "var(--color-primary)",
-                  color: "var(--color-white)",
-                  textAlign: "center",
-                }}
-                body={(rowData) => actionBodyTemplate(rowData, openItem)}
-                style={{ width: '50px', minWidth: '50px', maxWidth: '50px', background: 'var(--color-white)', color: 'var(--color-dark)' }}
-                frozen
-                alignFrozen="left"
-                className="text-sm sticky bg-[var(--color-white)] text-[var(--color-dark)]  font-semibold whitespace-nowrap overflow-hidden text-ellipsis"
-              />
+              {hasAccess(roleData, "Actions") && (
+                <Column
+                  header={t('globals.headerActions')}
+                  headerStyle={{
+                    backgroundColor: "var(--color-primary)",
+                    color: "var(--color-white)",
+                    textAlign: "center",
+                  }}
+                  body={(rowData) => actionBodyTemplate(rowData, openItem)}
+                  style={{ width: '50px', minWidth: '50px', maxWidth: '50px', background: 'var(--color-white)', color: 'var(--color-dark)' }}
+                  frozen
+                  alignFrozen="left"
+                  className="text-sm sticky bg-[var(--color-white)] text-[var(--color-dark)]  font-semibold whitespace-nowrap overflow-hidden text-ellipsis"
+                />
+              )}
 
               {visibleColumns.includes('name') && (
-              <Column
-                field="name" header={t("products.columns.fields.name")} sortable
-                headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                filter filterElement={
-                  <InputText
-                    value={query.tableSearch.searchRowFilter?.name || ''}
-                    className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                    onChange={(e) => handleFilterChangeLocal("name", e.target.value)}
-                  />
-                }
-                body={(rowData, { rowIndex }) => (
-                  <>
-                    <div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
-                      {rowData.name}
-                    </div>
-                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
-                  </>
-                )}
-              />
+                <Column
+                  field="name" header={t("products.columns.fields.name")} sortable
+                  headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                  style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                  filter filterElement={
+                    <InputText
+                      value={query.tableSearch.searchRowFilter?.name || ''}
+                      className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                      onChange={(e) => handleFilterChangeLocal("name", e.target.value)}
+                    />
+                  }
+                  body={(rowData, { rowIndex }) => (
+                    <>
+                      <div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+                        {rowData.name}
+                      </div>
+                      <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+                    </>
+                  )}
+                />
               )}
               {visibleColumns.includes('slug') && (
-              <Column
-                field="slug" header={t("products.columns.fields.slug")} sortable
-                headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                filter filterElement={
-                  <InputText
-                    value={query.tableSearch.searchRowFilter?.slug || ''}
-                    className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                    onChange={(e) => handleFilterChangeLocal("slug", e.target.value)}
-                  />
-                }
-                body={(rowData, { rowIndex }) => (
-                  <>
-                    <div id={`tooltip-slug-${rowIndex}`} className="text-left truncate font-medium">
-                      {rowData.slug}
-                    </div>
-                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-slug-${rowIndex}`} content={rowData.slug} showDelay={200} position="top" />
-                  </>
-                )}
-              />
+                <Column
+                  field="slug" header={t("products.columns.fields.slug")} sortable
+                  headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                  style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                  filter filterElement={
+                    <InputText
+                      value={query.tableSearch.searchRowFilter?.slug || ''}
+                      className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                      onChange={(e) => handleFilterChangeLocal("slug", e.target.value)}
+                    />
+                  }
+                  body={(rowData, { rowIndex }) => (
+                    <>
+                      <div id={`tooltip-slug-${rowIndex}`} className="text-left truncate font-medium">
+                        {rowData.slug}
+                      </div>
+                      <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-slug-${rowIndex}`} content={rowData.slug} showDelay={200} position="top" />
+                    </>
+                  )}
+                />
               )}
               {visibleColumns.includes('sku') && (
-              <Column
-                field="sku" header={t("products.columns.fields.sku")} sortable
-                headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                filter filterElement={
-                  <InputText
-                    value={query.tableSearch.searchRowFilter?.sku || ''}
-                    className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                    onChange={(e) => handleFilterChangeLocal("sku", e.target.value)}
-                  />
-                }
-                body={(rowData, { rowIndex }) => (
-                  <>
-                    <div id={`tooltip-sku-${rowIndex}`} className="text-left truncate font-medium">
-                      {rowData.sku}
-                    </div>
-                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-sku-${rowIndex}`} content={rowData.sku} showDelay={200} position="top" />
-                  </>
-                )}
-              />
+                <Column
+                  field="sku" header={t("products.columns.fields.sku")} sortable
+                  headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                  style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                  filter filterElement={
+                    <InputText
+                      value={query.tableSearch.searchRowFilter?.sku || ''}
+                      className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                      onChange={(e) => handleFilterChangeLocal("sku", e.target.value)}
+                    />
+                  }
+                  body={(rowData, { rowIndex }) => (
+                    <>
+                      <div id={`tooltip-sku-${rowIndex}`} className="text-left truncate font-medium">
+                        {rowData.sku}
+                      </div>
+                      <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-sku-${rowIndex}`} content={rowData.sku} showDelay={200} position="top" />
+                    </>
+                  )}
+                />
               )}
               {visibleColumns.includes('specifications') && (
-              <Column
-                field="specifications" header={t("products.columns.fields.specifications")} sortable
-                headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                filter filterElement={
-                  <InputText
-                    value={query.tableSearch.searchRowFilter?.specifications || ''}
-                    className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                    onChange={(e) => handleFilterChangeLocal("specifications", e.target.value)}
-                  />
-                }
-                body={(rowData, { rowIndex }) => (
-                  <>
-                    <div id={`tooltip-specifications-${rowIndex}`} className="text-left truncate font-medium">
-                      {rowData.specifications}
-                    </div>
-                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-specifications-${rowIndex}`} content={rowData.specifications} showDelay={200} position="top" />
-                  </>
-                )}
-              />
+                <Column
+                  field="specifications" header={t("products.columns.fields.specifications")} sortable
+                  headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                  style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                  filter filterElement={
+                    <InputText
+                      value={query.tableSearch.searchRowFilter?.specifications || ''}
+                      className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                      onChange={(e) => handleFilterChangeLocal("specifications", e.target.value)}
+                    />
+                  }
+                  body={(rowData, { rowIndex }) => (
+                    <>
+                      <div id={`tooltip-specifications-${rowIndex}`} className="text-left truncate font-medium">
+                        {rowData.specifications}
+                      </div>
+                      <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-specifications-${rowIndex}`} content={rowData.specifications} showDelay={200} position="top" />
+                    </>
+                  )}
+                />
               )}
               {visibleColumns.includes('shippingAmount') && (
-              <Column
-                field="shippingAmount" header={t("products.columns.fields.shippingAmount")} sortable
-                headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                filter filterElement={
-                  <InputText
-                    value={query.tableSearch.searchRowFilter?.shippingAmount || ''}
-                    className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                    onChange={(e) => handleFilterChangeLocal("shippingAmount", e.target.value)}
-                  />
-                }
-                body={(rowData, { rowIndex }) => (
-                  <>
-                    <div id={`tooltip-shippingAmount-${rowIndex}`} className="text-left truncate font-medium">
-                      {rowData.shippingAmount}
-                    </div>
-                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-shippingAmount-${rowIndex}`} content={rowData.shippingAmount} showDelay={200} position="top" />
-                  </>
-                )}
-              />
+                <Column
+                  field="shippingAmount" header={t("products.columns.fields.shippingAmount")} sortable
+                  headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                  style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                  filter filterElement={
+                    <InputText
+                      value={query.tableSearch.searchRowFilter?.shippingAmount || ''}
+                      className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                      onChange={(e) => handleFilterChangeLocal("shippingAmount", e.target.value)}
+                    />
+                  }
+                  body={(rowData, { rowIndex }) => (
+                    <>
+                      <div id={`tooltip-shippingAmount-${rowIndex}`} className="text-left truncate font-medium">
+                        {rowData.shippingAmount}
+                      </div>
+                      <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-shippingAmount-${rowIndex}`} content={rowData.shippingAmount} showDelay={200} position="top" />
+                    </>
+                  )}
+                />
               )}
               {visibleColumns.includes('regularPrice') && (
-              <Column
-                field="regularPrice" header={t("products.columns.fields.regularPrice")} sortable
-                headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                filter filterElement={
-                  <InputText
-                    value={query.tableSearch.searchRowFilter?.regularPrice || ''}
-                    className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                    onChange={(e) => handleFilterChangeLocal("regularPrice", e.target.value)}
-                  />
-                }
-                body={(rowData, { rowIndex }) => (
-                  <>
-                    <div id={`tooltip-regularPrice-${rowIndex}`} className="text-left truncate font-medium">
-                      {rowData.regularPrice}
-                    </div>
-                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-regularPrice-${rowIndex}`} content={rowData.regularPrice} showDelay={200} position="top" />
-                  </>
-                )}
-              />
+                <Column
+                  field="regularPrice" header={t("products.columns.fields.regularPrice")} sortable
+                  headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                  style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                  filter filterElement={
+                    <InputText
+                      value={query.tableSearch.searchRowFilter?.regularPrice || ''}
+                      className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                      onChange={(e) => handleFilterChangeLocal("regularPrice", e.target.value)}
+                    />
+                  }
+                  body={(rowData, { rowIndex }) => (
+                    <>
+                      <div id={`tooltip-regularPrice-${rowIndex}`} className="text-left truncate font-medium">
+                        {rowData.regularPrice}
+                      </div>
+                      <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-regularPrice-${rowIndex}`} content={rowData.regularPrice} showDelay={200} position="top" />
+                    </>
+                  )}
+                />
               )}
               {visibleColumns.includes('salePrice') && (
-              <Column
-                field="salePrice" header={t("products.columns.fields.salePrice")} sortable
-                headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                filter filterElement={
-                  <InputText
-                    value={query.tableSearch.searchRowFilter?.salePrice || ''}
-                    className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                    onChange={(e) => handleFilterChangeLocal("salePrice", e.target.value)}
-                  />
-                }
-                body={(rowData, { rowIndex }) => (
-                  <>
-                    <div id={`tooltip-salePrice-${rowIndex}`} className="text-left truncate font-medium">
-                      {rowData.salePrice}
-                    </div>
-                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-salePrice-${rowIndex}`} content={rowData.salePrice} showDelay={200} position="top" />
-                  </>
-                )}
-              />
+                <Column
+                  field="salePrice" header={t("products.columns.fields.salePrice")} sortable
+                  headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                  style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                  filter filterElement={
+                    <InputText
+                      value={query.tableSearch.searchRowFilter?.salePrice || ''}
+                      className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                      onChange={(e) => handleFilterChangeLocal("salePrice", e.target.value)}
+                    />
+                  }
+                  body={(rowData, { rowIndex }) => (
+                    <>
+                      <div id={`tooltip-salePrice-${rowIndex}`} className="text-left truncate font-medium">
+                        {rowData.salePrice}
+                      </div>
+                      <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-salePrice-${rowIndex}`} content={rowData.salePrice} showDelay={200} position="top" />
+                    </>
+                  )}
+                />
               )}
               {visibleColumns.includes('cgst') && (
-              <Column
-                field="cgst" header={t("products.columns.fields.cgst")} sortable
-                headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                filter filterElement={
-                  <InputText
-                    value={query.tableSearch.searchRowFilter?.cgst || ''}
-                    className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                    onChange={(e) => handleFilterChangeLocal("cgst", e.target.value)}
-                  />
-                }
-                body={(rowData, { rowIndex }) => (
-                  <>
-                    <div id={`tooltip-cgst-${rowIndex}`} className="text-left truncate font-medium">
-                      {rowData.cgst}
-                    </div>
-                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-cgst-${rowIndex}`} content={rowData.cgst} showDelay={200} position="top" />
-                  </>
-                )}
-              />
+                <Column
+                  field="cgst" header={t("products.columns.fields.cgst")} sortable
+                  headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                  style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                  filter filterElement={
+                    <InputText
+                      value={query.tableSearch.searchRowFilter?.cgst || ''}
+                      className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                      onChange={(e) => handleFilterChangeLocal("cgst", e.target.value)}
+                    />
+                  }
+                  body={(rowData, { rowIndex }) => (
+                    <>
+                      <div id={`tooltip-cgst-${rowIndex}`} className="text-left truncate font-medium">
+                        {rowData.cgst}
+                      </div>
+                      <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-cgst-${rowIndex}`} content={rowData.cgst} showDelay={200} position="top" />
+                    </>
+                  )}
+                />
               )}
               {visibleColumns.includes('sgst') && (
-              <Column
-                field="sgst" header={t("products.columns.fields.sgst")} sortable
-                headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                filter filterElement={
-                  <InputText
-                    value={query.tableSearch.searchRowFilter?.sgst || ''}
-                    className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                    onChange={(e) => handleFilterChangeLocal("sgst", e.target.value)}
-                  />
-                }
-                body={(rowData, { rowIndex }) => (
-                  <>
-                    <div id={`tooltip-sgst-${rowIndex}`} className="text-left truncate font-medium">
-                      {rowData.sgst}
-                    </div>
-                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-sgst-${rowIndex}`} content={rowData.sgst} showDelay={200} position="top" />
-                  </>
-                )}
-              />
+                <Column
+                  field="sgst" header={t("products.columns.fields.sgst")} sortable
+                  headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                  style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                  filter filterElement={
+                    <InputText
+                      value={query.tableSearch.searchRowFilter?.sgst || ''}
+                      className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                      onChange={(e) => handleFilterChangeLocal("sgst", e.target.value)}
+                    />
+                  }
+                  body={(rowData, { rowIndex }) => (
+                    <>
+                      <div id={`tooltip-sgst-${rowIndex}`} className="text-left truncate font-medium">
+                        {rowData.sgst}
+                      </div>
+                      <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-sgst-${rowIndex}`} content={rowData.sgst} showDelay={200} position="top" />
+                    </>
+                  )}
+                />
               )}
               {visibleColumns.includes('igst') && (
-              <Column
-                field="igst" header={t("products.columns.fields.igst")} sortable
-                headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                filter filterElement={
-                  <InputText
-                    value={query.tableSearch.searchRowFilter?.igst || ''}
-                    className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                    onChange={(e) => handleFilterChangeLocal("igst", e.target.value)}
-                  />
-                }
-                body={(rowData, { rowIndex }) => (
-                  <>
-                    <div id={`tooltip-igst-${rowIndex}`} className="text-left truncate font-medium">
-                      {rowData.igst}
-                    </div>
-                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-igst-${rowIndex}`} content={rowData.igst} showDelay={200} position="top" />
-                  </>
-                )}
-              />
+                <Column
+                  field="igst" header={t("products.columns.fields.igst")} sortable
+                  headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                  style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                  filter filterElement={
+                    <InputText
+                      value={query.tableSearch.searchRowFilter?.igst || ''}
+                      className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                      onChange={(e) => handleFilterChangeLocal("igst", e.target.value)}
+                    />
+                  }
+                  body={(rowData, { rowIndex }) => (
+                    <>
+                      <div id={`tooltip-igst-${rowIndex}`} className="text-left truncate font-medium">
+                        {rowData.igst}
+                      </div>
+                      <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-igst-${rowIndex}`} content={rowData.igst} showDelay={200} position="top" />
+                    </>
+                  )}
+                />
               )}
               {visibleColumns.includes('categoryId') && (
-              <Column
-                field="categoryId" header={t("products.columns.fields.categoryId")} sortable
-                headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                filter filterElement={
-                  <InputText
-                    value={query.tableSearch.searchRowFilter?.categoryId || ''}
-                    className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                    onChange={(e) => handleFilterChangeLocal("categoryId", e.target.value)}
-                  />
-                }
-                body={(rowData, { rowIndex }) => (
-                  <>
-                    <div id={`tooltip-categoryId-${rowIndex}`} className="text-left truncate font-medium">
-                      {rowData.categoryId}
-                    </div>
-                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-categoryId-${rowIndex}`} content={rowData.categoryId} showDelay={200} position="top" />
-                  </>
-                )}
-              />
+                <Column
+                  field="categoryId" header={t("products.columns.fields.categoryId")} sortable
+                  headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                  style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                  filter filterElement={
+                    <InputText
+                      value={query.tableSearch.searchRowFilter?.categoryId || ''}
+                      className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                      onChange={(e) => handleFilterChangeLocal("categoryId", e.target.value)}
+                    />
+                  }
+                  body={(rowData, { rowIndex }) => (
+                    <>
+                      <div id={`tooltip-categoryId-${rowIndex}`} className="text-left truncate font-medium">
+                        {rowData.categoryId}
+                      </div>
+                      <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-categoryId-${rowIndex}`} content={rowData.categoryId} showDelay={200} position="top" />
+                    </>
+                  )}
+                />
               )}
               {visibleColumns.includes('productStatus') && (
-              <Column
-                field="productStatus" header={t("products.columns.fields.productStatus")} sortable
-                headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                filter filterElement={
-                  <InputText
-                    value={query.tableSearch.searchRowFilter?.productStatus || ''}
-                    className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                    onChange={(e) => handleFilterChangeLocal("productStatus", e.target.value)}
-                  />
-                }
-                body={(rowData, { rowIndex }) => (
-                  <>
-                    <div id={`tooltip-productStatus-${rowIndex}`} className="text-left truncate font-medium">
-                      {rowData.pincode}
-                    </div>
-                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-productStatus-${rowIndex}`} content={rowData.productStatus} showDelay={200} position="top" />
-                  </>
-                )}
-              />
+                <Column
+                  field="productStatus" header={t("products.columns.fields.productStatus")} sortable
+                  headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                  style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                  filter filterElement={
+                    <InputText
+                      value={query.tableSearch.searchRowFilter?.productStatus || ''}
+                      className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                      onChange={(e) => handleFilterChangeLocal("productStatus", e.target.value)}
+                    />
+                  }
+                  body={(rowData, { rowIndex }) => (
+                    <>
+                      <div id={`tooltip-productStatus-${rowIndex}`} className="text-left truncate font-medium">
+                        {rowData.pincode}
+                      </div>
+                      <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-productStatus-${rowIndex}`} content={rowData.productStatus} showDelay={200} position="top" />
+                    </>
+                  )}
+                />
               )}
               {visibleColumns.includes('category') && (
-              <Column
-                field="category" header={t("products.columns.fields.category")} sortable
-                headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                filter filterElement={
-                  <InputText
-                    value={query.tableSearch.searchRowFilter?.category || ''}
-                    className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                    onChange={(e) => handleFilterChangeLocal("category", e.target.value)}
-                  />
-                }
-                body={(rowData, { rowIndex }) => (
-                  <>
-                    <div id={`tooltip-category-${rowIndex}`} className="text-left truncate font-medium">
-                      {rowData.category}
-                    </div>
-                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-category-${rowIndex}`} content={rowData.category} showDelay={200} position="top" />
-                  </>
-                )}
-              />
+                <Column
+                  field="category" header={t("products.columns.fields.category")} sortable
+                  headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                  style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                  filter filterElement={
+                    <InputText
+                      value={query.tableSearch.searchRowFilter?.category || ''}
+                      className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                      onChange={(e) => handleFilterChangeLocal("category", e.target.value)}
+                    />
+                  }
+                  body={(rowData, { rowIndex }) => (
+                    <>
+                      <div id={`tooltip-category-${rowIndex}`} className="text-left truncate font-medium">
+                        {rowData.category}
+                      </div>
+                      <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-category-${rowIndex}`} content={rowData.category} showDelay={200} position="top" />
+                    </>
+                  )}
+                />
               )}
               {visibleColumns.includes('minQty') && (
-              <Column
-                field="minQty" header={t("products.columns.fields.minQty")} sortable
-                headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                filter filterElement={
-                  <InputText
-                    value={query.tableSearch.searchRowFilter?.minQty || ''}
-                    className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                    onChange={(e) => handleFilterChangeLocal("minQty", e.target.value)}
-                  />
-                }
-                body={(rowData, { rowIndex }) => (
-                  <>
-                    <div id={`tooltip-minQty-${rowIndex}`} className="text-left truncate font-medium">
-                      {rowData.minQty}
-                    </div>
-                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-minQty-${rowIndex}`} content={rowData.minQty} showDelay={200} position="top" />
-                  </>
-                )}
-              />
+                <Column
+                  field="minQty" header={t("products.columns.fields.minQty")} sortable
+                  headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                  style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                  filter filterElement={
+                    <InputText
+                      value={query.tableSearch.searchRowFilter?.minQty || ''}
+                      className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                      onChange={(e) => handleFilterChangeLocal("minQty", e.target.value)}
+                    />
+                  }
+                  body={(rowData, { rowIndex }) => (
+                    <>
+                      <div id={`tooltip-minQty-${rowIndex}`} className="text-left truncate font-medium">
+                        {rowData.minQty}
+                      </div>
+                      <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-minQty-${rowIndex}`} content={rowData.minQty} showDelay={200} position="top" />
+                    </>
+                  )}
+                />
               )}
               {visibleColumns.includes('minQtyFarmer') && (
-              <Column
-                field="minQtyFarmer" header={t("products.columns.fields.minQtyFarmer")} sortable
-                headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                filter filterElement={
-                  <InputText
-                    value={query.tableSearch.searchRowFilter?.minQtyFarmer || ''}
-                    className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                    onChange={(e) => handleFilterChangeLocal("minQtyFarmer", e.target.value)}
-                  />
-                }
-                body={(rowData, { rowIndex }) => (
-                  <>
-                    <div id={`tooltip-minQtyFarmer-${rowIndex}`} className="text-left truncate font-medium">
-                      {rowData.minQtyFarmer}
-                    </div>
-                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-minQtyFarmer-${rowIndex}`} content={rowData.minQtyFarmer} showDelay={200} position="top" />
-                  </>
-                )}
-              />
+                <Column
+                  field="minQtyFarmer" header={t("products.columns.fields.minQtyFarmer")} sortable
+                  headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                  style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                  filter filterElement={
+                    <InputText
+                      value={query.tableSearch.searchRowFilter?.minQtyFarmer || ''}
+                      className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                      onChange={(e) => handleFilterChangeLocal("minQtyFarmer", e.target.value)}
+                    />
+                  }
+                  body={(rowData, { rowIndex }) => (
+                    <>
+                      <div id={`tooltip-minQtyFarmer-${rowIndex}`} className="text-left truncate font-medium">
+                        {rowData.minQtyFarmer}
+                      </div>
+                      <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-minQtyFarmer-${rowIndex}`} content={rowData.minQtyFarmer} showDelay={200} position="top" />
+                    </>
+                  )}
+                />
               )}
               {visibleColumns.includes('salePriceFarmer') && (
-              <Column
-                field="salePriceFarmer" header={t("products.columns.fields.salePriceFarmer")} sortable
-                headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                filter filterElement={
-                  <InputText
-                    value={query.tableSearch.searchRowFilter?.salePriceFarmer || ''}
-                    className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                    onChange={(e) => handleFilterChangeLocal("salePriceFarmer", e.target.value)}
-                  />
-                }
-                body={(rowData, { rowIndex }) => (
-                  <>
-                    <div id={`tooltip-salePriceFarmer-${rowIndex}`} className="text-left truncate font-medium">
-                      {rowData.salePriceFarmer}
-                    </div>
-                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-salePriceFarmer-${rowIndex}`} content={rowData.salePriceFarmer} showDelay={200} position="top" />
-                  </>
-                )}
-              />
+                <Column
+                  field="salePriceFarmer" header={t("products.columns.fields.salePriceFarmer")} sortable
+                  headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                  style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                  filter filterElement={
+                    <InputText
+                      value={query.tableSearch.searchRowFilter?.salePriceFarmer || ''}
+                      className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                      onChange={(e) => handleFilterChangeLocal("salePriceFarmer", e.target.value)}
+                    />
+                  }
+                  body={(rowData, { rowIndex }) => (
+                    <>
+                      <div id={`tooltip-salePriceFarmer-${rowIndex}`} className="text-left truncate font-medium">
+                        {rowData.salePriceFarmer}
+                      </div>
+                      <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-salePriceFarmer-${rowIndex}`} content={rowData.salePriceFarmer} showDelay={200} position="top" />
+                    </>
+                  )}
+                />
               )}
               {visibleColumns.includes('isActive') && (
-              <Column
-                field="isActive" header={t("products.columns.fields.isActive")} sortable
-                headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                filter filterElement={
-                  <InputText
-                    value={query.tableSearch.searchRowFilter?.isActive || ''}
-                    className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                    onChange={(e) => handleFilterChangeLocal("isActive", e.target.value)}
-                  />
-                }
-                body={(rowData, { rowIndex }) => (
-                  <>
-                    <div id={`tooltip-isActive-${rowIndex}`} className="text-left truncate font-medium">
-                      {rowData.isActive ? "true" : "false"}
-                    </div>
-                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isActive-${rowIndex}`} content={rowData.isActive} showDelay={200} position="top" />
-                  </>
-                )}
-              />
+                <Column
+                  field="isActive" header={t("products.columns.fields.isActive")} sortable
+                  headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                  style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                  filter filterElement={
+                    <InputText
+                      value={query.tableSearch.searchRowFilter?.isActive || ''}
+                      className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                      onChange={(e) => handleFilterChangeLocal("isActive", e.target.value)}
+                    />
+                  }
+                  body={(rowData, { rowIndex }) => (
+                    <>
+                      <div id={`tooltip-isActive-${rowIndex}`} className="text-left truncate font-medium">
+                        {rowData.isActive ? "true" : "false"}
+                      </div>
+                      <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isActive-${rowIndex}`} content={rowData.isActive} showDelay={200} position="top" />
+                    </>
+                  )}
+                />
               )}
               {visibleColumns.includes('orderNo') && (
-              <Column
-                field="orderNo" header={t("products.columns.fields.orderNo")} sortable
-                headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                filter filterElement={
-                  <InputText
-                    value={query.tableSearch.searchRowFilter?.orderNo || ''}
-                    className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                    onChange={(e) => handleFilterChangeLocal("orderNo", e.target.value)}
-                  />
-                }
-                body={(rowData, { rowIndex }) => (
-                  <>
-                    <div id={`tooltip-orderNo-${rowIndex}`} className="text-left truncate font-medium">
-                      {rowData.orderNo}
-                    </div>
-                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-orderNo-${rowIndex}`} content={rowData.orderNo} showDelay={200} position="top" />
-                  </>
-                )}
-              />
+                <Column
+                  field="orderNo" header={t("products.columns.fields.orderNo")} sortable
+                  headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                  style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                  filter filterElement={
+                    <InputText
+                      value={query.tableSearch.searchRowFilter?.orderNo || ''}
+                      className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                      onChange={(e) => handleFilterChangeLocal("orderNo", e.target.value)}
+                    />
+                  }
+                  body={(rowData, { rowIndex }) => (
+                    <>
+                      <div id={`tooltip-orderNo-${rowIndex}`} className="text-left truncate font-medium">
+                        {rowData.orderNo}
+                      </div>
+                      <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-orderNo-${rowIndex}`} content={rowData.orderNo} showDelay={200} position="top" />
+                    </>
+                  )}
+                />
               )}
               {visibleColumns.includes('deliveredData') && (
-              <Column
-                field="deliveredData" header={t("products.columns.fields.deliveredData")} sortable
-                headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                filter filterElement={
-                  <InputText
-                    value={query.tableSearch.searchRowFilter?.deliveredData || ''}
-                    className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                    onChange={(e) => handleFilterChangeLocal("deliveredData", e.target.value)}
-                  />
-                }
-                body={(rowData, { rowIndex }) => (
-                  <>
-                    <div id={`tooltip-deliveredData-${rowIndex}`} className="text-left truncate font-medium">
-                      {rowData.deliveredData}
-                    </div>
-                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-deliveredData-${rowIndex}`} content={rowData.deliveredData} showDelay={200} position="top" />
-                  </>
-                )}
-              />
+                <Column
+                  field="deliveredData" header={t("products.columns.fields.deliveredData")} sortable
+                  headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                  style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                  filter filterElement={
+                    <InputText
+                      value={query.tableSearch.searchRowFilter?.deliveredData || ''}
+                      className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                      onChange={(e) => handleFilterChangeLocal("deliveredData", e.target.value)}
+                    />
+                  }
+                  body={(rowData, { rowIndex }) => (
+                    <>
+                      <div id={`tooltip-deliveredData-${rowIndex}`} className="text-left truncate font-medium">
+                        {rowData.deliveredData}
+                      </div>
+                      <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-deliveredData-${rowIndex}`} content={rowData.deliveredData} showDelay={200} position="top" />
+                    </>
+                  )}
+                />
               )}
               {visibleColumns.includes('totalDeliverProduct') && (
-              <Column
-                field="totalDeliverProduct" header={t("products.columns.fields.totalDeliverProduct")} sortable
-                headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                filter filterElement={
-                  <InputText
-                    value={query.tableSearch.searchRowFilter?.totalDeliverProduct || ''}
-                    className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                    onChange={(e) => handleFilterChangeLocal("totalDeliverProduct", e.target.value)}
-                  />
-                }
-                body={(rowData, { rowIndex }) => (
-                  <>
-                    <div id={`tooltip-totalDeliverProduct-${rowIndex}`} className="text-left truncate font-medium">
-                      {rowData.totalDeliverProduct}
-                    </div>
-                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-totalDeliverProduct-${rowIndex}`} content={rowData.totalDeliverProduct} showDelay={200} position="top" />
-                  </>
-                )}
-              />
+                <Column
+                  field="totalDeliverProduct" header={t("products.columns.fields.totalDeliverProduct")} sortable
+                  headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                  style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                  filter filterElement={
+                    <InputText
+                      value={query.tableSearch.searchRowFilter?.totalDeliverProduct || ''}
+                      className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                      onChange={(e) => handleFilterChangeLocal("totalDeliverProduct", e.target.value)}
+                    />
+                  }
+                  body={(rowData, { rowIndex }) => (
+                    <>
+                      <div id={`tooltip-totalDeliverProduct-${rowIndex}`} className="text-left truncate font-medium">
+                        {rowData.totalDeliverProduct}
+                      </div>
+                      <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-totalDeliverProduct-${rowIndex}`} content={rowData.totalDeliverProduct} showDelay={200} position="top" />
+                    </>
+                  )}
+                />
               )}
               {visibleColumns.includes('isParent') && (
-              <Column
-                field="isParent" header={t("products.columns.fields.isParent")} sortable
-                headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                filter filterElement={
-                  <InputText
-                    value={query.tableSearch.searchRowFilter?.isParent || ''}
-                    className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                    onChange={(e) => handleFilterChangeLocal("isParent", e.target.value)}
-                  />
-                }
-                body={(rowData, { rowIndex }) => (
-                  <>
-                    <div id={`tooltip-isParent-${rowIndex}`} className="text-left truncate font-medium">
-                      {rowData.isParent ? "true" : "false"}
-                    </div>
-                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isParent-${rowIndex}`} content={rowData.isParent} showDelay={200} position="top" />
-                  </>
-                )}
-              />
+                <Column
+                  field="isParent" header={t("products.columns.fields.isParent")} sortable
+                  headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                  style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                  filter filterElement={
+                    <InputText
+                      value={query.tableSearch.searchRowFilter?.isParent || ''}
+                      className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                      onChange={(e) => handleFilterChangeLocal("isParent", e.target.value)}
+                    />
+                  }
+                  body={(rowData, { rowIndex }) => (
+                    <>
+                      <div id={`tooltip-isParent-${rowIndex}`} className="text-left truncate font-medium">
+                        {rowData.isParent ? "true" : "false"}
+                      </div>
+                      <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isParent-${rowIndex}`} content={rowData.isParent} showDelay={200} position="top" />
+                    </>
+                  )}
+                />
               )}
               {visibleColumns.includes('variableLabel') && (
-              <Column
-                field="variableLabel" header={t("products.columns.fields.variableLabel")} sortable
-                headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                filter filterElement={
-                  <InputText
-                    value={query.tableSearch.searchRowFilter?.variableLabel || ''}
-                    className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                    onChange={(e) => handleFilterChangeLocal("variableLabel", e.target.value)}
-                  />
-                }
-                body={(rowData, { rowIndex }) => (
-                  <>
-                    <div id={`tooltip-variableLabel-${rowIndex}`} className="text-left truncate font-medium">
-                      {rowData.variableLabel}
-                    </div>
-                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-variableLabel-${rowIndex}`} content={rowData.variableLabel} showDelay={200} position="top" />
-                  </>
-                )}
-              />
+                <Column
+                  field="variableLabel" header={t("products.columns.fields.variableLabel")} sortable
+                  headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                  style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                  filter filterElement={
+                    <InputText
+                      value={query.tableSearch.searchRowFilter?.variableLabel || ''}
+                      className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                      onChange={(e) => handleFilterChangeLocal("variableLabel", e.target.value)}
+                    />
+                  }
+                  body={(rowData, { rowIndex }) => (
+                    <>
+                      <div id={`tooltip-variableLabel-${rowIndex}`} className="text-left truncate font-medium">
+                        {rowData.variableLabel}
+                      </div>
+                      <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-variableLabel-${rowIndex}`} content={rowData.variableLabel} showDelay={200} position="top" />
+                    </>
+                  )}
+                />
               )}
               {visibleColumns.includes('variableValue') && (
-              <Column
-                field="variableValue" header={t("products.columns.fields.variableValue")} sortable
-                headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                filter filterElement={
-                  <InputText
-                    value={query.tableSearch.searchRowFilter?.variableValue || ''}
-                    className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                    onChange={(e) => handleFilterChangeLocal("variableValue", e.target.value)}
-                  />
-                }
-                body={(rowData, { rowIndex }) => (
-                  <>
-                    <div id={`tooltip-variableValue-${rowIndex}`} className="text-left truncate font-medium">
-                      {rowData.variableValue}
-                    </div>
-                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-variableValue-${rowIndex}`} content={rowData.variableValue} showDelay={200} position="top" />
-                  </>
-                )}
-              />
+                <Column
+                  field="variableValue" header={t("products.columns.fields.variableValue")} sortable
+                  headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                  style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                  filter filterElement={
+                    <InputText
+                      value={query.tableSearch.searchRowFilter?.variableValue || ''}
+                      className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                      onChange={(e) => handleFilterChangeLocal("variableValue", e.target.value)}
+                    />
+                  }
+                  body={(rowData, { rowIndex }) => (
+                    <>
+                      <div id={`tooltip-variableValue-${rowIndex}`} className="text-left truncate font-medium">
+                        {rowData.variableValue}
+                      </div>
+                      <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-variableValue-${rowIndex}`} content={rowData.variableValue} showDelay={200} position="top" />
+                    </>
+                  )}
+                />
               )}
             </DataTable>
           </div>

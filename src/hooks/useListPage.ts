@@ -131,7 +131,7 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
         if (roleDetailsData && roleDetailsData.length > 0) {
             fetchRoleDetails();
         }
-    }, [roleDetailsData, props.baseModelName]);
+    }, [roleDetailsData, props.typeName]);
 
 
     useEffect(() => {
