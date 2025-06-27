@@ -234,18 +234,20 @@ export default function AppUsersList() {
                                 </Button>
                             )}
 
-                            <Button
-                                type="button"
-                                className="bg-[var(--color-success)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
-                                onClick={() => exportToExcel(userService, globalFilterValue || '', 'AppUser')}
-                                tooltip={t("globals.exportExcel")}
-                                tooltipOptions={{
-                                    position: 'top',
-                                    className: 'font-normal rounded text-sm p-1'
-                                }}
-                            >
-                                <TbFileExcel size={18} />
-                            </Button>
+                            {hasAccess(roleData, "Export") && (
+                                <Button
+                                    type="button"
+                                    className="bg-[var(--color-success)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
+                                    onClick={() => exportToExcel(userService, globalFilterValue || '', 'AppUser')}
+                                    tooltip={t("globals.exportExcel")}
+                                    tooltipOptions={{
+                                        position: 'top',
+                                        className: 'font-normal rounded text-sm p-1'
+                                    }}
+                                >
+                                    <TbFileExcel size={18} />
+                                </Button>
+                            )}
 
                             {hasAccess(roleData, "Import") && (
                                 <Button
@@ -427,19 +429,21 @@ export default function AppUsersList() {
                                 scrollable
                                 scrollHeight="68vh"
                             >
-                                <Column
-                                    header={t('globals.headerActions')}
-                                    headerStyle={{
-                                        backgroundColor: "var(--color-primary)",
-                                        color: "var(--color-white)",
-                                        textAlign: "center",
-                                    }}
-                                    body={(rowData) => actionBodyTemplate(rowData, openItem)}
-                                    style={{ width: '50px', minWidth: '50px', maxWidth: '50px', background: 'var(--color-white)', color: 'var(--color-dark)' }}
-                                    frozen
-                                    alignFrozen="left"
-                                    className="text-sm sticky bg-[var(--color-white)] text-[var(--color-dark)]  font-semibold whitespace-nowrap overflow-hidden text-ellipsis"
-                                />
+                                {hasAccess(roleData, "Actions") && (
+                                    <Column
+                                        header={t('globals.headerActions')}
+                                        headerStyle={{
+                                            backgroundColor: "var(--color-primary)",
+                                            color: "var(--color-white)",
+                                            textAlign: "center",
+                                        }}
+                                        body={(rowData) => actionBodyTemplate(rowData, openItem)}
+                                        style={{ width: '50px', minWidth: '50px', maxWidth: '50px', background: 'var(--color-white)', color: 'var(--color-dark)' }}
+                                        frozen
+                                        alignFrozen="left"
+                                        className="text-sm sticky bg-[var(--color-white)] text-[var(--color-dark)]  font-semibold whitespace-nowrap overflow-hidden text-ellipsis"
+                                    />
+                                )}
                                 {visibleColumns.includes('createDate') && (
                                     <Column
                                         field="createDate" header={t("appUsers.columns.fields.createDate")} sortable headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
