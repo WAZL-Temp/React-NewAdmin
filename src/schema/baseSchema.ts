@@ -51,10 +51,19 @@ const numericField = (fieldName: string, t: TransFn, minLength: number, maxLengt
         .max(maxLength, { message: t('validators.maxDigits', { field: fieldName, length: maxLength }), });
 
 const stringNumeric = (fieldName: string, t: TransFn, minValue: number, maxValue: number) =>
-    baseStringField(fieldName, t)
-        .refine((val) => /^\d+$/.test(val), { message: t('validators.numbersOnly', { field: fieldName }), })
-        .refine((val) => parseInt(val, 10) >= minValue, { message: t('validators.minDigits', { field: fieldName, length: minValue }), })
-        .refine((val) => parseInt(val, 10) <= maxValue, { message: t('validators.maxDigits', { field: fieldName, length: maxValue }), });
+    z.coerce.string({
+        required_error: t('validators.required', { field: fieldName }),
+        invalid_type_error: t('validators.required', { field: fieldName }),
+    })
+        .refine((val) => /^\d+$/.test(val), {
+            message: t('validators.numbersOnly', { field: fieldName }),
+        })
+        .refine((val) => parseInt(val, 10) >= minValue, {
+            message: t('validators.minDigits', { field: fieldName, length: minValue }),
+        })
+        .refine((val) => parseInt(val, 10) <= maxValue, {
+            message: t('validators.maxDigits', { field: fieldName, length: maxValue }),
+        });
 
 const stringMobileNumber = (fieldName: string, t: TransFn, minLength: number, maxLength: number) =>
     baseStringField(fieldName, t)
