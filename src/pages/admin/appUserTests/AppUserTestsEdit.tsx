@@ -16,7 +16,7 @@ import {getData, useFetchDataEnum } from '../../../sharedBase/lookupService';
 import Loader from '../../../components/Loader';
 import { appUserTestValidate } from '../../../schema/appUserTest';
 import FormFieldError from '../../../components/FormFieldError';
-import {AppUser} from "../../../core/model/appUser";
+import {AppUser} from "../../../core/model/appuser";
 //<<addModelData>>
 export default function AppUserTestsEdit() {
   const { id } = useParams<{ id: string }>();
