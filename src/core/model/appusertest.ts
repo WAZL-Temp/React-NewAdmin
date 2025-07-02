@@ -1,4 +1,5 @@
 export interface AppUserTest {
+	createById?: number;
 	id?: number;
 	name?: string;
 	firstName?: string;
@@ -43,7 +44,6 @@ export interface AppUserTest {
 	createDate?: Date;
 	updateDate?: Date;
 	deleteDate?: Date;
-	createById?: number;
 	updateById?: number;
 	deleteById?: number;
 	isDelete?: boolean;

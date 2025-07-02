@@ -14,7 +14,6 @@ export default function AppUserTestsList() {
     const baseModelName = "appUserTests";
 const typeName= "appUserTest";
     const { t } = useTranslation();
-    const [visible, setVisible] = useState(false);
     const dtRef = useRef<DataTable<AppUserTest[]>>(null);
     // search
     const [calendarCreateDateFrom, setCalendarCreateDateFrom] = useState<Date | undefined | null>(null);
@@ -26,7 +25,7 @@ const typeName= "appUserTest";
         deleteItem, closeDeleteDialog, setFilters, onSort, onPage, first, rows, sortField, sortOrder, totalRecords,
         filters, setListSearch, clearListSearch, searchChange, openItem, confirmDeleteItem,
         toast, isSuccessDialogOpen, setIsSuccessDialogOpen, formatDate, exportToExcel,
-        importFromExcel, addData, handleDelete, useColumnConfig }
+        importFromExcel, addData, handleDelete, useColumnConfig,visible,setVisible }
         = useListPage<typeof query, AppUserTest>({
             query: query,
             props: {
@@ -37,6 +36,7 @@ const typeName= "appUserTest";
             }
         });
 const columnsConfigDefault = useMemo(() =>[
+			 {field: 'createById', header: t("appUserTests.columns.fields.createById"), isDefault: true, show: true }, 
 			 {field: 'id', header: t("appUserTests.columns.fields.id"), isDefault: true, show: true }, 
 			 {field: 'name', header: t("appUserTests.columns.fields.name"), isDefault: true, show: true }, 
 			 {field: 'firstName', header: t("appUserTests.columns.fields.firstName"), isDefault: true, show: true }, 
@@ -129,7 +129,7 @@ const columnsConfigDefault = useMemo(() =>[
             command: () => addData(navigate, baseModelName)
         });
     }
-if (roleData && hasAccess(roleData, "Export")){
+if (roleData && hasAccess(roleData, "Export")) {
     items.push({
         label: t("globals.exportExcel"),
         icon: 'pi pi-file-excel',
@@ -442,7 +442,27 @@ if (roleData && hasAccess(roleData, "Export")){
                             alignFrozen="left"
                             className="text-sm sticky bg-[var(--color-white)] text-[var(--color-dark)]  font-semibold whitespace-nowrap overflow-hidden text-ellipsis"
                         />
-                       {visibleColumns.includes('name') && (
+                       {visibleColumns.includes('createById') && (
+<Column field="createById" header={t("appUserTests.columns.fields.createById")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.createById || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("createById", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-createById-${rowIndex}`} className="text-left truncate font-medium">
+ {rowData.createById}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-createById-${rowIndex}`} content={rowData.createById} showDelay={200} position="top" />
+</>
+)}
+ />)} 
+{visibleColumns.includes('name') && (
 <Column field="name" header={t("appUserTests.columns.fields.name")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
