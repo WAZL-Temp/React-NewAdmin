@@ -114,6 +114,7 @@ const typeName= "appUserTest";
     setUploadedFile(files);
   };
 const columnsConfigDefault = useMemo(() =>[
+			 {field: 'createById', header: t("appUserTests.columns.fields.createById"), isDefault: true, show: true }, 
 			 {field: 'id', header: t("appUserTests.columns.fields.id"), isDefault: true, show: true }, 
 			 {field: 'name', header: t("appUserTests.columns.fields.name"), isDefault: true, show: true }, 
 			 {field: 'firstName', header: t("appUserTests.columns.fields.firstName"), isDefault: true, show: true }, 
@@ -315,6 +316,26 @@ const columnsConfigDefault = useMemo(() =>[
                       )}
                     />
                       
+<Column field="createById" header={t("appUserTests.columns.fields.createById")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+ 
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("createById", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-createById-${rowIndex}`} className="text-left truncate font-medium">
+ {rowData.createById}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-createById-${rowIndex}`} content={rowData.createById} showDelay={200} position="top" />
+</>
+)}
+ /> 
+ 
 <Column field="name" header={t("appUserTests.columns.fields.name")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}

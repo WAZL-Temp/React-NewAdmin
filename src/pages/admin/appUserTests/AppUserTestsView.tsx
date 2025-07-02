@@ -27,6 +27,7 @@ const typeName= "appUserTest";
 
 function initData(): AppUserTest {
 	return {
+		createById: undefined,
 		id: undefined,
 		name: '',
 		firstName: '',
@@ -71,7 +72,6 @@ function initData(): AppUserTest {
 		createDate: undefined,
 		updateDate: undefined,
 		deleteDate: undefined,
-		createById: undefined,
 		updateById: undefined,
 		deleteById: undefined,
 		isDelete: false,
