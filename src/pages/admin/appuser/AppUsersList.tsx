@@ -14,8 +14,7 @@ export default function AppUsersList() {
     const navigate = useNavigate();
     const baseModelName = "appuser";
     const typeName = "appuser";
-    const { t } = useTranslation();
-    const [visible, setVisible] = useState(false);
+    const { t } = useTranslation();    
     const dtRef = useRef<DataTable<AppUser[]>>(null);
     // search
     const [calendarCreateDateFrom, setCalendarCreateDateFrom] = useState<Date | undefined | null>(null);
@@ -27,7 +26,7 @@ export default function AppUsersList() {
         deleteItem, closeDeleteDialog, setFilters, onSort, onPage, first, rows, sortField, sortOrder, totalRecords,
         filters, setListSearch, clearListSearch, searchChange, openItem, confirmDeleteItem,
         toast, isSuccessDialogOpen, setIsSuccessDialogOpen, formatDate, exportToExcel,
-        importFromExcel, addData, handleDelete, useColumnConfig }
+        importFromExcel, addData, handleDelete, useColumnConfig ,visible,setVisible}
         = useListPage<typeof query, AppUser>({
             query: query,
             props: {

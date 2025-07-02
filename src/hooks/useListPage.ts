@@ -108,6 +108,7 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
     const [search, setSearch] = useState<Record<string, unknown>>({});
     const [searchRowFilter, setSearchRowFilter] = useState<Record<string, unknown>>({});
     const { data: roleDetailsData } = useFetchRoleDetailsData();
+    const [visible, setVisible] = useState(false);
 
     useEffect(() => {
         const fetchRoleDetails = async () => {
@@ -268,7 +269,11 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
     }
 
     const searchChange = (value: string | Date | null | undefined, name: string) => {
-        query.setSearch({ [name]: value });
+        // query.setSearch({ [name]: value });
+        setSearch((prevSearch) => ({
+            ...prevSearch,
+            [name]: value
+        }));
     };
 
     const setTableSearchInfo = useCallback(() => {
@@ -374,6 +379,7 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
         first, rows, sortField, sortOrder, totalRecords, filters, onPage, onSort, refreshItemData,
         setListSearch, clearListSearch, searchChange, isDeleteDialogVisible, setIsDeleteDialogVisible,
         confirmDeleteItem, deleteItem, openItem, closeDeleteDialog, setItemToDelete, toast, isSuccessDialogOpen,
-        setIsSuccessDialogOpen, formatDate, hasAccess, exportToExcel, importFromExcel, addData, handleDelete, useColumnConfig
+        setIsSuccessDialogOpen, formatDate, hasAccess, exportToExcel, importFromExcel, addData, handleDelete, useColumnConfig,
+        visible,setVisible
     };
 }
