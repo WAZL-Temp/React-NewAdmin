@@ -246,7 +246,7 @@ if (roleData && hasAccess(roleData, "Export")) {
                         <HiOutlinePlus size={18} />
                     </Button>
                    )} 
-
+                    {hasAccess(roleData, "Export") && (
                     <Button
                         type="button"
                         className="bg-[var(--color-success)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
@@ -259,7 +259,7 @@ if (roleData && hasAccess(roleData, "Export")) {
                     >
                         <TbFileExcel size={18} />
                     </Button>
-
+                    )}
                     {hasAccess(roleData, "Import") && (
                     <Button
                         type="button"
@@ -429,6 +429,7 @@ if (roleData && hasAccess(roleData, "Export")) {
                         scrollable
                         scrollHeight="68vh"
                     >
+                        {hasAccess(roleData, "Actions") && (
                         <Column
                             header={t('globals.headerActions')}
                             headerStyle={{
@@ -442,6 +443,7 @@ if (roleData && hasAccess(roleData, "Export")) {
                             alignFrozen="left"
                             className="text-sm sticky bg-[var(--color-white)] text-[var(--color-dark)]  font-semibold whitespace-nowrap overflow-hidden text-ellipsis"
                         />
+                        )}
                        {visibleColumns.includes('createById') && (
 <Column field="createById" header={t("appUserTests.columns.fields.createById")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
