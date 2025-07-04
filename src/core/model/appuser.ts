@@ -36,8 +36,9 @@ export interface AppUser {
 	isPremiumUser?: boolean;
 	totalPlot?: number;
 	reportedTo?: string;
+	reportedToName?: string;
 	reportedBy?: string;
-	reportedByLabel?: string;
+	reportedByName?: string;
 	appUserName?: string;
 	gender?: string;
 	genderLabel?: string;
