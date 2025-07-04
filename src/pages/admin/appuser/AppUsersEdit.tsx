@@ -103,9 +103,11 @@ export default function AppUsersEdit() {
       isPremiumUser: false,
       totalPlot: undefined,
       reportedBy: "",
-      reportedByLabel: '',
+      reportedByName: '',
       reportedTo: undefined,
-      gender: undefined
+      reportedToName: '',
+      gender: '',
+      genderLabel: '',
     };
   }
 
