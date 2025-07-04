@@ -611,7 +611,7 @@ export default function AppUsersView() {
                           </label>
                           <TooltipWithText text={t("appUsers.columns.fields.reportedBy")} />
                         </div>
-                        <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)]">{userData?.reportedBy}</span>
+                        <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)]">{userData?.reportedByName}</span>
                       </div>
                     )}
 
@@ -626,7 +626,7 @@ export default function AppUsersView() {
                           </label>
                           <TooltipWithText text={t("appUsers.columns.fields.reportedTo")} />
                         </div>
-                        <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)]">{userData?.reportedTo}</span>
+                        <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)]">{userData?.reportedToName}</span>
                       </div>
                     )}
                   </div>

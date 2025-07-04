@@ -14,7 +14,7 @@ export default function AppUsersList() {
     const navigate = useNavigate();
     const baseModelName = "appuser";
     const typeName = "appuser";
-    const { t } = useTranslation();    
+    const { t } = useTranslation();
     const dtRef = useRef<DataTable<AppUser[]>>(null);
     // search
     const [calendarCreateDateFrom, setCalendarCreateDateFrom] = useState<Date | undefined | null>(null);
@@ -26,7 +26,7 @@ export default function AppUsersList() {
         deleteItem, closeDeleteDialog, setFilters, onSort, onPage, first, rows, sortField, sortOrder, totalRecords,
         filters, setListSearch, clearListSearch, searchChange, openItem, confirmDeleteItem,
         toast, isSuccessDialogOpen, setIsSuccessDialogOpen, formatDate, exportToExcel,
-        importFromExcel, addData, handleDelete, useColumnConfig ,visible,setVisible}
+        importFromExcel, addData, handleDelete, useColumnConfig, visible, setVisible }
         = useListPage<typeof query, AppUser>({
             query: query,
             props: {
@@ -67,6 +67,8 @@ export default function AppUsersList() {
         { field: "publishLabel", header: t("appUsers.columns.fields.publishLabel"), isDefault: false, show: false },
         { field: "lastLogin", header: t("appUsers.columns.fields.lastLogin"), isDefault: false, show: false },
         { field: "totalPlot", header: t("appUsers.columns.fields.totalPlot"), isDefault: false, show: false },
+        { field: "reportedByName", header: t("appUsers.columns.fields.reportedBy"), isDefault: false, show: false },
+        { field: "reportedToName", header: t("appUsers.columns.fields.reportedTo"), isDefault: false, show: false },
     ].filter(col => col.field),
         [t]);
 
@@ -1095,8 +1097,7 @@ export default function AppUsersList() {
                                     />
                                 )}
                                 {visibleColumns.includes('isPremiumUser') && (
-                                    <Column
-                                        field="isPremiumUser" header={t("appUsers.columns.fields.isPremiumUser")} sortable filter
+                                    <Column field="isPremiumUser" header={t("appUserTests.columns.fields.isPremiumUser")} sortable filter
                                         headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                                         style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                                         filterElement={
@@ -1112,6 +1113,49 @@ export default function AppUsersList() {
                                                     {rowData.isPremiumUser ? "true" : "false"}
                                                 </div>
                                                 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isPremiumUser-${rowIndex}`} content={rowData.isPremiumUser ? "true" : "false"} showDelay={200} position="top" />
+                                            </>
+                                        )}
+                                    />)}
+                                {visibleColumns.includes('reportedByName') && (
+                                    <Column
+                                        field="reportedByName" header={t("appUsers.columns.fields.reportedBy")} sortable filter
+                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                                        filterElement={
+                                            <InputText
+                                                value={query.tableSearch.searchRowFilter?.reportedByName || ''}
+                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                                                onChange={(e) => handleFilterChangeLocal("reportedByName", e.target.value)}
+                                            />
+                                        }
+                                        body={(rowData, { rowIndex }) => (
+                                            <>
+                                                <div id={`tooltip-reportedByName-${rowIndex}`} className="text-left truncate font-medium">
+                                                    {rowData.reportedByName}
+                                                </div>
+                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-reportedByName-${rowIndex}`} content={rowData.reportedByName ? "true" : "false"} showDelay={200} position="top" />
+                                            </>
+                                        )}
+                                    />
+                                )}
+                                {visibleColumns.includes('reportedToName') && (
+                                    <Column
+                                        field="reportedToName" header={t("appUsers.columns.fields.reportedTo")} sortable filter
+                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                                        filterElement={
+                                            <InputText
+                                                value={query.tableSearch.searchRowFilter?.reportedToName || ''}
+                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                                                onChange={(e) => handleFilterChangeLocal("reportedToName", e.target.value)}
+                                            />
+                                        }
+                                        body={(rowData, { rowIndex }) => (
+                                            <>
+                                                <div id={`tooltip-reportedToName-${rowIndex}`} className="text-left truncate font-medium">
+                                                    {rowData.reportedToName}
+                                                </div>
+                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-reportedToName-${rowIndex}`} content={rowData.reportedToName} showDelay={200} position="top" />
                                             </>
                                         )}
                                     />
