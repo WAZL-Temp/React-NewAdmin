@@ -52,7 +52,14 @@ const AppRoutes = () => {
       <Route path="/categories/edit/:id" element={<Layout><CategoriesEdit /></Layout>} />
       <Route path="/categories/import" element={<Layout><CategoriesImport /></Layout>} />
 
-      {/* <!--router-link-admin--> */}
+      <Route path="/seos" element={<Layout><SeosList /></Layout>} />
+<Route path="/seos/home" element={<Layout><SeosHome /></Layout>} />
+<Route path="/seos/:id" element={<Layout><SeosView /></Layout>} />
+<Route path="/seos/add" element={<Layout><SeosEdit /></Layout>} />
+<Route path="/seos/edit/:id" element={<Layout><SeosEdit /></Layout>} />
+<Route path="/seos/import" element={<Layout><SeosImport /></Layout>} />
+
+{/* <!--router-link-admin--> */}
 
       <Route path="/product" element={<Layout><ProductsList /></Layout>} />
 
