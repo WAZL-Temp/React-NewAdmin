@@ -23,6 +23,11 @@ import CategoriesView from './pages/admin/categories/CategoriesView';
 import CategoriesEdit from './pages/admin/categories/CategoriesEdit';
 import CategoriesImport from './pages/admin/categories/CategoriesImport';
 import RoleDetailsForm from './pages/admin/role/RoleDetailsForm';
+import SeosList from './pages/admin/seos/SeosList';
+import SeosHome from './pages/admin/seos/SeosHome';
+import SeosEdit from './pages/admin/seos/SeosEdit';
+import SeosView from './pages/admin/seos/SeosView';
+import SeosImport from './pages/admin/seos/SeosImport';
 
 {/* <!--router-link-admin-Import--> */ }
 const AppRoutes = () => {
@@ -53,13 +58,13 @@ const AppRoutes = () => {
       <Route path="/categories/import" element={<Layout><CategoriesImport /></Layout>} />
 
       <Route path="/seos" element={<Layout><SeosList /></Layout>} />
-<Route path="/seos/home" element={<Layout><SeosHome /></Layout>} />
-<Route path="/seos/:id" element={<Layout><SeosView /></Layout>} />
-<Route path="/seos/add" element={<Layout><SeosEdit /></Layout>} />
-<Route path="/seos/edit/:id" element={<Layout><SeosEdit /></Layout>} />
-<Route path="/seos/import" element={<Layout><SeosImport /></Layout>} />
+      <Route path="/seos/home" element={<Layout><SeosHome /></Layout>} />
+      <Route path="/seos/:id" element={<Layout><SeosView /></Layout>} />
+      <Route path="/seos/add" element={<Layout><SeosEdit /></Layout>} />
+      <Route path="/seos/edit/:id" element={<Layout><SeosEdit /></Layout>} />
+      <Route path="/seos/import" element={<Layout><SeosImport /></Layout>} />
 
-{/* <!--router-link-admin--> */}
+      {/* <!--router-link-admin--> */}
 
       <Route path="/product" element={<Layout><ProductsList /></Layout>} />
 

@@ -59,11 +59,13 @@ export default function AppUsersEdit() {
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [itemData, setItemData] = useState<AppUser>(initData());
 
+
   const roleData = useFetchDataEnum("RoleType");
   const publishData = useFetchDataEnum("PublishType");
   const verifyData = useFetchDataEnum("VerifyType");
   const genderData = useFetchDataEnum('Gender');
   // const [calendarLastLogin, setCalendarLastLogin] = useState<Date | null>(null);
+  const hasRun = useRef(false);
 
   function initData(): AppUser {
     return {
@@ -139,37 +141,44 @@ export default function AppUsersEdit() {
   //   setCalendarLastLogin(null);
   // }
 
-  useEffect(() => {
+ useEffect(() => {
     const fetchData = async () => {
+      if (hasRun.current) return;
+      hasRun.current = true;
+
       try {
         const listReportedBy = await getData(userService);
         const options = listReportedBy.map((item) => ({
-          ...item, id: item.id?.toString()
+          ...item,
+          id: item.id?.toString(),
         }));
         setReportedByList(options);
-        if (itemData.reportedBy) {
-          setSelectedReportedBy(itemData.reportedBy);
-        }
 
         const listReportedTo = await getData(userService);
         setReportedToList(listReportedTo);
-        if (itemData.reportedTo) {
-          const arrList = itemData.reportedTo.split(",");
-          const selectedList = listReportedTo.filter((a: AppUser) =>
-            arrList.includes("" + a.id)
-          );
-          if (selectedList.length) {
-            setSelectedReportedTo(selectedList);
-          }
-        }
-
       } catch (err) {
-        console.error('Error fetching data:', err);
+        console.error("Error fetching data:", err);
       }
     };
 
     fetchData();
-  }, [itemData]);
+  }, []);
+
+  useEffect(() => {
+    if (item.reportedBy && reportedByList.length) {
+      setSelectedReportedBy(item.reportedBy);
+    }
+
+    if (item.reportedTo && reportedToList.length) {
+      const arrList = item.reportedTo.split(",");
+      const selectedList = reportedToList.filter((a: AppUser) =>
+        arrList.includes("" + a.id)
+      );
+      if (selectedList.length) {
+        setSelectedReportedTo(selectedList);
+      }
+    }
+  }, [item.reportedBy, item.reportedTo, reportedByList, reportedToList]);
 
   useEffect(() => {
     const bindDropDownList = async () => {
