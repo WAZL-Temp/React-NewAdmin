@@ -1,4 +1,4 @@
-import { AppUser } from "../model/appuser";
+import { AppUser } from "../model/appUser";
 import { useBaseService } from "../../sharedBase/baseService";
 
 export const AppUserService = () => {
