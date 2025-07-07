@@ -36,7 +36,7 @@ const typeName= "appUserTest";
   const [stepNo, setStepNo] = useState(0);
 
   
- const stepsData = [t("appUserTests.form_detail.fields.accessDeatails"), t("appUserTests.form_detail.fields.shopDetails"), t("appUserTests.form_detail.fields.shopAddress"), t("appUserTests.form_detail.fields.verifyShop"),];
+ const stepsData = [t("appUserTests.form_detail.fields.Step1"), t("appUserTests.form_detail.fields.Step2"), t("appUserTests.form_detail.fields.Step3"), t("appUserTests.form_detail.fields.Step4"),];
  
 const [listVerifyShop, setListVerifyShop] = useState<EnumDetail[]>([]);
  const [listRole, setListRole] = useState<EnumDetail[]>([]);
