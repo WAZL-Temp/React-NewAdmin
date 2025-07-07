@@ -1,5 +1,4 @@
 export interface AppUserTest {
-	createById?: number;
 	id?: number;
 	name?: string;
 	firstName?: string;
@@ -37,13 +36,15 @@ export interface AppUserTest {
 	isPremiumUser?: boolean;
 	totalPlot?: number;
 	reportedTo?: string;
+	reportedToName?: string;
 	reportedBy?: string;
-	appUserName?: string;
+	reportedByName?: string;
 	gender?: string;
 	genderLabel?: string;
 	createDate?: Date;
 	updateDate?: Date;
 	deleteDate?: Date;
+	createById?: number;
 	updateById?: number;
 	deleteById?: number;
 	isDelete?: boolean;

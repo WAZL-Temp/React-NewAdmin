@@ -238,8 +238,7 @@
 "appUserTests": {
     "columns": {
       "fields": {
-         "createById": "Create By Id",
-"id": "Id",
+         "id": "Id",
 "name": "Name ",
 "firstName": "First Name",
 "lastName": "Last Name",
@@ -277,12 +276,15 @@
 "isPremiumUser": "IsPremiumUser",
 "totalPlot": "TotalPlot",
 "reportedTo": "ReportedTo",
+"reportedToName": "ReportedTo",
 "reportedBy": "ReportedBy",
-"appUserName": "ReportedBy",
+"reportedByName": "ReportedBy",
 "gender": "Gender",
 "genderLabel": "Gender",
+"createDate": "Create Date",
 "updateDate": "Update Date",
 "deleteDate": "Delete Date",
+"createById": "Create By Id",
 "updateById": "Update By Id",
 "deleteById": "Delete By Id",
 "isDelete": "Is Delete"
@@ -292,11 +294,11 @@
       "fields": {
         "importAction": "Import Action",
         "importRemark": "Import Remark",
-        "accessDeatails": "Access Deatails",
-"shopDetails": "Shop Details",
-"shopAddress": "Shop Address",
-"verifyShop": "Verify Shop",
-"modelname": "AppUserTest"
+        "modelname": "AppUserTest",
+"setp1": "Access Deatails",
+"setp2": "Shop Details",
+"setp3": "Shop Address",
+"setp4": "Verify Shop"
       }
     },
     "form_list": {

@@ -16,7 +16,7 @@ import {getData, useFetchDataEnum } from '../../../sharedBase/lookupService';
 import Loader from '../../../components/Loader';
 import { appUserTestValidate } from '../../../schema/appUserTest';
 import FormFieldError from '../../../components/FormFieldError';
-import {AppUser} from "../../../core/model/appuser";
+import {AppUser} from "../../../core/model/appUser";
 //<<addModelData>>
 export default function AppUserTestsEdit() {
   const { id } = useParams<{ id: string }>();
@@ -69,7 +69,6 @@ const genderData = useFetchDataEnum('Gender');
 
 function initData(): AppUserTest {
 	return {
-		createById: undefined,
 		id: undefined,
 		name: '',
 		firstName: '',
@@ -107,13 +106,15 @@ function initData(): AppUserTest {
 		isPremiumUser: false,
 		totalPlot: undefined,
 		reportedTo: '',
+		reportedToName: '',
 		reportedBy: '',
-		appUserName: '',
+		reportedByName: '',
 		gender: '',
 		genderLabel: '',
 		createDate: undefined,
 		updateDate: undefined,
 		deleteDate: undefined,
+		createById: undefined,
 		updateById: undefined,
 		deleteById: undefined,
 		isDelete: false,
