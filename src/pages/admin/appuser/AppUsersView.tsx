@@ -3,7 +3,7 @@ import TooltipWithText from "../../../components/TooltipWithText";
 import ImgViewer from "../../../components/ImgViewer";
 import { BsArrowLeft, Button, FaEdit, IoIosArrowBack, IoIosArrowForward, Stepper, StepperPanel, StepperRefAttributes } from "../../../sharedBase/globalImports";
 import { useTranslation, useParams, format } from '../../../sharedBase/globalUtils';
-import { AppUser } from "../../../core/model/appuser";
+import { AppUser } from "../../../core/model/appUser";
 import { useViewPage } from "../../../hooks/useViewPage";
 import { AppUserService } from "../../../core/service/appUsers.service";
 import { useItemQuery } from "../../../store/useItemQuery";

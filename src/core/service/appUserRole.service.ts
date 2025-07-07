@@ -1,4 +1,4 @@
-import { AppUser } from "../model/appuser";
+import { AppUser } from "../model/appUser";
 import { useQuery } from "@tanstack/react-query";
 import { useBaseService } from "../../sharedBase/baseService";
 
