@@ -27,7 +27,6 @@ const typeName= "appUserTest";
 
 function initData(): AppUserTest {
 	return {
-		createById: undefined,
 		id: undefined,
 		name: '',
 		firstName: '',
@@ -65,13 +64,15 @@ function initData(): AppUserTest {
 		isPremiumUser: false,
 		totalPlot: undefined,
 		reportedTo: '',
+		reportedToName: '',
 		reportedBy: '',
-		appUserName: '',
+		reportedByName: '',
 		gender: '',
 		genderLabel: '',
 		createDate: undefined,
 		updateDate: undefined,
 		deleteDate: undefined,
+		createById: undefined,
 		updateById: undefined,
 		deleteById: undefined,
 		isDelete: false,
@@ -574,7 +575,7 @@ function initData(): AppUserTest {
                       <span className="text-red-600">*</span>
                       <TooltipWithText text={t("appUserTests.columns.fields.reportedTo")} />
                     </div>
-                    <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)] ">{item?.reportedTo}</span>
+                    <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)] ">{item?.reportedToName}</span>
                   </div>
                 )}{!isFieldHidden("reportedBy") && (
                   <div className="flex flex-col   bg-[var(--color-white)] text-[var(--color-dark)] bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
@@ -588,7 +589,7 @@ function initData(): AppUserTest {
                       <span className="text-red-600">*</span>
                       <TooltipWithText text={t("appUserTests.columns.fields.reportedBy")} />
                     </div>
-                    <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)] ">{item?.reportedBy}</span>
+                    <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)] ">{item?.reportedByName}</span>
                   </div>
                 )}{!isFieldHidden("gender") && (
                   <div className="flex flex-col   bg-[var(--color-white)] text-[var(--color-dark)] bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">

@@ -36,7 +36,6 @@ const typeName= "appUserTest";
             }
         });
 const columnsConfigDefault = useMemo(() =>[
-			 {field: 'createById', header: t("appUserTests.columns.fields.createById"), isDefault: true, show: true }, 
 			 {field: 'id', header: t("appUserTests.columns.fields.id"), isDefault: true, show: true }, 
 			 {field: 'name', header: t("appUserTests.columns.fields.name"), isDefault: true, show: true }, 
 			 {field: 'firstName', header: t("appUserTests.columns.fields.firstName"), isDefault: true, show: true }, 
@@ -74,8 +73,9 @@ const columnsConfigDefault = useMemo(() =>[
 			 {field: 'isPremiumUser', header: t("appUserTests.columns.fields.isPremiumUser"), isDefault: true, show: true }, 
 			 {field: 'totalPlot', header: t("appUserTests.columns.fields.totalPlot"), isDefault: true, show: true }, 
 			 {field: 'reportedTo', header: t("appUserTests.columns.fields.reportedTo"), isDefault: true, show: true }, 
+			 {field: 'reportedToName', header: t("appUserTests.columns.fields.reportedToName"), isDefault: true, show: true }, 
 			 {field: 'reportedBy', header: t("appUserTests.columns.fields.reportedBy"), isDefault: true, show: true }, 
-			 {field: 'appUserName', header: t("appUserTests.columns.fields.appUserName"), isDefault: true, show: true }, 
+			 {field: 'reportedByName', header: t("appUserTests.columns.fields.reportedByName"), isDefault: true, show: true }, 
 			 {field: 'gender', header: t("appUserTests.columns.fields.gender"), isDefault: true, show: true }, 
 			 {field: 'genderLabel', header: t("appUserTests.columns.fields.genderLabel"), isDefault: true, show: true }, 
 			 {field: 'updateDate', header: t("appUserTests.columns.fields.updateDate"), isDefault: true, show: true }, 
@@ -444,27 +444,7 @@ if (roleData && hasAccess(roleData, "Export")) {
                             className="text-sm sticky bg-[var(--color-white)] text-[var(--color-dark)]  font-semibold whitespace-nowrap overflow-hidden text-ellipsis"
                         />
                         )}
-                       {visibleColumns.includes('createById') && (
-<Column field="createById" header={t("appUserTests.columns.fields.createById")} sortable filter
-headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-style={{width: "200px", backgroundColor: "var(--color-white)" }}
-filterElement={
-<InputText
-value={query.tableSearch.searchRowFilter?.createById || ''}
-className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-onChange={(e) => handleFilterChangeLocal("createById", e.target.value)}
-/> 
- }
-body={(rowData, { rowIndex }) => (
-<>
-<div id={`tooltip-createById-${rowIndex}`} className="text-left truncate font-medium">
- {rowData.createById}
- </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-createById-${rowIndex}`} content={rowData.createById} showDelay={200} position="top" />
-</>
-)}
- />)} 
-{visibleColumns.includes('name') && (
+                       {visibleColumns.includes('name') && (
 <Column field="name" header={t("appUserTests.columns.fields.name")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -1060,23 +1040,43 @@ body={(rowData, { rowIndex }) => (
 </>
 )}
  />)} 
-{visibleColumns.includes('appUserName') && (
-<Column field="appUserName" header={t("appUserTests.columns.fields.appUserName")} sortable filter
+{visibleColumns.includes('reportedToName') && (
+<Column field="reportedToName" header={t("appUserTests.columns.fields.reportedToName")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
 filterElement={
 <InputText
-value={query.tableSearch.searchRowFilter?.appUserName || ''}
+value={query.tableSearch.searchRowFilter?.reportedToName || ''}
 className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-onChange={(e) => handleFilterChangeLocal("appUserName", e.target.value)}
+onChange={(e) => handleFilterChangeLocal("reportedToName", e.target.value)}
 /> 
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-appUserName-${rowIndex}`} className="text-left truncate font-medium">
- {rowData.appUserName}
+<div id={`tooltip-reportedToName-${rowIndex}`} className="text-left truncate font-medium">
+ {rowData.reportedToName}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-appUserName-${rowIndex}`} content={rowData.appUserName} showDelay={200} position="top" />
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-reportedToName-${rowIndex}`} content={rowData.reportedToName} showDelay={200} position="top" />
+</>
+)}
+ />)} 
+{visibleColumns.includes('reportedByName') && (
+<Column field="reportedByName" header={t("appUserTests.columns.fields.reportedByName")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.reportedByName || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("reportedByName", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-reportedByName-${rowIndex}`} className="text-left truncate font-medium">
+ {rowData.reportedByName}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-reportedByName-${rowIndex}`} content={rowData.reportedByName} showDelay={200} position="top" />
 </>
 )}
  />)} 
