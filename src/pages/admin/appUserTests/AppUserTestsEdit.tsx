@@ -161,7 +161,7 @@ function initData(): AppUserTest {
  
      const listReportedTo = await getData(appUserTestService);
         setReportedToList(listReportedTo);
-     const listReportedBy = await getData(appUserTestService);
+     const listReportedBy = await getData(appUserService);
     const options = listReportedBy.map((item) => ({
           ...item, id: item.id?.toString()
         }));
@@ -202,7 +202,10 @@ function initData(): AppUserTest {
     };
 
     fetchData();
-  }, [itemData]);
+  }, [
+    
+itemData.reportedTo,reportedTolist, itemData.reportedBy,reportedBylist
+    ]);
 
    useEffect(() => {
     const bindDropDownList = async () => {
