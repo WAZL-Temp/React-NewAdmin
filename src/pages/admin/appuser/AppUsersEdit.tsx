@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import successImg from '../../../assets/images/success.gif'
-import { BsArrowLeft, Button, Calendar, Checkbox, Dialog, Dropdown, DropdownChangeEvent, FaSave, Image, InputText, InputTextarea, IoIosArrowBack, IoIosArrowForward, MultiSelect, MultiSelectChangeEvent, RadioButton, RadioButtonChangeEvent, Stepper, StepperPanel, StepperRefAttributes, Toast } from '../../../sharedBase/globalImports';
+import { BsArrowLeft, Button, Calendar, Checkbox, Dialog, DropdownChangeEvent, FaSave, Image, InputText, InputTextarea, IoIosArrowBack, IoIosArrowForward, MultiSelectChangeEvent, RadioButton, RadioButtonChangeEvent, Stepper, StepperPanel, StepperRefAttributes, Toast } from '../../../sharedBase/globalImports';
 import { useNavigate, useParams, useTranslation } from '../../../sharedBase/globalUtils';
 import { useEditPage } from '../../../hooks/useEditPage';
 import { AppUser } from '../../../core/model/appUser';
@@ -16,6 +16,8 @@ import { getData, useFetchDataEnum } from '../../../sharedBase/lookupService';
 import Loader from '../../../components/Loader';
 import { appUser } from '../../../schema/appuser';
 import FormFieldError from '../../../components/FormFieldError';
+import { DropdownWithAutoClose } from '../../../components/DropdownWithAutoClose';
+import { MultiSelectWithAutoClose } from '../../../components/MultiSelectWithAutoClose';
 
 export default function AppUsersEdit() {
   const { id } = useParams<{ id: string }>();
@@ -943,7 +945,7 @@ export default function AppUsersEdit() {
                                 </label>
                                 <TooltipWithText text={t("appUsers.columns.fields.verifyShop")} />
                               </div>
-                              <Dropdown
+                              <DropdownWithAutoClose
                                 id="verifyShop"
                                 name="verifyShop"
                                 value={selectedVerifyShop}
@@ -1245,7 +1247,7 @@ export default function AppUsersEdit() {
                                 <span className=" text-[var(--color-danger)] pl-2">*</span>
                                 <TooltipWithText text={t("appUsers.columns.fields.role")} />
                               </div>
-                              <Dropdown
+                              <DropdownWithAutoClose
                                 id="role"
                                 name="role"
                                 value={selectedRole}
@@ -1276,7 +1278,7 @@ export default function AppUsersEdit() {
                                 <span className=" text-[var(--color-danger)] pl-2">*</span>
                                 <TooltipWithText text={t("appUsers.columns.fields.publish")} />
                               </div>
-                              <Dropdown
+                              <DropdownWithAutoClose
                                 id="publish"
                                 name="publish"
                                 value={selectedPublish}
@@ -1423,7 +1425,7 @@ export default function AppUsersEdit() {
                                 <span className=" text-[var(--color-danger)] pl-2">*</span>
                                 <TooltipWithText text={t("appUsers.columns.fields.reportedTo")} />
                               </div>
-                              <MultiSelect
+                              <MultiSelectWithAutoClose
                                 name="reportedTo"
                                 id="reportedTo"
                                 value={selectedReportedTo}
@@ -1449,7 +1451,7 @@ export default function AppUsersEdit() {
                                 <span className="text-[var(--color-danger)] pl-2">*</span>
                                 <TooltipWithText text={t("appUsers.columns.fields.reportedBy")} />
                               </div>
-                              <Dropdown
+                              <DropdownWithAutoClose
                                 id="reportedBy"
                                 name="reportedBy"
                                 value={selectedReportedBy}

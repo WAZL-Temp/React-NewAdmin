@@ -59,6 +59,7 @@ export default function AppUsersList() {
         { field: "photoShopFront", header: t("appUsers.columns.fields.photoShopFront"), isDefault: false, show: false },
         { field: "visitingCard", header: t("appUsers.columns.fields.visitingCard"), isDefault: false, show: false },
         { field: "cheque", header: t("appUsers.columns.fields.cheque"), isDefault: false, show: false },
+         { field: "gstOtp", header: t("appUsers.columns.fields.gstOtp"), isDefault: false, show: false },
         { field: "isActive", header: t("appUsers.columns.fields.isActive"), isDefault: false, show: false },
         { field: "isAdmin", header: t("appUsers.columns.fields.isAdmin"), isDefault: false, show: false },
         { field: "hasImpersonateAccess", header: t("appUsers.columns.fields.hasImpersonateAccess"), isDefault: false, show: false },
@@ -66,9 +67,11 @@ export default function AppUsersList() {
         { field: "roleLabel", header: t("appUsers.columns.fields.roleLabel"), isDefault: false, show: false },
         { field: "publishLabel", header: t("appUsers.columns.fields.publishLabel"), isDefault: false, show: false },
         { field: "lastLogin", header: t("appUsers.columns.fields.lastLogin"), isDefault: false, show: false },
+         { field: "defaultLanguage", header: t("appUsers.columns.fields.defaultLanguage"), isDefault: false, show: false },
         { field: "totalPlot", header: t("appUsers.columns.fields.totalPlot"), isDefault: false, show: false },
         { field: "reportedByName", header: t("appUsers.columns.fields.reportedBy"), isDefault: false, show: false },
         { field: "reportedToName", header: t("appUsers.columns.fields.reportedTo"), isDefault: false, show: false },
+        { field: "gender", header: t("appUsers.columns.fields.gender"), isDefault: false, show: false },
     ].filter(col => col.field),
         [t]);
 
@@ -1156,6 +1159,28 @@ export default function AppUsersList() {
                                                     {rowData.reportedToName}
                                                 </div>
                                                 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-reportedToName-${rowIndex}`} content={rowData.reportedToName} showDelay={200} position="top" />
+                                            </>
+                                        )}
+                                    />
+                                )}
+                                 {visibleColumns.includes('gender') && (
+                                    <Column
+                                        field="gender" header={t("appUsers.columns.fields.gender")} sortable filter
+                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                                        filterElement={
+                                            <InputText
+                                                value={query.tableSearch.searchRowFilter?.gender || ''}
+                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                                                onChange={(e) => handleFilterChangeLocal("gender", e.target.value)}
+                                            />
+                                        }
+                                        body={(rowData, { rowIndex }) => (
+                                            <>
+                                                <div id={`tooltip-gender-${rowIndex}`} className="text-left truncate font-medium">
+                                                    {rowData.gender}
+                                                </div>
+                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-gender-${rowIndex}`} content={rowData.gender} showDelay={200} position="top" />
                                             </>
                                         )}
                                     />

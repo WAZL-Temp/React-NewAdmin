@@ -1107,3 +1107,24 @@ code {
   border-color: var(--color-primary);
   box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
 }
+ /* Modern dark tooltip with arrow */
+.custom-tooltip {
+  background-color: #2d2d2d !important;
+  color: #ffffff !important;
+  border-radius: 6px !important;
+  font-size: 0.75rem !important;
+  padding: 6px 10px !important;
+  position: relative;
+}
+
+/* Arrow for right-positioned tooltip */
+.custom-tooltip.p-tooltip-right::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -5px;
+  transform: translateY(-50%);
+  border-style: solid;
+  border-width: 6px;
+  border-color: transparent #2d2d2d transparent transparent;
+}

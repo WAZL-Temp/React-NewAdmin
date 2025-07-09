@@ -203,6 +203,7 @@ const ItemSlider = ({ user }: { user: AppUser }) => {
 const ItemList = ({ title, users }: { title: string; users: UserData[] }) => {
   const navigate = useNavigate();
   const baseModelName = 'appuser';
+  const { t } = useTranslation();
 
   return (
     <div className='mt-3'>
@@ -238,17 +239,20 @@ const ItemList = ({ title, users }: { title: string; users: UserData[] }) => {
                   </p>
                   <div className="flex justify-center md:justify-start gap-3 sm:gap-4 mt-3 sm:mt-4">
                     <Button
-                      label="Edit"
                       icon="pi pi-file-edit"
-                      className="flex items-center gap-2 text-white bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] hover:text-white p-2 border border-[var(--color-primary)] rounded-md text-xs sm:text-sm"
+                      className="flex items-center gap-2 text-white bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] hover:text-white px-3 py-2 border border-[var(--color-primary)] rounded-md text-xs whitespace-nowrap"
                       onClick={() => navigate(`/${baseModelName}/edit/${user.id}`)}
-                    />
+                    >
+                      {t('globals.edit')}
+                    </Button>
+
                     <Button
-                      label="View"
                       icon="pi pi-eye"
-                      className="flex items-center gap-2 text-[var(--color-primary)] bg-white hover:text-[var(--color-primary)] p-2 border border-[var(--color-primary)] rounded-md text-xs sm:text-sm"
+                      className="flex items-center gap-2 text-[var(--color-primary)] bg-white hover:text-[var(--color-primary)] px-3 py-2 border border-[var(--color-primary)] rounded-md text-xs whitespace-nowrap"
                       onClick={() => navigate(`/${baseModelName}/${user.id}`)}
-                    />
+                    >
+                      {t('globals.view')}
+                    </Button>
                   </div>
                 </div>
               </div>
