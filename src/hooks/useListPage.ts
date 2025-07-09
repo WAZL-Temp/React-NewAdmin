@@ -171,8 +171,9 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
             const scrollTop = localStorage.getItem('dtScrollTop');
             const scrollLeft = localStorage.getItem('dtScrollLeft');
 
-            if (dtRef.current) {
-                const bodyEl = dtRef.current.getElement().querySelector('.p-datatable-wrapper');
+            const dtElement = dtRef.current?.getElement();
+            if (dtElement) {
+                const bodyEl = dtElement.querySelector('.p-datatable-wrapper');
                 if (bodyEl) {
                     if (scrollTop) bodyEl.scrollTop = parseInt(scrollTop);
                     if (scrollLeft) bodyEl.scrollLeft = parseInt(scrollLeft);
@@ -181,14 +182,18 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
                 }
             }
         };
+
         setTimeout(applyScrollPosition, 500);
+
         const handleScroll = (e: Event) => {
             const target = e.target as HTMLElement;
             localStorage.setItem('dtScrollTop', target.scrollTop.toString());
             localStorage.setItem('dtScrollLeft', target.scrollLeft.toString());
         };
 
-        const bodyEl = dtRef.current?.getElement().querySelector('.p-datatable-wrapper');
+        const dtElement = dtRef.current?.getElement();
+        const bodyEl = dtElement?.querySelector('.p-datatable-wrapper');
+
         bodyEl?.addEventListener('scroll', handleScroll);
 
         return () => {
@@ -277,7 +282,7 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
     };
 
     const setTableSearchInfo = useCallback(() => {
-        const body = dtRef.current?.getElement().querySelector('.p-datatable-wrapper');
+        const body = dtRef.current?.getElement()?.querySelector('.p-datatable-wrapper');
         const info = {
             filter: query.tableSearch.filter,
             sortField: query.tableSearch.sortField,
@@ -380,6 +385,6 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
         setListSearch, clearListSearch, searchChange, isDeleteDialogVisible, setIsDeleteDialogVisible,
         confirmDeleteItem, deleteItem, openItem, closeDeleteDialog, setItemToDelete, toast, isSuccessDialogOpen,
         setIsSuccessDialogOpen, formatDate, hasAccess, exportToExcel, importFromExcel, addData, handleDelete, useColumnConfig,
-        visible,setVisible
+        visible, setVisible
     };
 }

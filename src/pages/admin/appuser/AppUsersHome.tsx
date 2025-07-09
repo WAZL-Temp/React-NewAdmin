@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { AppUser } from '../../../core/model/appUser';
+import { AppUser } from '../../../core/model/appuser';
 import teambanner from '../../../assets/images/team-banner.png';
 import prodilimg from '../../../assets/images/prodil.jpg';
 import avatar from '../../../assets/images/avatar.svg';
@@ -207,7 +207,7 @@ const ItemList = ({ title, users }: { title: string; users: UserData[] }) => {
 
   return (
     <div className='mt-3'>
-      <div className="container mx-auto px-2 sm:px-4">
+      <div className="container mx-auto">
         <h5 className="text-xl sm:text-2xl font-semibold text-center text-[var(--color-dark)] mb-3">{title}</h5>
         <Carousel
           value={users}
@@ -222,8 +222,8 @@ const ItemList = ({ title, users }: { title: string; users: UserData[] }) => {
             { breakpoint: '640px', numVisible: 1, numScroll: 1 },
           ]}
           itemTemplate={(user) => (
-            <div className="p-2 sm:p-3">
-              <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-xl overflow-hidden w-full max-w-full min-w-0 min-h-[150px] sm:min-h-[200px]">
+            <div className="p-2 sm:p-3 w-full">
+              <div className="w-full flex flex-col md:flex-row bg-white shadow-lg rounded-xl overflow-hidden min-h-[150px] sm:min-h-[200px]">
                 <div className="w-full md:w-1/3 flex items-center justify-center bg-blue-100 h-auto">
                   <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-32 md:h-32 rounded-full overflow-hidden">
                     <Image

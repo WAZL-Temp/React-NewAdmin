@@ -853,6 +853,10 @@ code {
   color: var(--color-dark) !important;
 }
 
+.p-dropdown-filter {
+  padding: 0.5rem !important;
+}
+
 .p-dropdown-filter-container input {
   font-size: 13px !important;
 }

@@ -4,7 +4,7 @@ import { BiSolidTrash, Button, Calendar, Column, DataTable, Dialog, HiOutlinePlu
 import { useTranslation, useNavigate } from '../../../sharedBase/globalUtils';
 import successimg from '../../../assets/images/success.gif';
 import confirmImg from '../../../assets/images/are-you-sure.jpg';
-import { AppUser } from "../../../core/model/appUser";
+import { AppUser } from "../../../core/model/appuser";
 import { RowData } from "../../../types/listpage";
 import { useListQuery } from "../../../store/useListQuery";
 import { AppUserService } from "../../../core/service/appUsers.service";
@@ -403,7 +403,7 @@ export default function AppUsersList() {
                         </Dialog>
                     </div>
 
-                    <div className="m-2">
+                    <div className="m-2 tableResponsive">
                         {!query.isLoading && (
                             <DataTable
                                 ref={dtRef}
@@ -426,7 +426,7 @@ export default function AppUsersList() {
                                 globalFilterFields={columnsConfig.map(config => config.field)}
                                 paginatorTemplate={t('globals.layout')}
                                 currentPageReportTemplate={t('globals.report')}
-                                className="p-datatable-gridlines datatable-responsive bg-[var(--color-white)] text-[var(--color-dark)] tableResponsive"
+                                className="p-datatable-gridlines datatable-responsive bg-[var(--color-white)] text-[var(--color-dark)] "
                                 filterDisplay="row"
                                 emptyMessage={t('globals.emptyMessage')}
                                 resizableColumns

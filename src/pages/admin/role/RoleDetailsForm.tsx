@@ -11,7 +11,7 @@ import { useFetchRoleDetailsData } from '../../../sharedBase/lookupService';
 import { roleAddService, RoleService } from '../../../core/service/roles.service';
 import { useListQuery } from '../../../store/useListQuery';
 import { RoleDataService } from '../../../core/service/roleDatas.service';
-import { AppUser } from '../../../core/model/appUser';
+import { AppUser } from '../../../core/model/appuser';
 import { RoleDetailService } from '../../../core/service/roleDetails.service';
 
 interface SourceOption {
