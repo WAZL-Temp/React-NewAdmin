@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { FiUploadCloud, InputText, IoCheckmarkCircleSharp, RiDeleteBin6Fill } from "../sharedBase/globalImports";
+import { AiFillCloseCircle, FiUploadCloud, InputText, IoCheckmarkCircleSharp, RiDeleteBin6Fill } from "../sharedBase/globalImports";
 import { useFileUploadService } from "../core/service/fileUpload.service";
 import { useTranslation } from "../sharedBase/globalUtils";
 import { CustomFile } from "../core/model/customfile";
@@ -41,6 +41,10 @@ export default function FileUploadMain({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const fileUploadService = useFileUploadService(modelName);
   const [isUploadError, setIsUploadError] = useState<boolean>(false);
+  const [scale, setScale] = useState(1);
+  const scaleStep = 0.1;
+  const [imageShowDialog, setImageShowDialog] = useState(false);
+  const [imageShowUrl, setImageShowUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const isEmpty = uploadedFiles.length === 0;
@@ -198,6 +202,15 @@ export default function FileUploadMain({
     }
   }
 
+  const handleScroll = (event: React.WheelEvent<HTMLImageElement>) => {
+    event.preventDefault();
+    if (event.deltaY < 0) {
+      setScale((prevScale) => prevScale + scaleStep);
+    } else {
+      setScale((prevScale) => Math.max(1, prevScale - scaleStep));
+    }
+  };
+
   return (
     <div className="file-attachments space-y-4">
       {uploadedFiles.length < maxFileNumber && (
@@ -261,6 +274,19 @@ export default function FileUploadMain({
             ) : (
               <span className="text-xs text-[var(--color-primary)] flex-shrink-0"><IoCheckmarkCircleSharp size={16} /></span>
             )}
+            <div
+              className="cursor-pointer"
+              onClick={() => {
+                setImageShowDialog(true);
+                setImageShowUrl(`${import.meta.env.VITE_API_URL}/ImportFiles/${file.filePath.replace(/\\/g, "/")}`);
+              }}
+            >
+              <img
+                src={`${import.meta.env.VITE_API_URL}/ImportFiles/${file.filePath.replace(/\\/g, "/")}`}
+                alt={file.fileName}
+                className="h-8 w-8 object-cover rounded text-xs"
+              />
+            </div>
             <button
               onClick={() => deleteAttachment(file)}
               className="text-[var(--color-danger)]  transition-colors flex-shrink-0"
@@ -271,6 +297,32 @@ export default function FileUploadMain({
           </li>
         ))}
       </ul>
+
+      {imageShowDialog && imageShowUrl && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-dark)] bg-opacity-80">
+          <div className="relative w-full h-full max-w-full max-h-full my-16 p-4">
+            <div
+              className="absolute top-4 right-4 cursor-pointer text-[var(--color-white)]"
+              onClick={() => {
+                setImageShowDialog(false);
+                setImageShowUrl(null);
+                setScale(1);
+              }}
+            >
+              <AiFillCloseCircle className="h-8 w-8 text-[var(--color-white)]" />
+            </div>
+            <div className="w-full h-full flex justify-center items-center pt-16 pb-16">
+              <img
+                src={imageShowUrl}
+                onWheel={handleScroll}
+                style={{ transform: `scale(${scale})`, transition: 'transform 0.2s' }}
+                className="w-auto h-auto max-h-full max-w-full"
+                alt="Preview"
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {uploadError && <p className="text-xs text-[var(--color-danger)] mt-2">{uploadError}</p>}
     </div>

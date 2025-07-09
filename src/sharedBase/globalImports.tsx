@@ -25,7 +25,8 @@ export type { StepperRefAttributes } from "primereact/stepper";
 export type { DropdownChangeEvent } from 'primereact/dropdown';
 export type { RadioButtonChangeEvent } from "primereact/radiobutton";
 export type { MultiSelectChangeEvent } from "primereact/multiselect";
-
+export type { Dropdown as DropdownType, DropdownProps } from "primereact/dropdown";
+export type { MultiSelect as MultiSelectType, MultiSelectProps } from "primereact/multiselect";
 
 export { TiEye } from "react-icons/ti";
 export { RiPencilFill } from "react-icons/ri";
@@ -66,3 +67,9 @@ export type { ColumnFilterElementTemplateOptions } from 'primereact/column';
 export type { DataTableFilterMeta, DataTablePageEvent, DataTableSortEvent, DataTableValue, DataTableValueArray } from 'primereact/datatable';
 export type { NavigateFunction } from "react-router-dom";
 export { default as GoogleButton } from 'react-google-button';
+
+// export interface StepperRefAttributes {
+//   next: () => void;
+//   previous: () => void;
+//   reset: () => void;
+// }
