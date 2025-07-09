@@ -7,7 +7,7 @@ import FileUploadMain from '../../../components/FileUploadMain';
 import TableSkeleton from '../../../components/TableSkeleton';
 import successimg from '../../../assets/images/success.gif';
 import { useImportPage } from '../../../hooks/useImportPage';
-import { AppUser } from '../../../core/model/appUser';
+import { AppUser } from '../../../core/model/appuser';
 import { RowData } from '../../../types/listpage';
 import { CustomFile } from '../../../core/model/customfile';
 

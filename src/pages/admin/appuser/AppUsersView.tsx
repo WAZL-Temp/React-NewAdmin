@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import TooltipWithText from "../../../components/TooltipWithText";
 import ImgViewer from "../../../components/ImgViewer";
-import { BsArrowLeft, Button, FaEdit, IoIosArrowBack, IoIosArrowForward, Stepper, StepperPanel, StepperRefAttributes } from "../../../sharedBase/globalImports";
+import { BsArrowLeft, Button, FaEdit, IoIosArrowBack, IoIosArrowForward, Stepper, StepperPanel } from "../../../sharedBase/globalImports";
 import { useTranslation, useParams, format } from '../../../sharedBase/globalUtils';
-import { AppUser } from "../../../core/model/appUser";
+import { AppUser } from "../../../core/model/appuser";
 import { useViewPage } from "../../../hooks/useViewPage";
 import { AppUserService } from "../../../core/service/appUsers.service";
 import { useItemQuery } from "../../../store/useItemQuery";
@@ -13,7 +13,7 @@ import Loader from "../../../components/Loader";
 export default function AppUsersView() {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
-  const stepperRef = useRef<StepperRefAttributes | null>(null);
+  const stepperRef = useRef<Stepper | null>(null);
   const [stepNo, setStepNo] = useState(0);
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
   const stepsData = [

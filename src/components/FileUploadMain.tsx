@@ -272,21 +272,23 @@ export default function FileUploadMain({
             {file.progress === 100 ? (
               <span className="text-xs text-[#22c55e] flex-shrink-0 font-semibold">{file.progress}%</span>
             ) : (
-              <span className="text-xs text-[var(--color-primary)] flex-shrink-0"><IoCheckmarkCircleSharp size={16} /></span>
-            )}
-            <div
-              className="cursor-pointer"
-              onClick={() => {
-                setImageShowDialog(true);
-                setImageShowUrl(`${import.meta.env.VITE_API_URL}/ImportFiles/${file.filePath.replace(/\\/g, "/")}`);
-              }}
-            >
-              <img
-                src={`${import.meta.env.VITE_API_URL}/ImportFiles/${file.filePath.replace(/\\/g, "/")}`}
-                alt={file.fileName}
-                className="h-8 w-8 object-cover rounded text-xs"
-              />
-            </div>
+                <span className="text-xs text-[var(--color-primary)] flex-shrink-0"><IoCheckmarkCircleSharp size={16} /></span>
+              )}
+              {/\.(jpe?g|png|gif|bmp|webp|svg)$/i.test(file.fileName) && (
+                <div
+                className="cursor-pointer"
+                onClick={() => {
+                  setImageShowDialog(true);
+                  setImageShowUrl(`${import.meta.env.VITE_API_URL}/ImportFiles/${file.filePath.replace(/\\/g, "/")}`);
+                }}
+                >
+                <img
+                  src={`${import.meta.env.VITE_API_URL}/ImportFiles/${file.filePath.replace(/\\/g, "/")}`}
+                  alt={file.fileName}
+                  className="h-8 w-8 object-cover rounded text-xs"
+                />
+                </div>
+              )}
             <button
               onClick={() => deleteAttachment(file)}
               className="text-[var(--color-danger)]  transition-colors flex-shrink-0"

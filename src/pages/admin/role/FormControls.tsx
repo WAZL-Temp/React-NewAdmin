@@ -3,7 +3,7 @@ import { MultiSelect, MultiSelectChangeEvent, RadioButton, RadioButtonChangeEven
 import { selectMultiData, selectRadioEnum } from "../../../sharedBase/dropdownUtils";
 import { AppUserService } from "../../../core/service/appUsers.service";
 import { useListQuery } from "../../../store/useListQuery";
-import { AppUser } from "../../../core/model/appUser";
+import { AppUser } from "../../../core/model/appuser";
 import { ProductLive } from "../../../core/model/productlive";
 import { getData } from "../../../sharedBase/lookupService";
 import { ProductService } from "../../../core/service/products.service";
