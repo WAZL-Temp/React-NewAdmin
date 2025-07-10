@@ -978,7 +978,9 @@ code {
 .p-multiselect-filter {
   background: var(--color-dark) !important;
   color: var(--color-dark) !important;
+  padding: 0.5rem !important;
 }
+
 
 .p-multiselect-label .p-placeholder {
   background-color: var(--color-dark) !important;

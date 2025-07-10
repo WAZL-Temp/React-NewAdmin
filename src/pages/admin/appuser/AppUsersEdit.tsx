@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import successImg from '../../../assets/images/success.gif'
-import { BsArrowLeft, Button, Calendar, Checkbox, Dialog, DropdownChangeEvent, FaSave, Image, InputText, InputTextarea, IoIosArrowBack, IoIosArrowForward, MultiSelectChangeEvent, RadioButton, RadioButtonChangeEvent, Stepper, StepperPanel, StepperRefAttributes, Toast } from '../../../sharedBase/globalImports';
+import { BsArrowLeft, Button, Calendar, Checkbox, Dialog, DropdownChangeEvent, FaSave, Image, InputText, InputTextarea, IoIosArrowBack, IoIosArrowForward, MultiSelectChangeEvent, RadioButton, RadioButtonChangeEvent, Stepper, StepperPanel, Toast } from '../../../sharedBase/globalImports';
 import { useNavigate, useParams, useTranslation } from '../../../sharedBase/globalUtils';
 import { useEditPage } from '../../../hooks/useEditPage';
 import { AppUser } from '../../../core/model/appuser';
@@ -31,7 +31,7 @@ export default function AppUsersEdit() {
   const itemQuery = useItemQuery<AppUser>(userService);
   const listQuery = useListQuery<AppUser>(userService);
   const isEditMode = Boolean(id);
-  const stepperRef = useRef<StepperRefAttributes | null>(null);
+  const stepperRef = useRef<Stepper | null>(null);
   const [item, setItem] = useState<AppUser>(initData());
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [stepNo, setStepNo] = useState(0);
@@ -60,7 +60,6 @@ export default function AppUsersEdit() {
   const [dialogMessage, setDialogMessage] = useState('');
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [itemData, setItemData] = useState<AppUser>(initData());
-
 
   const roleData = useFetchDataEnum("RoleType");
   const publishData = useFetchDataEnum("PublishType");
@@ -783,7 +782,7 @@ export default function AppUsersEdit() {
                                 <TooltipWithText text={t("appUsers.columns.fields.password")} />
                               </div>
                               <InputText
-                                type="password"
+                                type="text"
                                 id="password"
                                 name="password"
                                 value={item.password}
