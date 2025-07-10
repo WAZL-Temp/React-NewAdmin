@@ -15,7 +15,7 @@ export default function CategoriesView() {
   const stepperRef = useRef<StepperRefAttributes | null>(null);
   const [stepNo, setStepNo] = useState(0);
         
- const stepsData = [ t("categories.form_detail.fields.categoryDetails")];
+ const stepsData = [ t("categories.form_detail.fields.Step1")];
   const baseModelName = "categories";
 const typeName= "category";
   const categoriesService = CategoriesService();
