@@ -14,7 +14,6 @@ export default function CategoriesList() {
     const baseModelName = "categories";
 const typeName= "category";
     const { t } = useTranslation();
-    const [visible, setVisible] = useState(false);
     const dtRef = useRef<DataTable<Category[]>>(null);
     // search
     const [calendarCreateDateFrom, setCalendarCreateDateFrom] = useState<Date | undefined | null>(null);
@@ -26,7 +25,7 @@ const typeName= "category";
         deleteItem, closeDeleteDialog, setFilters, onSort, onPage, first, rows, sortField, sortOrder, totalRecords,
         filters, setListSearch, clearListSearch, searchChange, openItem, confirmDeleteItem,
         toast, isSuccessDialogOpen, setIsSuccessDialogOpen, formatDate, exportToExcel,
-        importFromExcel, addData, handleDelete, useColumnConfig }
+        importFromExcel, addData, handleDelete, useColumnConfig,visible,setVisible }
         = useListPage<typeof query, Category>({
             query: query,
             props: {
@@ -86,26 +85,26 @@ const columnsConfigDefault = useMemo(() =>[
     }, [columnsConfig, setFilters, setGlobalFilterValue, query.tableSearch]);
 
     const items: MenuItem[] = []
-    if (hasAccess(roleData, "Add")) {
-    items.push({
-        label: t("globals.add"),
-        icon: 'pi pi-plus',
-        command: () => addData(navigate, baseModelName)
-    });
+    if (roleData && hasAccess(roleData, "Add")) {
+        items.push({
+            label: t("globals.add"),
+            icon: 'pi pi-plus',
+            command: () => addData(navigate, baseModelName)
+        });
     }
-
+if (roleData && hasAccess(roleData, "Export")) {
     items.push({
         label: t("globals.exportExcel"),
         icon: 'pi pi-file-excel',
         command: () => exportToExcel(categoriesService, globalFilterValue || '', 'Category')
     });
-
-    if (hasAccess(roleData, "Import")) {
-    items.push({
-        label: t("globals.import"),
-        icon: 'pi pi-upload',
-        command: () => importFromExcel(navigate, baseModelName)
-    });
+}
+    if (roleData && hasAccess(roleData, "Import")) {
+        items.push({
+            label: t("globals.import"),
+            icon: 'pi pi-upload',
+            command: () => importFromExcel(navigate, baseModelName)
+        });
     }
 
     items.push({
@@ -210,7 +209,7 @@ const columnsConfigDefault = useMemo(() =>[
                         <HiOutlinePlus size={18} />
                     </Button>
                    )} 
-
+                    {hasAccess(roleData, "Export") && (
                     <Button
                         type="button"
                         className="bg-[var(--color-success)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
@@ -223,7 +222,7 @@ const columnsConfigDefault = useMemo(() =>[
                     >
                         <TbFileExcel size={18} />
                     </Button>
-
+                    )}
                     {hasAccess(roleData, "Import") && (
                     <Button
                         type="button"
@@ -393,6 +392,7 @@ const columnsConfigDefault = useMemo(() =>[
                         scrollable
                         scrollHeight="68vh"
                     >
+                        {hasAccess(roleData, "Actions") && (
                         <Column
                             header={t('globals.headerActions')}
                             headerStyle={{
@@ -406,6 +406,7 @@ const columnsConfigDefault = useMemo(() =>[
                             alignFrozen="left"
                             className="text-sm sticky bg-[var(--color-white)] text-[var(--color-dark)]  font-semibold whitespace-nowrap overflow-hidden text-ellipsis"
                         />
+                        )}
                        {visibleColumns.includes('name') && (
 <Column field="name" header={t("categories.columns.fields.name")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}

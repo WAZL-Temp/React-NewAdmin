@@ -208,33 +208,6 @@
       }
     }
   },
-  "categories": {
-    "columns": {
-      "fields": {
-        "id": "Id",
-        "name": "Name ",
-        "slug": "Slug",
-        "icon": "Icon Attachment",
-        "importDataId": "Import Data Id",
-        "updateDate": "Update Date",
-        "deleteDate": "Delete Date",
-        "updateById": "Update By Id",
-        "deleteById": "Delete By Id",
-        "isDelete": "Is Delete"
-      }
-    },
-    "form_detail": {
-      "fields": {
-        "importAction": "Import Action",
-        "importRemark": "Import Remark",
-        "categoryDetails": "Category Details",
-        "modelname": "Category"
-      }
-    },
-    "form_list": {
-      "fields": {}
-    }
-  },
   "seos": {
     "columns": {
       "fields": {
@@ -261,6 +234,35 @@
         "importRemark": "Import Remark",
         "modelname": "Seo",
         "Step1": "SEO"
+      }
+    },
+    "form_list": {
+      "fields": {}
+    }
+  },
+  "categories": {
+    "columns": {
+      "fields": {
+        "id": "Id",
+        "name": "Name ",
+        "slug": "Slug",
+        "icon": "Icon Attachment",
+        "importDataId": "Import Data Id",
+        "createDate": "Create Date",
+        "updateDate": "Update Date",
+        "deleteDate": "Delete Date",
+        "createById": "Create By Id",
+        "updateById": "Update By Id",
+        "deleteById": "Delete By Id",
+        "isDelete": "Is Delete"
+      }
+    },
+    "form_detail": {
+      "fields": {
+        "importAction": "Import Action",
+        "importRemark": "Import Remark",
+        "modelname": "Category",
+        "Step1": "Category Details"
       }
     },
     "form_list": {

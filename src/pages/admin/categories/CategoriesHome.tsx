@@ -89,17 +89,17 @@ export default function CategoriesHome() {
                 itemTemplate={(item) => <ItemSlider item={item} />}
               />
             ) : (
-              <p className="text-center text-[var(--color-dark)]">No users available</p>
+              <p className="text-center text-[var(--color-dark)]">No items available</p>
             )}
 
             <section>
-              <ItemList title={t('globals.topUsers', { length: topData?.length })} users={listHomeUserData ?? []} />
+              <ItemList title={t('globals.topUsers', { length: topData?.length })} items={listHomeUserData ?? []} />
             </section>
 
             {listHomeUserData && (
               <section className="py-10 flex items-center justify-center">
                 <div className="container mx-auto px-4 sm:px-12">
-                  <h2 className="text-xl sm:text-2xl font-bold text-gray-800 text-center">{t('globals.createdByMe')}</h2>
+                  <h2 className="text-xl sm:text-2xl font-bold text-[var(--color-dark)] text-center">{t('globals.createdByMe')}</h2>
                   <div className="relative overflow-hidden">
                     <div className="flex space-x-4 overflow-x-auto scrollbar-hide px-4 py-4 snap-x snap-proximity justify-start">
                       {listHomeUserData.map((item, index) => (
@@ -112,7 +112,7 @@ export default function CategoriesHome() {
                                 className="w-full h-full object-cover"
                               />
                             </div>
-                            <h3 className="mt-3 text-sm font-semibold text-gray-800 text-center min-h-[24px]">
+                            <h3 className="mt-3 text-sm font-semibold text-black text-center min-h-[24px]">
                               {item.name}
                             </h3>
                           </div>
@@ -203,61 +203,63 @@ const ItemSlider = ({ item }: { item: Category }) => {
 const ItemList = ({ title, users }: { title: string; users: UserData[] }) => {
   const navigate = useNavigate();
   const baseModelName = 'categories';
+  const { t } = useTranslation();
 
   return (
     <div className='mt-3'>
-      <div className="container mx-auto px-2 sm:px-4">
-        <h5 className="text-xl sm:text-2xl font-semibold text-center text-gray-800 mb-3">{title}</h5>
-        <Carousel
-          value={users}
-          numVisible={2}
-          numScroll={1}
-          showIndicators={false}
-          showNavigators={true}
-          responsiveOptions={[
-            { breakpoint: '1280px', numVisible: 2, numScroll: 1 },
-            { breakpoint: '1024px', numVisible: 1, numScroll: 1 },
-            { breakpoint: '768px', numVisible: 1, numScroll: 1 },
-            { breakpoint: '640px', numVisible: 1, numScroll: 1 },
-          ]}
-          itemTemplate={(item) => (
-            <div className="p-2 sm:p-3">
-              <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-xl overflow-hidden w-full max-w-full min-w-0 min-h-[150px] sm:min-h-[200px]">
-                <div className="w-full md:w-1/3 flex items-center justify-center bg-blue-100 h-auto">
-                  <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-32 md:h-32 rounded-full overflow-hidden">
-                    <Image
-                      src={avatar}
-                      alt={item.name || 'User avatar'}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
+      <h5 className="text-xl sm:text-2xl font-semibold text-center text-[var(--color-dark)] mb-3">{title}</h5>
+      <Carousel
+        value={users}
+        numVisible={2}
+        numScroll={1}
+        showIndicators={false}
+        showNavigators={true}
+        responsiveOptions={[
+          { breakpoint: '1280px', numVisible: 2, numScroll: 1 },
+          { breakpoint: '1024px', numVisible: 1, numScroll: 1 },
+          { breakpoint: '768px', numVisible: 1, numScroll: 1 },
+          { breakpoint: '640px', numVisible: 1, numScroll: 1 },
+        ]}
+        itemTemplate={(user) => (
+          <div className="p-2 w-full">
+            <div className="w-full flex flex-col gap-2 md:flex-row bg-white shadow-lg rounded-xl overflow-hidden min-h-[150px] sm:min-h-[200px]">
+              <div className="w-full md:w-1/3 flex items-center justify-center bg-blue-100 h-auto">
+                <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-32 md:h-32 rounded-full overflow-hidden">
+                  <Image
+                    src={avatar}
+                    alt={user.name || 'User avatar'}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-                <div className="w-full md:w-2/3 p-3 sm:p-4 md:p-6 flex flex-col justify-between">
-                  <p className="text-gray-900 font-semibold mt-2 text-center md:text-left text-sm sm:text-base">
-                    {item.name}
-                  </p>
-                  <div className="flex justify-center md:justify-start gap-3 sm:gap-4 mt-3 sm:mt-4">
-                    <Button
-                      label="Edit"
-                      icon="pi pi-file-edit"
-                      className="flex items-center gap-2 text-white bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] hover:text-white p-2 border border-[var(--color-primary)] rounded-md text-xs sm:text-sm"
-                      onClick={() => navigate(`/${baseModelName}/edit/${item.id}`)}
-                    />
-                    <Button
-                      label="View"
-                      icon="pi pi-eye"
-                      className="flex items-center gap-2 text-[var(--color-primary)] bg-white hover:text-[var(--color-primary)] p-2 border border-[var(--color-primary)] rounded-md text-xs sm:text-sm"
-                      onClick={() => navigate(`/${baseModelName}/${item.id}`)}
-                    />
-                  </div>
+              </div>
+              <div className="w-full md:w-2/3 p-3 sm:p-4 md:p-6 flex flex-col justify-between">
+                <p className="text-gray-900 font-semibold mt-2 text-center md:text-left text-sm sm:text-base">
+                  {user.name}
+                </p>
+                <div className="flex justify-center md:justify-start gap-3 sm:gap-4 mt-3 sm:mt-4">
+                  <Button
+                    icon="pi pi-file-edit"
+                    className="flex items-center gap-2 text-white bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] hover:text-white px-3 py-2 border border-[var(--color-primary)] rounded-md text-xs whitespace-nowrap"
+                    onClick={() => navigate(`/${baseModelName}/edit/${user.id}`)}
+                  >
+                    {t('globals.edit')}
+                  </Button>
+
+                  <Button
+                    icon="pi pi-eye"
+                    className="flex items-center gap-2 text-[var(--color-primary)] bg-white hover:text-[var(--color-primary)] px-3 py-2 border border-[var(--color-primary)] rounded-md text-xs whitespace-nowrap"
+                    onClick={() => navigate(`/${baseModelName}/${user.id}`)}
+                  >
+                    {t('globals.view')}
+                  </Button>
                 </div>
               </div>
             </div>
-          )}
-          circular
-          className="w-full px-2 sm:px-4"
-        />
-      </div>
+          </div>
+        )}
+        circular
+        className="w-full px-0 sm:px-4"
+      />
     </div>
   );
 };
@@ -277,8 +279,8 @@ const ItemCard = ({ item }: { item: Category }) => {
         />
       </div>
 
-      <h3 className="text-lg font-semibold text-gray-800">{item.name}</h3>
-      <p className="text-gray-600 text-xs leading-relaxed mt-2">
+      <h3 className="text-lg font-semibold text-black">{item.name}</h3>
+      <p className="text-black text-xs leading-relaxed mt-2">
         Nunc mi ipsum faucibus vitae aliquet nec. Lacus sed viverra tellus in hac habitasse platea dictumst.
       </p>
       <div className="mt-4">
