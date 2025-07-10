@@ -403,7 +403,7 @@ export default function AppUsersList() {
                         </Dialog>
                     </div>
 
-                    <div className="m-2 tableResponsive">
+                    <div className="m-2 ">
                         {!query.isLoading && (
                             <DataTable
                                 ref={dtRef}
@@ -426,7 +426,7 @@ export default function AppUsersList() {
                                 globalFilterFields={columnsConfig.map(config => config.field)}
                                 paginatorTemplate={t('globals.layout')}
                                 currentPageReportTemplate={t('globals.report')}
-                                className="p-datatable-gridlines datatable-responsive bg-[var(--color-white)] text-[var(--color-dark)] "
+                                className="p-datatable-gridlines datatable-responsive bg-[var(--color-white)] text-[var(--color-dark)] tableResponsive"
                                 filterDisplay="row"
                                 emptyMessage={t('globals.emptyMessage')}
                                 resizableColumns
