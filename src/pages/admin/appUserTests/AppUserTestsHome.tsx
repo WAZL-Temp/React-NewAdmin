@@ -93,7 +93,7 @@ export default function AppUserTestsHome() {
             )}
 
             <section>
-              <ItemList title={t('globals.topUsers', { length: topData?.length })} items={listHomeUserData ?? []} />
+              <ItemList title={t('globals.topUsers', { length: topData?.length })} users={listHomeUserData ?? []} />
             </section>
 
             {listHomeUserData && (
