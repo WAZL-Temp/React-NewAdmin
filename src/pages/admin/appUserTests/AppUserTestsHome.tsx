@@ -93,7 +93,7 @@ export default function AppUserTestsHome() {
             )}
 
             <section>
-              <ItemList title={t('globals.topUsers', { length: topData?.length })} users={listHomeUserData ?? []} />
+              <ItemList title={t('globals.topUsers', { length: topData?.length })} items={listHomeUserData ?? []} />
             </section>
 
             {listHomeUserData && (
@@ -200,7 +200,7 @@ const ItemSlider = ({ item }: { item: AppUserTest }) => {
   );
 };
 
-const ItemList = ({ title, users }: { title: string; users: UserData[] }) => {
+const ItemList = ({ title, items }: { title: string; items: UserData[] }) => {
   const navigate = useNavigate();
   const baseModelName = 'appUserTests';
   const { t } = useTranslation();
@@ -209,7 +209,7 @@ const ItemList = ({ title, users }: { title: string; users: UserData[] }) => {
     <div className='mt-3'>
       <h5 className="text-xl sm:text-2xl font-semibold text-center text-[var(--color-dark)] mb-3">{title}</h5>
       <Carousel
-        value={users}
+        value={items}
         numVisible={2}
         numScroll={1}
         showIndicators={false}
