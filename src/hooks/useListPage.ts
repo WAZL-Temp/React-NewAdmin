@@ -206,8 +206,9 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
             const scrollTop = localStorage.getItem('dtScrollTop');
             const scrollLeft = localStorage.getItem('dtScrollLeft');
 
-            if (dtRef.current) {
-                const bodyEl = dtRef.current.getElement().querySelector('.p-datatable-wrapper');
+            const dtElement = dtRef.current?.getElement();
+            if (dtElement) {
+                const bodyEl = dtElement.querySelector('.p-datatable-wrapper');
                 if (bodyEl) {
                     if (scrollTop) bodyEl.scrollTop = parseInt(scrollTop);
                     if (scrollLeft) bodyEl.scrollLeft = parseInt(scrollLeft);

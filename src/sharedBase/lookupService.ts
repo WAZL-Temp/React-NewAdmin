@@ -75,9 +75,9 @@ export const useFetchRoleDetailsData = () => {
   const [data, setData] = useState<RoleDetail[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const {
-    fetchRoleData,
-  } = AppuserRoleService();
+
+  // ✅ use hook properly
+  const { fetchRoleData,roleData } = AppuserRoleService();
 
   useEffect(() => {
     const fetchRoleDetails = async () => {
@@ -90,7 +90,6 @@ export const useFetchRoleDetailsData = () => {
         if (response && response.length > 0) {
           setData(response);
         } else {
-          // setData([]);
           setError("No role data found.");
         }
       } catch {
@@ -101,13 +100,16 @@ export const useFetchRoleDetailsData = () => {
     };
 
     fetchRoleDetails();
-  }, [fetchRoleData]);
+  }, [roleData]);
 
   return { data, loading, error };
 };
 
+
+
 interface Service {
-  getAll: (condition: any) => Promise<any[]>;
+  // getAll: (condition: any) => Promise<any[]>;
+  getLookup: () => Promise<any[]>;
 }
 
 export function getService(): Service | null {
@@ -119,8 +121,8 @@ export function getService(): Service | null {
 export async function getData(service: Service | null): Promise<any[]> {
   // userFilter: boolean = false
   if (service != null) {
-    const condition = {};
-    const data = await service.getAll(condition);
+    // const condition = {};
+    const data = await service.getLookup();
     return data;
   } else {
     return [];

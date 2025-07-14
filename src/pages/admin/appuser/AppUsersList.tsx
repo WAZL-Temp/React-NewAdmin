@@ -4,7 +4,7 @@ import { BiSolidTrash, Button, Calendar, Column, DataTable, Dialog, HiOutlinePlu
 import { useTranslation, useNavigate } from '../../../sharedBase/globalUtils';
 import successimg from '../../../assets/images/success.gif';
 import confirmImg from '../../../assets/images/are-you-sure.jpg';
-import { AppUser } from "../../../core/model/appuser";
+import { AppUser } from "../../../core/model/appUser";
 import { RowData } from "../../../types/listpage";
 import { useListQuery } from "../../../store/useListQuery";
 import { AppUserService } from "../../../core/service/appUsers.service";

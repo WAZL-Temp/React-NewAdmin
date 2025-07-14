@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { AppUser } from '../../../core/model/appuser';
+import { AppUser } from '../../../core/model/appUser';
 import teambanner from '../../../assets/images/team-banner.png';
 import prodilimg from '../../../assets/images/prodil.jpg';
 import avatar from '../../../assets/images/avatar.svg';
