@@ -3,7 +3,7 @@ import { MultiSelect, MultiSelectChangeEvent, RadioButton, RadioButtonChangeEven
 import { selectMultiData, selectRadioEnum } from "../../../sharedBase/dropdownUtils";
 import { AppUserService } from "../../../core/service/appUsers.service";
 import { useListQuery } from "../../../store/useListQuery";
-import { AppUser } from "../../../core/model/appuser";
+import { AppUser } from "../../../core/model/appUser";
 import { ProductLive } from "../../../core/model/productlive";
 import { getData } from "../../../sharedBase/lookupService";
 import { ProductService } from "../../../core/service/products.service";
@@ -63,7 +63,7 @@ export default function FormControls() {
             try {
                 const userList = await getData(userService);
                 setListAppUser(userList);
-                if (appuserItem && appuserItem.appUserList) {
+                if (appuserItem && appuserItem.reportedTo) {
                     // const arrList = appuserItem.appUserList.split(',');
                     // const selectedList = userList.filter((a) => arrList.includes(String(a.id)));
                     // setSelectedAppUser(selectedList);

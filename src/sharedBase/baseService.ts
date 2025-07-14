@@ -360,6 +360,19 @@ export const useBaseService = <T extends BaseModel>(type: string) => {
         return await response.json();
     }
 
+    const getLookup = async (): Promise<T[]> => {
+
+        const response = await fetch(`${apiUrl}/GetLookup`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify({}),
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch lookup data");
+        return await response.json();
+    }
+
+
     return {
         setToken,
         setUserInfo,
@@ -373,6 +386,7 @@ export const useBaseService = <T extends BaseModel>(type: string) => {
         searchData, exportExcel, downloadPdf, getAll, get, add, draft, update,
         handleDelete, fileUpload, fileDownload, unique, getRoleData,
         getGridData,
-        type
+        type,
+        getLookup
     };
 };

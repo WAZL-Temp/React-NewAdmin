@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useBaseService } from "../../sharedBase/baseService";
-import { AppUser } from "../model/appuser";
+import { AppUser } from "../model/appUser";
 
 export const AppuserRoleService = () => {
   const baseService = useBaseService<AppUser>("AppUser");
