@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import successImg from '../../../assets/images/success.gif'
-import { BsArrowLeft, Button, Calendar, Checkbox, Dialog, Dropdown, DropdownChangeEvent, FaSave, Image, InputText, InputTextarea, IoIosArrowBack, IoIosArrowForward, MultiSelect, MultiSelectChangeEvent, RadioButton, RadioButtonChangeEvent, Stepper, StepperPanel,Toast } from '../../../sharedBase/globalImports';
+import { BsArrowLeft, Button, Calendar, Checkbox, Dialog, DropdownChangeEvent, FaSave, Image, InputText, InputTextarea, IoIosArrowBack, IoIosArrowForward, MultiSelectChangeEvent, RadioButton, RadioButtonChangeEvent, Stepper, StepperPanel,Toast } from '../../../sharedBase/globalImports';
 import { useNavigate, useParams, useTranslation } from '../../../sharedBase/globalUtils';
 import { useEditPage } from '../../../hooks/useEditPage';
 import { AppUserTest } from '../../../core/model/appUserTest';
@@ -847,7 +847,7 @@ verifyShopData?.data, roleData?.data, publishData?.data, genderData?.data
               <TooltipWithText text={t("appUserTests.columns.fields.verifyShop")} />
             </div>
 
-            <DropdownWithAutoClose id='verifyShop' name='verifyShop' value={selectedVerifyShop} minLength={2} maxLength={100} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "verifyShop"); setSelectedVerifyShop(e.value) }} options={listVerifyShop} filter optionLabel='name'  checkmark={true}  highlightOnSelect={false}  appendTo="self"  placeholder={t("appUserTests.columns.fields.verifyShop")}  className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)]"  />
+            <DropdownWithAutoClose id='verifyShop' name='verifyShop' value={selectedVerifyShop} minLength={2} maxLength={100} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "verifyShop"); setSelectedVerifyShop(e.value) }} options={listVerifyShop} filter optionLabel='name'  checkmark={true}  highlightOnSelect={false}  appendTo="self"  placeholder={t("appUserTests.columns.fields.verifyShop")}  className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)]"  emptyFilterMessage={t("globals.noResults")}/>
             <FormFieldError field="verifyShop" errors={errors} />
           </div>
         )}
@@ -1034,7 +1034,7 @@ verifyShopData?.data, roleData?.data, publishData?.data, genderData?.data
               <TooltipWithText text={t("appUserTests.columns.fields.role")} />
             </div>
 
-            <DropdownWithAutoClose id='role' name='role' value={selectedRole} required minLength={2} maxLength={100} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "role"); setSelectedRole(e.value) }} options={listRole} filter optionLabel='name'  checkmark={true}  highlightOnSelect={false}  appendTo="self"  placeholder={t("appUserTests.columns.fields.role")}  className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)]"  />
+            <DropdownWithAutoClose id='role' name='role' value={selectedRole} required minLength={2} maxLength={100} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "role"); setSelectedRole(e.value) }} options={listRole} filter optionLabel='name'  checkmark={true}  highlightOnSelect={false}  appendTo="self"  placeholder={t("appUserTests.columns.fields.role")}  className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)]"  emptyFilterMessage={t("globals.noResults")}/>
             <FormFieldError field="role" errors={errors} />
           </div>
         )}
@@ -1051,7 +1051,7 @@ verifyShopData?.data, roleData?.data, publishData?.data, genderData?.data
               <TooltipWithText text={t("appUserTests.columns.fields.publish")} />
             </div>
 
-            <DropdownWithAutoClose id='publish' name='publish' value={selectedPublish} required minLength={2} maxLength={100} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "publish"); setSelectedPublish(e.value) }} options={listPublish} filter optionLabel='name'  checkmark={true}  highlightOnSelect={false}  appendTo="self"  placeholder={t("appUserTests.columns.fields.publish")}  className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)]"  />
+            <DropdownWithAutoClose id='publish' name='publish' value={selectedPublish} required minLength={2} maxLength={100} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "publish"); setSelectedPublish(e.value) }} options={listPublish} filter optionLabel='name'  checkmark={true}  highlightOnSelect={false}  appendTo="self"  placeholder={t("appUserTests.columns.fields.publish")}  className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)]"  emptyFilterMessage={t("globals.noResults")}/>
             <FormFieldError field="publish" errors={errors} />
           </div>
         )}
@@ -1138,7 +1138,7 @@ verifyShopData?.data, roleData?.data, publishData?.data, genderData?.data
 
             <MultiSelectWithAutoClose id='reportedTo' name='reportedTo' value={selectedReportedTo} options={reportedTolist} optionLabel='name' onChange={(e) => handleMultiSelectChange(e, 'reportedTo', setSelectedReportedTo)} filter placeholder={t("appUserTests.columns.fields.reportedTo")} className="p-multiselect text-sm w-full lg:w-20rem flex items-center h-[40px] border bg-[var(--color-white)] text-[var(--color-dark)] border-[var(--color-gray)] rounded-md shadow-sm"
                                 data-name="reportedTo"
- data-required="true"/>
+ data-required="true" emptyFilterMessage={t("globals.noResults")}/>
             <FormFieldError field="reportedTo" errors={errors} />
           </div>
         )}
@@ -1155,7 +1155,7 @@ verifyShopData?.data, roleData?.data, publishData?.data, genderData?.data
               <TooltipWithText text={t("appUserTests.columns.fields.reportedBy")} />
             </div>
 
-            <DropdownWithAutoClose id='reportedBy' name='reportedBy' value={selectedReportedBy} required maxLength={100} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "reportedBy"); setSelectedReportedBy(e.value) }} filter options={reportedBylist} optionLabel='name' optionValue="id" checkmark={true}  highlightOnSelect={false}  appendTo="self"  placeholder={t("appUserTests.columns.fields.reportedBy")} className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] " />
+            <DropdownWithAutoClose id='reportedBy' name='reportedBy' value={selectedReportedBy} required maxLength={100} onChange={(e: DropdownChangeEvent) => { handleDropdownChange(e, "reportedBy"); setSelectedReportedBy(e.value) }} filter options={reportedBylist} optionLabel='name' optionValue="id" checkmark={true}  highlightOnSelect={false}  appendTo="self"  placeholder={t("appUserTests.columns.fields.reportedBy")} className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] " emptyFilterMessage={t("globals.noResults")}/>
             <FormFieldError field="reportedBy" errors={errors} />
           </div>
         )}
