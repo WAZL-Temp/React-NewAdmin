@@ -49,7 +49,7 @@ export const useListQuery = <T extends BaseModel>(
   const hasSetRoleCondition = useRef(false);
 
   const payload = { ...condition, ...search, ...roleCondition };
- const isPayloadEmpty = Object.keys(payload).length === 0;
+  const isPayloadEmpty = Object.keys(payload).length === 0;
   const shouldWait = Object.keys(roleCondition).length === 0 && !hasSetRoleCondition.current;
   const isQueryEnabled = !shouldWait || !isPayloadEmpty;
 
@@ -58,6 +58,7 @@ export const useListQuery = <T extends BaseModel>(
     queryFn: () => service.getAll(payload),
     staleTime: 1000 * 60 * 5,
     enabled: isQueryEnabled,
+    select: (data) => Array.isArray(data) ? [...data].reverse() : data,
   });
 
   const deleteMutation = useMutation({
@@ -138,7 +139,7 @@ export const useListQuery = <T extends BaseModel>(
   };
 
   const setRoleCondition = (newRoleCondition: RoleConditionParams) => {
-     hasSetRoleCondition.current = true;
+    hasSetRoleCondition.current = true;
     setRoleConditionState((prev: RoleConditionParams) => {
       const updated = { ...prev, ...newRoleCondition };
       queryClient.setQueryData([`list-${service.type}-state`], {

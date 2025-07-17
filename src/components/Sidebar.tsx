@@ -1,5 +1,5 @@
 import { useAuthStore } from "../store/auth.store";
-import { AiFillHome, Button, FiShoppingBag, FiUser, IoPersonSharp, RiLogoutCircleLine, RxCross2 } from "../sharedBase/globalImports";
+import { AiFillHome, Button, FiShoppingBag, FiUser, IoList, IoPersonSharp, RiLogoutCircleLine, RxCross2 } from "../sharedBase/globalImports";
 import { useLocation, useNavigate, useTranslation } from '../sharedBase/globalUtils';
 import { UserInfo } from "../types/auth";
 import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
@@ -106,6 +106,24 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
         >
           <AiFillHome size={18} className={`${isMinimized ? '' : 'mr-3'}`} />
           {(!isMinimized) && <span className=" text-sm font-medium">{t("globals.homes")}</span>}
+        </Button>
+
+        <Button
+          onClick={() => {
+            navigate("/appuser/list");
+            if (!isMinimized) toggleSidebar();
+          }}
+          className={`flex items-center ${isMinimized ? 'px-1' : 'px-2'} py-2 rounded
+          ${location.pathname === "/appuser/list" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
+          hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]`}
+          tooltip={t("globals.homes")}
+          tooltipOptions={{
+            position: 'right',
+            className: 'font-normal rounded text-sm p-1'
+          }}
+        >
+          <IoList size={18} className={`${isMinimized ? '' : 'mr-3'}`} />
+          {(!isMinimized) && <span className=" text-sm font-medium">{t("globals.list")}</span>}
         </Button>
 
         {roleData && hasAccess(roleData.find((r: any) => r.name.toLowerCase() == 'appusertest'), "List") && (

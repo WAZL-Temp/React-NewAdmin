@@ -72,7 +72,9 @@
     "minNo": "Min No",
     "view": "View",
     "createdByMe": "Created by Me",
-    "topUsers": "Top {{length}} Users"
+    "topUsers": "Top {{length}} Users",
+    "noResults": "No results found",
+    "list":"List"
   },
   "appUsers": {
     "columns": {

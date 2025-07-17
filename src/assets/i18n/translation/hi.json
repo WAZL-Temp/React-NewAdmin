@@ -74,7 +74,9 @@
     "minNo": "न्यूनतम संख्या",
     "view": "देखें",
     "createdByMe": "मेरे द्वारा बनाया गया",
-    "topUsers": "शीर्ष {{length}} उपयोगकर्ता"
+    "topUsers": "शीर्ष {{length}} उपयोगकर्ता",
+    "noResults": "कोई डेटा नहीं मिला",
+    "list": "सूची"
   },
   "appUsers": {
     "columns": {

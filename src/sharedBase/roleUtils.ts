@@ -7,16 +7,10 @@ export function hasPageAccess(roleData: RoleDetail[] | null, pageName: string, a
   const pageRole = roleData.find(
     (r) => typeof r.name === "string" && r.name.toLowerCase() == pageName.toLowerCase()
   );
-
-  console.log("pageRole",pageRole);
   
   if (!pageRole) return false;
 
   const actions: Action[] = typeof pageRole.action === "string" ? JSON.parse(pageRole.action) : [];
-  console.log("actions",actions);
-  const action = actions.some((action: Action) => action.name.toLowerCase() == actionName.toLowerCase());
-
-  console.log("action",action);
-  
+  const action = actions.some((action: Action) => action.name.toLowerCase() == actionName.toLowerCase());  
   return action
 }
