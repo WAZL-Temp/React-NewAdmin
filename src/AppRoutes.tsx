@@ -28,6 +28,7 @@ import SeosHome from './pages/admin/seos/SeosHome';
 import SeosEdit from './pages/admin/seos/SeosEdit';
 import SeosView from './pages/admin/seos/SeosView';
 import SeosImport from './pages/admin/seos/SeosImport';
+import AppUserListGrid from './pages/admin/appuser/AppUserListGrid';
 
 {/* <!--router-link-admin-Import--> */ }
 const AppRoutes = () => {
@@ -40,6 +41,7 @@ const AppRoutes = () => {
       <Route path="/appuser/add" element={<Layout><AppUsersEdit /></Layout>} />
       <Route path="/appuser/edit/:id" element={<Layout><AppUsersEdit /></Layout>} />
       <Route path="/appuser/import" element={<Layout><AppUsersImport /></Layout>} />
+      <Route path="/appuser/list" element={<Layout><AppUserListGrid /></Layout>} />
 
       <Route path="/role" element={<Layout><RoleDetailsForm /></Layout>} />
 

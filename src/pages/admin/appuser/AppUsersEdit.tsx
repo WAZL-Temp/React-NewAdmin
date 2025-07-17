@@ -149,10 +149,6 @@ export default function AppUsersEdit() {
 
       try {
         const listReportedBy = await getData(userService);
-
-        // const listReportedBy1 = await listQuery.fetchLookupData();
-        // console.log("listReportedBy:", listReportedBy1);
-        
         const options = listReportedBy.map((item) => ({
           ...item,
           id: item.id?.toString(),
@@ -961,6 +957,7 @@ export default function AppUsersEdit() {
                                 highlightOnSelect={false}
                                 appendTo="self"
                                 className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)]"
+                                emptyFilterMessage={t("globals.noResults")}
                               />
                               <FormFieldError field="verifyShop" errors={errors} />
                             </div>
@@ -1264,6 +1261,7 @@ export default function AppUsersEdit() {
                                 checkmark={true}
                                 highlightOnSelect={false}
                                 appendTo="self"
+                                emptyFilterMessage={t("globals.noResults")}
                               />
                               <FormFieldError field="role" errors={errors} />
                             </div>
@@ -1295,6 +1293,7 @@ export default function AppUsersEdit() {
                                 className="dropdowndark text-sm w-full lg:w-20rem flex items-center h-[40px]  bg-[var(--color-white)] text-[var(--color-dark)] "
                                 required
                                 appendTo="self"
+                                emptyFilterMessage={t("globals.noResults")}
                               />
                               <FormFieldError field="publish" errors={errors} />
                             </div>
@@ -1440,6 +1439,7 @@ export default function AppUsersEdit() {
                                 className="p-multiselect text-sm w-full lg:w-20rem flex items-center h-[40px] border bg-[var(--color-white)] text-[var(--color-dark)] border-[var(--color-gray)] rounded-md shadow-sm"
                                 data-name="reportedTo"
                                 data-required="true"
+                                emptyFilterMessage={t("globals.noResults")}
                               />
                               <FormFieldError field="reportedTo" errors={errors} />
                             </div>
@@ -1469,6 +1469,7 @@ export default function AppUsersEdit() {
                                 highlightOnSelect={false}
                                 appendTo="self"
                                 required
+                                emptyFilterMessage={t("globals.noResults")}
                               />
                               <FormFieldError field="reportedBy" errors={errors} />
                             </div>

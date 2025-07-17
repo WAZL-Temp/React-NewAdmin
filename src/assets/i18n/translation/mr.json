@@ -72,7 +72,9 @@
     "minNo": "किमान संख्या",
     "view": "पहा",
     "createdByMe": "मी तयार केलेले",
-    "topUsers": "टॉप {{length}} वापरकर्ते"
+    "topUsers": "टॉप {{length}} वापरकर्ते",
+    "noResults": "कोणताही डेटा सापडला नाही",
+    "list": "यादी"
   },
   "appUsers": {
     "columns": {
