@@ -3,7 +3,7 @@ import { AppUser } from '../../../core/model/appUser';
 import teambanner from '../../../assets/images/team-banner.png';
 import prodilimg from '../../../assets/images/prodil.jpg';
 import avatar from '../../../assets/images/avatar.svg';
-import { Button, Card, Carousel, CgEye, CiShoppingCart, FaRegComment, GoInbox, Image, MdOutlineLocationOn, RiFileEditLine } from '../../../sharedBase/globalImports';
+import { Button, Card, Carousel, CgEye, CiShoppingCart, FaRegComment, GoInbox, Image, MdOutlineLocationOn, RiFileEditLine, Tooltip } from '../../../sharedBase/globalImports';
 import { useNavigate, useTranslation } from '../../../sharedBase/globalUtils';
 import { HomeUserData, SummaryData, UserData } from '../../../types/homepage';
 import { useHomePage } from '../../../hooks/useHomePage';
@@ -165,6 +165,7 @@ const SummaryCard = ({ title, value, icon, bgColor, iconBgColor }: { title: stri
 const ItemSlider = ({ user }: { user: AppUser }) => {
   const navigate = useNavigate();
   const baseModelName = 'appuser';
+  const { t } = useTranslation();
 
   return (
     <div className="flex justify-center h-full">
@@ -184,14 +185,16 @@ const ItemSlider = ({ user }: { user: AppUser }) => {
           <div className="flex items-center justify-center gap-3">
             <div
               onClick={() => navigate(`/${baseModelName}/${user.id}`)}
-              className="flex p-[6px] items-center justify-center rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white hover:bg-[var(--color-primary)] transition cursor-pointer"
+              className="flex p-[6px] items-center justify-center rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white hover:bg-[var(--color-primary)] transition cursor-pointer view-tooltip-target"
             >
+              <Tooltip target=".view-tooltip-target" content={t('globals.view')} position="top" className='text-xs font-semibold' />
               <CgEye className="text-white w-7 h-7 " />
             </div>
             <div
               onClick={() => navigate(`/${baseModelName}/edit/${user.id}`)}
-              className="p-[6px] flex items-center justify-center rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white hover:bg-[var(--color-primary)] transition cursor-pointer"
+              className="p-[6px] flex items-center justify-center rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white hover:bg-[var(--color-primary)] transition cursor-pointer edit-tooltip-target"
             >
+              <Tooltip target=".edit-tooltip-target" content={t('globals.edit')} position="top" className='text-xs font-semibold' />
               <RiFileEditLine className="text-white w-7 h-7" />
             </div>
           </div>
