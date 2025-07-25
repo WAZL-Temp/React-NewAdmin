@@ -16,7 +16,9 @@
     "minFiles": "{{field}} के लिए कम से कम {{count}} फ़ाइलें अपलोड करें",
     "maxFiles": "{{field}} के लिए अधिकतम {{count}} फ़ाइलें अपलोड करें",
     "fileSizeExceedsMax": "{{filename}} अधिकतम अनुमत आकार {{maxFileSize}}MB से बड़ा है।",
-    "fileSizeBelowMin": "{{filename}} न्यूनतम आवश्यक आकार {{minFileSize}}KB से छोटा है।"
+    "fileSizeBelowMin": "{{filename}} न्यूनतम आवश्यक आकार {{minFileSize}}KB से छोटा है।",
+    "minSelected": "{{field}} में कम से कम {{count}} विकल्प चुने जाने चाहिए।",
+    "maxSelected": "{{field}} में अधिकतम {{count}} विकल्प चुने जा सकते हैं।"
   },
   "globals": {
     "english": "अंग्रेजी",
@@ -76,7 +78,10 @@
     "createdByMe": "मेरे द्वारा बनाया गया",
     "topUsers": "शीर्ष {{length}} उपयोगकर्ता",
     "noResults": "कोई डेटा नहीं मिला",
-    "list": "सूची"
+    "list": "सूची",
+    "viewData": "डेटा देखें",
+    "editData": "डेटा संपादित करें",
+    "deleteData": "डेटा हटाएं"
   },
   "appUsers": {
     "columns": {

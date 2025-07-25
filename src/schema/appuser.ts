@@ -25,7 +25,7 @@ export const appUser = (t: TransFn) => ({
     photoShopFront: fileUploadField(t("appUsers.columns.fields.photoShopFront"), t, 1, 2),
     visitingCard: fileUploadField(t("appUsers.columns.fields.visitingCard"), t, 2, 2),
     cheque: fileUploadField(t("appUsers.columns.fields.cheque"), t, 1, 2),
-    gstOtp: stringAlphanumeric(t("appUsers.columns.fields.gstOtp"), t, 1, 100),
+    gstOtp: stringAlphanumeric(t("appUsers.columns.fields.gstOtp"), t, 6, 6),
     isActive: booleanField(t("appUsers.columns.fields.isActive"), t),
     isAdmin: booleanField(t("appUsers.columns.fields.isAdmin"), t),
     photoAttachment: fileUploadField(t("appUsers.columns.fields.photoAttachment"), t, 1, 2),

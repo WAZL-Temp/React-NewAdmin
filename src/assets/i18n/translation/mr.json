@@ -16,7 +16,9 @@
     "minFiles": "{{field}} साठी किमान {{count}} फाईल्स अपलोड करा",
     "maxFiles": "{{field}} साठी कमाल {{count}} फाईली अपलोड करा",
     "fileSizeExceedsMax": "{{filename}} अनुमत कमाल आकार {{maxFileSize}}MB पेक्षा मोठा आहे.",
-    "fileSizeBelowMin": "{{filename}} आवश्यक किमान आकार {{minFileSize}}KB पेक्षा लहान आहे."
+    "fileSizeBelowMin": "{{filename}} आवश्यक किमान आकार {{minFileSize}}KB पेक्षा लहान आहे.",
+    "minSelected": "{{field}} मध्ये किमान {{count}} पर्याय निवडणे आवश्यक आहे.",
+    "maxSelected": "{{field}} मध्ये जास्तीत जास्त {{count}} पर्याय निवडू शकता."
   },
   "globals": {
     "english": "इंग्रजी",
@@ -74,7 +76,10 @@
     "createdByMe": "मी तयार केलेले",
     "topUsers": "टॉप {{length}} वापरकर्ते",
     "noResults": "कोणताही डेटा सापडला नाही",
-    "list": "यादी"
+    "list": "यादी",
+    "viewData": "डेटा पहा",
+    "editData": " डेटा संपादित करा",
+    "deleteData": "डेटा हटवा"
   },
   "appUsers": {
     "columns": {

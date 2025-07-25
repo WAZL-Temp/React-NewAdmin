@@ -14,7 +14,7 @@ export default function AppUsersList() {
     const navigate = useNavigate();
     const baseModelName = "appuser";
     const typeName = "appuser";
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const dtRef = useRef<DataTable<AppUser[]>>(null);
     // search
     const [calendarCreateDateFrom, setCalendarCreateDateFrom] = useState<Date | undefined | null>(null);
@@ -59,7 +59,7 @@ export default function AppUsersList() {
         { field: "photoShopFront", header: t("appUsers.columns.fields.photoShopFront"), isDefault: false, show: false },
         { field: "visitingCard", header: t("appUsers.columns.fields.visitingCard"), isDefault: false, show: false },
         { field: "cheque", header: t("appUsers.columns.fields.cheque"), isDefault: false, show: false },
-         { field: "gstOtp", header: t("appUsers.columns.fields.gstOtp"), isDefault: false, show: false },
+        { field: "gstOtp", header: t("appUsers.columns.fields.gstOtp"), isDefault: false, show: false },
         { field: "isActive", header: t("appUsers.columns.fields.isActive"), isDefault: false, show: false },
         { field: "isAdmin", header: t("appUsers.columns.fields.isAdmin"), isDefault: false, show: false },
         { field: "hasImpersonateAccess", header: t("appUsers.columns.fields.hasImpersonateAccess"), isDefault: false, show: false },
@@ -67,7 +67,7 @@ export default function AppUsersList() {
         { field: "roleLabel", header: t("appUsers.columns.fields.roleLabel"), isDefault: false, show: false },
         { field: "publishLabel", header: t("appUsers.columns.fields.publishLabel"), isDefault: false, show: false },
         { field: "lastLogin", header: t("appUsers.columns.fields.lastLogin"), isDefault: false, show: false },
-         { field: "defaultLanguage", header: t("appUsers.columns.fields.defaultLanguage"), isDefault: false, show: false },
+        { field: "defaultLanguage", header: t("appUsers.columns.fields.defaultLanguage"), isDefault: false, show: false },
         { field: "totalPlot", header: t("appUsers.columns.fields.totalPlot"), isDefault: false, show: false },
         { field: "reportedByName", header: t("appUsers.columns.fields.reportedBy"), isDefault: false, show: false },
         { field: "reportedToName", header: t("appUsers.columns.fields.reportedTo"), isDefault: false, show: false },
@@ -161,24 +161,24 @@ export default function AppUsersList() {
                         <TiEye size={17} className="font-bold text-[var(--color-primary)]" />
                     </div>
                 )}
-                <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-view-${rowData.id}`} content="View Data" showDelay={200} position="top" />
+                <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-view-${rowData.id}`} content={t("globals.viewData")} showDelay={200} position="top" />
 
                 {hasAccess(roleData, "Edit") && (
                     <div id={`tooltip-edit-${rowData.id}`} className="p-button-text text-xs w-2 text-center cursor-pointer" onClick={() => openItem(rowData, 'edit')}>
                         <RiPencilFill size={17} className="font-bold" />
                     </div>
                 )}
-                <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-edit-${rowData.id}`} content="Edit Data" showDelay={200} position="top" />
+                <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-edit-${rowData.id}`} content={t("globals.editData")} showDelay={200} position="top" />
 
                 {hasAccess(roleData, "Delete") && (
                     <div id={`tooltip-delete-${rowData.id}`} className="p-button-text text-xs w-2 text-center cursor-pointer" onClick={() => handleDelete(deleteItem, rowData.id)} >
                         <BiSolidTrash size={17} className="font-bold text-[var(--color-danger)]" />
                     </div>
                 )}
-                <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-delete-${rowData.id}`} content="Delete Data" showDelay={200} position="top" />
+                <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-delete-${rowData.id}`} content={t("globals.deleteData")} showDelay={200} position="top" />
             </div>
         );
-    }, [deleteItem, handleDelete, hasAccess, roleData]);
+    }, [deleteItem, handleDelete, hasAccess, roleData, t]);
 
     const renderFileCell = (rowData: RowData, field: string, rowIndex: number) => {
         let fileName = "";
@@ -406,6 +406,7 @@ export default function AppUsersList() {
                     <div className="m-2 ">
                         {!query.isLoading && (
                             <DataTable
+                                key={i18n.language}
                                 ref={dtRef}
                                 value={query?.data}
                                 dataKey="id"
@@ -1163,7 +1164,7 @@ export default function AppUsersList() {
                                         )}
                                     />
                                 )}
-                                 {visibleColumns.includes('gender') && (
+                                {visibleColumns.includes('gender') && (
                                     <Column
                                         field="gender" header={t("appUsers.columns.fields.gender")} sortable filter
                                         headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}

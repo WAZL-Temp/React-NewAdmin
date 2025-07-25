@@ -96,8 +96,8 @@ const stringPassword = (fieldName: string, t: TransFn, minLength: number, maxLen
 const requiredStringField = (fieldName: string, t: TransFn, minLength: number, maxLength: number) =>
     baseStringField(fieldName, t)
         .min(1, { message: t('validators.required', { field: fieldName }) })
-        .min(minLength, { message: t('validators.minLength', { field: fieldName, length: minLength }) })
-        .max(maxLength, { message: t('validators.maxLength', { field: fieldName, length: maxLength }) });
+        .min(minLength, { message: t('validators.minSelected', { field: fieldName, count: minLength }) })
+        .max(maxLength, { message: t('validators.maxSelected', { field: fieldName, count: maxLength }) });
 
 const booleanField = (fieldName: string, t: TransFn, required = false) =>
     required
