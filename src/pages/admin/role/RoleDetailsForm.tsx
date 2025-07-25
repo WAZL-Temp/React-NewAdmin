@@ -234,6 +234,21 @@ const RoleDetailsForm = () => {
     };
 
     const save = async () => {
+        const trimmedName = model.name?.trim();
+        const trimmedRoleName = selectedRole?.name?.trim();
+
+        if (!selectedRole?.id && !trimmedName) {
+            setErrorMsg('Role name is required');
+            setTimeout(() => setErrorMsg(''), 5000);
+            return;
+        }
+
+        if (selectedRole?.id && !trimmedRoleName) {
+            setErrorMsg('Selected role is required');
+            setTimeout(() => setErrorMsg(''), 5000);
+            return;
+        }
+
         const roleDetail: RoleDetail[] = roleData.map((element: any) => ({
             name: element.name,
             action: JSON.stringify(element.selectedActions),
@@ -265,7 +280,6 @@ const RoleDetailsForm = () => {
                 "id": 0
             }
             const form = !selectedRole?.id ? newRole : selectedRole;
-            
             const response = await roleAddService.addData(form, roleDetail);
 
             if (response.trim() === 'Success') {
@@ -358,10 +372,11 @@ const RoleDetailsForm = () => {
                             optionLabel="name"
                             filter
                             className="w-full lg:w-20rem text-sm bg-[var(--color-white)]  flex items-center h-[40px]"
+                            emptyFilterMessage={t("globals.noResults")}
                         />
                     </div>
                 </div>
-                <small className="text-red-500 mt-2 block">{errorMsg}</small>
+                <small className="text-red-500 my-2 block">{errorMsg}</small>
 
                 <DataTable value={roleData} className="p-datatable-gridlines datatable-responsive tableResponsive" >
                     <Column
@@ -397,6 +412,7 @@ const RoleDetailsForm = () => {
                                     filter
                                     placeholder={t("roles.columns.fields.actions")}
                                     className="w-full border bg-[var(--color-white)] text-[var(--color-dark)] border-[var(--color-gray)] rounded-md shadow-sm"
+                                    emptyFilterMessage={t("globals.noResults")}
                                 />
                             )
                         }}
@@ -422,6 +438,7 @@ const RoleDetailsForm = () => {
                                 filter
                                 placeholder={t("roles.columns.fields.hideColumns")}
                                 className="w-full border bg-[var(--color-white)] text-[var(--color-dark)] border-[var(--color-gray)] rounded-md shadow-sm"
+                                emptyFilterMessage={t("globals.noResults")}
                             />
                         )}
                     />
@@ -447,6 +464,7 @@ const RoleDetailsForm = () => {
                                     filter
                                     placeholder={t("roles.columns.fields.statuses")}
                                     className="w-full border bg-[var(--color-white)] text-[var(--color-dark)] border-[var(--color-gray)] rounded-md shadow-sm"
+                                    emptyFilterMessage={t("globals.noResults")}
                                 />
                             )
                         }}

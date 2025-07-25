@@ -231,22 +231,22 @@ export default function AppUsersEdit() {
     bindDropDownList();
   }, [itemData, roleData?.data, publishData?.data, verifyData?.data, genderData?.data]);
 
-  const handleInputChange = (field: string, value: string) => {
-    setItem((prev) => ({ ...prev, [field]: value }));
-    const schema = appUserSchema[field as keyof typeof appUserSchema];
+    const handleInputChange = (field: string, value: string) => {
+      setItem((prev) => ({ ...prev, [field]: value }));
+      const schema = appUserSchema[field as keyof typeof appUserSchema];
 
-    if (schema) {
-      const result = schema.safeParse(value);
-      if (result.success) {
-        setErrors((prev) => ({ ...prev, [field]: '' }));
-      } else {
-        setErrors((prev) => ({
-          ...prev,
-          [field]: result.error.errors[0].message,
-        }));
+      if (schema) {
+        const result = schema.safeParse(value);
+        if (result.success) {
+          setErrors((prev) => ({ ...prev, [field]: '' }));
+        } else {
+          setErrors((prev) => ({
+            ...prev,
+            [field]: result.error.errors[0].message,
+          }));
+        }
       }
-    }
-  };
+    };
 
   // const onClearDate = () => {
   //   setItem((prev) => ({ ...prev, lastLogin: undefined }));

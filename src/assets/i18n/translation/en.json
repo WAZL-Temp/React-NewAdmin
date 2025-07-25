@@ -16,7 +16,9 @@
     "minFiles": "Please upload at least {{count}} files for {{field}}",
     "maxFiles": "Please upload maximimum {{count}} files for {{field}}",
     "fileSizeExceedsMax": "{{filename}} exceeds the maximum allowed size of {{maxFileSize}}MB.",
-    "fileSizeBelowMin": "{{filename}} is smaller than the minimum required size of {{minFileSize}}KB."
+    "fileSizeBelowMin": "{{filename}} is smaller than the minimum required size of {{minFileSize}}KB.",
+    "minSelected": "{{field}} must have at least {{count}} selected values.",
+    "maxSelected": "{{field}} can have at most {{count}} selected values."
   },
   "globals": {
     "english": "English",
@@ -74,7 +76,10 @@
     "createdByMe": "Created by Me",
     "topUsers": "Top {{length}} Users",
     "noResults": "No results found",
-    "list": "List"
+    "list": "List",
+    "viewData": "View Data",
+    "editData": "Edit Data",
+    "deleteData": "Delete Data"
   },
   "appUsers": {
     "columns": {
@@ -270,60 +275,60 @@
     "form_list": {
       "fields": {}
     }
-  },
-"appUserTests": {
+  },
+  "appUserTests": {
     "columns": {
       "fields": {
-         "id": "Id",
-"name": "Name ",
-"firstName": "First Name",
-"lastName": "Last Name",
-"mobile": "Mobile",
-"mobileVerified": "Mobile Verified",
-"emailId": "Email Id",
-"emailVerified": "Email Verified",
-"shopName": "Shop Name",
-"password": "Password",
-"pincode": "Pincode",
-"state": "State",
-"district": "District",
-"address": "Address Line 1",
-"addressLine": "Address Line 2",
-"verifyShop": "VerifyShop",
-"verifyShopLabel": "VerifyShop",
-"gst": "GST Number",
-"gstCertificate": "GstCertificate",
-"photoShopFront": "Photo Shop From Front",
-"visitingCard": "VisitingCard",
-"cheque": "Cheque",
-"gstOtp": "Gst Otp",
-"isActive": "Active",
-"isAdmin": "Is Admin",
-"hasImpersonateAccess": "Has Impersonate Access",
-"photoAttachment": "Photo",
-"role": "Role",
-"roleLabel": "Role",
-"publish": "Publish",
-"publishLabel": "Publish",
-"importDataId": "Import Data Id",
-"lastLogin": "Last Login",
-"lastLoginCalendar": "Last Login",
-"defaultLanguage": "DefaultLanguage",
-"isPremiumUser": "IsPremiumUser",
-"totalPlot": "TotalPlot",
-"reportedTo": "ReportedTo",
-"reportedToName": "ReportedTo",
-"reportedBy": "ReportedBy",
-"reportedByName": "ReportedBy",
-"gender": "Gender",
-"genderLabel": "Gender",
-"createDate": "Create Date",
-"updateDate": "Update Date",
-"deleteDate": "Delete Date",
-"createById": "Create By Id",
-"updateById": "Update By Id",
-"deleteById": "Delete By Id",
-"isDelete": "Is Delete"
+        "id": "Id",
+        "name": "Name ",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "mobile": "Mobile",
+        "mobileVerified": "Mobile Verified",
+        "emailId": "Email Id",
+        "emailVerified": "Email Verified",
+        "shopName": "Shop Name",
+        "password": "Password",
+        "pincode": "Pincode",
+        "state": "State",
+        "district": "District",
+        "address": "Address Line 1",
+        "addressLine": "Address Line 2",
+        "verifyShop": "VerifyShop",
+        "verifyShopLabel": "VerifyShop",
+        "gst": "GST Number",
+        "gstCertificate": "GstCertificate",
+        "photoShopFront": "Photo Shop From Front",
+        "visitingCard": "VisitingCard",
+        "cheque": "Cheque",
+        "gstOtp": "Gst Otp",
+        "isActive": "Active",
+        "isAdmin": "Is Admin",
+        "hasImpersonateAccess": "Has Impersonate Access",
+        "photoAttachment": "Photo",
+        "role": "Role",
+        "roleLabel": "Role",
+        "publish": "Publish",
+        "publishLabel": "Publish",
+        "importDataId": "Import Data Id",
+        "lastLogin": "Last Login",
+        "lastLoginCalendar": "Last Login",
+        "defaultLanguage": "DefaultLanguage",
+        "isPremiumUser": "IsPremiumUser",
+        "totalPlot": "TotalPlot",
+        "reportedTo": "ReportedTo",
+        "reportedToName": "ReportedTo",
+        "reportedBy": "ReportedBy",
+        "reportedByName": "ReportedBy",
+        "gender": "Gender",
+        "genderLabel": "Gender",
+        "createDate": "Create Date",
+        "updateDate": "Update Date",
+        "deleteDate": "Delete Date",
+        "createById": "Create By Id",
+        "updateById": "Update By Id",
+        "deleteById": "Delete By Id",
+        "isDelete": "Is Delete"
       }
     },
     "form_detail": {
@@ -331,15 +336,14 @@
         "importAction": "Import Action",
         "importRemark": "Import Remark",
         "modelname": "AppUserTest",
-"Step1": "Access Deatails",
-"Step2": "Shop Details",
-"Step3": "Shop Address",
-"Step4": "Verify Shop"
+        "Step1": "Access Deatails",
+        "Step2": "Shop Details",
+        "Step3": "Shop Address",
+        "Step4": "Verify Shop"
       }
     },
     "form_list": {
-      "fields": {        
-      }
+      "fields": {}
     }
   }
 }
