@@ -14,7 +14,7 @@ export default function AppUserListGrid() {
     const navigate = useNavigate();
     const baseModelName = "appuser";
     const typeName = "appuser";
-    const { t } = useTranslation();
+    const { t ,i18n} = useTranslation();
     const dtRef = useRef<DataTable<AppUser[]>>(null);
     // search
     const [calendarCreateDateFrom, setCalendarCreateDateFrom] = useState<Date | undefined | null>(null);
@@ -184,24 +184,24 @@ export default function AppUserListGrid() {
                         <TiEye size={17} className="font-bold text-[var(--color-primary)]" />
                     </div>
                 )}
-                <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-view-${rowData.id}`} content="View Data" showDelay={200} position="top" />
+                <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-view-${rowData.id}`} content={t("globals.viewData")} showDelay={200} position="top" />
 
                 {hasAccess(roleData, "Edit") && (
                     <div id={`tooltip-edit-${rowData.id}`} className="p-button-text text-xs w-2 text-center cursor-pointer" onClick={() => openItem(rowData, 'edit')}>
                         <RiPencilFill size={17} className="font-bold" />
                     </div>
                 )}
-                <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-edit-${rowData.id}`} content="Edit Data" showDelay={200} position="top" />
+                <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-edit-${rowData.id}`} content={t("globals.editData")} showDelay={200} position="top" />
 
                 {hasAccess(roleData, "Delete") && (
                     <div id={`tooltip-delete-${rowData.id}`} className="p-button-text text-xs w-2 text-center cursor-pointer" onClick={() => handleDelete(deleteItem, rowData.id)} >
                         <BiSolidTrash size={17} className="font-bold text-[var(--color-danger)]" />
                     </div>
                 )}
-                <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-delete-${rowData.id}`} content="Delete Data" showDelay={200} position="top" />
+                <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-delete-${rowData.id}`} content={t("globals.deleteData")} showDelay={200} position="top" />
             </div>
         );
-    }, [deleteItem, handleDelete, hasAccess, roleData]);
+    }, [deleteItem, handleDelete, hasAccess, roleData,t]);
 
     const renderFileCell = (rowData: RowData, field: string, rowIndex: number) => {
         let fileName = "";
@@ -431,6 +431,7 @@ export default function AppUserListGrid() {
                         {!query.isLoading && (
                             <>
                                 <DataTable
+                                    key={i18n.language}
                                     ref={dtRef}
                                     value={data}
                                     lazy
