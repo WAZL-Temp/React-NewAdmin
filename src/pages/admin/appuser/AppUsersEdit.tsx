@@ -67,6 +67,7 @@ export default function AppUsersEdit() {
   const genderData = useFetchDataEnum('Gender');
   // const [calendarLastLogin, setCalendarLastLogin] = useState<Date | null>(null);
   const hasRun = useRef(false);
+  const clickRef = useRef(false);
 
   function initData(): AppUser {
     return {
@@ -231,22 +232,22 @@ export default function AppUsersEdit() {
     bindDropDownList();
   }, [itemData, roleData?.data, publishData?.data, verifyData?.data, genderData?.data]);
 
-    const handleInputChange = (field: string, value: string) => {
-      setItem((prev) => ({ ...prev, [field]: value }));
-      const schema = appUserSchema[field as keyof typeof appUserSchema];
+  const handleInputChange = (field: string, value: string) => {
+    setItem((prev) => ({ ...prev, [field]: value }));
+    const schema = appUserSchema[field as keyof typeof appUserSchema];
 
-      if (schema) {
-        const result = schema.safeParse(value);
-        if (result.success) {
-          setErrors((prev) => ({ ...prev, [field]: '' }));
-        } else {
-          setErrors((prev) => ({
-            ...prev,
-            [field]: result.error.errors[0].message,
-          }));
-        }
+    if (schema) {
+      const result = schema.safeParse(value);
+      if (result.success) {
+        setErrors((prev) => ({ ...prev, [field]: '' }));
+      } else {
+        setErrors((prev) => ({
+          ...prev,
+          [field]: result.error.errors[0].message,
+        }));
       }
-    };
+    }
+  };
 
   // const onClearDate = () => {
   //   setItem((prev) => ({ ...prev, lastLogin: undefined }));
@@ -290,7 +291,7 @@ export default function AppUsersEdit() {
   const validateStepFields = (step: number) => {
     const container = stepRefs.current[step];
     let hasError = false;
-    const newErrors: Record<string, string> = { ...errors };
+   const newErrors: Record<string, string> = { ...errors };
 
     if (container) {
       const nativeInputs = container.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
@@ -383,9 +384,15 @@ export default function AppUsersEdit() {
   };
 
   const handleSubmitClick = () => {
-    const isValid = validateStepFields(stepNo);
+    if (clickRef.current || isSubmitting) return;
 
-    if (!isValid) return;
+
+    const isValid = validateStepFields(stepNo);
+    if (!isValid) {
+      clickRef.current = false;
+      return;
+    }
+    clickRef.current = true;
     const form = document.getElementById("myForm") as HTMLFormElement | null;
     if (form) {
       form.requestSubmit();
@@ -451,6 +458,9 @@ export default function AppUsersEdit() {
       }
 
       setItem(initData());
+      setErrors({});
+      const form = document.getElementById("myForm") as HTMLFormElement | null;
+      form?.reset();
       await listQuery?.load();
       setShowDialog(true);
     } catch (error) {
@@ -462,6 +472,7 @@ export default function AppUsersEdit() {
       }
     } finally {
       setIsSubmitting(false);
+      clickRef.current = false;
     }
   };
 
@@ -1546,12 +1557,14 @@ export default function AppUsersEdit() {
                 {stepNo === headers.length - 1 && (
                   <Button
                     type="button"
-                    className={`p-2 w-[100px] rounded-md font-medium text-[13px] flex items-center justify-center 
-                      bg-[var(--color-primary)] text-white disabled:bg-[#9ca3af] disabled:text-black disabled:cursor-not-allowed`}
+                    disabled={isSubmitting}
                     onClick={handleSubmitClick}
+                    className={`p-2 w-[100px] rounded-md font-medium text-[13px] flex items-center justify-center 
+    ${isSubmitting ? 'bg-[#9ca3af] text-black cursor-not-allowed' : 'bg-[var(--color-primary)] text-white'}`}
                   >
                     <span>{t("globals.save")}</span> <FaSave size={15} />
                   </Button>
+
                 )}
               </div>
             </div>
