@@ -272,23 +272,23 @@ export default function FileUploadMain({
             {file.progress === 100 ? (
               <span className="text-xs text-[#22c55e] flex-shrink-0 font-semibold">{file.progress}%</span>
             ) : (
-                <span className="text-xs text-[var(--color-primary)] flex-shrink-0"><IoCheckmarkCircleSharp size={16} /></span>
-              )}
-              {/\.(jpe?g|png|gif|bmp|webp|svg)$/i.test(file.fileName) && (
-                <div
+              <span className="text-xs text-[var(--color-primary)] flex-shrink-0"><IoCheckmarkCircleSharp size={16} /></span>
+            )}
+            {/\.(jpe?g|png|gif|bmp|webp|svg)$/i.test(file.fileName) && (
+              <div
                 className="cursor-pointer"
                 onClick={() => {
                   setImageShowDialog(true);
                   setImageShowUrl(`${import.meta.env.VITE_API_URL}/ImportFiles/${file.filePath.replace(/\\/g, "/")}`);
                 }}
-                >
+              >
                 <img
                   src={`${import.meta.env.VITE_API_URL}/ImportFiles/${file.filePath.replace(/\\/g, "/")}`}
                   alt={file.fileName}
                   className="h-8 w-8 object-cover rounded text-xs"
                 />
-                </div>
-              )}
+              </div>
+            )}
             <button
               onClick={() => deleteAttachment(file)}
               className="text-[var(--color-danger)]  transition-colors flex-shrink-0"
@@ -301,30 +301,30 @@ export default function FileUploadMain({
       </ul>
 
       {imageShowDialog && imageShowUrl && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-dark)] bg-opacity-80">
-          <div className="relative w-full h-full max-w-full max-h-full my-16 p-4">
-            <div
-              className="absolute top-4 right-4 cursor-pointer text-[var(--color-white)]"
-              onClick={() => {
-                setImageShowDialog(false);
-                setImageShowUrl(null);
-                setScale(1);
-              }}
-            >
-              <AiFillCloseCircle className="h-8 w-8 text-[var(--color-white)]" />
-            </div>
-            <div className="w-full h-full flex justify-center items-center pt-16 pb-16">
-              <img
-                src={imageShowUrl}
-                onWheel={handleScroll}
-                style={{ transform: `scale(${scale})`, transition: 'transform 0.2s' }}
-                className="w-auto h-auto max-h-full max-w-full"
-                alt="Preview"
-              />
-            </div>
+        <div className="fixed inset-0 z-50 bg-[var(--color-dark)] bg-opacity-90 flex items-center justify-center overflow-auto mt-0">
+          <button
+            className="absolute top-4 right-4 z-50 text-white"
+            onClick={() => {
+              setImageShowDialog(false);
+              setImageShowUrl(null);
+              setScale(1);
+            }}
+          >
+            <AiFillCloseCircle className="h-8 w-8" />
+          </button>
+
+          <div className="flex justify-center items-center w-full h-full p-4">
+            <img
+              src={imageShowUrl}
+              onWheel={handleScroll}
+              alt="Preview"
+              style={{ transform: `scale(${scale})`, transition: 'transform 0.2s' }}
+              className="max-h-[90vh] max-w-[90vw] object-contain"
+            />
           </div>
         </div>
       )}
+
 
       {uploadError && <p className="text-xs text-[var(--color-danger)] mt-2">{uploadError}</p>}
     </div>
