@@ -13,7 +13,7 @@ import Loader from "../../../components/Loader";
 const ProductsList = () => {
   const navigate = useNavigate();
   const baseModelName = "product";
-  const { t } = useTranslation();
+  const { t,i18n } = useTranslation();
   const productService = ProductService();
   const query = useListQuery<Product>(productService);
   const [visible, setVisible] = useState(false);
@@ -64,6 +64,11 @@ const ProductsList = () => {
     });
 
   const { columnsConfig, visibleColumns, handleSelectAll, handleColumnChange } = useColumnConfig(columnsConfigDefault, roleData);
+
+  useEffect(() => {
+    console.log("daata", query.data);
+    
+  }, []);
 
   useEffect(() => {
     if (query.search) {
@@ -147,24 +152,24 @@ const ProductsList = () => {
             <TiEye size={17} className="font-bold text-[var(--color-primary)]" />
           </Button>
         )}
-        <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-view-${rowData.id}`} content="View Data" showDelay={200} position="top" />
+        <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-view-${rowData.id}`} content={t("globals.viewData")} showDelay={200} position="top" />
 
         {hasAccess(roleData, "Edit") && (
           <Button id={`tooltip-edit-${rowData.id}`} className="p-button-text text-xs w-3 text-center" onClick={() => openItem(rowData, 'edit')}>
             <RiPencilFill size={17} className="font-bold" />
           </Button>
         )}
-        <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-edit-${rowData.id}`} content="Edit Data" showDelay={200} position="top" />
+        <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-edit-${rowData.id}`} content={t("globals.editData")} showDelay={200} position="top" />
 
         {hasAccess(roleData, "Delete") && (
           <Button id={`tooltip-delete-${rowData.id}`} className="p-button-text text-xs w-3 text-center text-[var(--color-danger)]" onClick={() => handleDelete(deleteItem, rowData.id)} >
             <BiSolidTrash size={17} className="font-bold" />
           </Button>
         )}
-        <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-delete-${rowData.id}`} content="Delete Data" showDelay={200} position="top" />
+        <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-delete-${rowData.id}`} content={t("globals.deleteData")} showDelay={200} position="top" />
       </div>
     );
-  }, [deleteItem, handleDelete, hasAccess, roleData]);
+  }, [deleteItem, handleDelete, hasAccess, roleData, t]);
 
   return (
     <div className='relative h-screen flex flex-col overflow-auto'>
@@ -364,6 +369,7 @@ const ProductsList = () => {
 
           <div className="m-2">
             <DataTable
+              key={i18n.language}
               ref={dtRef}
               value={query?.data}
               dataKey="id"

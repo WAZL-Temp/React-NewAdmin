@@ -67,7 +67,6 @@ export default function AppUsersEdit() {
   const genderData = useFetchDataEnum('Gender');
   // const [calendarLastLogin, setCalendarLastLogin] = useState<Date | null>(null);
   const hasRun = useRef(false);
-  const clickRef = useRef(false);
 
   function initData(): AppUser {
     return {
@@ -291,7 +290,7 @@ export default function AppUsersEdit() {
   const validateStepFields = (step: number) => {
     const container = stepRefs.current[step];
     let hasError = false;
-   const newErrors: Record<string, string> = { ...errors };
+    const newErrors: Record<string, string> = { ...errors };
 
     if (container) {
       const nativeInputs = container.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>(
@@ -384,15 +383,15 @@ export default function AppUsersEdit() {
   };
 
   const handleSubmitClick = () => {
-    if (clickRef.current || isSubmitting) return;
-
+    if (isSubmitting) return;
+    setIsSubmitting(true);
 
     const isValid = validateStepFields(stepNo);
+
     if (!isValid) {
-      clickRef.current = false;
+      setIsSubmitting(false);
       return;
     }
-    clickRef.current = true;
     const form = document.getElementById("myForm") as HTMLFormElement | null;
     if (form) {
       form.requestSubmit();
@@ -457,12 +456,13 @@ export default function AppUsersEdit() {
         setDialogMessage(t('globals.addDialogMsg', { model: 'App User' }));
       }
 
-      setItem(initData());
-      setErrors({});
-      const form = document.getElementById("myForm") as HTMLFormElement | null;
-      form?.reset();
-      await listQuery?.load();
       setShowDialog(true);
+      setItem(initData());
+      const form = document.getElementById('myForm') as HTMLFormElement;
+      form.reset();
+
+      await listQuery?.load();
+      setErrors({});
     } catch (error) {
       console.error("Error:", error);
       if (itemData?.id) {
@@ -472,7 +472,6 @@ export default function AppUsersEdit() {
       }
     } finally {
       setIsSubmitting(false);
-      clickRef.current = false;
     }
   };
 
