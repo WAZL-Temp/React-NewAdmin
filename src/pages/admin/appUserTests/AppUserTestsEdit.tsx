@@ -464,7 +464,7 @@ verifyShopData?.data, roleData?.data, publishData?.data, genderData?.data
     try {
 
       const payload = {
-        ...item
+        ...item,
       };
 
       const cleanedPayload = removeEmptyFields(payload);
@@ -479,9 +479,13 @@ verifyShopData?.data, roleData?.data, publishData?.data, genderData?.data
         setDialogMessage(t('globals.addDialogMsg', { model: 'AppUserTest' }));
       }
 
-      setItem(initData());
-      await listQuery?.load();
       setShowDialog(true);
+      setItem(initData());
+      const form = document.getElementById('myForm') as HTMLFormElement;
+      form.reset();
+
+      await listQuery?.load();
+      setErrors({});
     } catch (error) {
       console.error("Error:", error);
       if (itemData?.id) {
