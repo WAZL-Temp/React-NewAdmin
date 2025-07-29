@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import TooltipWithText from "../../../components/TooltipWithText";
 import ImgViewer from "../../../components/ImgViewer";
-import { BsArrowLeft, Button, FaEdit, IoIosArrowBack, IoIosArrowForward, Stepper, StepperPanel, StepperRefAttributes } from "../../../sharedBase/globalImports";
+import { BsArrowLeft, Button, FaEdit, IoIosArrowBack, IoIosArrowForward, Stepper, StepperPanel } from "../../../sharedBase/globalImports";
 import { useTranslation, useParams, format } from '../../../sharedBase/globalUtils';
 import { Category } from "../../../core/model/category";
 import { useViewPage } from "../../../hooks/useViewPage";
@@ -12,7 +12,7 @@ import Loader from "../../../components/Loader";
 export default function CategoriesView() {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
-  const stepperRef = useRef<StepperRefAttributes | null>(null);
+  const stepperRef = useRef<Stepper  | null>(null);
   const [stepNo, setStepNo] = useState(0);
         
  const stepsData = [ t("categories.form_detail.fields.Step1")];

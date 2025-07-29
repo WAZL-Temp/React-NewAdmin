@@ -1,5 +1,4 @@
-import { booleanField, fileUploadField, genderField, gstField, numericField, requiredStringField, stringAlphanumeric, stringAlphanumericWithSpecialChars, stringDateFormat, stringEmail, stringMobileNumber, stringNumeric, stringOnlyAlphabets, stringPassword } from "./baseSchema";
-
+import { booleanField, stringDateFormat,stringNumeric, stringOnlyAlphabets } from "./baseSchema";
 type TransFn = (key: string, params?: Record<string, unknown>) => string;
 
 export const categoryValidate = (t: TransFn) => ({

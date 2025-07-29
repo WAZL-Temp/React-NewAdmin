@@ -3,7 +3,7 @@ import { Category } from '../../../core/model/category';
 import teambanner from '../../../assets/images/team-banner.png';
 import prodilimg from '../../../assets/images/prodil.jpg';
 import avatar from '../../../assets/images/avatar.svg';
-import { Button, Card, Carousel, CgEye, CiShoppingCart, FaRegComment, GoInbox, Image, MdOutlineLocationOn, RiFileEditLine } from '../../../sharedBase/globalImports';
+import { Button, Card, Carousel, CgEye, CiShoppingCart, FaRegComment, GoInbox, Image, MdOutlineLocationOn, RiFileEditLine, Tooltip } from '../../../sharedBase/globalImports';
 import { useNavigate, useTranslation } from '../../../sharedBase/globalUtils';
 import { HomeUserData, SummaryData, UserData } from '../../../types/homepage';
 import { useHomePage } from '../../../hooks/useHomePage';
@@ -14,8 +14,8 @@ import Loader from '../../../components/Loader';
 export default function CategoriesHome() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const categoriesService = CategoriesService();
-  const query = useHomeQuery(categoriesService);
+  const categoryService = CategoriesService();
+  const query = useHomeQuery(categoryService);
   const [summaryData, setSummaryData] = useState<SummaryData>();
   const [topData, setTopData] = useState<UserData[]>();
   const [lastData, setLastData] = useState<UserData[]>();
@@ -86,24 +86,25 @@ export default function CategoriesHome() {
                 numScroll={3}
                 responsiveOptions={responsiveOptions}
                 showIndicators={false}
-                itemTemplate={(item) => <ItemSlider item={item} />}
+                itemTemplate={(user) => <ItemSlider user={user} />}
               />
             ) : (
-              <p className="text-center text-[var(--color-dark)]">No items available</p>
+              <p className="text-center text-[var(--color-dark)]">No users available</p>
             )}
 
             <section>
-              <ItemList title={t('globals.topUsers', { length: topData?.length })} items={listHomeUserData ?? []} />
+              <ItemList title={t('globals.topUsers', { length: topData?.length })} users={listHomeUserData ?? []} />
             </section>
 
             {listHomeUserData && (
-              <section className="py-10 flex items-center justify-center">
+              <section className="py-10 flex items-center justify-center" >
                 <div className="container mx-auto px-4 sm:px-12">
                   <h2 className="text-xl sm:text-2xl font-bold text-[var(--color-dark)] text-center">{t('globals.createdByMe')}</h2>
                   <div className="relative overflow-hidden">
                     <div className="flex space-x-4 overflow-x-auto scrollbar-hide px-4 py-4 snap-x snap-proximity justify-start">
                       {listHomeUserData.map((item, index) => (
-                        <div key={index} className="flex-none snap-center w-[140px] sm:w-[160px]">
+                        <div key={index} className="flex-none snap-center w-[140px] sm:w-[160px] cursor-pointer"
+                          onClick={() => navigate(`/categories/${item.id}`)}>
                           <div className="bg-white shadow-xl rounded-2xl p-4 flex flex-col items-center h-[180px] sm:h-[200px]">
                             <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden">
                               <Image
@@ -127,7 +128,7 @@ export default function CategoriesHome() {
             {lastData && (
               <section className="item-card-grid">
                 {(lastData ?? []).slice(0, 5).map((item: UserData, index: number) => (
-                  <ItemCard key={index} item={item as UserData} />
+                  <ItemCard key={index} user={item as UserData} />
                 ))}
               </section>
             )}
@@ -161,9 +162,10 @@ const SummaryCard = ({ title, value, icon, bgColor, iconBgColor }: { title: stri
   </div>
 );
 
-const ItemSlider = ({ item }: { item: Category }) => {
+const ItemSlider = ({ user }: { user: Category }) => {
   const navigate = useNavigate();
-  const baseModelName = 'categories';
+  const baseModelName = 'category';
+  const { t } = useTranslation();
 
   return (
     <div className="flex justify-center h-full">
@@ -172,25 +174,27 @@ const ItemSlider = ({ item }: { item: Category }) => {
           <div className="relative mb-4">
             <Image
               src={teambanner}
-              alt={item.name || 'User image'}
+              alt={user.name || 'User image'}
               className="w-full h-40 sm:h-48 object-cover rounded-full transform transition-transform hover:scale-105"
             />
           </div>
           <div className="text-center">
-            <h4 className="text-base sm:text-lg font-semibold text-gray-900">{item.name}</h4>
-            <p className="text-xs sm:text-sm text-gray-600 mb-4">{item.emailId}</p>
+            <h4 className="text-base sm:text-lg font-semibold text-gray-900">{user.name}</h4>
+            <p className="text-xs sm:text-sm text-gray-600 mb-4">{user.emailId}</p>
           </div>
           <div className="flex items-center justify-center gap-3">
             <div
-              onClick={() => navigate(`/${baseModelName}/${item.id}`)}
-              className="flex p-[6px] items-center justify-center rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white hover:bg-[var(--color-primary)] transition cursor-pointer"
+              onClick={() => navigate(`/${baseModelName}/${user.id}`)}
+              className="flex p-[6px] items-center justify-center rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white hover:bg-[var(--color-primary)] transition cursor-pointer view-tooltip-target"
             >
+              <Tooltip target=".view-tooltip-target" content={t('globals.view')} position="top" className='text-xs font-semibold' />
               <CgEye className="text-white w-7 h-7 " />
             </div>
             <div
-              onClick={() => navigate(`/${baseModelName}/edit/${item.id}`)}
-              className="p-[6px] flex items-center justify-center rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white hover:bg-[var(--color-primary)] transition cursor-pointer"
+              onClick={() => navigate(`/${baseModelName}/edit/${user.id}`)}
+              className="p-[6px] flex items-center justify-center rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white hover:bg-[var(--color-primary)] transition cursor-pointer edit-tooltip-target"
             >
+              <Tooltip target=".edit-tooltip-target" content={t('globals.edit')} position="top" className='text-xs font-semibold' />
               <RiFileEditLine className="text-white w-7 h-7" />
             </div>
           </div>
@@ -202,7 +206,7 @@ const ItemSlider = ({ item }: { item: Category }) => {
 
 const ItemList = ({ title, users }: { title: string; users: UserData[] }) => {
   const navigate = useNavigate();
-  const baseModelName = 'categories';
+  const baseModelName = 'category';
   const { t } = useTranslation();
 
   return (
@@ -264,7 +268,7 @@ const ItemList = ({ title, users }: { title: string; users: UserData[] }) => {
   );
 };
 
-const ItemCard = ({ item }: { item: Category }) => {
+const ItemCard = ({ user }: { user: Category }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -273,13 +277,13 @@ const ItemCard = ({ item }: { item: Category }) => {
       <div className="mb-4 w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-2 border-gray-300 shadow-md mx-auto">
         <Image
           src={prodilimg}
-          alt={item.name || ''}
+          alt={user.name || ''}
           imageClassName="w-full h-full object-cover"
           preview={false}
         />
       </div>
 
-      <h3 className="text-lg font-semibold text-black">{item.name}</h3>
+      <h3 className="text-lg font-semibold text-black">{user.name}</h3>
       <p className="text-black text-xs leading-relaxed mt-2">
         Nunc mi ipsum faucibus vitae aliquet nec. Lacus sed viverra tellus in hac habitasse platea dictumst.
       </p>
@@ -288,7 +292,7 @@ const ItemCard = ({ item }: { item: Category }) => {
           label={t('globals.view')}
           icon="pi pi-arrow-right"
           className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white py-2 px-5 rounded-full hover:bg-[var(--color-primary)] transition duration-300 text-sm"
-          onClick={() => navigate(`/categories/${item.id}`)}
+          onClick={() => navigate(`/categories/${user.id}`)}
         />
       </div>
     </Card>
