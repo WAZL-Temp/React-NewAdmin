@@ -105,7 +105,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
           }}
         >
           <AiFillHome size={18} className={`${isMinimized ? '' : 'mr-3'}`} />
-          {(!isMinimized) && <span className=" text-sm font-medium">{t("globals.homes")}</span>}
+          {(!isMinimized) && <span className=" text-xs font-medium">{t("globals.homes")}</span>}
         </Button>
 
         <Button
@@ -123,7 +123,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
           }}
         >
           <IoList size={18} className={`${isMinimized ? '' : 'mr-3'}`} />
-          {(!isMinimized) && <span className=" text-sm font-medium">{t("globals.list")}</span>}
+          {(!isMinimized) && <span className=" text-xs font-medium">{t("globals.list")}</span>}
         </Button>
 
         {roleData && hasAccess(roleData.find((r: any) => r.name.toLowerCase() == 'appusertest'), "List") && (
@@ -143,10 +143,31 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
             }}
           >
             <FiUser size={18} className={`${isMinimized ? '' : 'mr-3'}`} />
-            {(!isMinimized) && <span className=" text-sm font-medium">
+            {(!isMinimized) && <span className=" text-xs font-medium">
               {t("appUserTests.form_detail.fields.modelname")}</span>}
           </Button>
         )}
+
+        <Button
+          onClick={() => {
+            navigate("/appUserTests/list");
+            if (!isMinimized) toggleSidebar();
+          }}
+          className={`flex items-center ${isMinimized ? 'px-1' : 'px-2'} py-2 rounded
+          ${location.pathname === "/appUserTests/list" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
+          hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]`}
+          tooltip={t("globals.homes")}
+          tooltipOptions={{
+            position: 'right',
+            className: 'font-normal rounded text-sm p-1'
+          }}
+        >
+          <IoList size={18} className={`${isMinimized ? '' : 'mr-3'}`} />
+          {(!isMinimized) && <span className=" text-xs font-medium">
+            {t("appUserTests.form_detail.fields.modelname")}
+            {t("globals.list")}
+          </span>}
+        </Button>
 
         {roleData && hasAccess(roleData.find((r: any) => r.name.toLowerCase() === 'product'), "List") && (
           <Button
@@ -165,9 +186,31 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
             }}
           >
             <FiShoppingBag size={18} className={`${isMinimized ? '' : 'mr-3'}`} />
-            {(!isMinimized) && <span className=" text-sm font-medium">{t("products.form_detail.fields.modelname")}</span>}
+            {(!isMinimized) && <span className=" text-xs font-medium">
+              {t("products.form_detail.fields.modelname")}
+            </span>}
           </Button>
         )}
+
+        <Button
+          onClick={() => {
+            navigate("/categories");
+            if (!isMinimized) toggleSidebar();
+          }}
+          className={`flex items-center ${isMinimized ? 'px-1' : 'px-2'} py-2 rounded
+          ${location.pathname === "/categories" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
+          hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]`}
+          tooltip={t("globals.homes")}
+          tooltipOptions={{
+            position: 'right',
+            className: 'font-normal rounded text-sm p-1'
+          }}
+        >
+          <FiUser size={18} className={`${isMinimized ? '' : 'mr-3'}`} />
+          {(!isMinimized) && <span className=" text-xs font-medium">
+            {t("categories.form_detail.fields.modelname")}
+          </span>}
+        </Button>
 
         <Button
           onClick={() => {
@@ -195,7 +238,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
          hover:bg-[var(--color-white)] hover:text-[var(--color-primary)] ${isMinimized && !isSidebarOpen ? "justify-center" : ""}`}
         >
           <RiLogoutCircleLine size={18} className={`${isMinimized ? '' : 'mr-3'}`} />
-          {(!isMinimized) && <span className="text-sm font-medium">{t("globals.logout")}</span>}
+          {(!isMinimized) && <span className="text-xs font-medium">{t("globals.logout")}</span>}
         </Button>
       </footer>
     </aside >
