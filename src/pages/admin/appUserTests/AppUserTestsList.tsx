@@ -13,7 +13,7 @@ export default function AppUserTestsList() {
     const navigate = useNavigate();
     const baseModelName = "appUserTests";
 const typeName= "appUserTest";
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
     const dtRef = useRef<DataTable<AppUserTest[]>>(null);
     // search
     const [calendarCreateDateFrom, setCalendarCreateDateFrom] = useState<Date | undefined | null>(null);
@@ -404,6 +404,7 @@ if (roleData && hasAccess(roleData, "Export")){
             <div className="m-2">
                 {!query.isLoading && (
                     <DataTable
+                    key={i18n.language}
                         ref={dtRef}
                         value={query?.data}
                         dataKey="id"

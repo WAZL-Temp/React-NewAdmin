@@ -293,9 +293,15 @@ function initData(): Category {
   };
 
   const handleSubmitClick = () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     const isValid = validateStepFields(stepNo);
 
-    if (!isValid) return;
+    if (!isValid) {
+      setIsSubmitting(false);
+      return;
+    }
     const form = document.getElementById("myForm") as HTMLFormElement | null;
     if (form) {
       form.requestSubmit();
