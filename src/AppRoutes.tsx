@@ -29,6 +29,7 @@ import SeosEdit from './pages/admin/seos/SeosEdit';
 import SeosView from './pages/admin/seos/SeosView';
 import SeosImport from './pages/admin/seos/SeosImport';
 import AppUserListGrid from './pages/admin/appuser/AppUserListGrid';
+import AppUserTestsListGrid from './pages/admin/appUserTests/AppUserTestsListGrid';
 
 {/* <!--router-link-admin-Import--> */ }
 const AppRoutes = () => {
@@ -51,6 +52,7 @@ const AppRoutes = () => {
       <Route path="/appUserTests/add" element={<Layout><AppUserTestsEdit /></Layout>} />
       <Route path="/appUserTests/edit/:id" element={<Layout><AppUserTestsEdit /></Layout>} />
       <Route path="/appUserTests/import" element={<Layout><AppUserTestsImport /></Layout>} />
+      <Route path="/appUserTests/list" element={<Layout><AppUserTestsListGrid /></Layout>} />
 
       <Route path="/categories" element={<Layout><CategoriesList /></Layout>} />
       <Route path="/categories/home" element={<Layout><CategoriesHome /></Layout>} />
