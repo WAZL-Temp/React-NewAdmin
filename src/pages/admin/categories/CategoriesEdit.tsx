@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import successImg from '../../../assets/images/success.gif'
-import { BsArrowLeft, Button, Calendar, Checkbox, Dialog, Dropdown, DropdownChangeEvent, FaSave, Image, InputText, InputTextarea, IoIosArrowBack, IoIosArrowForward, MultiSelect, MultiSelectChangeEvent, RadioButton, RadioButtonChangeEvent, Stepper, StepperPanel,Toast } from '../../../sharedBase/globalImports';
+import { BsArrowLeft, Button, Calendar, Checkbox, Dialog, DropdownChangeEvent, FaSave, Image, InputText, InputTextarea, IoIosArrowBack, IoIosArrowForward, MultiSelectChangeEvent, RadioButton, RadioButtonChangeEvent, Stepper, StepperPanel,Toast } from '../../../sharedBase/globalImports';
 import { useNavigate, useParams, useTranslation } from '../../../sharedBase/globalUtils';
 import { useEditPage } from '../../../hooks/useEditPage';
 import { Category } from '../../../core/model/category';
@@ -14,6 +14,8 @@ import { CategoriesService } from '../../../core/service/categories.service';
 import { useListQuery } from '../../../store/useListQuery';
 import {getData, useFetchDataEnum } from '../../../sharedBase/lookupService';
 import Loader from '../../../components/Loader';
+import { DropdownWithAutoClose } from '../../../components/DropdownWithAutoClose';
+import { MultiSelectWithAutoClose } from '../../../components/MultiSelectWithAutoClose';
 import { categoryValidate } from '../../../schema/category';
 import FormFieldError from '../../../components/FormFieldError';
 

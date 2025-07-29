@@ -41,8 +41,10 @@ const columnsConfigDefault = useMemo(() =>[
 			 {field: 'slug', header: t("categories.columns.fields.slug"), isDefault: true, show: true }, 
 			 {field: 'icon', header: t("categories.columns.fields.icon"), isDefault: true, show: true }, 
 			 {field: 'importDataId', header: t("categories.columns.fields.importDataId"), isDefault: true, show: true }, 
+			 {field: 'createDate', header: t("categories.columns.fields.createDate"), isDefault: true, show: true }, 
 			 {field: 'updateDate', header: t("categories.columns.fields.updateDate"), isDefault: true, show: true }, 
 			 {field: 'deleteDate', header: t("categories.columns.fields.deleteDate"), isDefault: true, show: true }, 
+			 {field: 'createById', header: t("categories.columns.fields.createById"), isDefault: true, show: true }, 
 			 {field: 'updateById', header: t("categories.columns.fields.updateById"), isDefault: true, show: true }, 
 			 {field: 'deleteById', header: t("categories.columns.fields.deleteById"), isDefault: true, show: true }, 
 			 {field: 'isDelete', header: t("categories.columns.fields.isDelete"), isDefault: true, show: true }, 
@@ -92,7 +94,7 @@ const columnsConfigDefault = useMemo(() =>[
             command: () => addData(navigate, baseModelName)
         });
     }
-if (roleData && hasAccess(roleData, "Export")) {
+if (roleData && hasAccess(roleData, "Export")){
     items.push({
         label: t("globals.exportExcel"),
         icon: 'pi pi-file-excel',
@@ -130,28 +132,28 @@ if (roleData && hasAccess(roleData, "Export")) {
         return (
             <div className="flex items-center justify-start action-group gap-3">
                 {hasAccess(roleData, "View") && (
-                <div id={`tooltip-view-${rowData.id}`} className="p-button-text text-xs w-2 text-center cursor-pointer" onClick={() => openItem(rowData, 'view')}>
-                    <TiEye size={17} className="font-bold text-[var(--color-primary)]" />
-                </div>
+                    <div id={`tooltip-view-${rowData.id}`} className="p-button-text text-xs w-2 text-center cursor-pointer" onClick={() => openItem(rowData, 'view')}>
+                        <TiEye size={17} className="font-bold text-[var(--color-primary)]" />
+                    </div>
                 )}
-                <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-view-${rowData.id}`} content="View Data" showDelay={200} position="top" />
+                <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-view-${rowData.id}`} content={t("globals.viewData")} showDelay={200} position="top" />
 
                 {hasAccess(roleData, "Edit") && (
-                <div id={`tooltip-edit-${rowData.id}`} className="p-button-text text-xs w-2 text-center cursor-pointer" onClick={() => openItem(rowData, 'edit')}>
-                    <RiPencilFill size={17} className="font-bold" />
-                </div>
-                 )} 
-                <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-edit-${rowData.id}`} content="Edit Data" showDelay={200} position="top" />
+                    <div id={`tooltip-edit-${rowData.id}`} className="p-button-text text-xs w-2 text-center cursor-pointer" onClick={() => openItem(rowData, 'edit')}>
+                        <RiPencilFill size={17} className="font-bold" />
+                    </div>
+                )}
+                <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-edit-${rowData.id}`} content={t("globals.editData")} showDelay={200} position="top" />
 
                 {hasAccess(roleData, "Delete") && (
-                <div id={`tooltip-delete-${rowData.id}`} className="p-button-text text-xs w-2 text-center cursor-pointer" onClick={() => handleDelete(deleteItem, rowData.id)} >
-                    <BiSolidTrash size={17} className="font-bold text-[var(--color-danger)]" />
-                </div>
-                 )} 
-                <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-delete-${rowData.id}`} content="Delete Data" showDelay={200} position="top" />
+                    <div id={`tooltip-delete-${rowData.id}`} className="p-button-text text-xs w-2 text-center cursor-pointer" onClick={() => handleDelete(deleteItem, rowData.id)} >
+                        <BiSolidTrash size={17} className="font-bold text-[var(--color-danger)]" />
+                    </div>
+                )}
+                <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-delete-${rowData.id}`} content={t("globals.deleteData")} showDelay={200} position="top" />
             </div>
         );
-    }, [deleteItem, handleDelete,hasAccess,roleData]);
+    }, [deleteItem, handleDelete, hasAccess, roleData, t]);
 
     const renderFileCell = (rowData: RowData, field: string, rowIndex: number) => {
         let fileName = "";
@@ -463,6 +465,46 @@ body={(rowData, { rowIndex }) => (
  {renderFileCell(rowData, 'icon', rowIndex)}
  </div>
 )} />)} 
+{visibleColumns.includes('createDate') && (
+<Column field="createDate" header={t("categories.columns.fields.createDate")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.createDate || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("createDate", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-createDate-${rowIndex}`} className="text-left truncate font-medium">
+ {rowData.createDate}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-createDate-${rowIndex}`} content={rowData.createDate} showDelay={200} position="top" />
+</>
+)}
+ />)} 
+{visibleColumns.includes('createById') && (
+<Column field="createById" header={t("categories.columns.fields.createById")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.createById || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("createById", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-createById-${rowIndex}`} className="text-left truncate font-medium">
+ {rowData.createById}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-createById-${rowIndex}`} content={rowData.createById} showDelay={200} position="top" />
+</>
+)}
+ />)} 
 
 
                     </DataTable>
