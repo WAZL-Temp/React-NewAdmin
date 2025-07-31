@@ -1115,14 +1115,10 @@ onChange={(e) => handleFilterChangeLocal("createDate", e.target.value)}
 /> 
  }
 body={(rowData, { rowIndex }) => (
-<>
 <div id={`tooltip-createDate-${rowIndex}`} className="text-left truncate font-medium">
- {rowData.createDate}
+ {formatDate(rowData.createDate)}
  </div>
-<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-createDate-${rowIndex}`} content={rowData.createDate} showDelay={200} position="top" />
-</>
-)}
- />)} 
+)} />)} 
 {visibleColumns.includes('createById') && (
 <Column field="createById" header={t("appUserTests.columns.fields.createById")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
