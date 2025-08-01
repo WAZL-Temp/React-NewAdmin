@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { BiSolidTrash, Button, Calendar, Column, DataTable, Dialog, HiOutlinePlus, IoMdSettings, Image, InputText, IoMdRefresh, MdOutlineUploadFile, MenuItem, RiPencilFill, SplitButton, TbFileExcel, TiEye, Toast, Tooltip, FilterMatchMode, Checkbox } from "../../../sharedBase/globalImports";
 import { useTranslation, useNavigate } from '../../../sharedBase/globalUtils';
 import successimg from '../../../assets/images/success.gif';
@@ -14,11 +14,9 @@ export default function AppUserListGrid() {
     const navigate = useNavigate();
     const baseModelName = "appuser";
     const typeName = "appuser";
-    const { t ,i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
     const dtRef = useRef<DataTable<AppUser[]>>(null);
     // search
-    const [calendarCreateDateFrom, setCalendarCreateDateFrom] = useState<Date | undefined | null>(null);
-    const [calendarCreateDateTo, setCalendarCreateDateTo] = useState<Date | undefined | null>(null);
     const userService = AppUserService();
     const query = useListQuery<AppUser>(userService);
     const {
@@ -28,7 +26,8 @@ export default function AppUserListGrid() {
         toast, isSuccessDialogOpen, setIsSuccessDialogOpen, formatDate, exportToExcel,
         importFromExcel, addData, handleDelete, useColumnConfig, visible, setVisible,
         onLazyLoad, selectedRow, setSelectedRow, multiSortMeta, currentPageReportTemplate, data,
-        sortField, sortOrder }
+        sortField, sortOrder ,calendarCreateDateFrom,setCalendarCreateDateFrom,
+        calendarCreateDateTo, setCalendarCreateDateTo}
         = useListGridPage<typeof query, AppUser>({
             query: query,
             props: {
@@ -80,24 +79,6 @@ export default function AppUserListGrid() {
         [t]);
 
     const { columnsConfig, visibleColumns, handleSelectAll, handleColumnChange } = useColumnConfig(columnsConfigDefault, roleData);
-
-
-    useEffect(() => {
-        if (query.search) {
-            if (query.search?.createDateSearchFrom) {
-                setCalendarCreateDateFrom(new Date(query.search.createDateSearchFrom));
-            }
-            if (query.search?.createDateSearchTo) {
-                setCalendarCreateDateTo(new Date(query.search.createDateSearchTo));
-            }
-        }
-
-        if (query.tableSearch) {
-            if (query.tableSearch.filter) {
-                setGlobalFilterValue(query.tableSearch.filter);
-            }
-        }
-    }, [query.search, query.tableSearch, setGlobalFilterValue]);
 
     useEffect(() => {
         const initFilters = () => {
@@ -201,7 +182,7 @@ export default function AppUserListGrid() {
                 <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-delete-${rowData.id}`} content={t("globals.deleteData")} showDelay={200} position="top" />
             </div>
         );
-    }, [deleteItem, handleDelete, hasAccess, roleData,t]);
+    }, [deleteItem, handleDelete, hasAccess, roleData, t]);
 
     const renderFileCell = (rowData: RowData, field: string, rowIndex: number) => {
         let fileName = "";
