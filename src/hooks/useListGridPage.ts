@@ -121,6 +121,8 @@ export function useListGridPage<TQuery extends UseListQueryResult<TItem>, TItem>
     const [data, setData] = useState<TItem[]>([]);
     const sortFieldRef = useRef('ID ASC');
     const hasInitialized = useRef(false);
+    const [calendarCreateDateFrom, setCalendarCreateDateFrom] = useState<Date | undefined | null>(null);
+    const [calendarCreateDateTo, setCalendarCreateDateTo] = useState<Date | undefined | null>(null);
 
     useEffect(() => {
         setCurrentPageReportTemplate(t('globals.report'));
@@ -142,7 +144,7 @@ export function useListGridPage<TQuery extends UseListQueryResult<TItem>, TItem>
 
             gridData(finalCondition);
         }
-    }, [query.roleCondition,query.condition,query.search]);
+    }, [query.roleCondition, query.condition, query.search]);
 
     useEffect(() => {
         const fetchRoleDetails = async () => {
@@ -166,6 +168,24 @@ export function useListGridPage<TQuery extends UseListQueryResult<TItem>, TItem>
             fetchRoleDetails();
         }
     }, [roleDetailsData, props.typeName]);
+
+
+    useEffect(() => {
+        if (query.search) {
+            if (query.search?.createDateSearchFrom) {
+                setCalendarCreateDateFrom(new Date(query.search.createDateSearchFrom));
+            }
+            if (query.search?.createDateSearchTo) {
+                setCalendarCreateDateTo(new Date(query.search.createDateSearchTo));
+            }
+        }
+
+        if (query.tableSearch) {
+            if (query.tableSearch.filter) {
+                setGlobalFilterValue(query.tableSearch.filter);
+            }
+        }
+    }, [query.search, query.tableSearch, setGlobalFilterValue]);
 
     useEffect(() => {
         if (query.tableSearch.searchRowFilter) {
@@ -558,6 +578,7 @@ export function useListGridPage<TQuery extends UseListQueryResult<TItem>, TItem>
         setIsSuccessDialogOpen, formatDate, hasAccess, exportToExcel, importFromExcel, addData, handleDelete, useColumnConfig,
         visible, setVisible, currentPage, setCurrentPage, totalCount, setTotalCount,
         loading, setLoading, setFirst, onLazyLoad, selectedRow, setSelectedRow,
-        multiSortMeta, setMultiSortMeta, currentPageReportTemplate, data, setData
+        multiSortMeta, setMultiSortMeta, currentPageReportTemplate, data, setData, calendarCreateDateFrom, setCalendarCreateDateFrom,
+        calendarCreateDateTo, setCalendarCreateDateTo
     };
 }
