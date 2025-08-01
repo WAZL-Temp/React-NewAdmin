@@ -109,6 +109,8 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
     const [searchRowFilter, setSearchRowFilter] = useState<Record<string, unknown>>({});
     const { data: roleDetailsData } = useFetchRoleDetailsData();
     const [visible, setVisible] = useState(false);
+    const [calendarCreateDateFrom, setCalendarCreateDateFrom] = useState<Date | undefined | null>(null);
+    const [calendarCreateDateTo, setCalendarCreateDateTo] = useState<Date | undefined | null>(null);
 
     useEffect(() => {
         const fetchRoleDetails = async () => {
@@ -134,6 +136,22 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
         }
     }, [roleDetailsData, props.typeName]);
 
+    useEffect(() => {
+        if (query.search) {
+            if (query.search?.createDateSearchFrom) {
+                setCalendarCreateDateFrom(new Date(query.search.createDateSearchFrom));
+            }
+            if (query.search?.createDateSearchTo) {
+                setCalendarCreateDateTo(new Date(query.search.createDateSearchTo));
+            }
+        }
+
+        if (query.tableSearch) {
+            if (query.tableSearch.filter) {
+                setGlobalFilterValue(query.tableSearch.filter);
+            }
+        }
+    }, [query.search, query.tableSearch, setGlobalFilterValue]);
 
     useEffect(() => {
         if (query.tableSearch.searchRowFilter) {
@@ -386,6 +404,7 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
         setListSearch, clearListSearch, searchChange, isDeleteDialogVisible, setIsDeleteDialogVisible,
         confirmDeleteItem, deleteItem, openItem, closeDeleteDialog, setItemToDelete, toast, isSuccessDialogOpen,
         setIsSuccessDialogOpen, formatDate, hasAccess, exportToExcel, importFromExcel, addData, handleDelete, useColumnConfig,
-        visible, setVisible
+        visible, setVisible,calendarCreateDateFrom,setCalendarCreateDateFrom,
+        calendarCreateDateTo, setCalendarCreateDateTo
     };
 }

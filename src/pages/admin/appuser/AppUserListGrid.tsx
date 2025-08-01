@@ -22,7 +22,7 @@ export default function AppUserListGrid() {
     const userService = AppUserService();
     const query = useListQuery<AppUser>(userService);
     const {
-        roleData, hasAccess, globalFilterValue, setGlobalFilterValue, onGlobalFilterChange, refreshItemData, isDeleteDialogVisible,
+        roleData, hasAccess, globalFilterValue, setGlobalFilterValue, refreshItemData, isDeleteDialogVisible,
         deleteItem, closeDeleteDialog, setFilters, first, rows, totalRecords,
         filters, setListSearch, clearListSearch, searchChange, openItem, confirmDeleteItem,
         toast, isSuccessDialogOpen, setIsSuccessDialogOpen, formatDate, exportToExcel,
@@ -237,7 +237,7 @@ export default function AppUserListGrid() {
                 <Loader />
             ) : (
                 <>
-                    <div className="flex mx-2 flex-wrap justify-between items-center gap-3 border text-[var(--color-dark)] border-[var(--color-border)] rounded-md p-1 lg:my-1">
+                    <div className="flex mx-2 flex-wrap justify-start items-center gap-3 border text-[var(--color-dark)] border-[var(--color-border)] rounded-md p-1 lg:my-1">
                         <div className="flex sm:flex md:flex lg:hidden card justify-content-center">
                             <Toast ref={toast}></Toast>
                             <SplitButton
@@ -304,19 +304,6 @@ export default function AppUserListGrid() {
                             >
                                 <IoMdRefresh size={18} />
                             </Button>
-                        </div>
-
-                        <div className="flex flex-grow">
-                            <span className="p-input-icon-left w-full relative">
-                                <i className="pi pi-search  pl-2 ml-1 bg-[var(--color-white)] text-[var(--color-dark)]" />
-                                <InputText
-                                    type="search"
-                                    className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] text-xs rounded-md pl-5 lg:py-2 py-1"
-                                    placeholder={t("globals.globalSearch")}
-                                    value={globalFilterValue}
-                                    onChange={onGlobalFilterChange}
-                                />
-                            </span>
                         </div>
 
                         <div className="flex gap-2 w-full sm:w-auto">
