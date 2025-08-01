@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useListPage } from "../../../hooks/useListPage";
 import { BiSolidTrash, Button, Calendar, Column, DataTable, Dialog, HiOutlinePlus, IoMdSettings ,Image, InputText, IoMdRefresh, MdOutlineUploadFile, MenuItem, RiPencilFill, SplitButton, TbFileExcel, TiEye, Toast, Tooltip, FilterMatchMode, Checkbox } from "../../../sharedBase/globalImports";
 import {useTranslation,useNavigate} from '../../../sharedBase/globalUtils';
@@ -16,16 +16,15 @@ const typeName= "appUserTest";
     const { t, i18n } = useTranslation();
     const dtRef = useRef<DataTable<AppUserTest[]>>(null);
     // search
-    const [calendarCreateDateFrom, setCalendarCreateDateFrom] = useState<Date | undefined | null>(null);
-    const [calendarCreateDateTo, setCalendarCreateDateTo] = useState<Date | undefined | null>(null);
-    const appUserTestsService = AppUserTestsService();
+     const appUserTestsService = AppUserTestsService();
     const query = useListQuery<AppUserTest>(appUserTestsService);
     const {
-        roleData, hasAccess,globalFilterValue, setGlobalFilterValue, onGlobalFilterChange, refreshItemData, isDeleteDialogVisible,
+        roleData, hasAccess, globalFilterValue, setGlobalFilterValue, onGlobalFilterChange, refreshItemData, isDeleteDialogVisible,
         deleteItem, closeDeleteDialog, setFilters, onSort, onPage, first, rows, sortField, sortOrder, totalRecords,
         filters, setListSearch, clearListSearch, searchChange, openItem, confirmDeleteItem,
         toast, isSuccessDialogOpen, setIsSuccessDialogOpen, formatDate, exportToExcel,
-        importFromExcel, addData, handleDelete, useColumnConfig,visible,setVisible }
+        importFromExcel, addData, handleDelete, useColumnConfig, visible, setVisible, calendarCreateDateFrom, setCalendarCreateDateFrom,
+        calendarCreateDateTo, setCalendarCreateDateTo }
         = useListPage<typeof query, AppUserTest>({
             query: query,
             props: {
@@ -89,23 +88,6 @@ const columnsConfigDefault = useMemo(() =>[
         [t]);
 
         const { columnsConfig, visibleColumns, handleSelectAll, handleColumnChange } = useColumnConfig(columnsConfigDefault, roleData);
-
-    useEffect(() => {
-        if (query.search) {
-            if (query.search?.createDateSearchFrom) {
-                setCalendarCreateDateFrom(new Date(query.search.createDateSearchFrom))
-            }
-            if (query.search?.createDateSearchTo) {
-                setCalendarCreateDateTo(new Date(query.search.createDateSearchTo))
-            }
-        }
-
-        if (query.tableSearch) {
-            if (query.tableSearch.filter) {
-                setGlobalFilterValue(query.tableSearch.filter);
-            }
-        }
-    }, [query.search, query.tableSearch, setGlobalFilterValue]);
 
     useEffect(() => {
         
