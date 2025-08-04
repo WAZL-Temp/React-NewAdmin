@@ -366,14 +366,23 @@ export default function AppUsersEdit() {
     return !hasError;
   };
 
-  const next = () => {
+  const next = async () => {
     const isValid = validateStepFields(stepNo);
     if (!isValid) {
       return;
     }
-    if (stepNo <= headers?.length) {
-      setStepNo((prev) => prev + 1);
-      stepperRef?.current?.nextCallback();
+    // if (stepNo <= headers?.length) {
+    //   setStepNo((prev) => prev + 1);
+    //   stepperRef?.current?.nextCallback();
+    // }
+    try {
+      await itemQuery.draftItem(item);
+      if (stepNo < headers?.length) {
+        setStepNo((prev) => prev + 1);
+        stepperRef?.current?.nextCallback();
+      }
+    } catch (error) {
+      console.error("Draft save failed:", error);
     }
   };
 
