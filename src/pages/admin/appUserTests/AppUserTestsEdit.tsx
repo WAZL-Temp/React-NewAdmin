@@ -396,7 +396,9 @@ verifyShopData?.data, roleData?.data, publishData?.data, genderData?.data
       return;
     }
     try {
-      await itemQuery.draftItem(item);
+    if (item.id) {
+        await itemQuery.draftItem(item);
+      }
       if (stepNo < stepsData?.length) {
         setStepNo((prev) => prev + 1);
         stepperRef?.current?.nextCallback();
