@@ -396,7 +396,7 @@ export default function AppUserTestsEdit() {
       return;
     }
     try {
-      if (item.id) {
+    if (item.id) {
         await itemQuery.draftItem(item);
       }
       if (stepNo < stepsData?.length) {
