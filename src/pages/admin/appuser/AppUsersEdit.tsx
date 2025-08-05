@@ -376,7 +376,9 @@ export default function AppUsersEdit() {
     //   stepperRef?.current?.nextCallback();
     // }
     try {
-      await itemQuery.draftItem(item);
+      if (item.id) {  
+        await itemQuery.draftItem(item);
+      }
       if (stepNo < headers?.length) {
         setStepNo((prev) => prev + 1);
         stepperRef?.current?.nextCallback();
