@@ -58,7 +58,7 @@ export const useListQuery = <T extends BaseModel>(
     queryFn: () => service.getAll(payload),
     staleTime: 1000 * 60 * 5,
     enabled: isQueryEnabled,
-    select: (data) => Array.isArray(data) ? [...data].reverse() : data,
+    // select: (data) => Array.isArray(data) ? [...data].reverse() : data,
   });
 
   const deleteMutation = useMutation({
