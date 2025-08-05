@@ -13,6 +13,7 @@ export type UseItemQueryResult<T> = {
   addItem: (item: T) => void;
   updateItem: (item: T) => void;
   deleteItem: (id: number) => void;
+  draftItem: (item: T) => void;
   resetStatus: () => void;
   load: () => void;
 };
@@ -69,6 +70,13 @@ export const useItemQuery = <T extends BaseModel>(
     },
   });
 
+  const draftItem = useMutation<T, Error, T>({
+    mutationFn: async (item: T) => service.draft(item) as Promise<T>,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`item-${service.type}`] });
+    },
+  });
+
   const clearItem = () => {
     setCurrentId(undefined);
     queryClient.removeQueries({ queryKey: [`item-${service.type}`] });
@@ -83,8 +91,9 @@ export const useItemQuery = <T extends BaseModel>(
     addItem: addItem.mutate,
     updateItem: updateItem.mutate,
     deleteItem: deleteItem.mutate,
+    draftItem: draftItem.mutate,
     clearItem,
-    resetStatus: () => {},
+    resetStatus: () => { },
     load: () => queryClient.invalidateQueries({ queryKey: [`item-${service.type}`] }),
   };
 };
