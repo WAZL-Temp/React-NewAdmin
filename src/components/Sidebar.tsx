@@ -101,7 +101,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
           tooltip={t("globals.homes")}
           tooltipOptions={{
             position: 'right',
-            className: 'font-normal rounded text-sm p-1'
+            className: 'font-normal rounded text-xs'
           }}
         >
           <AiFillHome size={18} className={`${isMinimized ? '' : 'mr-3'}`} />
@@ -116,10 +116,10 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
           className={`flex items-center ${isMinimized ? 'px-1' : 'px-2'} py-2 rounded
           ${location.pathname === "/appuser/list" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
           hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]`}
-          tooltip={t("globals.homes")}
+          tooltip={t("appUsers.form_detail.fields.modelname") + " " + t("globals.list")}
           tooltipOptions={{
             position: 'right',
-            className: 'font-normal rounded text-sm p-1'
+            className: 'font-normal rounded text-xs'
           }}
         >
           <IoList size={18} className={`${isMinimized ? '' : 'mr-3'}`} />
@@ -139,7 +139,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
             tooltip={t("appUserTests.form_detail.fields.modelname")}
             tooltipOptions={{
               position: 'right',
-              className: 'font-normal rounded text-sm p-1'
+              className: 'font-normal rounded text-xs'
             }}
           >
             <FiUser size={18} className={`${isMinimized ? '' : 'mr-3'}`} />
@@ -156,10 +156,10 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
           className={`flex items-center ${isMinimized ? 'px-1' : 'px-2'} py-2 rounded
           ${location.pathname === "/appUserTests/list" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
           hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]`}
-          tooltip={t("globals.homes")}
+          tooltip={t("appUserTests.form_detail.fields.modelname") + " " + t("globals.list")}
           tooltipOptions={{
             position: 'right',
-            className: 'font-normal rounded text-sm p-1'
+            className: 'font-normal rounded text-xs'
           }}
         >
           <IoList size={18} className={`${isMinimized ? '' : 'mr-3'}`} />
@@ -182,7 +182,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
             tooltip={t("products.form_detail.fields.modelname")}
             tooltipOptions={{
               position: 'right',
-              className: 'font-normal rounded text-sm p-1'
+              className: 'font-normal rounded text-xs'
             }}
           >
             <FiShoppingBag size={18} className={`${isMinimized ? '' : 'mr-3'}`} />
@@ -200,10 +200,10 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
           className={`flex items-center ${isMinimized ? 'px-1' : 'px-2'} py-2 rounded
           ${location.pathname === "/categories" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
           hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]`}
-          tooltip={t("globals.homes")}
+          tooltip={t("categories.form_detail.fields.modelname")}
           tooltipOptions={{
             position: 'right',
-            className: 'font-normal rounded text-sm p-1'
+            className: 'font-normal rounded text-xs'
           }}
         >
           <FiUser size={18} className={`${isMinimized ? '' : 'mr-3'}`} />
@@ -223,7 +223,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
           tooltip={t("appUsers.columns.fields.role")}
           tooltipOptions={{
             position: 'right',
-            className: 'font-normal rounded text-sm p-1'
+            className: 'font-normal rounded text-xs'
           }}
         >
           <IoPersonSharp size={18} className={`${isMinimized ? '' : 'mr-3'}`} />

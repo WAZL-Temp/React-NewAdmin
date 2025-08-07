@@ -58,10 +58,13 @@ export const useItemQuery = <T extends BaseModel>(
 
   const updateItem = useMutation<T, Error, T>({
     mutationFn: async (item: T) => service.update(item) as Promise<T>,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [`item-${service.type}`] });
+    onSuccess: (data, variables) => {
+      if (variables.id !== undefined) {
+        queryClient.setQueryData([`item-${service.type}`, variables.id], data);
+      }
     },
   });
+  ;
 
   const deleteItem = useMutation<void, Error, number>({
     mutationFn: async (id: number) => service.handleDelete(id),
@@ -72,9 +75,6 @@ export const useItemQuery = <T extends BaseModel>(
 
   const draftItem = useMutation<T, Error, T>({
     mutationFn: async (item: T) => service.draft(item) as Promise<T>,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [`item-${service.type}`] });
-    },
   });
 
   const clearItem = () => {
