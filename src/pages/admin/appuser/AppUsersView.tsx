@@ -629,6 +629,20 @@ export default function AppUsersView() {
                         <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)]">{userData?.reportedToName}</span>
                       </div>
                     )}
+                    {!isFieldHidden("gender") && (
+                      <div className="flex flex-col bg-[var(--color-white)] text-[var(--color-dark)]  bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
+                        <div className="flex items-center space-x-2">
+                          <label
+                            htmlFor="gst"
+                            className="text-sm font-bold py-2  bg-[var(--color-white)] text-[var(--color-dark)]"
+                          >
+                            {t("appUsers.columns.fields.gender")}
+                          </label>
+                          <TooltipWithText text={t("appUsers.columns.fields.gender")} />
+                        </div>
+                        <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)]">{userData?.gender}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </StepperPanel>

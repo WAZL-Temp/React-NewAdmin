@@ -371,10 +371,6 @@ export default function AppUsersEdit() {
     if (!isValid) {
       return;
     }
-    // if (stepNo <= headers?.length) {
-    //   setStepNo((prev) => prev + 1);
-    //   stepperRef?.current?.nextCallback();
-    // }
     try {
       if (item.id) {  
         await itemQuery.draftItem(item);
