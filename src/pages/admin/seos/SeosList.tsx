@@ -5,7 +5,6 @@ import {useTranslation,useNavigate} from '../../../sharedBase/globalUtils';
 import successimg from '../../../assets/images/success.gif';
 import confirmImg from '../../../assets/images/are-you-sure.jpg';
 import { Seo } from "../../../core/model/seo";
-import { RowData } from "../../../types/listpage";
 import { useListQuery } from "../../../store/useListQuery";
 import { SeosService } from "../../../core/service/seos.service";
 import Loader from "../../../components/Loader";
@@ -24,7 +23,7 @@ const typeName= "seo";
         roleData, hasAccess,globalFilterValue, setGlobalFilterValue, onGlobalFilterChange, refreshItemData, isDeleteDialogVisible,
         deleteItem, closeDeleteDialog, setFilters, onSort, onPage, first, rows, sortField, sortOrder, totalRecords,
         filters, setListSearch, clearListSearch, searchChange, openItem, confirmDeleteItem,
-        toast, isSuccessDialogOpen, setIsSuccessDialogOpen, formatDate, exportToExcel,
+        toast, isSuccessDialogOpen, setIsSuccessDialogOpen, exportToExcel,
         importFromExcel, addData, handleDelete, useColumnConfig,visible,setVisible }
         = useListPage<typeof query, Seo>({
             query: query,
@@ -95,7 +94,7 @@ const columnsConfigDefault = useMemo(() =>[
             command: () => addData(navigate, baseModelName)
         });
     }
-if (roleData && hasAccess(roleData, "Export")) {
+if (roleData && hasAccess(roleData, "Export")){
     items.push({
         label: t("globals.exportExcel"),
         icon: 'pi pi-file-excel',
@@ -155,29 +154,6 @@ if (roleData && hasAccess(roleData, "Export")) {
             </div>
         );
     }, [deleteItem, handleDelete,hasAccess,roleData]);
-
-    const renderFileCell = (rowData: RowData, field: string, rowIndex: number) => {
-        let fileName = "";
-        const uniqueId = `tooltip-${field}-${rowIndex}`;
-        try {
-            if (typeof rowData[field] === "string") {
-                if (rowData[field].startsWith("{") || rowData[field].startsWith("[")) {
-                    const imageData = JSON.parse(rowData[field]);
-                    fileName = Array.isArray(imageData) ? imageData[0]?.fileName : imageData.fileName;
-                } else {
-                    fileName = rowData[field];
-                }
-            }
-        } catch (e) {
-            console.error("Error parsing image data:", e);
-        }
-        return (
-            <div id={uniqueId} className='text-[13px] overflow-hidden overflow-ellipsis whitespace-nowrap'>
-                {(fileName)}
-                <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#${uniqueId}`} content={fileName} showDelay={200} position="top" />
-            </div>
-        );
-    };
 
     return (
         <div className='relative h-screen flex flex-col overflow-auto'>

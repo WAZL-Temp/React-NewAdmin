@@ -29,7 +29,7 @@ const typeName= "category";
   const categoriesService = CategoriesService();
   const [filters, setFilters] = useState<DataTableFilterMeta>({ global: { value: null, matchMode: FilterMatchMode.CONTAINS } });
 
-  const { onPage, first, rows, handleDownloadTemplate, downloading, importAllow, formatDate }
+  const { onPage, first, rows, handleDownloadTemplate, downloading, importAllow }
     = useImportPage({
       props: {
         baseModelName: typeName,

@@ -25,7 +25,7 @@ export default function CategoriesListGrid() {
         roleData, hasAccess, globalFilterValue, setGlobalFilterValue, onGlobalFilterChange, refreshItemData, isDeleteDialogVisible,
         deleteItem, closeDeleteDialog, setFilters, first, rows, totalRecords,
         filters, setListSearch, clearListSearch, searchChange, openItem, confirmDeleteItem,
-        toast, isSuccessDialogOpen, setIsSuccessDialogOpen, formatDate, exportToExcel,
+        toast, isSuccessDialogOpen, setIsSuccessDialogOpen, exportToExcel,
         importFromExcel, addData, handleDelete, useColumnConfig, visible, setVisible,
         onLazyLoad, selectedRow, setSelectedRow, multiSortMeta, currentPageReportTemplate, data,
         sortField, sortOrder }
