@@ -42,7 +42,7 @@ const AppRoutes = () => {
       <Route path="/appuser/add" element={<Layout><AppUsersEdit /></Layout>} />
       <Route path="/appuser/edit/:id" element={<Layout><AppUsersEdit /></Layout>} />
       <Route path="/appuser/import" element={<Layout><AppUsersImport /></Layout>} />
-      <Route path="/appuser/list" element={<Layout><AppUserListGrid /></Layout>} />
+      <Route path="/appuser/grid" element={<Layout><AppUserListGrid /></Layout>} />
 
       <Route path="/role" element={<Layout><RoleDetailsForm /></Layout>} />
 
@@ -52,7 +52,7 @@ const AppRoutes = () => {
       <Route path="/appUserTests/add" element={<Layout><AppUserTestsEdit /></Layout>} />
       <Route path="/appUserTests/edit/:id" element={<Layout><AppUserTestsEdit /></Layout>} />
       <Route path="/appUserTests/import" element={<Layout><AppUserTestsImport /></Layout>} />
-      <Route path="/appUserTests/list" element={<Layout><AppUserTestsListGrid /></Layout>} />
+      <Route path="/appUserTests/grid" element={<Layout><AppUserTestsListGrid /></Layout>} />
 
       <Route path="/categories" element={<Layout><CategoriesList /></Layout>} />
       <Route path="/categories/home" element={<Layout><CategoriesHome /></Layout>} />

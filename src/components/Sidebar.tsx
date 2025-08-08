@@ -110,11 +110,11 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
 
         <Button
           onClick={() => {
-            navigate("/appuser/list");
+            navigate("/appuser/grid");
             if (!isMinimized) toggleSidebar();
           }}
           className={`flex items-center ${isMinimized ? 'px-1' : 'px-2'} py-2 rounded
-          ${location.pathname === "/appuser/list" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
+          ${location.pathname === "/appuser/grid" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
           hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]`}
           tooltip={t("appUsers.form_detail.fields.modelname") + " " + t("globals.list")}
           tooltipOptions={{
@@ -150,11 +150,11 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
 
         <Button
           onClick={() => {
-            navigate("/appUserTests/list");
+            navigate("/appUserTests/grid");
             if (!isMinimized) toggleSidebar();
           }}
           className={`flex items-center ${isMinimized ? 'px-1' : 'px-2'} py-2 rounded
-          ${location.pathname === "/appUserTests/list" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
+          ${location.pathname === "/appUserTests/grid" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
           hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]`}
           tooltip={t("appUserTests.form_detail.fields.modelname") + " " + t("globals.list")}
           tooltipOptions={{

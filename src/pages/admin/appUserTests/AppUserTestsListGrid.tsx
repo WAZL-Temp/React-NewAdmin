@@ -12,7 +12,7 @@ import { useListGridPage } from "../../../hooks/useListGridPage";
 
 export default function AppUserTestsListGrid() {
     const navigate = useNavigate();
-    const baseModelName = "appUserTest";
+    const baseModelName = "appUserTests";
     const typeName = "appUserTest";
     const { t ,i18n} = useTranslation();
     const dtRef = useRef<DataTable<AppUserTest[]>>(null);
