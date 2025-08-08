@@ -178,7 +178,7 @@ const ItemSlider = ({ item }: { item: Seo }) => {
           </div>
           <div className="text-center">
             <h4 className="text-base sm:text-lg font-semibold text-gray-900">{item.name}</h4>
-            <p className="text-xs sm:text-sm text-gray-600 mb-4">{item.emailId}</p>
+            {/* <p className="text-xs sm:text-sm text-gray-600 mb-4">{item.emailId}</p> */}
           </div>
           <div className="flex items-center justify-center gap-3">
             <div

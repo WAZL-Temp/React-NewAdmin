@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import TooltipWithText from "../../../components/TooltipWithText";
 import ImgViewer from "../../../components/ImgViewer";
 import { BsArrowLeft, Button, FaEdit, IoIosArrowBack, IoIosArrowForward, Stepper, StepperPanel } from "../../../sharedBase/globalImports";
-import { useTranslation, useParams, format } from '../../../sharedBase/globalUtils';
+import { useTranslation, useParams } from '../../../sharedBase/globalUtils';
 import { Category } from "../../../core/model/category";
 import { useViewPage } from "../../../hooks/useViewPage";
 import { CategoriesService } from "../../../core/service/categories.service";

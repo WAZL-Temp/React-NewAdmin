@@ -115,7 +115,7 @@ export function useListGridPage<TQuery extends UseListQueryResult<TItem>, TItem>
     const { data: roleDetailsData } = useFetchRoleDetailsData();
     const [visible, setVisible] = useState(false);
     const [loading, setLoading] = useState<boolean>(false);
-    const [selectedRow, setSelectedRow] = useState(null);
+    const [selectedRow, setSelectedRow] = useState<any>(null);
     const [multiSortMeta, setMultiSortMeta] = useState([]);
     const [currentPageReportTemplate, setCurrentPageReportTemplate] = useState<string>('');
     const [data, setData] = useState<TItem[]>([]);

@@ -8,7 +8,6 @@ import TableSkeleton from '../../../components/TableSkeleton';
 import successimg from '../../../assets/images/success.gif';
 import { useImportPage } from '../../../hooks/useImportPage';
 import { Seo } from '../../../core/model/seo';
-import { RowData } from '../../../types/listpage';
 import { CustomFile } from '../../../core/model/customfile';
 
 const SeosImport = () => {
@@ -29,7 +28,7 @@ const typeName= "seo";
   const seosService = SeosService();
   const [filters, setFilters] = useState<DataTableFilterMeta>({ global: { value: null, matchMode: FilterMatchMode.CONTAINS } });
 
-  const { onPage, first, rows, handleDownloadTemplate, downloading, importAllow, formatDate }
+  const { onPage, first, rows, handleDownloadTemplate, downloading, importAllow }
     = useImportPage({
       props: {
         baseModelName: typeName,
@@ -129,29 +128,6 @@ const columnsConfigDefault = useMemo(() =>[
 			 {field: 'isDelete', header: t("seos.columns.fields.isDelete"), isDefault: true, show: true }, 
  		].filter(col => col.field),
         [t]);
-  
-  const renderFileCell = (rowData: RowData, field: string, rowIndex: number) => {
-    let fileName = "";
-    const uniqueId = `tooltip-${field}-${rowIndex}`;
-    try {
-      if (typeof rowData[field] === "string") {
-        if (rowData[field].startsWith("{") || rowData[field].startsWith("[")) {
-          const imageData = JSON.parse(rowData[field]);
-          fileName = Array.isArray(imageData) ? imageData[0]?.fileName : imageData.fileName;
-        } else {
-          fileName = rowData[field];
-        }
-      }
-    } catch (e) {
-      console.error("Error parsing image data:", e);
-    }
-    return (
-      <div id={uniqueId} className='text-[13px] overflow-hidden overflow-ellipsis whitespace-nowrap'>
-        {(fileName)}
-        <Tooltip className=' text-xs font-semibold hide-tooltip-mobile' target={`#${uniqueId}`} content={fileName} showDelay={200} position="top" />
-      </div>
-    );
-  };
 
  const handleFilterChangeLocal = (field: string, value: string | number | boolean | null | Array<string | number | boolean>) => {
     setFilters(prevFilters => ({

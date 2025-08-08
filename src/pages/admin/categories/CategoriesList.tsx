@@ -24,7 +24,7 @@ const typeName= "category";
         roleData, hasAccess,globalFilterValue, setGlobalFilterValue, onGlobalFilterChange, refreshItemData, isDeleteDialogVisible,
         deleteItem, closeDeleteDialog, setFilters, onSort, onPage, first, rows, sortField, sortOrder, totalRecords,
         filters, setListSearch, clearListSearch, searchChange, openItem, confirmDeleteItem,
-        toast, isSuccessDialogOpen, setIsSuccessDialogOpen, formatDate, exportToExcel,
+        toast, isSuccessDialogOpen, setIsSuccessDialogOpen, exportToExcel,
         importFromExcel, addData, handleDelete, useColumnConfig,visible,setVisible }
         = useListPage<typeof query, Category>({
             query: query,

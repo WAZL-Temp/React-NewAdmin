@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import TooltipWithText from "../../../components/TooltipWithText";
-import ImgViewer from "../../../components/ImgViewer";
-import { BsArrowLeft, Button, FaEdit, IoIosArrowBack, IoIosArrowForward, Stepper, StepperPanel, StepperRefAttributes } from "../../../sharedBase/globalImports";
-import { useTranslation, useParams, format } from '../../../sharedBase/globalUtils';
+import { BsArrowLeft, Button, FaEdit, IoIosArrowBack, IoIosArrowForward, Stepper, StepperPanel } from "../../../sharedBase/globalImports";
+import { useTranslation, useParams } from '../../../sharedBase/globalUtils';
 import { Seo } from "../../../core/model/seo";
 import { useViewPage } from "../../../hooks/useViewPage";
 import { SeosService } from "../../../core/service/seos.service";
@@ -12,7 +11,7 @@ import Loader from "../../../components/Loader";
 export default function SeosView() {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
-  const stepperRef = useRef<StepperRefAttributes | null>(null);
+  const stepperRef = useRef<Stepper | null>(null);
   const [stepNo, setStepNo] = useState(0);
         
  const stepsData = [ t("seos.form_detail.fields.Step1")];
