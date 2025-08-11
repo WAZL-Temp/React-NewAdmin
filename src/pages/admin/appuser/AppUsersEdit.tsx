@@ -10,7 +10,7 @@ import FileUploadMain from '../../../components/FileUploadMain';
 import { EnumDetail } from '../../../core/model/enumdetail';
 import { CustomFile } from '../../../core/model/customfile';
 import { useItemQuery } from '../../../store/useItemQuery';
-import { AppUserService } from '../../../core/service/appUsers.service';
+import { AppUserService, convertLangItem } from '../../../core/service/appUsers.service';
 import { useListQuery } from '../../../store/useListQuery';
 import { getData, useFetchDataEnum } from '../../../sharedBase/lookupService';
 import Loader from '../../../components/Loader';
@@ -372,7 +372,7 @@ export default function AppUsersEdit() {
       return;
     }
     try {
-      if (item.id) {  
+      if (item.id) {
         await itemQuery.draftItem(item);
       }
       if (stepNo < headers?.length) {
@@ -546,24 +546,66 @@ export default function AppUsersEdit() {
     }
   };
 
+  const convertLanguage = async (id: number, language: string) => {
+    try {
+      await convertLangItem(id, language);
+    } catch (error) {
+      console.error("Error converting language:", error);
+    }
+  }
+
   return (
     <div className='relative h-screen flex flex-col'>
-      <div className="flex flex-col overflow-y-auto overflow-x-hidden">
-        <div className="flex items-center p-1 border-b topbar border-[var(--color-border)] shadow-md bg-[var(--color-white)] text-[var(--color-dark)] w-full fixed  top-30 z-20">
-          <Button
-            className="backBtn cursor-pointer flex items-center"
-            onClick={handleBackToUser}
-          >
-            <BsArrowLeft className="h-6 w-6 cursor-pointer mx-3" />
-          </Button>
-          <h1 className=" capitalize text-[14px] font-semibold ">{t("globals.backto")} {t("appUsers.form_detail.fields.modelname")}</h1>
+      <div className="flex flex-col flex-1 min-w-0 overflow-y-auto overflow-x-hidden">
+        <div className="flex flex-wrap items-center justify-between p-1 topbar border-none bg-[var(--color-white)] text-[var(--color-dark)] min-w-0 gap-2 fixed top-30 z-20">
+          <div className="flex items-center min-w-0">
+            <Button
+              className="backBtn cursor-pointer flex items-center"
+              onClick={handleBackToUser}
+            >
+              <BsArrowLeft className="h-6 w-6 cursor-pointer mx-3" />
+            </Button>
+            <h1 className="capitalize sm:text-xs text-[14px] font-semibold truncate">
+              {t("globals.backto")} {t("appUsers.form_detail.fields.modelname")}
+            </h1>
+          </div>
+
+          {itemData?.id && (
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <Button
+                type="button"
+                className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 px-2 text-[8px] lg:text-sm rounded-md"
+                onClick={() => itemData?.id !== undefined && convertLanguage(itemData.id, "Hi")}
+                tooltip={t("globals.hindi")}
+                tooltipOptions={{
+                  position: 'top',
+                  className: 'font-normal rounded text-xs'
+                }}
+              >
+                {t("globals.hindi")}
+              </Button>
+              <Button
+                type="button"
+                className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 px-2 text-[8px] lg:text-sm rounded-md"
+                onClick={() => itemData?.id !== undefined && convertLanguage(itemData.id, "Mr")}
+                tooltip={t("globals.marathi")}
+                tooltipOptions={{
+                  position: 'top',
+                  className: 'font-normal rounded text-xs'
+                }}
+              >
+                {t("globals.marathi")}
+              </Button>
+            </div>
+          )}
         </div>
 
-        {itemQuery.isLoading ? (
-          <Loader />
-        ) : (
-          <>
-            <div className="flex flex-col  border-none bg-[var(--color-white)] text-[var(--color-dark)] mb-10 sm:mb-20">
+        <div className="flex flex-col border-none bg-[var(--color-white)] text-[var(--color-dark)] mb-10 sm:mb-20 flex-1 min-w-0">
+          {itemQuery.isLoading ? (
+            <Loader />
+          ) : (
+            <>
+              {/* <div className="flex flex-col  border-none bg-[var(--color-white)] text-[var(--color-dark)] mb-10 sm:mb-20"> */}
               <form id="myForm" onSubmit={handleSubmit} noValidate>
                 <div className="w-full bg-[var(--color-white)] text-[var(--color-dark)]">
                   <Stepper ref={stepperRef} headerPosition="bottom">
@@ -1534,66 +1576,67 @@ export default function AppUsersEdit() {
                   </Stepper>
                 </div>
               </form>
-            </div>
+              {/* </div> */}
 
-            <div className="fixed bottom-0 z-auto  shadow-lg border-t border-[var(--color-border)] bg-[var(--color-white)] available-width">
-              <div className="flex gap-2 px-3 button-container">
-                {stepNo > 0 && (
-                  <Button
-                    type="button"
-                    className="bg-[#f9fafb] rounded-md p-2 w-[100px] text-[var(--color-primary)] bg-[var(--color-white)]  border-2 border-[var(--color-primary)] font-medium text-[13px] flex items-center justify-center space-x-2"
-                    onClick={previous}
-                  >
-                    <IoIosArrowBack size={15} className="text-[var(--color-primary)]" />
-                    <span>{t("globals.previous")}</span>
-                  </Button>
-                )}
+              <div className="fixed bottom-0 z-auto  shadow-lg border-t border-[var(--color-border)] bg-[var(--color-white)] available-width">
+                <div className="flex gap-2 px-3 button-container">
+                  {stepNo > 0 && (
+                    <Button
+                      type="button"
+                      className="bg-[#f9fafb] rounded-md p-2 w-[100px] text-[var(--color-primary)] bg-[var(--color-white)]  border-2 border-[var(--color-primary)] font-medium text-[13px] flex items-center justify-center space-x-2"
+                      onClick={previous}
+                    >
+                      <IoIosArrowBack size={15} className="text-[var(--color-primary)]" />
+                      <span>{t("globals.previous")}</span>
+                    </Button>
+                  )}
 
-                {stepNo !== headers.length - 1 && (
-                  <Button
-                    type="button"
-                    className="bg-[var(--color-primary)] rounded-md p-2 w-[100px] text-[var(--color-white)] font-medium text-[13px] flex items-center justify-center space-x-2"
-                    onClick={next}
-                  >
-                    <span>{t("globals.next")}</span>
-                    <IoIosArrowForward size={15} className="text-[var(--color-white)]" />
-                  </Button>
-                )}
+                  {stepNo !== headers.length - 1 && (
+                    <Button
+                      type="button"
+                      className="bg-[var(--color-primary)] rounded-md p-2 w-[100px] text-[var(--color-white)] font-medium text-[13px] flex items-center justify-center space-x-2"
+                      onClick={next}
+                    >
+                      <span>{t("globals.next")}</span>
+                      <IoIosArrowForward size={15} className="text-[var(--color-white)]" />
+                    </Button>
+                  )}
 
-                {stepNo === headers.length - 1 && (
-                  <Button
-                    type="button"
-                    disabled={isSubmitting}
-                    onClick={handleSubmitClick}
-                    className={`p-2 w-[100px] rounded-md font-medium text-[13px] flex items-center justify-center 
+                  {stepNo === headers.length - 1 && (
+                    <Button
+                      type="button"
+                      disabled={isSubmitting}
+                      onClick={handleSubmitClick}
+                      className={`p-2 w-[100px] rounded-md font-medium text-[13px] flex items-center justify-center 
     ${isSubmitting ? 'bg-[#9ca3af] text-black cursor-not-allowed' : 'bg-[var(--color-primary)] text-white'}`}
-                  >
-                    <span>{t("globals.save")}</span> <FaSave size={15} />
-                  </Button>
+                    >
+                      <span>{t("globals.save")}</span> <FaSave size={15} />
+                    </Button>
 
-                )}
-              </div>
-            </div>
-
-            <Toast ref={toast} />
-            <Dialog
-              visible={showDialog}
-              onHide={handleCloseDialog}
-              className="w-[350px] rounded-xl shadow-lg"
-            >
-              <div className="flex flex-col items-center p-2 space-y-4">
-                <Image
-                  src={successImg}
-                  alt="Record Deleted Successfully"
-                  className="h-[100px] w-[100px] lg:h-[150px] lg:w-[150px] object-cover rounded-full border-4 border-emerald-500 shadow-md"
-                />
-                <div className="text-center">
-                  <p className="text-lg font-semibold text-gray-800">{dialogMessage}</p>
+                  )}
                 </div>
               </div>
-            </Dialog>
-          </>
-        )}
+
+              <Toast ref={toast} />
+              <Dialog
+                visible={showDialog}
+                onHide={handleCloseDialog}
+                className="w-[350px] rounded-xl shadow-lg"
+              >
+                <div className="flex flex-col items-center p-2 space-y-4">
+                  <Image
+                    src={successImg}
+                    alt="Record Deleted Successfully"
+                    className="h-[100px] w-[100px] lg:h-[150px] lg:w-[150px] object-cover rounded-full border-4 border-emerald-500 shadow-md"
+                  />
+                  <div className="text-center">
+                    <p className="text-lg font-semibold text-gray-800">{dialogMessage}</p>
+                  </div>
+                </div>
+              </Dialog>
+            </>
+          )}
+        </div>
       </div>
     </div>
   )

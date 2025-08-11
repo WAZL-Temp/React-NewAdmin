@@ -79,7 +79,8 @@
     "list": "List",
     "viewData": "View Data",
     "editData": "Edit Data",
-    "deleteData": "Delete Data"
+    "deleteData": "Delete Data",
+    "convertLang": "Convert Language"
   },
   "appUsers": {
     "columns": {
@@ -275,7 +276,8 @@
     "form_list": {
       "fields": {}
     }
-  },
+  }
+,
 "appUserTests": {
     "columns": {
       "fields": {

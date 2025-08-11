@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import { BiSolidTrash, Button, Calendar, Column, DataTable, Dialog, HiOutlinePlus, IoMdSettings, Image, InputText, IoMdRefresh, MdOutlineUploadFile, MenuItem, RiPencilFill, SplitButton, TbFileExcel, TiEye, Toast, Tooltip, FilterMatchMode, Checkbox } from "../../../sharedBase/globalImports";
+import { BiSolidTrash, Button, Calendar, Column, DataTable, Dialog, HiOutlinePlus, IoMdSettings, Image, InputText, IoMdRefresh, MdOutlineUploadFile, MenuItem, RiPencilFill, SplitButton, TbFileExcel, TiEye, Toast, Tooltip, FilterMatchMode, Checkbox, IoLanguage } from "../../../sharedBase/globalImports";
 import { useTranslation, useNavigate } from '../../../sharedBase/globalUtils';
 import successimg from '../../../assets/images/success.gif';
 import confirmImg from '../../../assets/images/are-you-sure.jpg';
 import { AppUser } from "../../../core/model/appUser";
 import { RowData } from "../../../types/listpage";
 import { useListQuery } from "../../../store/useListQuery";
-import { AppUserService, appUserPageDataService } from "../../../core/service/appUsers.service";
+import { AppUserService, appUserPageDataService, convertLang } from "../../../core/service/appUsers.service";
 import Loader from "../../../components/Loader";
 import { useListGridPage } from "../../../hooks/useListGridPage";
 
@@ -26,8 +26,8 @@ export default function AppUserListGrid() {
         toast, isSuccessDialogOpen, setIsSuccessDialogOpen, formatDate, exportToExcel,
         importFromExcel, addData, handleDelete, useColumnConfig, visible, setVisible,
         onLazyLoad, selectedRow, setSelectedRow, multiSortMeta, currentPageReportTemplate, data,
-        sortField, sortOrder ,calendarCreateDateFrom,setCalendarCreateDateFrom,
-        calendarCreateDateTo, setCalendarCreateDateTo}
+        sortField, sortOrder, calendarCreateDateFrom, setCalendarCreateDateFrom,
+        calendarCreateDateTo, setCalendarCreateDateTo, setLoading }
         = useListGridPage<typeof query, AppUser>({
             query: query,
             props: {
@@ -95,7 +95,23 @@ export default function AppUserListGrid() {
         initFilters();
     }, [columnsConfig, setFilters, setGlobalFilterValue, query.tableSearch]);
 
+    const convertLanguage = async () => {
+        setLoading(true);
+        try {
+            const result = await convertLang();
+            console.log("Converted all:", result);
+        } finally {
+            setLoading(false);
+        }
+    }
+
     const items: MenuItem[] = []
+    items.push({
+        label: t("globals.convertLang"),
+        icon: <IoLanguage size={16} />,
+        command: () => convertLanguage()
+    });
+
     if (roleData && hasAccess(roleData, "Add")) {
         items.push({
             label: t("globals.add"),
@@ -228,6 +244,18 @@ export default function AppUserListGrid() {
                         </div>
 
                         <div className="hidden lg:flex items-center space-x-2 flex-wrap  bg-[var(--color-white)] text-[var(--color-dark)]">
+                            <Button
+                                type="button"
+                                className="bg-[var(--color-danger)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
+                                onClick={() => convertLanguage()}
+                                tooltip={t("globals.convertLang")}
+                                tooltipOptions={{
+                                    position: 'top',
+                                    className: 'font-normal rounded text-xs'
+                                }}
+                            >
+                                <IoLanguage size={18} />
+                            </Button>
                             {hasAccess(roleData, "Add") && (
                                 <Button
                                     type="button"
@@ -236,7 +264,7 @@ export default function AppUserListGrid() {
                                     tooltip={t("globals.add")}
                                     tooltipOptions={{
                                         position: 'top',
-                                        className: 'font-normal rounded text-sm p-1'
+                                        className: 'font-normal rounded text-xs'
                                     }}
                                 >
                                     <HiOutlinePlus size={18} />

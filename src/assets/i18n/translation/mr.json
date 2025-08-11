@@ -79,7 +79,8 @@
     "list": "यादी",
     "viewData": "डेटा पहा",
     "editData": " डेटा संपादित करा",
-    "deleteData": "डेटा हटवा"
+    "deleteData": "डेटा हटवा",
+    "convertLang": "भाषा बदला"
   },
   "appUsers": {
     "columns": {
