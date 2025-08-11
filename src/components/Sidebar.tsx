@@ -36,6 +36,16 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
     }
   }, [roleDetailsData]);
 
+  useEffect(() => {
+    if (isMinimized) {
+      document.body.classList.add("sidebar-collapsed");
+      document.body.classList.remove("sidebar-expanded");
+    } else {
+      document.body.classList.add("sidebar-expanded");
+      document.body.classList.remove("sidebar-collapsed");
+    }
+  }, [isMinimized]);
+
   const hasAccess = (roleData: any, requiredAction: string) => {
     if (!roleData) return false;
 
@@ -72,7 +82,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
 
   return (
     <aside
-      className={`fixed inset-y-0 left-0 z-50 sidebar bg-[var(--color-primary)] text-[var(--color-white)] border border-muted/40 transform transition-transform duration-300 ease-in-out 
+      className={`flex-shrink-0 fixed inset-y-0 left-0 z-50 sidebar bg-[var(--color-primary)] text-[var(--color-white)] border border-muted/40 transform transition-transform duration-300 ease-in-out 
       ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} 
        md:relative md:translate-x-0
       ${isMinimized ? "w-16" : "w-[170px]"} flex flex-col justify-between h-full`}

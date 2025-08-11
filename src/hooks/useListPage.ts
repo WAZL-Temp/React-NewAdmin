@@ -111,6 +111,7 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
     const [visible, setVisible] = useState(false);
     const [calendarCreateDateFrom, setCalendarCreateDateFrom] = useState<Date | undefined | null>(null);
     const [calendarCreateDateTo, setCalendarCreateDateTo] = useState<Date | undefined | null>(null);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchRoleDetails = async () => {
@@ -398,13 +399,14 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
         return format(date, "MM-dd-yyyy");
     };
 
+
     return {
         roleData, globalFilterValue, setGlobalFilterValue, onGlobalFilterChange, setFilters,
         first, rows, sortField, sortOrder, totalRecords, filters, onPage, onSort, refreshItemData,
         setListSearch, clearListSearch, searchChange, isDeleteDialogVisible, setIsDeleteDialogVisible,
         confirmDeleteItem, deleteItem, openItem, closeDeleteDialog, setItemToDelete, toast, isSuccessDialogOpen,
         setIsSuccessDialogOpen, formatDate, hasAccess, exportToExcel, importFromExcel, addData, handleDelete, useColumnConfig,
-        visible, setVisible,calendarCreateDateFrom,setCalendarCreateDateFrom,
-        calendarCreateDateTo, setCalendarCreateDateTo
+        visible, setVisible, calendarCreateDateFrom, setCalendarCreateDateFrom,
+        calendarCreateDateTo, setCalendarCreateDateTo,loading,setLoading
     };
 }

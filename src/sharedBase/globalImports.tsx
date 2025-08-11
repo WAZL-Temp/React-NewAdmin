@@ -62,8 +62,7 @@ export { RiDeleteBin6Fill } from "react-icons/ri";
 export { FiUploadCloud } from "react-icons/fi";
 export { IoCheckmarkCircleSharp } from "react-icons/io5";
 export { IoList } from "react-icons/io5";
-
-
+export { IoLanguage } from "react-icons/io5";
 
 export type { MenuItem } from "primereact/menuitem";
 export type { CarouselResponsiveOption } from 'primereact/carousel';
@@ -72,10 +71,3 @@ export type { DataTableFilterMeta, DataTablePageEvent, DataTableSortEvent, DataT
 export type { VirtualScrollerLazyEvent, VirtualScrollerLoadingTemplateOptions } from 'primereact/virtualscroller';
 export type { NavigateFunction } from "react-router-dom";
 export { default as GoogleButton } from 'react-google-button';
-
-// export interface StepperRefAttributes {
-//   next: () => void;
-//   previous: () => void;
-//   reset: () => void;
-// }
-
