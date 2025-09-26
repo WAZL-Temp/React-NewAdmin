@@ -104,11 +104,11 @@ const RoleDetailsForm = () => {
             try {
                 return {
                     ...item,
-                    id: item.id,
-                    name: item.name,
-                    actions: item.action ? safeParseJson(item.action) : [],
-                    hideColumns: item.columnData ? safeParseJson(item.columnData) : [],
-                    statuses: item.status ? safeParseJson(item.status) : [],
+                    id: item?.id,
+                    name: item?.name,
+                    actions: item?.action ? safeParseJson(item?.action) : [],
+                    hideColumns: item?.columnData ? safeParseJson(item?.columnData) : [],
+                    statuses: item?.status ? safeParseJson(item?.status) : [],
                 };
             } catch (error) {
                 console.error("Error parsing item:", item, error);
@@ -180,45 +180,87 @@ const RoleDetailsForm = () => {
         setRoleData(updatedRoleData);
     };
 
+    // const handleMultiSelectChange = (
+    //     e: MultiSelectChangeEvent,
+    //     item: RoleDataItem,
+    //     field: string
+    // ) => {
+    //     const updatedData = roleData.map((dataItem: any) => {
+    //         if (dataItem.id === item.id) {
+    //             let sourceArray: SourceOption[] = [];
+    //             if (field === 'selectedStatuses') {
+    //                 sourceArray = item.statuses || [];
+    //             } else if (field === 'selectedHideColumns') {
+    //                 sourceArray = item.hideColumns || [];
+    //             } else if (field === 'selectedActions') {
+    //                 sourceArray = item.actions || [];
+    //             }
+
+    //             const updatedSelections = sourceArray.filter((option: SourceOption) =>
+    //                 Array.isArray(e.value) &&
+    //                 e.value.includes(option.value === '1' ? option.label : option.value)
+    //             );
+
+    //             const mappedSelections: Option[] = updatedSelections.map((option: SourceOption) => ({
+    //                 id: option.value,
+    //                 name: option.name,
+    //             }));
+
+    //             const updatedItem = selectMultiData(mappedSelections, field);
+
+    //             return {
+    //                 ...dataItem,
+    //                 ...updatedItem,
+    //                 [field]: updatedSelections,
+    //             };
+    //         }
+    //         return dataItem;
+    //     });
+    //     console.log("updatedData",updatedData);
+
+    //     setRoleData(updatedData);
+    // };
+
     const handleMultiSelectChange = (
         e: MultiSelectChangeEvent,
         item: RoleDataItem,
-        field: string
+        field: keyof RoleDataItem
     ) => {
-        const updatedData = roleData.map((dataItem: any) => {
-            if (dataItem.id === item.id) {
-                let sourceArray: SourceOption[] = [];
-                if (field === 'selectedStatuses') {
-                    sourceArray = item.statuses || [];
-                } else if (field === 'selectedHideColumns') {
-                    sourceArray = item.hideColumns || [];
-                } else if (field === 'selectedActions') {
-                    sourceArray = item.actions || [];
+        setRoleData(prevData =>
+            prevData.map((row: any) => {
+                if (row.id !== item.id) {
+                    return row;
                 }
 
-                const updatedSelections = sourceArray.filter((option: SourceOption) =>
+                let sourceArray: SourceOption[] = [];
+                if (field === 'selectedStatuses') {
+                    sourceArray = row.statuses || [];
+                } else if (field === 'selectedHideColumns') {
+                    sourceArray = row.hideColumns || [];
+                } else if (field === 'selectedActions') {
+                    sourceArray = row.actions || [];
+                }
+
+                const updatedSelections = sourceArray.filter(option =>
                     Array.isArray(e.value) &&
                     e.value.includes(option.value === '1' ? option.label : option.value)
                 );
 
-                const mappedSelections: Option[] = updatedSelections.map((option: SourceOption) => ({
+                const mappedSelections = updatedSelections.map(option => ({
                     id: option.value,
                     name: option.name,
                 }));
-
-                const updatedItem = selectMultiData(mappedSelections, field);
+                console.log("updatedSelections", updatedSelections);
 
                 return {
-                    ...dataItem,
-                    ...updatedItem,
+                    ...row,
+                    ...selectMultiData(mappedSelections, field),
                     [field]: updatedSelections,
                 };
-            }
-            return dataItem;
-        });
-
-        setRoleData(updatedData);
+            })
+        );
     };
+
 
     const transformArrayToObject = (array: { label: string; value: string | number }[]): Record<string, string | number> => {
         return array.reduce((acc, item) => {
@@ -316,7 +358,7 @@ const RoleDetailsForm = () => {
 
     return (
         <div className="relative h-screen flex flex-col overflow-y-auto overflow-x-hidden">
-            <div className="flex items-center p-1 border-b border-[var(--color-gray)] shadow-md bg-[var(--color-white)] text-[var(--color-dark)] w-full fixed  top-30 z-20">
+            <div className="flex items-center p-1 shadow-md bg-[var(--color-white)] text-[var(--color-dark)] w-full fixed  top-30 z-20">
                 <Button
                     className="backBtn cursor-pointer flex items-center"
                     onClick={handleBackToUser}

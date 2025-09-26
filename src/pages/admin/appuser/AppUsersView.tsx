@@ -68,6 +68,8 @@ export default function AppUsersView() {
   useEffect(() => {
     const fetchData = async () => {
       const data = await query.getItem(parseInt(id as string, 10));
+      console.log("data",data);
+      
       setUserData(data);
     };
     fetchData();
@@ -126,7 +128,7 @@ export default function AppUsersView() {
                 <div ref={(el) => { stepRefs.current[0] = el; }} className="p-2 mb-12 md:mb-0 lg:mb-0 bg-[var(--color-white)] text-[var(--color-dark)] mt-3 lg:mt-10">
                   <div className="user-grid pb-5">
                     {!isFieldHidden("name") && (
-                      <div className="flex flex-col   bg-[var(--color-white)] text-[var(--color-dark)] bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
+                      <div className="flex flex-col bg-[var(--color-white)] text-[var(--color-dark)] bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
                         <div className="flex items-center space-x-1 bg-[var(--color-white)] text-[var(--color-dark)]">
                           <label
                             htmlFor="name"

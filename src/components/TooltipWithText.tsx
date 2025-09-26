@@ -14,7 +14,9 @@ const TooltipWithText = ({ text }:TooltipWithTextProps) => {
         tooltip={text}
         tooltipOptions={{
           position: 'right',
-          className: 'tooltip-text font-normal rounded text-xs lg:text-sm p-0 hide-tooltip-mobile'
+          className: 'tooltip-text font-normal rounded text-xs p-0 hide-tooltip-mobile text-[var(--color-white)]',
+          mouseTrack: true,
+          mouseTrackLeft: 10
         }}
       />
     </div>
