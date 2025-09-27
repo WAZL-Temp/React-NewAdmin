@@ -6,6 +6,7 @@ import { Action, ColumnConfig, RoleData } from "../types/listpage";
 import { UseListQueryResult } from "../store/useListQuery";
 import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
 import { RoleDetail } from "../core/model/roledetail";
+import { CustomFile } from "../core/model/customfile";
 
 type UseListPageCommonProps = {
     initialFilterValue?: string;
@@ -112,6 +113,8 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
     const [calendarCreateDateFrom, setCalendarCreateDateFrom] = useState<Date | undefined | null>(null);
     const [calendarCreateDateTo, setCalendarCreateDateTo] = useState<Date | undefined | null>(null);
     const [loading, setLoading] = useState(false);
+    const [selectedItem, setSelectedItem] = useState<TItem | null>(null);
+    const [sidebarVisible, setSidebarVisible] = useState(false);
 
     useEffect(() => {
         const fetchRoleDetails = async () => {
@@ -399,6 +402,28 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
         return format(date, "MM-dd-yyyy");
     };
 
+    const parseAndFormatImages = (imageData: string | null) => {
+        if (!imageData) return [];
+        try {
+            const parsedFiles = JSON.parse(imageData);
+            if (!Array.isArray(parsedFiles)) {
+                return [];
+            }
+            return parsedFiles.map((img: CustomFile) => ({
+                fileName: img.fileName,
+                filePath: img.filePath.replace(/\\/g, '/'),
+                type: img.type,
+            }));
+        } catch (error) {
+            console.error('Failed to parse image data:', error);
+            return [];
+        }
+    };
+
+     const handleSelectItem = (item: TItem) => {
+        setSelectedItem(item);
+        setSidebarVisible(true);
+    };
 
     return {
         roleData, globalFilterValue, setGlobalFilterValue, onGlobalFilterChange, setFilters,
@@ -407,6 +432,7 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
         confirmDeleteItem, deleteItem, openItem, closeDeleteDialog, setItemToDelete, toast, isSuccessDialogOpen,
         setIsSuccessDialogOpen, formatDate, hasAccess, exportToExcel, importFromExcel, addData, handleDelete, useColumnConfig,
         visible, setVisible, calendarCreateDateFrom, setCalendarCreateDateFrom,
-        calendarCreateDateTo, setCalendarCreateDateTo,loading,setLoading
+        calendarCreateDateTo, setCalendarCreateDateTo, loading, setLoading, parseAndFormatImages,
+        selectedItem, setSelectedItem,sidebarVisible, setSidebarVisible,handleSelectItem
     };
 }

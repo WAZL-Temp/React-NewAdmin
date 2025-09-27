@@ -65,10 +65,6 @@ const ProductsList = () => {
 
   const { columnsConfig, visibleColumns, handleSelectAll, handleColumnChange } = useColumnConfig(columnsConfigDefault, roleData);
 
-  useEffect(() => {
-    console.log("daata", query.data);
-    
-  }, []);
 
   useEffect(() => {
     if (query.search) {

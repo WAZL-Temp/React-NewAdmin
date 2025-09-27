@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from './Sidebar';
-import img1 from '../assets/images/only-logo.png';
+// import img1 from '../assets/images/only-logo.png';
 import Header from './Header';
 import { useTheme } from '../hooks/useTheme';
-import { Button, Dropdown, FaBars, Image } from '../sharedBase/globalImports';
-import {useLocation, useTranslation} from '../sharedBase/globalUtils';
+import { Dropdown, FaBars } from '../sharedBase/globalImports';
+import { useLocation, useTranslation } from '../sharedBase/globalUtils';
 import { useLanguageStore } from "../store/useLanguage.store";
 
 interface LayoutProps {
@@ -16,8 +16,13 @@ const Layout = ({ children }: LayoutProps) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const { theme, setTheme, themes } = useTheme();
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { selectedLanguage, setLanguage } = useLanguageStore();
+  const languages = [
+    { label: t("globals.english"), value: "en" },
+    { label: t("globals.hindi"), value: "hi" },
+    { label: t("globals.marathi"), value: "mr" },
+  ];
 
   useEffect(() => {
     i18n.changeLanguage(selectedLanguage);
@@ -57,25 +62,21 @@ const Layout = ({ children }: LayoutProps) => {
 
       {showSidebar && (
         <header className="flex h-14 md:hidden lg:hidden items-center justify-between bg-[var(--color-primary)] border-b px-2 w-full">
-          <div className="flex items-center">
+          {/* <div className="flex items-center">
             <Image src={img1} alt="Logo" className="h-[28px] w-[28px]" />
-          </div>
+          </div> */}
 
           <div className="flex items-center gap-1 sm:gap-3 ml-auto pr-2">
-            <div className="flex gap-1 sm:gap-2">
-              {["en", "hi", "mr"].map((lang) => (
-                <Button
-                  key={lang}
-                  className={`w-[50px] sm:w-[58px] h-[32px] sm:h-[36px] text-xs border rounded-lg flex items-center justify-center
-                      ${selectedLanguage === lang
-                      ? "bg-[var(--color-white)] text-[var(--color-primary)] border-[var(--color-border)]"
-                      : "bg-[var(--color-primary)] text-[var(--color-white)] border-[var(--color-white)]"
-                    }`}
-                  onClick={() => handleLanguageChange(lang)}
-                >
-                  {lang === "en" ? "EN" : lang === "hi" ? "HI" : "MR"}
-                </Button>
-              ))}
+            <div className="flex gap-1 sm:gap-2">             
+              <Dropdown
+                value={selectedLanguage}
+                onChange={(e) => handleLanguageChange(e.value)}
+                options={languages}
+                optionLabel="label"
+                optionValue="value"
+                className="w-[80px] sm:w-22 text-xs"
+                placeholder={t("globals.selectLanguage")}
+              />
             </div>
 
             <Dropdown
@@ -104,7 +105,7 @@ const Layout = ({ children }: LayoutProps) => {
             isSidebarOpen={isSidebarOpen}
             toggleSidebar={toggleSidebar}
             isMinimized={isMinimized}
-            toggleMinimized={toggleMinimized}            
+            toggleMinimized={toggleMinimized}
           />
         )}
         <main className="flex-1 min-w-0 overflow-hidden">{children}</main>

@@ -30,7 +30,7 @@ export default function ImgViewer({ files, modelName }: ImageViewerProps) {
     }
   };
 
-  const [uploadedFiles, setUploadedFiles] = useState<CustomFile[]>(parseAndFormatImages(files));;
+  const [uploadedFiles, setUploadedFiles] = useState<CustomFile[]>(parseAndFormatImages(files));
   const { t } = useTranslation();
   const fileUploadService = useFileUploadService(modelName);
   const [scale, setScale] = useState(1);
@@ -131,7 +131,7 @@ export default function ImgViewer({ files, modelName }: ImageViewerProps) {
             >
               <AiFillCloseCircle className="h-8 w-8 text-[var(--color-white)]" />
             </div>
-            <div className="w-full h-full flex justify-center items-center pt-16 pb-16">
+            <div className="w-full h-full flex justify-center items-center py-2">
               <img
                 src={imageShowUrl}
                 onWheel={handleScroll}

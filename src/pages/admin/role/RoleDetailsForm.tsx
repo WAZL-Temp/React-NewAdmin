@@ -20,11 +20,6 @@ interface SourceOption {
     label?: string;
 }
 
-interface Option {
-    id: string | number;
-    name: string;
-}
-
 interface RoleDataItem {
     id: string;
     statuses: SourceOption[];
@@ -180,47 +175,6 @@ const RoleDetailsForm = () => {
         setRoleData(updatedRoleData);
     };
 
-    // const handleMultiSelectChange = (
-    //     e: MultiSelectChangeEvent,
-    //     item: RoleDataItem,
-    //     field: string
-    // ) => {
-    //     const updatedData = roleData.map((dataItem: any) => {
-    //         if (dataItem.id === item.id) {
-    //             let sourceArray: SourceOption[] = [];
-    //             if (field === 'selectedStatuses') {
-    //                 sourceArray = item.statuses || [];
-    //             } else if (field === 'selectedHideColumns') {
-    //                 sourceArray = item.hideColumns || [];
-    //             } else if (field === 'selectedActions') {
-    //                 sourceArray = item.actions || [];
-    //             }
-
-    //             const updatedSelections = sourceArray.filter((option: SourceOption) =>
-    //                 Array.isArray(e.value) &&
-    //                 e.value.includes(option.value === '1' ? option.label : option.value)
-    //             );
-
-    //             const mappedSelections: Option[] = updatedSelections.map((option: SourceOption) => ({
-    //                 id: option.value,
-    //                 name: option.name,
-    //             }));
-
-    //             const updatedItem = selectMultiData(mappedSelections, field);
-
-    //             return {
-    //                 ...dataItem,
-    //                 ...updatedItem,
-    //                 [field]: updatedSelections,
-    //             };
-    //         }
-    //         return dataItem;
-    //     });
-    //     console.log("updatedData",updatedData);
-
-    //     setRoleData(updatedData);
-    // };
-
     const handleMultiSelectChange = (
         e: MultiSelectChangeEvent,
         item: RoleDataItem,
@@ -250,7 +204,6 @@ const RoleDetailsForm = () => {
                     id: option.value,
                     name: option.name,
                 }));
-                console.log("updatedSelections", updatedSelections);
 
                 return {
                     ...row,

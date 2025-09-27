@@ -64,11 +64,11 @@ code {
 }
 
 .p-datatable.p-datatable-gridlines:has(.p-datatable-thead):has(.p-datatable-tbody) .p-datatable-tbody>tr>td {
-  border-width: 0 0 2px 0px !important;
+  border-width: 1px !important;
   color: var(--color-dark) !important;
   background-color: var(--color-white) !important;
-  /* border-width: 0 !important; */
 }
+
 
 .p-datatable .p-datatable-tbody tr:hover {
   background-color: #f3f3f3;
@@ -103,6 +103,7 @@ code {
 .p-datatable .p-datatable-thead>tr>th {
   padding: 0.625rem;
   font-weight: 600;
+  border-width: 1px !important;
 }
 
 .p-datatable .p-dropdown {
@@ -263,6 +264,7 @@ code {
 }
 
 @media screen and (max-width: 768px) {
+
   .topbar,
   .sidebar-expanded .topbar,
   .sidebar-collapsed .topbar {
@@ -1177,4 +1179,13 @@ code {
   border-style: solid;
   border-width: 6px;
   border-color: transparent #2d2d2d transparent transparent;
+}
+
+.homecard {
+background: linear-gradient(
+    135deg,
+    var(--color-primary-light) 0%,
+    var(--color-primary) 50%,
+    var(--color-success) 100%
+  );  color: #ffffff;
 }
