@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const themes = ["light", "dark", "modern", "glacier", "aurora", "sapphire"];
+const themes = ["light", "dark", "modern", "glacier", "aurora", "sapphire","blossom","breeze","peach","mint","lavender","sky"];
 
 
 export const useTheme = () => {

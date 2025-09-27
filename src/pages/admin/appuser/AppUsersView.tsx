@@ -67,9 +67,7 @@ export default function AppUsersView() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await query.getItem(parseInt(id as string, 10));
-      console.log("data",data);
-      
+      const data = await query.getItem(parseInt(id as string, 10));      
       setUserData(data);
     };
     fetchData();

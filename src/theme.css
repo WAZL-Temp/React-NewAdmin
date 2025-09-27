@@ -102,7 +102,108 @@
     --color-border: #dbeafe;
 }
 
-/* Apply colors */
+/* Blossom Theme */
+[data-theme="blossom"] {
+    --color-primary: #f472b6;
+    --color-primary-light: rgba(244, 114, 182, 0.1);
+    --color-secondary: #93c5fd;
+    --color-tertiary: #fcd34d;
+    --color-white: #ffffff;
+    --color-light: #fff7f9;
+    --color-dark: #374151;
+    --color-gray: #d1d5db;
+    --color-info: #60a5fa;
+    --color-success: #86efac;
+    --color-warning: #fde68a;
+    --color-danger: #fca5a5;
+    --color-border: #fbcfe8;
+}
+
+/* Breeze Theme */
+[data-theme="breeze"] {
+    --color-primary: #4bc1f7;
+    --color-primary-light: rgba(125, 211, 252, 0.15);
+    --color-secondary: #bae6fd;
+    --color-tertiary: #fde68a;
+    --color-white: #ffffff;
+    --color-light: #f0f9ff;
+    --color-dark: #334155;
+    --color-gray: #cbd5e1;
+    --color-info: #38bdf8;
+    --color-success: #86efac;
+    --color-warning: #fcd34d;
+    --color-danger: #fca5a5;
+    --color-border: #e0f2fe;
+}
+
+/* Peach Theme */
+[data-theme="peach"] {
+    --color-primary: #f3aa6d;
+    --color-primary-light: rgba(251, 146, 60, 0.1);
+    --color-secondary: #fdba74;
+    --color-tertiary: #fcd34d;
+    --color-white: #ffffff;
+    --color-light: #fff7ed;
+    --color-dark: #7c2d12;
+    --color-gray: #d4d4d8;
+    --color-info: #93c5fd;
+    --color-success: #86efac;
+    --color-warning: #fcd34d;
+    --color-danger: #fca5a5;
+    --color-border: #fed7aa;
+}
+
+/* Mint Theme */
+[data-theme="mint"] {
+    --color-primary: #39da9a;
+    --color-primary-light: rgba(110, 231, 183, 0.15);
+    --color-secondary: #a7f3d0;
+    --color-tertiary: #bfdbfe;
+    --color-white: #ffffff;
+    --color-light: #ecfdf5;
+    --color-dark: #14532d;
+    --color-gray: #d1d5db;
+    --color-info: #5eead4;
+    --color-success: #34d399;
+    --color-warning: #fde68a;
+    --color-danger: #fca5a5;
+    --color-border: #d1fae5;
+}
+
+/* Lavender Theme */
+[data-theme="lavender"] {
+    --color-primary: #9b86ef;
+    --color-primary-light: rgba(196, 181, 253, 0.15);
+    --color-secondary: #ddd6fe;
+    --color-tertiary: #f9a8d4;
+    --color-white: #ffffff;
+    --color-light: #f5f3ff;
+    --color-dark: #4338ca;
+    --color-gray: #e5e7eb;
+    --color-info: #a5b4fc;
+    --color-success: #a7f3d0;
+    --color-warning: #fef3c7;
+    --color-danger: #fecaca;
+    --color-border: #ede9fe;
+}
+
+/* Sky Theme */
+[data-theme="sky"] {
+    --color-primary: #6da7e9;
+    --color-primary-light: rgba(147, 197, 253, 0.15);
+    --color-secondary: #bfdbfe;
+    --color-tertiary: #fde68a;
+    --color-white: #ffffff;
+    --color-light: #eff6ff;
+    --color-dark: #1e40af;
+    --color-gray: #dbeafe;
+    --color-info: #60a5fa;
+    --color-success: #bbf7d0;
+    --color-warning: #fcd34d;
+    --color-danger: #fca5a5;
+    --color-border: #e0e7ff;
+}
+
 .bg-primary {
     background-color: var(--color-primary);
 }

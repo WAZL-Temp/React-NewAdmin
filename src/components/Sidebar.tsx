@@ -237,7 +237,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
           }}
         >
           <IoPersonSharp size={18} className={`${isMinimized ? '' : 'mr-3'}`} />
-          {(!isMinimized) && <span className=" text-sm font-medium">{t("appUsers.columns.fields.role")}</span>}
+          {(!isMinimized) && <span className=" text-xs font-medium">{t("appUsers.columns.fields.role")}</span>}
         </Button>
       </nav>
 

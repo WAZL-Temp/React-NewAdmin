@@ -7,8 +7,11 @@ import confirmImg from '../../../assets/images/are-you-sure.jpg';
 import { AppUser } from "../../../core/model/appUser";
 import { RowData } from "../../../types/listpage";
 import { useListQuery } from "../../../store/useListQuery";
-import { AppUserService ,convertLang} from "../../../core/service/appUsers.service";
+import { AppUserService, convertLang } from "../../../core/service/appUsers.service";
 import Loader from "../../../components/Loader";
+import { Sidebar } from "primereact/sidebar";
+import userAvtar from "../../../assets/images/user-avatar.png";
+import { CustomFile } from "../../../core/model/customfile";
 
 export default function AppUsersList() {
     const navigate = useNavigate();
@@ -25,7 +28,8 @@ export default function AppUsersList() {
         filters, setListSearch, clearListSearch, searchChange, openItem, confirmDeleteItem,
         toast, isSuccessDialogOpen, setIsSuccessDialogOpen, formatDate, exportToExcel,
         importFromExcel, addData, handleDelete, useColumnConfig, visible, setVisible, calendarCreateDateFrom, setCalendarCreateDateFrom,
-        calendarCreateDateTo, setCalendarCreateDateTo,setLoading}
+        calendarCreateDateTo, setCalendarCreateDateTo, setLoading, parseAndFormatImages,
+        selectedItem, sidebarVisible, setSidebarVisible,handleSelectItem }
         = useListPage<typeof query, AppUser>({
             query: query,
             props: {
@@ -35,6 +39,7 @@ export default function AppUsersList() {
                 service: userService
             }
         });
+
 
     const columnsConfigDefault = useMemo(() => [
         { field: "createDate", header: t("appUsers.columns.fields.createDate"), isDefault: true, show: true },
@@ -94,8 +99,7 @@ export default function AppUsersList() {
     const convertLanguage = async () => {
         setLoading(true);
         try {
-            const result = await convertLang();
-            console.log("Converted all:", result);
+            await convertLang();
         } finally {
             setLoading(false);
         }
@@ -163,14 +167,14 @@ export default function AppUsersList() {
 
                 {hasAccess(roleData, "Edit") && (
                     <div id={`tooltip-edit-${rowData.id}`} className="p-button-text text-xs w-2 text-center cursor-pointer" onClick={() => openItem(rowData, 'edit')}>
-                        <RiPencilFill size={17} className="font-bold" />
+                        <RiPencilFill size={17} className="font-bold text-[var(--color-primary)]" />
                     </div>
                 )}
                 <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-edit-${rowData.id}`} content={t("globals.editData")} showDelay={200} position="top" />
 
                 {hasAccess(roleData, "Delete") && (
                     <div id={`tooltip-delete-${rowData.id}`} className="p-button-text text-xs w-2 text-center cursor-pointer" onClick={() => handleDelete(deleteItem, rowData.id)} >
-                        <BiSolidTrash size={17} className="font-bold text-[var(--color-danger)]" />
+                        <BiSolidTrash size={17} className="font-bold text-[var(--color-primary)]" />
                     </div>
                 )}
                 <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-delete-${rowData.id}`} content={t("globals.deleteData")} showDelay={200} position="top" />
@@ -196,10 +200,10 @@ export default function AppUsersList() {
         return (
             <div id={uniqueId} className='text-[13px] overflow-hidden overflow-ellipsis whitespace-nowrap'>
                 {(fileName)}
-                <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#${uniqueId}`} content={fileName} showDelay={200} position="top" />
+                {/* <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#${uniqueId}`} content={fileName} showDelay={200} position="top" /> */}
             </div>
         );
-    };
+    };   
 
     return (
         <div className='relative h-screen flex flex-col overflow-auto'>
@@ -218,78 +222,6 @@ export default function AppUsersList() {
                                 label={t("globals.action")}
                                 className="small-button text-xs lg:text-sm border border-[var(--color-border)] p-1 lg:p-2"
                                 model={items} />
-                        </div>
-
-                        <div className="hidden lg:flex items-center space-x-2 flex-wrap  bg-[var(--color-white)] text-[var(--color-dark)]">
-                            <Button
-                                type="button"
-                                className="bg-[var(--color-danger)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
-                                onClick={() => convertLanguage()}
-                                tooltip={t("globals.convertLang")}
-                                tooltipOptions={{
-                                    position: 'top',
-                                    className: 'font-normal rounded text-xs'
-                                }}
-                            >
-                                <IoLanguage size={18} />
-                            </Button>
-                            {hasAccess(roleData, "Add") && (
-                                <Button
-                                    type="button"
-                                    className="bg-[var(--color-secondary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
-                                    onClick={() => addData(navigate, baseModelName)}
-                                    tooltip={t("globals.add")}
-                                    tooltipOptions={{
-                                        position: 'top',
-                                        className: 'font-normal rounded text-xs'
-                                    }}
-                                >
-                                    <HiOutlinePlus size={18} />
-                                </Button>
-                            )}
-
-                            {hasAccess(roleData, "Export") && (
-                                <Button
-                                    type="button"
-                                    className="bg-[var(--color-success)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
-                                    onClick={() => exportToExcel(userService, globalFilterValue || '', 'AppUser')}
-                                    tooltip={t("globals.exportExcel")}
-                                    tooltipOptions={{
-                                        position: 'top',
-                                        className: 'font-normal rounded text-xs'
-                                    }}
-                                >
-                                    <TbFileExcel size={18} />
-                                </Button>
-                            )}
-
-                            {hasAccess(roleData, "Import") && (
-                                <Button
-                                    type="button"
-                                    className="bg-[var(--color-info)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
-                                    tooltip={t("globals.import")}
-                                    onClick={() => importFromExcel(navigate, baseModelName)}
-                                    tooltipOptions={{
-                                        position: 'top',
-                                        className: 'font-normal rounded text-xs'
-                                    }}
-                                >
-                                    <MdOutlineUploadFile size={18} />
-                                </Button>
-                            )}
-
-                            <Button
-                                type="button"
-                                className="bg-[var(--color-warning)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
-                                onClick={refreshItemData}
-                                tooltip={t("globals.refresh")}
-                                tooltipOptions={{
-                                    position: 'top',
-                                    className: 'font-normal rounded text-xs'
-                                }}
-                            >
-                                <IoMdRefresh size={18} />
-                            </Button>
                         </div>
 
                         <div className="flex flex-grow">
@@ -350,7 +282,7 @@ export default function AppUsersList() {
                             </Button>
                             <Button
                                 type="button"
-                                className="bg-[var(--color-danger)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
+                                className="bg-white text-[var(--color-primary)] p-1 lg:p-2 text-xs lg:text-sm rounded-md border border-[var(--color-primary)]"
                                 onClick={() => { setCalendarCreateDateTo(null); setCalendarCreateDateFrom(null); clearListSearch('search'); }}
                                 tooltip={t("globals.clearAll")}
                                 tooltipOptions={{
@@ -362,7 +294,7 @@ export default function AppUsersList() {
                             </Button>
                             <Button
                                 onClick={() => setVisible(true)}
-                                className="p-1 lg:p-2 bg-[var(--color-white)] text-[var(--color-primary)] border border-[var(--color-border)] text-xs lg:text-sm rounded-md"
+                                className="p-1 lg:p-2 bg-[var(--color-primary)] text-[var(--color-white)] border border-[var(--color-border)] text-xs lg:text-sm rounded-md"
                             >
                                 <IoMdSettings size={20} />
                             </Button>
@@ -411,6 +343,78 @@ export default function AppUsersList() {
                                 </div>
                             </div>
                         </Dialog>
+
+                        <div className="hidden lg:flex items-center space-x-2 flex-wrap  bg-[var(--color-white)] text-[var(--color-dark)]">
+                            <Button
+                                type="button"
+                                className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
+                                onClick={() => convertLanguage()}
+                                tooltip={t("globals.convertLang")}
+                                tooltipOptions={{
+                                    position: 'top',
+                                    className: 'font-normal rounded text-xs'
+                                }}
+                            >
+                                <IoLanguage size={18} />
+                            </Button>
+                            {hasAccess(roleData, "Add") && (
+                                <Button
+                                    type="button"
+                                    className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
+                                    onClick={() => addData(navigate, baseModelName)}
+                                    tooltip={t("globals.add")}
+                                    tooltipOptions={{
+                                        position: 'top',
+                                        className: 'font-normal rounded text-xs'
+                                    }}
+                                >
+                                    <HiOutlinePlus size={18} />
+                                </Button>
+                            )}
+
+                            {hasAccess(roleData, "Export") && (
+                                <Button
+                                    type="button"
+                                    className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
+                                    onClick={() => exportToExcel(userService, globalFilterValue || '', 'AppUser')}
+                                    tooltip={t("globals.exportExcel")}
+                                    tooltipOptions={{
+                                        position: 'top',
+                                        className: 'font-normal rounded text-xs'
+                                    }}
+                                >
+                                    <TbFileExcel size={18} />
+                                </Button>
+                            )}
+
+                            {hasAccess(roleData, "Import") && (
+                                <Button
+                                    type="button"
+                                    className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
+                                    tooltip={t("globals.import")}
+                                    onClick={() => importFromExcel(navigate, baseModelName)}
+                                    tooltipOptions={{
+                                        position: 'top',
+                                        className: 'font-normal rounded text-xs'
+                                    }}
+                                >
+                                    <MdOutlineUploadFile size={18} />
+                                </Button>
+                            )}
+
+                            <Button
+                                type="button"
+                                className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
+                                onClick={refreshItemData}
+                                tooltip={t("globals.refresh")}
+                                tooltipOptions={{
+                                    position: 'top',
+                                    className: 'font-normal rounded text-xs'
+                                }}
+                            >
+                                <IoMdRefresh size={18} />
+                            </Button>
+                        </div>
                     </div>
 
                     <div className="m-2 ">
@@ -421,6 +425,8 @@ export default function AppUsersList() {
                                 value={query?.data}
                                 dataKey="id"
                                 showGridlines
+                                resizableColumns
+                                columnResizeMode="fit"
                                 filters={filters}
                                 sortField={sortField}
                                 sortOrder={sortOrder as 1 | 0 | -1}
@@ -437,10 +443,8 @@ export default function AppUsersList() {
                                 globalFilterFields={columnsConfig.map(config => config.field)}
                                 paginatorTemplate={t('globals.layout')}
                                 currentPageReportTemplate={t('globals.report')}
-                                className="p-datatable-gridlines datatable-responsive bg-[var(--color-white)] text-[var(--color-dark)] tableResponsive"
-                                filterDisplay="row"
+                                className="datatable-responsive p-datatable-gridlines tableResponsive bg-[var(--color-white)] text-[var(--color-dark)]" filterDisplay="row"
                                 emptyMessage={t('globals.emptyMessage')}
-                                resizableColumns
                                 scrollable
                                 scrollHeight="68vh"
                             >
@@ -465,7 +469,7 @@ export default function AppUsersList() {
                                         style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-createDate-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-createDate-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {formatDate(rowData.createDate)}
                                                 </div>
                                             </>
@@ -486,10 +490,10 @@ export default function AppUsersList() {
                                         }
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {rowData.name}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />
@@ -508,10 +512,10 @@ export default function AppUsersList() {
                                         }
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-firstName-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-firstName-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {rowData.firstName}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-firstName-${rowIndex}`} content={rowData.firstName} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-firstName-${rowIndex}`} content={rowData.firstName} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />
@@ -530,10 +534,10 @@ export default function AppUsersList() {
                                         }
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-lastName-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-lastName-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {rowData.lastName}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-lastName-${rowIndex}`} content={rowData.lastName} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-lastName-${rowIndex}`} content={rowData.lastName} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />
@@ -552,10 +556,10 @@ export default function AppUsersList() {
                                         }
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-mobile-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-mobile-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {rowData.mobile}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-mobile-${rowIndex}`} content={rowData.mobile} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-mobile-${rowIndex}`} content={rowData.mobile} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />
@@ -574,10 +578,10 @@ export default function AppUsersList() {
                                         }
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-mobileVerified-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-mobileVerified-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {rowData.mobileVerified ? "true" : "false"}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-mobileVerified-${rowIndex}`} content={rowData.mobileVerified ? "true" : "false"} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-mobileVerified-${rowIndex}`} content={rowData.mobileVerified ? "true" : "false"} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />
@@ -596,10 +600,10 @@ export default function AppUsersList() {
                                         }
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-emailId-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-emailId-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {rowData.emailId}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-emailId-${rowIndex}`} content={rowData.emailId} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-emailId-${rowIndex}`} content={rowData.emailId} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />
@@ -618,10 +622,10 @@ export default function AppUsersList() {
                                         }
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-emailVerified-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-emailVerified-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {rowData.emailVerified ? "true" : "false"}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-emailVerified-${rowIndex}`} content={rowData.emailVerified ? "true" : "false"} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-emailVerified-${rowIndex}`} content={rowData.emailVerified ? "true" : "false"} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />
@@ -640,10 +644,10 @@ export default function AppUsersList() {
                                         }
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-shopName-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-shopName-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {rowData.shopName}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-shopName-${rowIndex}`} content={rowData.shopName} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-shopName-${rowIndex}`} content={rowData.shopName} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />
@@ -662,10 +666,10 @@ export default function AppUsersList() {
                                         }
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-password-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-password-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {rowData.password}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-password-${rowIndex}`} content={rowData.password} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-password-${rowIndex}`} content={rowData.password} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />
@@ -684,10 +688,10 @@ export default function AppUsersList() {
                                         }
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-pincode-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-pincode-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {rowData.pincode}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-pincode-${rowIndex}`} content={rowData.pincode} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-pincode-${rowIndex}`} content={rowData.pincode} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />
@@ -706,10 +710,10 @@ export default function AppUsersList() {
                                         }
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-state-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-state-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {rowData.state}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-state-${rowIndex}`} content={rowData.state} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-state-${rowIndex}`} content={rowData.state} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />
@@ -728,10 +732,10 @@ export default function AppUsersList() {
                                         }
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-district-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-district-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {rowData.pincode}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-district-${rowIndex}`} content={rowData.district} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-district-${rowIndex}`} content={rowData.district} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />
@@ -750,10 +754,10 @@ export default function AppUsersList() {
                                         }
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-address-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-address-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {rowData.address}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-address-${rowIndex}`} content={rowData.address} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-address-${rowIndex}`} content={rowData.address} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />
@@ -772,10 +776,10 @@ export default function AppUsersList() {
                                         }
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-addressLine-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-addressLine-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {rowData.addressLine}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-addressLine-${rowIndex}`} content={rowData.addressLine} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-addressLine-${rowIndex}`} content={rowData.addressLine} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />
@@ -794,10 +798,10 @@ export default function AppUsersList() {
                                         }
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-gst-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-gst-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {rowData.gst}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-gst-${rowIndex}`} content={rowData.gst} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-gst-${rowIndex}`} content={rowData.gst} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />
@@ -816,10 +820,10 @@ export default function AppUsersList() {
                                         }
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-verifyShop-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-verifyShop-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {rowData.verifyShop}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-verifyShop-${rowIndex}`} content={rowData.verifyShop} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-verifyShop-${rowIndex}`} content={rowData.verifyShop} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />
@@ -837,7 +841,7 @@ export default function AppUsersList() {
                                             />
                                         }
                                         body={(rowData, { rowIndex }) => (
-                                            <div className="text-left truncate font-medium">
+                                            <div className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                 {renderFileCell(rowData, 'gstCertificate', rowIndex)}
                                             </div>
                                         )}
@@ -856,7 +860,7 @@ export default function AppUsersList() {
                                             />
                                         }
                                         body={(rowData, { rowIndex }) => (
-                                            <div className="text-left truncate font-medium">
+                                            <div className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                 {renderFileCell(rowData, 'photoShopFront', rowIndex)}
                                             </div>
                                         )}
@@ -875,7 +879,7 @@ export default function AppUsersList() {
                                             />
                                         }
                                         body={(rowData, { rowIndex }) => (
-                                            <div className="text-left truncate font-medium">
+                                            <div className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                 {renderFileCell(rowData, 'visitingCard', rowIndex)}
                                             </div>
                                         )}
@@ -894,7 +898,7 @@ export default function AppUsersList() {
                                             />
                                         }
                                         body={(rowData, { rowIndex }) => (
-                                            <div className="text-left truncate font-medium">
+                                            <div className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                 {renderFileCell(rowData, 'cheque', rowIndex)}
                                             </div>
                                         )}
@@ -914,10 +918,10 @@ export default function AppUsersList() {
                                         }
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-gstOtp-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-gstOtp-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {rowData.gstOtp}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-gstOtp-${rowIndex}`} content={rowData.gstOtp} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-gstOtp-${rowIndex}`} content={rowData.gstOtp} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />
@@ -936,10 +940,10 @@ export default function AppUsersList() {
                                         }
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-isActive-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-isActive-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {rowData.isActive ? "true" : "false"}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isActive-${rowIndex}`} content={rowData.isActive} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isActive-${rowIndex}`} content={rowData.isActive} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />
@@ -958,10 +962,10 @@ export default function AppUsersList() {
                                         }
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-isAdmin-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-isAdmin-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {rowData.isAdmin ? "true" : "false"}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isAdmin-${rowIndex}`} content={rowData.isAdmin ? "true" : "false"} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isAdmin-${rowIndex}`} content={rowData.isAdmin ? "true" : "false"} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />
@@ -980,10 +984,10 @@ export default function AppUsersList() {
                                         }
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-hasImpersonateAccess-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-hasImpersonateAccess-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {rowData.hasImpersonateAccess ? "true" : "false"}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-hasImpersonateAccess-${rowIndex}`} content={rowData.hasImpersonateAccess ? "true" : "false"} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-hasImpersonateAccess-${rowIndex}`} content={rowData.hasImpersonateAccess ? "true" : "false"} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />
@@ -1001,7 +1005,7 @@ export default function AppUsersList() {
                                             />
                                         }
                                         body={(rowData, { rowIndex }) => (
-                                            <div className="text-left truncate font-medium">
+                                            <div className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                 {renderFileCell(rowData, 'photoAttachment', rowIndex)}
                                             </div>
                                         )}
@@ -1021,10 +1025,10 @@ export default function AppUsersList() {
                                         }
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-roleLabel-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-roleLabel-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {rowData.roleLabel}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-roleLabel-${rowIndex}`} content={rowData.roleLabel} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-roleLabel-${rowIndex}`} content={rowData.roleLabel} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />
@@ -1043,10 +1047,10 @@ export default function AppUsersList() {
                                         }
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-publishLabel-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-publishLabel-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {rowData.publishLabel}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-publishLabel-${rowIndex}`} content={rowData.publishLabel} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-publishLabel-${rowIndex}`} content={rowData.publishLabel} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />
@@ -1058,10 +1062,10 @@ export default function AppUsersList() {
                                         style={{ width: "200px", backgroundColor: "var(--color-white)" }}
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-lastLogin-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-lastLogin-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {formatDate(rowData.lastLogin)}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-lastLogin-${rowIndex}`} content={formatDate(rowData.lastLogin)} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-lastLogin-${rowIndex}`} content={formatDate(rowData.lastLogin)} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />
@@ -1080,10 +1084,10 @@ export default function AppUsersList() {
                                         }
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-totalPlot-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-totalPlot-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {rowData.totalPlot}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-totalPlot-${rowIndex}`} content={rowData.totalPlot} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-totalPlot-${rowIndex}`} content={rowData.totalPlot} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />
@@ -1102,10 +1106,10 @@ export default function AppUsersList() {
                                         }
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-defaultLanguage-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-defaultLanguage-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {rowData.defaultLanguage}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-defaultLanguage-${rowIndex}`} content={rowData.defaultLanguage} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-defaultLanguage-${rowIndex}`} content={rowData.defaultLanguage} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />
@@ -1123,10 +1127,10 @@ export default function AppUsersList() {
                                         }
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-isPremiumUser-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-isPremiumUser-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {rowData.isPremiumUser ? "true" : "false"}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isPremiumUser-${rowIndex}`} content={rowData.isPremiumUser ? "true" : "false"} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isPremiumUser-${rowIndex}`} content={rowData.isPremiumUser ? "true" : "false"} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />)}
@@ -1144,10 +1148,10 @@ export default function AppUsersList() {
                                         }
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-reportedByName-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-reportedByName-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {rowData.reportedByName}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-reportedByName-${rowIndex}`} content={rowData.reportedByName ? "true" : "false"} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-reportedByName-${rowIndex}`} content={rowData.reportedByName} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />
@@ -1166,10 +1170,10 @@ export default function AppUsersList() {
                                         }
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-reportedToName-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-reportedToName-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {rowData.reportedToName}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-reportedToName-${rowIndex}`} content={rowData.reportedToName} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-reportedToName-${rowIndex}`} content={rowData.reportedToName} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />
@@ -1188,10 +1192,10 @@ export default function AppUsersList() {
                                         }
                                         body={(rowData, { rowIndex }) => (
                                             <>
-                                                <div id={`tooltip-gender-${rowIndex}`} className="text-left truncate font-medium">
+                                                <div id={`tooltip-gender-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                     {rowData.gender}
                                                 </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-gender-${rowIndex}`} content={rowData.gender} showDelay={200} position="top" />
+                                                {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-gender-${rowIndex}`} content={rowData.gender} showDelay={200} position="top" /> */}
                                             </>
                                         )}
                                     />
@@ -1199,6 +1203,105 @@ export default function AppUsersList() {
                             </DataTable>
                         )}
                     </div>
+
+                    <Sidebar
+                        visible={sidebarVisible}
+                        position="right"
+                        onHide={() => setSidebarVisible(false)}
+                        baseZIndex={10000}
+                        className="w-full md:w-20rem lg:w-25rem"
+                    >
+                        <div className="flex flex-col h-full">
+                            <div className="flex-1 overflow-y-auto p-2 flex flex-col items-center sm:items-start">
+                                <div className="w-[150px] h-[150px] mb-5 mx-auto">
+                                    {selectedItem?.photoAttachment ? (
+                                        <div className="flex justify-center items-center h-full">
+                                            <ul className="flex flex-col items-center justify-center gap-4 list-none p-0 m-0">
+                                                {parseAndFormatImages(selectedItem.photoAttachment).map(
+                                                    (file: CustomFile, index: number) => (
+                                                        <li
+                                                            key={index}
+                                                            className="w-[150px] h-[150px] flex items-center justify-center"
+                                                        >
+                                                            <Image
+                                                                src={`${import.meta.env.VITE_API_URL}/ImportFiles/${file.filePath.replace(/\\/g, "/")}`}
+                                                                alt={`Uploaded file ${index + 1}`}
+                                                                className="w-full h-full object-cover rounded-full shadow-lg"
+                                                            />
+                                                        </li>
+                                                    ))}
+                                            </ul>
+                                        </div>
+                                    ) : (
+                                        <Image
+                                            src={userAvtar}
+                                            alt="User Photo"
+                                            className="w-full h-full object-cover rounded-full shadow-lg"
+                                        />
+                                    )}
+                                </div>
+
+                                <h2 className="text-lg mt-4 sm:text-xl font-bold text-gray-800 mb-2 text-center sm:text-left">
+                                    {selectedItem?.name}
+                                </h2>
+
+                                <div className="space-y-1 text-center sm:text-left">
+                                    <p>
+                                        <strong className="text-sm font-bold">First Name:</strong>{" "}
+                                        <span className="text-sm">
+                                            {selectedItem?.firstName ? selectedItem.firstName : "-"}
+                                        </span>
+                                    </p>
+                                    <p>
+                                        <strong className="text-sm font-bold">Last Name:</strong>{" "}
+                                        <span className="text-sm">
+                                            {selectedItem?.lastName ? selectedItem.lastName : "-"}
+                                        </span>
+                                    </p>
+                                    <p>
+                                        <strong className="text-sm font-bold">Email:</strong>{" "}
+                                        <span className="text-sm">
+                                            {selectedItem?.emailId ? selectedItem.emailId : "-"}
+                                        </span>
+                                    </p>
+                                    <p>
+                                        <strong className="text-sm font-bold">Role:</strong>{" "}
+                                        <span className="text-sm">
+                                            {selectedItem?.role ? selectedItem.role : "-"}
+                                        </span>
+                                    </p>
+                                    <p>
+                                        <strong className="text-sm font-bold">Address:</strong>{" "}
+                                        <span className="text-sm">
+                                            {selectedItem?.address ? selectedItem.address : "-"}
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="p-3 border-t shadow-lg flex flex-col sm:flex-row justify-center sm:justify-end gap-2 sm:gap-3 bg-white">
+                                <Button
+                                    label="View"
+                                    icon="pi pi-eye"
+                                    className="w-full sm:w-auto bg-[var(--color-primary)] text-[var(--color-white)] px-4 py-2 text-sm rounded-md font-semibold"
+                                    onClick={() => openItem(selectedItem!, "view")}
+                                />
+                                <Button
+                                    label="Edit"
+                                    icon="pi pi-pencil"
+                                    className="w-full sm:w-auto bg-[var(--color-primary)] text-[var(--color-white)] px-4 py-2 text-sm rounded-md font-semibold"
+                                    onClick={() => openItem(selectedItem!, "edit")}
+                                />
+                                <Button
+                                    label="Close"
+                                    icon="pi pi-times"
+                                    className="w-full sm:w-auto bg-[var(--color-primary)] text-[var(--color-white)] px-4 py-2 text-sm rounded-md font-semibold"
+                                    onClick={() => setSidebarVisible(false)}
+                                />
+                            </div>
+                        </div>
+                    </Sidebar>
+
 
                     <Dialog
                         visible={isDeleteDialogVisible}

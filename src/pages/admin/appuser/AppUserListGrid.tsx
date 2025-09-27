@@ -98,8 +98,7 @@ export default function AppUserListGrid() {
     const convertLanguage = async () => {
         setLoading(true);
         try {
-            const result = await convertLang();
-            console.log("Converted all:", result);
+            await convertLang();
         } finally {
             setLoading(false);
         }
@@ -185,14 +184,14 @@ export default function AppUserListGrid() {
 
                 {hasAccess(roleData, "Edit") && (
                     <div id={`tooltip-edit-${rowData.id}`} className="p-button-text text-xs w-2 text-center cursor-pointer" onClick={() => openItem(rowData, 'edit')}>
-                        <RiPencilFill size={17} className="font-bold" />
+                        <RiPencilFill size={17} className="font-bold text-[var(--color-primary)]" />
                     </div>
                 )}
                 <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-edit-${rowData.id}`} content={t("globals.editData")} showDelay={200} position="top" />
 
                 {hasAccess(roleData, "Delete") && (
                     <div id={`tooltip-delete-${rowData.id}`} className="p-button-text text-xs w-2 text-center cursor-pointer" onClick={() => handleDelete(deleteItem, rowData.id)} >
-                        <BiSolidTrash size={17} className="font-bold text-[var(--color-danger)]" />
+                        <BiSolidTrash size={17} className="font-bold text-[var(--color-primary)]" />
                     </div>
                 )}
                 <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#tooltip-delete-${rowData.id}`} content={t("globals.deleteData")} showDelay={200} position="top" />
@@ -243,78 +242,6 @@ export default function AppUserListGrid() {
                                 model={items} />
                         </div>
 
-                        <div className="hidden lg:flex items-center space-x-2 flex-wrap  bg-[var(--color-white)] text-[var(--color-dark)]">
-                            <Button
-                                type="button"
-                                className="bg-[var(--color-danger)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
-                                onClick={() => convertLanguage()}
-                                tooltip={t("globals.convertLang")}
-                                tooltipOptions={{
-                                    position: 'top',
-                                    className: 'font-normal rounded text-xs'
-                                }}
-                            >
-                                <IoLanguage size={18} />
-                            </Button>
-                            {hasAccess(roleData, "Add") && (
-                                <Button
-                                    type="button"
-                                    className="bg-[var(--color-secondary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
-                                    onClick={() => addData(navigate, baseModelName)}
-                                    tooltip={t("globals.add")}
-                                    tooltipOptions={{
-                                        position: 'top',
-                                        className: 'font-normal rounded text-xs'
-                                    }}
-                                >
-                                    <HiOutlinePlus size={18} />
-                                </Button>
-                            )}
-
-                            {hasAccess(roleData, "Export") && (
-                                <Button
-                                    type="button"
-                                    className="bg-[var(--color-success)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
-                                    onClick={() => exportToExcel(userService, globalFilterValue || '', 'AppUser')}
-                                    tooltip={t("globals.exportExcel")}
-                                    tooltipOptions={{
-                                        position: 'top',
-                                        className: 'font-normal rounded text-sm p-1'
-                                    }}
-                                >
-                                    <TbFileExcel size={18} />
-                                </Button>
-                            )}
-
-                            {hasAccess(roleData, "Import") && (
-                                <Button
-                                    type="button"
-                                    className="bg-[var(--color-info)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
-                                    tooltip={t("globals.import")}
-                                    onClick={() => importFromExcel(navigate, baseModelName)}
-                                    tooltipOptions={{
-                                        position: 'top',
-                                        className: 'font-normal rounded text-sm p-1'
-                                    }}
-                                >
-                                    <MdOutlineUploadFile size={18} />
-                                </Button>
-                            )}
-
-                            <Button
-                                type="button"
-                                className="bg-[var(--color-warning)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
-                                onClick={refreshItemData}
-                                tooltip={t("globals.refresh")}
-                                tooltipOptions={{
-                                    position: 'top',
-                                    className: 'font-normal rounded text-sm p-1'
-                                }}
-                            >
-                                <IoMdRefresh size={18} />
-                            </Button>
-                        </div>
-
                         <div className="flex gap-2 w-full sm:w-auto">
                             <Calendar
                                 value={calendarCreateDateFrom}
@@ -360,7 +287,7 @@ export default function AppUserListGrid() {
                             </Button>
                             <Button
                                 type="button"
-                                className="bg-[var(--color-danger)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
+                                className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
                                 onClick={() => { setCalendarCreateDateTo(null); setCalendarCreateDateFrom(null); clearListSearch('search'); }}
                                 tooltip={t("globals.clearAll")}
                                 tooltipOptions={{
@@ -372,7 +299,7 @@ export default function AppUserListGrid() {
                             </Button>
                             <Button
                                 onClick={() => setVisible(true)}
-                                className="p-1 lg:p-2 bg-[var(--color-white)] text-[var(--color-primary)] border border-[var(--color-border)] text-xs lg:text-sm rounded-md"
+                                className="p-1 lg:p-2 bg-[var(--color-primary)] text-[var(--color-white)] border border-[var(--color-border)] text-xs lg:text-sm rounded-md"
                             >
                                 <IoMdSettings size={20} />
                             </Button>
@@ -421,6 +348,79 @@ export default function AppUserListGrid() {
                                 </div>
                             </div>
                         </Dialog>
+
+                        <div className="hidden lg:flex items-center space-x-2 flex-wrap  bg-[var(--color-white)] text-[var(--color-dark)]">
+                            <Button
+                                type="button"
+                                className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
+                                onClick={() => convertLanguage()}
+                                tooltip={t("globals.convertLang")}
+                                tooltipOptions={{
+                                    position: 'top',
+                                    className: 'font-normal rounded text-xs'
+                                }}
+                            >
+                                <IoLanguage size={18} />
+                            </Button>
+
+                            {hasAccess(roleData, "Add") && (
+                                <Button
+                                    type="button"
+                                    className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
+                                    onClick={() => addData(navigate, baseModelName)}
+                                    tooltip={t("globals.add")}
+                                    tooltipOptions={{
+                                        position: 'top',
+                                        className: 'font-normal rounded text-xs'
+                                    }}
+                                >
+                                    <HiOutlinePlus size={18} />
+                                </Button>
+                            )}
+
+                            {hasAccess(roleData, "Export") && (
+                                <Button
+                                    type="button"
+                                    className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
+                                    onClick={() => exportToExcel(userService, globalFilterValue || '', 'AppUser')}
+                                    tooltip={t("globals.exportExcel")}
+                                    tooltipOptions={{
+                                        position: 'top',
+                                        className: 'font-normal rounded text-sm p-1'
+                                    }}
+                                >
+                                    <TbFileExcel size={18} />
+                                </Button>
+                            )}
+
+                            {hasAccess(roleData, "Import") && (
+                                <Button
+                                    type="button"
+                                    className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
+                                    tooltip={t("globals.import")}
+                                    onClick={() => importFromExcel(navigate, baseModelName)}
+                                    tooltipOptions={{
+                                        position: 'top',
+                                        className: 'font-normal rounded text-sm p-1'
+                                    }}
+                                >
+                                    <MdOutlineUploadFile size={18} />
+                                </Button>
+                            )}
+
+                            <Button
+                                type="button"
+                                className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
+                                onClick={refreshItemData}
+                                tooltip={t("globals.refresh")}
+                                tooltipOptions={{
+                                    position: 'top',
+                                    className: 'font-normal rounded text-sm p-1'
+                                }}
+                            >
+                                <IoMdRefresh size={18} />
+                            </Button>
+                        </div>
                     </div>
 
                     <div className="m-2 ">
@@ -1163,7 +1163,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-reportedByName-${rowIndex}`} className="text-left truncate font-medium">
                                                         {rowData.reportedByName}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-reportedByName-${rowIndex}`} content={rowData.reportedByName ? "true" : "false"} showDelay={200} position="top" />
+                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-reportedByName-${rowIndex}`} content={rowData.reportedByName} showDelay={200} position="top" />
                                                 </>
                                             )}
                                         />
