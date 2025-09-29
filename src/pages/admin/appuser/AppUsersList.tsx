@@ -270,7 +270,7 @@ export default function AppUsersList() {
                         <div className="card flex justify-center gap-2">
                             <Button
                                 type="button"
-                                className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
+                                className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs rounded-md"
                                 onClick={() => { setListSearch(); }}
                                 tooltip={t("globals.apply")}
                                 tooltipOptions={{
@@ -282,7 +282,7 @@ export default function AppUsersList() {
                             </Button>
                             <Button
                                 type="button"
-                                className="bg-white text-[var(--color-primary)] p-1 lg:p-2 text-xs lg:text-sm rounded-md border border-[var(--color-primary)]"
+                                className="bg-white text-[var(--color-primary)] p-1 lg:p-2 text-xs rounded-md border border-[var(--color-primary)]"
                                 onClick={() => { setCalendarCreateDateTo(null); setCalendarCreateDateFrom(null); clearListSearch('search'); }}
                                 tooltip={t("globals.clearAll")}
                                 tooltipOptions={{
@@ -304,7 +304,7 @@ export default function AppUsersList() {
                             header={t("globals.columnVisibility")}
                             visible={visible}
                             onHide={() => setVisible(false)}
-                            className="columnVisibility w-full max-w-[95vw] sm:max-w-[70vw] md:max-w-[60vw] lg:max-w-[50vw] text-xs lg:text-sm"
+                            className="columnVisibility w-full max-w-[95vw] sm:max-w-[70vw] md:max-w-[60vw] lg:max-w-[50vw] text-xs"
                             style={{
                                 position: "fixed",
                                 top: "10vh",

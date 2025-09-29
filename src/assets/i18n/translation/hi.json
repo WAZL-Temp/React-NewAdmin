@@ -285,5 +285,34 @@
     "form_list": {
       "fields": {}
     }
+  },
+  "categories": {
+    "columns": {
+      "fields": {
+        "id": "आईडी",
+        "name": "नाम",
+        "slug": "स्लग",
+        "icon": "आइकन संलग्नक",
+        "importDataId": "आयात डेटा आईडी",
+        "createDate": "निर्माण तिथि",
+        "updateDate": "अपडेट तिथि",
+        "deleteDate": "हटाने की तिथि",
+        "createById": "द्वारा बनाया गया आईडी",
+        "updateById": "द्वारा अपडेट आईडी",
+        "deleteById": "द्वारा हटाया गया आईडी",
+        "isDelete": "हटाया गया है"
+      }
+    },
+    "form_detail": {
+      "fields": {
+        "importAction": "आयात क्रिया",
+        "importRemark": "आयात टिप्पणी",
+        "modelname": "श्रेणी",
+        "Step1": "श्रेणी विवरण"
+      }
+    },
+    "form_list": {
+      "fields": {}
+    }
   }
 }
