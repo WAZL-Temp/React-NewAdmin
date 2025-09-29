@@ -283,5 +283,34 @@
     "form_list": {
       "fields": {}
     }
+  },
+  "categories": {
+    "columns": {
+      "fields": {
+        "id": "आयडी",
+        "name": "नाव",
+        "slug": "स्लग",
+        "icon": "आयकॉन संलग्नक",
+        "importDataId": "आयात डेटा आयडी",
+        "createDate": "तयार करण्याची तारीख",
+        "updateDate": "अपडेट तारीख",
+        "deleteDate": "हटवण्याची तारीख",
+        "createById": "कोणाद्वारे तयार केले आयडी",
+        "updateById": "कोणाद्वारे अपडेट केले आयडी",
+        "deleteById": "कोणाद्वारे हटवले आयडी",
+        "isDelete": "हटवले आहे"
+      }
+    },
+    "form_detail": {
+      "fields": {
+        "importAction": "आयात क्रिया",
+        "importRemark": "आयात टिप्पणी",
+        "modelname": "श्रेणी",
+        "Step1": "श्रेणी तपशील"
+      }
+    },
+    "form_list": {
+      "fields": {}
+    }
   }
 }
