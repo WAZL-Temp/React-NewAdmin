@@ -61,8 +61,9 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
   const handleLogout = () => {
     login("");
     userInfo(null as unknown as UserInfo);
-    window.location.href = "/";
+    // window.location.href = "/";
     toggleSidebar();
+    navigate("/", { replace: true });
   };
 
   const hasAccessToPage = (actionName: string) => {
@@ -146,7 +147,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
             className={`w-full flex items-center justify-start ${isMinimized ? 'px-1' : 'px-2'} py-2 rounded
               ${location.pathname === "/appUserTests" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
               hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]`}
-            tooltip={isMinimized ?  t("appUserTests.form_detail.fields.modelname") : undefined}
+            tooltip={isMinimized ? t("appUserTests.form_detail.fields.modelname") : undefined}
             tooltipOptions={{
               position: 'right',
               className: 'font-normal rounded text-xs'
@@ -241,7 +242,7 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
         </Button>
       </nav>
 
-      <footer className="flex items-center p-2 lg:p-3 border-t bg-[var(--color-primary)] text-[var(--color-white)] ">
+      <footer className="flex items-center p-2 border-t bg-[var(--color-primary)] text-[var(--color-white)] ">
         <Button
           onClick={handleLogout}
           className={`w-full flex items-center justify-start ${isMinimized ? "px-1 " : "px-2"} py-2 rounded  

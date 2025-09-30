@@ -23,7 +23,7 @@ export default function AppUsersView() {
     t("appUsers.form_detail.fields.verifyShop"),
   ];
   const baseModelName = "appuser";
-   const typeName = "appuser";
+  const typeName = "appuser";
   const userService = AppUserService();
   const query = useItemQuery<AppUser>(userService);
   const [userData, setUserData] = useState<AppUser | undefined>(initialData() || {});
@@ -67,7 +67,7 @@ export default function AppUsersView() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await query.getItem(parseInt(id as string, 10));      
+      const data = await query.getItem(parseInt(id as string, 10));
       setUserData(data);
     };
     fetchData();
@@ -357,6 +357,23 @@ export default function AppUsersView() {
               <StepperPanel header={stepsData[3]}>
                 <div ref={(el) => { stepRefs.current[3] = el; }} className="p-2 mb-12 md:mb-0 lg:mb-0 bg-[var(--color-white)] text-[var(--color-dark)] mt-3 lg:mt-10">
                   <div className="user-grid">
+                    {!isFieldHidden("verifyShop") && (
+                      <div className="flex flex-col bg-[var(--color-white)] text-[var(--color-dark)] bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
+                        <div className="flex items-center space-x-2">
+                          <label
+                            htmlFor="verifyShop"
+                            className="text-sm font-bold py-2  bg-[var(--color-white)] text-[var(--color-dark)]"
+                          >
+                            {t("appUsers.columns.fields.verifyShop")}
+                          </label>
+                          <TooltipWithText text={t("appUsers.columns.fields.verifyShop")} />
+                        </div>
+                        <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)]">
+                          {userData?.verifyShop}
+                        </span>
+                      </div>
+                    )}
+
                     {!isFieldHidden("gst") && (
                       <div className="flex flex-col bg-[var(--color-white)] text-[var(--color-dark)]  bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
                         <div className="flex items-center space-x-2">
@@ -530,6 +547,40 @@ export default function AppUsersView() {
                       </div>
                     )}
 
+                    {!isFieldHidden("role") && (
+                      <div className="flex flex-col bg-[var(--color-white)] text-[var(--color-dark)] bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
+                        <div className="flex items-center space-x-2">
+                          <label
+                            htmlFor="role"
+                            className="text-sm font-bold py-2  bg-[var(--color-white)] text-[var(--color-dark)]"
+                          >
+                            {t("appUsers.columns.fields.role")}
+                          </label>
+                          <TooltipWithText text={t("appUsers.columns.fields.role")} />
+                        </div>
+                        <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)]">
+                          {userData?.role}
+                        </span>
+                      </div>
+                    )}
+
+                    {!isFieldHidden("publish") && (
+                      <div className="flex flex-col bg-[var(--color-white)] text-[var(--color-dark)] bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
+                        <div className="flex items-center space-x-2">
+                          <label
+                            htmlFor="publish"
+                            className="text-sm font-bold py-2  bg-[var(--color-white)] text-[var(--color-dark)]"
+                          >
+                            {t("appUsers.columns.fields.publish")}
+                          </label>
+                          <TooltipWithText text={t("appUsers.columns.fields.publish")} />
+                        </div>
+                        <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)]">
+                          {userData?.publish}
+                        </span>
+                      </div>
+                    )}
+
                     {!isFieldHidden("lastLogin") && (
                       <div className="flex flex-col bg-[var(--color-white)] text-[var(--color-dark)]  bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
                         <div className="flex items-center space-x-2">
@@ -600,6 +651,21 @@ export default function AppUsersView() {
                       </div>
                     )}
 
+                    {!isFieldHidden("reportedTo") && (
+                      <div className="flex flex-col bg-[var(--color-white)] text-[var(--color-dark)]  bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
+                        <div className="flex items-center space-x-2">
+                          <label
+                            htmlFor="gst"
+                            className="text-sm font-bold py-2  bg-[var(--color-white)] text-[var(--color-dark)]"
+                          >
+                            {t("appUsers.columns.fields.reportedTo")}
+                          </label>
+                          <TooltipWithText text={t("appUsers.columns.fields.reportedTo")} />
+                        </div>
+                        <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)]">{userData?.reportedToName}</span>
+                      </div>
+                    )}
+
                     {!isFieldHidden("reportedBy") && (
                       <div className="flex flex-col bg-[var(--color-white)] text-[var(--color-dark)]  bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
                         <div className="flex items-center space-x-2">
@@ -615,20 +681,6 @@ export default function AppUsersView() {
                       </div>
                     )}
 
-                    {!isFieldHidden("reportedTo") && (
-                      <div className="flex flex-col bg-[var(--color-white)] text-[var(--color-dark)]  bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
-                        <div className="flex items-center space-x-2">
-                          <label
-                            htmlFor="gst"
-                            className="text-sm font-bold py-2  bg-[var(--color-white)] text-[var(--color-dark)]"
-                          >
-                            {t("appUsers.columns.fields.reportedTo")}
-                          </label>
-                          <TooltipWithText text={t("appUsers.columns.fields.reportedTo")} />
-                        </div>
-                        <span className="text-sm font-medium  bg-[var(--color-white)] text-[var(--color-dark)]">{userData?.reportedToName}</span>
-                      </div>
-                    )}
                     {!isFieldHidden("gender") && (
                       <div className="flex flex-col bg-[var(--color-white)] text-[var(--color-dark)]  bg-opacity-80 p-2 h-full border border-dark border-opacity-5 rounded-md">
                         <div className="flex items-center space-x-2">
