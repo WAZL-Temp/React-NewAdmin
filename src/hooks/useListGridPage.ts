@@ -7,6 +7,7 @@ import { UseListQueryResult } from "../store/useListQuery";
 import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
 import { RoleDetail } from "../core/model/roledetail";
 import { getGridData } from "../core/service/appUsers.service";
+import { CustomFile } from "../core/model/customfile";
 
 type UseListPageCommonProps = {
     initialFilterValue?: string;
@@ -123,6 +124,8 @@ export function useListGridPage<TQuery extends UseListQueryResult<TItem>, TItem>
     const hasInitialized = useRef(false);
     const [calendarCreateDateFrom, setCalendarCreateDateFrom] = useState<Date | undefined | null>(null);
     const [calendarCreateDateTo, setCalendarCreateDateTo] = useState<Date | undefined | null>(null);
+    const [selectedItem, setSelectedItem] = useState<TItem | null>(null);
+    const [sidebarVisible, setSidebarVisible] = useState(false);
 
     useEffect(() => {
         setCurrentPageReportTemplate(t('globals.report'));
@@ -570,6 +573,34 @@ export function useListGridPage<TQuery extends UseListQueryResult<TItem>, TItem>
         return format(date, "MM-dd-yyyy");
     };
 
+    const parseAndFormatImages = (imageData: string | null) => {
+        if (!imageData) return [];
+        try {
+            const parsedFiles = JSON.parse(imageData);
+            if (!Array.isArray(parsedFiles)) {
+                return [];
+            }
+            return parsedFiles.map((img: CustomFile) => ({
+                fileName: img.fileName,
+                filePath: img.filePath.replace(/\\/g, '/'),
+                type: img.type,
+            }));
+        } catch (error) {
+            console.error('Failed to parse image data:', error);
+            return [];
+        }
+    };
+
+    const handleSelectItem = (item: TItem) => {
+        setSelectedItem(item);
+        setSidebarVisible(true);
+    };
+
+    const stripHtml = (html: string) => {
+        if (!html) return "";
+        return html.replace(/<[^>]+>/g, "");
+    };
+
     return {
         roleData, globalFilterValue, setGlobalFilterValue, onGlobalFilterChange, setFilters,
         first, rows, sortField, sortOrder, totalRecords, setTotalRecords, filters, refreshItemData,
@@ -579,6 +610,7 @@ export function useListGridPage<TQuery extends UseListQueryResult<TItem>, TItem>
         visible, setVisible, currentPage, setCurrentPage, totalCount, setTotalCount,
         loading, setLoading, setFirst, onLazyLoad, selectedRow, setSelectedRow,
         multiSortMeta, setMultiSortMeta, currentPageReportTemplate, data, setData, calendarCreateDateFrom, setCalendarCreateDateFrom,
-        calendarCreateDateTo, setCalendarCreateDateTo
+        calendarCreateDateTo, setCalendarCreateDateTo, parseAndFormatImages, stripHtml,
+        selectedItem, setSelectedItem, sidebarVisible, setSidebarVisible, handleSelectItem
     };
 }

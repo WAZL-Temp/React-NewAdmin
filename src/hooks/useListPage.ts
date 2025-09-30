@@ -420,9 +420,14 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
         }
     };
 
-     const handleSelectItem = (item: TItem) => {
+    const handleSelectItem = (item: TItem) => {
         setSelectedItem(item);
         setSidebarVisible(true);
+    };
+
+    const stripHtml = (html: string) => {
+        if (!html) return "";
+        return html.replace(/<[^>]+>/g, "");
     };
 
     return {
@@ -431,8 +436,8 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
         setListSearch, clearListSearch, searchChange, isDeleteDialogVisible, setIsDeleteDialogVisible,
         confirmDeleteItem, deleteItem, openItem, closeDeleteDialog, setItemToDelete, toast, isSuccessDialogOpen,
         setIsSuccessDialogOpen, formatDate, hasAccess, exportToExcel, importFromExcel, addData, handleDelete, useColumnConfig,
-        visible, setVisible, calendarCreateDateFrom, setCalendarCreateDateFrom,
+        visible, setVisible, calendarCreateDateFrom, setCalendarCreateDateFrom, stripHtml,
         calendarCreateDateTo, setCalendarCreateDateTo, loading, setLoading, parseAndFormatImages,
-        selectedItem, setSelectedItem,sidebarVisible, setSidebarVisible,handleSelectItem
+        selectedItem, setSelectedItem, sidebarVisible, setSidebarVisible, handleSelectItem
     };
 }
