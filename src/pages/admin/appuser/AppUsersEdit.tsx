@@ -1288,7 +1288,7 @@ export default function AppUsersEdit() {
                                 onFileUpload={(files) => handleFileUpload(files, 'photoAttachment')}
                                 accept=".jpg,.jpeg,.png,.pdf"
                                 initialData={item.photoAttachment ?? null}
-                                maxFileNumber={2}
+                                maxFileNumber={1}
                                 error={errors.photoAttachment}
                               />
                             </div>

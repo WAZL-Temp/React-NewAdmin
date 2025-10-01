@@ -40,7 +40,7 @@ const LoginPage = () => {
                 userInfo(userInfoData);
                 setEmail("");
                 setPassword("");
-                navigate('/appuser', { replace: true });
+                navigate('/appuser');
             } else {
                 setErrorMessage("Login failed. Please check your credentials.");
             }
@@ -87,7 +87,7 @@ const LoginPage = () => {
                 login(response?.token);
                 const userInfoData = response?.userInfo[0];
                 userInfo(userInfoData);
-                navigate('/appuser', { replace: true });
+                navigate('/appuser');
             } else {
                 console.error('Login failed: Token not found');
             }
@@ -102,7 +102,7 @@ const LoginPage = () => {
             const data = await ValidateEmail(email, emailToken);
 
             if (data === "success:Register-Admin") {
-                navigate('/appuser', { replace: true });
+                navigate('/appuser');
             } else if (data === "success:Not Register") {
                 setEmail(email);
                 setErrorMessage("User is not registered. Please sign up.");

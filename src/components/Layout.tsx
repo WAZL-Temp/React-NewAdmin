@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from './Sidebar';
-// import img1 from '../assets/images/only-logo.png';
 import Header from './Header';
 import { useTheme } from '../hooks/useTheme';
 import { Dropdown, FaBars } from '../sharedBase/globalImports';
@@ -62,20 +61,22 @@ const Layout = ({ children }: LayoutProps) => {
 
       {showSidebar && (
         <header className="flex h-14 md:hidden lg:hidden items-center justify-between bg-[var(--color-primary)] border-b px-2 w-full">
-          {/* <div className="flex items-center">
-            <Image src={img1} alt="Logo" className="h-[28px] w-[28px]" />
-          </div> */}
+          <button
+            className="text-[var(--color-white)] p-2 rounded-md"
+            onClick={toggleSidebar}
+          >
+            <FaBars size={22} />
+          </button>
 
           <div className="flex items-center gap-1 sm:gap-3 ml-auto pr-2">
-            <div className="flex gap-1 sm:gap-2">             
+            <div className="flex gap-1 sm:gap-2">
               <Dropdown
                 value={selectedLanguage}
                 onChange={(e) => handleLanguageChange(e.value)}
                 options={languages}
                 optionLabel="label"
                 optionValue="value"
-                className="w-[80px] sm:w-22 text-xs"
-                placeholder={t("globals.selectLanguage")}
+                className="w-[80px] sm:w-22 text-xs font-medium text-[var(--color-primary)]"
               />
             </div>
 
@@ -83,18 +84,10 @@ const Layout = ({ children }: LayoutProps) => {
               value={theme}
               options={themes.map((t) => ({ label: t, value: t }))}
               onChange={(e) => setTheme(e.value)}
-              placeholder="Theme"
-              className="w-[80px] sm:w-22 text-xs"
+              className="w-[80px] sm:w-22 text-xs font-medium text-[var(--color-primary)]"
             />
 
           </div>
-
-          <button
-            className="text-[var(--color-white)] p-2 rounded-md"
-            onClick={toggleSidebar}
-          >
-            <FaBars size={22} />
-          </button>
         </header>
       )}
 
