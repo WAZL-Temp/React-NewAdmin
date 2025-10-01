@@ -30,7 +30,7 @@ export default function AppUserListGrid() {
         importFromExcel, addData, handleDelete, useColumnConfig, visible, setVisible,
         onLazyLoad, selectedRow, setSelectedRow, multiSortMeta, currentPageReportTemplate, data,
         sortField, sortOrder, calendarCreateDateFrom, setCalendarCreateDateFrom,
-        calendarCreateDateTo, setCalendarCreateDateTo, setLoading,parseAndFormatImages,
+        calendarCreateDateTo, setCalendarCreateDateTo, setLoading, parseAndFormatImages,
         selectedItem, sidebarVisible, setSidebarVisible, handleSelectItem }
         = useListGridPage<typeof query, AppUser>({
             query: query,
@@ -221,7 +221,7 @@ export default function AppUserListGrid() {
         return (
             <div id={uniqueId} className='text-[13px] overflow-hidden overflow-ellipsis whitespace-nowrap'>
                 {(fileName)}
-                <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#${uniqueId}`} content={fileName} showDelay={200} position="top" />
+                {/* <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#${uniqueId}`} content={fileName} showDelay={200} position="top" /> */}
             </div>
         );
     };
@@ -301,12 +301,6 @@ export default function AppUserListGrid() {
                             >
                                 {t("globals.clearAll")}
                             </Button>
-                            <Button
-                                onClick={() => setVisible(true)}
-                                className="p-1 lg:p-2 bg-[var(--color-primary)] text-[var(--color-white)] border border-[var(--color-border)] text-xs lg:text-sm rounded-md"
-                            >
-                                <IoMdSettings size={20} />
-                            </Button>
                         </div>
 
                         <Dialog
@@ -324,7 +318,7 @@ export default function AppUserListGrid() {
                             }}
                         >
                             <div className="my-2">
-                                <label className="flex items-center justify-end space-x-2 mb-2">
+                                <label className="flex items-center justify-start space-x-2 mb-3">
                                     <Checkbox
                                         onChange={handleSelectAll}
                                         checked={visibleColumns.length === columnsConfig.length}
@@ -425,6 +419,20 @@ export default function AppUserListGrid() {
                                 <IoMdRefresh size={18} />
                             </Button>
                         </div>
+
+                        <div className="flex card justify-content-center">
+                            <Button
+                                onClick={() => setVisible(true)}
+                                className="p-1 lg:p-2 bg-[var(--color-primary)] text-[var(--color-white)] border border-[var(--color-border)] text-xs lg:text-sm rounded-md"
+                                tooltip={t("globals.columnVisibility")}
+                                tooltipOptions={{
+                                    position: 'top',
+                                    className: 'font-normal rounded text-xs'
+                                }}
+                            >
+                                <IoMdSettings size={20} />
+                            </Button>
+                        </div>
                     </div>
 
                     <div className="m-2 ">
@@ -439,6 +447,7 @@ export default function AppUserListGrid() {
                                     paginator
                                     first={first}
                                     rows={rows}
+                                    rowHover
                                     totalRecords={totalRecords}
                                     onPage={onLazyLoad}
                                     onSort={onLazyLoad}
@@ -454,6 +463,7 @@ export default function AppUserListGrid() {
                                     sortMode="multiple"
                                     multiSortMeta={multiSortMeta}
                                     selectionMode="single"
+                                    columnResizeMode="expand"
                                     selection={selectedRow}
                                     onSelectionChange={(e) => setSelectedRow(e.value)}
                                     removableSort
@@ -509,7 +519,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {rowData.name}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />
@@ -531,7 +541,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-firstName-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {rowData.firstName}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-firstName-${rowIndex}`} content={rowData.firstName} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-firstName-${rowIndex}`} content={rowData.firstName} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />
@@ -553,7 +563,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-lastName-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {rowData.lastName}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-lastName-${rowIndex}`} content={rowData.lastName} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-lastName-${rowIndex}`} content={rowData.lastName} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />
@@ -575,7 +585,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-mobile-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {rowData.mobile}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-mobile-${rowIndex}`} content={rowData.mobile} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-mobile-${rowIndex}`} content={rowData.mobile} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />
@@ -597,7 +607,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-mobileVerified-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {rowData.mobileVerified ? "true" : "false"}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-mobileVerified-${rowIndex}`} content={rowData.mobileVerified ? "true" : "false"} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-mobileVerified-${rowIndex}`} content={rowData.mobileVerified ? "true" : "false"} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />
@@ -619,7 +629,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-emailId-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {rowData.emailId}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-emailId-${rowIndex}`} content={rowData.emailId} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-emailId-${rowIndex}`} content={rowData.emailId} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />
@@ -641,7 +651,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-emailVerified-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {rowData.emailVerified ? "true" : "false"}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-emailVerified-${rowIndex}`} content={rowData.emailVerified ? "true" : "false"} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-emailVerified-${rowIndex}`} content={rowData.emailVerified ? "true" : "false"} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />
@@ -663,7 +673,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-shopName-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {rowData.shopName}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-shopName-${rowIndex}`} content={rowData.shopName} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-shopName-${rowIndex}`} content={rowData.shopName} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />
@@ -685,7 +695,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-password-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {rowData.password}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-password-${rowIndex}`} content={rowData.password} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-password-${rowIndex}`} content={rowData.password} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />
@@ -707,7 +717,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-pincode-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {rowData.pincode}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-pincode-${rowIndex}`} content={rowData.pincode} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-pincode-${rowIndex}`} content={rowData.pincode} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />
@@ -729,7 +739,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-state-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {rowData.state}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-state-${rowIndex}`} content={rowData.state} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-state-${rowIndex}`} content={rowData.state} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />
@@ -751,7 +761,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-district-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {rowData.pincode}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-district-${rowIndex}`} content={rowData.district} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-district-${rowIndex}`} content={rowData.district} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />
@@ -773,7 +783,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-address-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {rowData.address}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-address-${rowIndex}`} content={rowData.address} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-address-${rowIndex}`} content={rowData.address} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />
@@ -795,7 +805,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-addressLine-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {rowData.addressLine}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-addressLine-${rowIndex}`} content={rowData.addressLine} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-addressLine-${rowIndex}`} content={rowData.addressLine} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />
@@ -817,7 +827,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-gst-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {rowData.gst}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-gst-${rowIndex}`} content={rowData.gst} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-gst-${rowIndex}`} content={rowData.gst} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />
@@ -839,7 +849,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-verifyShop-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {rowData.verifyShop}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-verifyShop-${rowIndex}`} content={rowData.verifyShop} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-verifyShop-${rowIndex}`} content={rowData.verifyShop} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />
@@ -937,7 +947,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-gstOtp-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {rowData.gstOtp}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-gstOtp-${rowIndex}`} content={rowData.gstOtp} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-gstOtp-${rowIndex}`} content={rowData.gstOtp} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />
@@ -959,7 +969,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-isActive-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {rowData.isActive ? "true" : "false"}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isActive-${rowIndex}`} content={rowData.isActive} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isActive-${rowIndex}`} content={rowData.isActive} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />
@@ -981,7 +991,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-isAdmin-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {rowData.isAdmin ? "true" : "false"}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isAdmin-${rowIndex}`} content={rowData.isAdmin ? "true" : "false"} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isAdmin-${rowIndex}`} content={rowData.isAdmin ? "true" : "false"} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />
@@ -1003,7 +1013,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-hasImpersonateAccess-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {rowData.hasImpersonateAccess ? "true" : "false"}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-hasImpersonateAccess-${rowIndex}`} content={rowData.hasImpersonateAccess ? "true" : "false"} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-hasImpersonateAccess-${rowIndex}`} content={rowData.hasImpersonateAccess ? "true" : "false"} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />
@@ -1044,7 +1054,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-roleLabel-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {rowData.roleLabel}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-roleLabel-${rowIndex}`} content={rowData.roleLabel} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-roleLabel-${rowIndex}`} content={rowData.roleLabel} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />
@@ -1066,7 +1076,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-publishLabel-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {rowData.publishLabel}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-publishLabel-${rowIndex}`} content={rowData.publishLabel} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-publishLabel-${rowIndex}`} content={rowData.publishLabel} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />
@@ -1081,7 +1091,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-lastLogin-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {formatDate(rowData.lastLogin)}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-lastLogin-${rowIndex}`} content={formatDate(rowData.lastLogin)} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-lastLogin-${rowIndex}`} content={formatDate(rowData.lastLogin)} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />
@@ -1103,7 +1113,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-totalPlot-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {rowData.totalPlot}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-totalPlot-${rowIndex}`} content={rowData.totalPlot} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-totalPlot-${rowIndex}`} content={rowData.totalPlot} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />
@@ -1125,7 +1135,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-defaultLanguage-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {rowData.defaultLanguage}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-defaultLanguage-${rowIndex}`} content={rowData.defaultLanguage} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-defaultLanguage-${rowIndex}`} content={rowData.defaultLanguage} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />
@@ -1146,7 +1156,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-isPremiumUser-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {rowData.isPremiumUser ? "true" : "false"}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isPremiumUser-${rowIndex}`} content={rowData.isPremiumUser ? "true" : "false"} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isPremiumUser-${rowIndex}`} content={rowData.isPremiumUser ? "true" : "false"} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />)}
@@ -1167,7 +1177,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-reportedByName-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {rowData.reportedByName}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-reportedByName-${rowIndex}`} content={rowData.reportedByName} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-reportedByName-${rowIndex}`} content={rowData.reportedByName} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />
@@ -1189,7 +1199,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-reportedToName-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {rowData.reportedToName}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-reportedToName-${rowIndex}`} content={rowData.reportedToName} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-reportedToName-${rowIndex}`} content={rowData.reportedToName} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />
@@ -1211,7 +1221,7 @@ export default function AppUserListGrid() {
                                                     <div id={`tooltip-gender-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
                                                         {rowData.gender}
                                                     </div>
-                                                    <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-gender-${rowIndex}`} content={rowData.gender} showDelay={200} position="top" />
+                                                    {/* <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-gender-${rowIndex}`} content={rowData.gender} showDelay={200} position="top" /> */}
                                                 </>
                                             )}
                                         />
@@ -1239,23 +1249,27 @@ export default function AppUserListGrid() {
                                                     (file: CustomFile, index: number) => (
                                                         <li
                                                             key={index}
-                                                            className="w-[150px] h-[150px] flex items-center justify-center"
+                                                            className="flex items-center justify-center"
                                                         >
-                                                            <Image
-                                                                src={`${import.meta.env.VITE_API_URL}/ImportFiles/${file.filePath.replace(/\\/g, "/")}`}
-                                                                alt={`Uploaded file ${index + 1}`}
-                                                                className="w-full h-full object-cover rounded-full shadow-lg"
-                                                            />
+                                                            <div className="w-[200px] h-[200px] rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                                                                <Image
+                                                                    src={`${import.meta.env.VITE_API_URL}/ImportFiles/${file.filePath.replace(/\\/g, "/")}`}
+                                                                    alt={`Uploaded file ${index + 1}`}
+                                                                    className="w-full h-full object-cover"
+                                                                />
+                                                            </div>
                                                         </li>
                                                     ))}
                                             </ul>
                                         </div>
                                     ) : (
-                                        <Image
-                                            src={userAvtar}
-                                            alt="User Photo"
-                                            className="w-full h-full object-cover rounded-full shadow-lg"
-                                        />
+                                        <div className="w-[200px] h-[200px] rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                                            <Image
+                                                src={userAvtar}
+                                                alt="User Photo"
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </div>
                                     )}
                                 </div>
 

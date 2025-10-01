@@ -1,5 +1,5 @@
 import { useAuthStore } from "../store/auth.store";
-import { AiFillHome, Button, FiShoppingBag, FiUser, IoList, IoPersonSharp, RiLogoutCircleLine, RxCross2 } from "../sharedBase/globalImports";
+import { AiFillHome, Button, FiShoppingBag, FiUser, InputText, IoList, IoPersonSharp, RiLogoutCircleLine, RxCross2 } from "../sharedBase/globalImports";
 import { useLocation, useNavigate, useTranslation } from '../sharedBase/globalUtils';
 import { UserInfo } from "../types/auth";
 import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
@@ -15,12 +15,68 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { login, userInfo } = useAuthStore();
   const [roleData, setRoleData] = useState<RoleDetail[] | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const { data: roleDetailsData } = useFetchRoleDetailsData();
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const menuItems = [
+    {
+      label: t("globals.homes"),
+      path: "/appuser/home",
+      icon: <AiFillHome size={18} className={`flex-shrink-0 ${isMinimized ? '' : 'mr-2'}`}/>,
+      type: "navigate"
+    },
+    {
+      label: t("globals.list"),
+      path: "/appuser/grid",
+      icon: <IoList size={18} className={`flex-shrink-0 ${isMinimized ? '' : 'mr-2'}`}/>,
+      type: "navigate"
+    },
+    {
+      label: t("appUserTests.form_detail.fields.modelname"),
+      path: "/appUserTests",
+      icon: <FiUser size={18} className={`flex-shrink-0 ${isMinimized ? '' : 'mr-2'}`}/>,
+      type: "handleNavigation",
+      accessName: "AppUserTest",
+      requires: { role: "appusertest", action: "List" }
+    },
+    {
+      label: `${t("appUserTests.form_detail.fields.modelname")} ${t("globals.list")}`,
+      path: "/appUserTests/grid",
+      icon: <IoList size={18} className={`flex-shrink-0 ${isMinimized ? '' : 'mr-2'}`}/>,
+      type: "navigate"
+    },
+    {
+      label: t("products.form_detail.fields.modelname"),
+      path: "/product",
+      icon: <FiShoppingBag size={18} className={`flex-shrink-0 ${isMinimized ? '' : 'mr-2'}`}/>,
+      type: "handleNavigation",
+      accessName: "Product",
+      requires: { role: "product", action: "List" }
+    },
+    {
+      label: t("categories.form_detail.fields.modelname"),
+      path: "/categories",
+      icon: <FiUser size={18} className={`flex-shrink-0 ${isMinimized ? '' : 'mr-2'}`}/>,
+      type: "navigate"
+    },
+    {
+      label: t("appUsers.columns.fields.role"),
+      path: "/role",
+      icon: <IoPersonSharp size={18} className={`flex-shrink-0 ${isMinimized ? '' : 'mr-2'}`}/>,
+      type: "navigate"
+    }
+  ];
+
+  const visibleMenuItems = menuItems.filter((item) => {
+    const label = item.label?.toLocaleLowerCase(i18n.language);
+    const query = searchTerm?.toLocaleLowerCase(i18n.language);
+    return label.includes(query);
+  });
 
   useEffect(() => {
     if (roleDetailsData && Array.isArray(roleDetailsData)) {
@@ -61,9 +117,8 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
   const handleLogout = () => {
     login("");
     userInfo(null as unknown as UserInfo);
-    // window.location.href = "/";
+    window.location.href = "/";
     toggleSidebar();
-    navigate("/", { replace: true });
   };
 
   const hasAccessToPage = (actionName: string) => {
@@ -82,182 +137,99 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
   }
 
   return (
-    <aside
-      className={`flex-shrink-0 fixed inset-y-0 left-0 z-50 sidebar bg-[var(--color-primary)] text-[var(--color-white)] border border-muted/40 transform transition-transform duration-300 ease-in-out 
-      ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} 
-       md:relative md:translate-x-0
-      ${isMinimized ? "w-16" : "w-[170px]"} flex flex-col justify-between h-full`}
-    >
+    <> {isSidebarOpen && (
+      <div
+        className="fixed inset-0 bg-black/30 z-40 md:hidden"
+        onClick={toggleSidebar}
+      />
+    )}
 
-      <div className="bg-[var(--color-primary)] sidebar md:hidden lg:hidden mb-14">
-        <button
-          className="absolute top-4 right-4 text-[var(--color-primary)] bg-[var(--color-white)] p-1 rounded-md"
-          onClick={toggleSidebar}
-        >
-          <RxCross2 size={20} />
-        </button>
-      </div>
-
-      <nav
-        className={`flex-1 overflow-y-auto overflow-x-hidden p-2 lg:p-3 space-y-2 bg-[var(--color-primary)] text-[var(--color-white)] `}
+      <aside
+        className={`flex-shrink-0 fixed inset-y-0 left-0 z-50 sidebar bg-[var(--color-primary)] text-[var(--color-white)] border border-muted/40 transform transition-transform duration-300 ease-in-out 
+        ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} 
+        md:relative md:translate-x-0
+        ${isMinimized ? "w-16" : "w-[170px]"} flex flex-col justify-between h-full`}
       >
-        <Button
-          onClick={() => {
-            navigate("/appuser/home");
-            if (!isMinimized) toggleSidebar();
-          }}
-          className={`w-full flex items-center justify-start ${isMinimized ? 'px-1' : 'px-2'} py-2 rounded
-          ${location.pathname === "/appuser/home" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
-          hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]`}
-          tooltip={isMinimized ? t("globals.homes") : undefined}
-          tooltipOptions={{
-            position: 'right',
-            className: 'font-normal rounded text-xs'
-          }}
-        >
-          <AiFillHome size={18} className={`flex-shrink-0 ${isMinimized ? '' : 'mr-3'}`} />
-          {(!isMinimized) && <span className=" text-xs font-medium text-left truncate">{t("globals.homes")}</span>}
-        </Button>
 
-        <Button
-          onClick={() => {
-            navigate("/appuser/grid");
-            if (!isMinimized) toggleSidebar();
-          }}
-          className={`w-full flex items-center justify-start ${isMinimized ? 'px-1' : 'px-2'} py-2 rounded
-          ${location.pathname === "/appuser/grid" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
-          hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]`}
-          tooltip={isMinimized ? t("appUsers.form_detail.fields.modelname") + " " + t("globals.list") : undefined}
-          tooltipOptions={{
-            position: 'right',
-            className: 'font-normal rounded text-xs'
-          }}
-        >
-          <IoList size={18} className={`flex-shrink-0 ${isMinimized ? '' : 'mr-3'}`} />
-          {(!isMinimized) && <span className=" text-xs font-medium text-left truncate">{t("globals.list")}</span>}
-        </Button>
-
-        {roleData && hasAccess(roleData.find((r: any) => r.name.toLowerCase() == 'appusertest'), "List") && (
-          <Button
-            // onClick={() => {
-            //   navigate("/appUserTests");
-            //   if (!isMinimized) toggleSidebar();
-            // }}
-            onClick={() => handleNavigation("/appUserTests", "AppUserTest")}
-            className={`w-full flex items-center justify-start ${isMinimized ? 'px-1' : 'px-2'} py-2 rounded
-              ${location.pathname === "/appUserTests" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
-              hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]`}
-            tooltip={isMinimized ? t("appUserTests.form_detail.fields.modelname") : undefined}
-            tooltipOptions={{
-              position: 'right',
-              className: 'font-normal rounded text-xs'
-            }}
+        <div className="bg-[var(--color-primary)] sidebar md:hidden lg:hidden mb-14">
+          <button
+            className="absolute top-4 right-4 text-[var(--color-primary)] bg-[var(--color-white)] p-1 rounded-md"
+            onClick={toggleSidebar}
           >
-            <FiUser size={18} className={`flex-shrink-0 ${isMinimized ? '' : 'mr-3'}`} />
-            {(!isMinimized) && <span className=" text-xs font-medium text-left truncate">
-              {t("appUserTests.form_detail.fields.modelname")}</span>}
-          </Button>
+            <RxCross2 size={20} />
+          </button>
+        </div>
+
+        {!isMinimized && (
+          <div className="p-2">
+            <InputText
+              type="search"
+              placeholder={t("globals.globalSearch")}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] text-xs rounded-md pl-2 lg:py-2 py-1"
+            />
+          </div>
         )}
 
-        <Button
-          onClick={() => {
-            navigate("/appUserTests/grid");
-            if (!isMinimized) toggleSidebar();
-          }}
-          className={`w-full flex items-center justify-start ${isMinimized ? 'px-1' : 'px-2'} py-2 rounded
-          ${location.pathname === "/appUserTests/grid" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
-          hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]`}
-          tooltip={isMinimized ? t("appUserTests.form_detail.fields.modelname") + " " + t("globals.list") : undefined}
-          tooltipOptions={{
-            position: 'right',
-            className: 'font-normal rounded text-xs'
-          }}
+        <nav
+          className={`flex-1 overflow-y-auto overflow-x-hidden p-2 lg:p-3 space-y-2 bg-[var(--color-primary)] text-[var(--color-white)] `}
         >
-          <IoList size={18} className={`flex-shrink-0 ${isMinimized ? '' : 'mr-3'}`} />
-          {(!isMinimized) && <span className=" text-xs font-medium text-left truncate">
-            {t("appUserTests.form_detail.fields.modelname")}
-            {t("globals.list")}
-          </span>}
-        </Button>
+          {visibleMenuItems.map((item) => {
+            if (item.requires) {
+              const roleObj = roleData?.find(
+                (r: any) => r.name?.toLowerCase() === item.requires!.role.toLowerCase()
+              );
+              if (!hasAccess(roleObj, item.requires.action)) return null;
+            }
 
-        {roleData && hasAccess(roleData.find((r: any) => r.name.toLowerCase() === 'product'), "List") && (
+            const isActive = location.pathname.startsWith(item.path);
+
+            const onClick = () => {
+              if (item.type === "handleNavigation") {
+                handleNavigation(item.path, item.accessName || item.label);
+              } else {
+                navigate(item.path);
+                if (!isMinimized) toggleSidebar();
+              }
+            };
+
+            return (
+              <Button
+                key={item.path}
+                onClick={onClick}
+                className={`w-full flex items-center justify-start ${isMinimized ? "px-1" : "px-2"} py-2 rounded
+                ${isActive ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
+                hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]`}
+                tooltip={isMinimized ? item.label : undefined}
+                tooltipOptions={{ position: "right", className: "font-normal rounded text-xs" }}
+              >
+                {item.icon}
+                {!isMinimized && (
+                  <span className="text-xs font-medium text-left truncate ml-2">{item.label}</span>
+                )}
+              </Button>
+            );
+          })}
+        </nav>
+
+        <footer className="flex items-center p-2 lg:px-3 border-t bg-[var(--color-primary)] text-[var(--color-white)] ">
           <Button
-            onClick={() => handleNavigation("/product", "Product")}
-            // onClick={() => {
-            //   navigate("/product");
-            //   if (!isMinimized) toggleSidebar();
-            // }}
-            className={`w-full flex items-center justify-start ${isMinimized ? 'px-1' : 'px-2'} py-2 rounded
-            ${location.pathname === "/product" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
-            hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]`}
-            tooltip={isMinimized ? t("products.form_detail.fields.modelname") : undefined}
-            tooltipOptions={{
-              position: 'right',
-              className: 'font-normal rounded text-xs'
-            }}
-          >
-            <FiShoppingBag size={18} className={`flex-shrink-0 ${isMinimized ? '' : 'mr-3'}`} />
-            {(!isMinimized) && <span className=" text-xs font-medium text-left truncate">
-              {t("products.form_detail.fields.modelname")}
-            </span>}
-          </Button>
-        )}
-
-        <Button
-          onClick={() => {
-            navigate("/categories");
-            if (!isMinimized) toggleSidebar();
-          }}
-          className={`w-full flex items-center justify-start ${isMinimized ? 'px-1' : 'px-2'} py-2 rounded
-          ${location.pathname === "/categories" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
-          hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]`}
-          tooltip={isMinimized ? t("categories.form_detail.fields.modelname") : undefined}
-          tooltipOptions={{
-            position: 'right',
-            className: 'font-normal rounded text-xs'
-          }}
-        >
-          <FiUser size={18} className={`flex-shrink-0 ${isMinimized ? '' : 'mr-3'}`} />
-          {(!isMinimized) && <span className=" text-xs font-medium text-left truncate">
-            {t("categories.form_detail.fields.modelname")}
-          </span>}
-        </Button>
-
-        <Button
-          onClick={() => {
-            navigate("/role");
-            if (!isMinimized) toggleSidebar();
-          }}
-          className={`w-full flex items-center justify-start ${isMinimized ? 'px-1' : 'px-2'} py-2 rounded
-          ${location.pathname === "/role" ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
-          hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]`}
-          tooltip={t("appUsers.columns.fields.role")}
-          tooltipOptions={{
-            position: 'right',
-            className: 'font-normal rounded text-xs'
-          }}
-        >
-          <IoPersonSharp size={18} className={`flex-shrink-0 ${isMinimized ? '' : 'mr-3'}`} />
-          {(!isMinimized) && <span className=" text-xs font-medium text-left truncate">{t("appUsers.columns.fields.role")}</span>}
-        </Button>
-      </nav>
-
-      <footer className="flex items-center p-2 border-t bg-[var(--color-primary)] text-[var(--color-white)] ">
-        <Button
-          onClick={handleLogout}
-          className={`w-full flex items-center justify-start ${isMinimized ? "px-1 " : "px-2"} py-2 rounded  
+            onClick={handleLogout}
+            className={`w-full flex items-center justify-start ${isMinimized ? "px-1 " : "px-2"} py-2 rounded  
             bg-[var(--color-primary)] text-[var(--color-white)] hover:bg-[var(--color-white)] hover:text-[var(--color-primary)] `}
-          tooltip={isMinimized ? t("globals.logout") : undefined}
-          tooltipOptions={{
-            position: 'right',
-            className: 'font-normal rounded text-xs'
-          }}
-        >
-          <RiLogoutCircleLine size={18} className={` flex-shrink-0 ${isMinimized ? '' : 'mr-3'}`} />
-          {(!isMinimized) && <span className="text-xs font-medium text-left truncate">{t("globals.logout")}</span>}
-        </Button>
-      </footer>
-    </aside >
+            tooltip={isMinimized ? t("globals.logout") : undefined}
+            tooltipOptions={{
+              position: 'right',
+              className: 'font-normal rounded text-xs'
+            }}
+          >
+            <RiLogoutCircleLine size={18} className={` flex-shrink-0 ${isMinimized ? '' : 'mr-3'}`} />
+            {(!isMinimized) && <span className="text-xs font-medium text-left truncate">{t("globals.logout")}</span>}
+          </Button>
+        </footer>
+      </aside>
+    </>
   );
 };
 

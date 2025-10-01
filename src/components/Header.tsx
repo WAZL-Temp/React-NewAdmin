@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-// import img1 from '../assets/images/logo.png';
 import { useTheme } from "../hooks/useTheme";
 import { Button, Dropdown, FaBars } from "../sharedBase/globalImports";
 import { useLanguageStore } from "../store/useLanguage.store";
@@ -38,10 +37,6 @@ const Header = ({ toggleMinimized }: HeaderProps) => {
                 >
                     <FaBars size={16} />
                 </Button>
-
-                {/* <div className="flex items-center gap-1 pl-4 ">
-                    <Image src={img1} alt="Logo" height='80' width='80' />
-                </div> */}
             </div>
 
             <div className="flex gap-3 ml-auto pr-4 ">
@@ -52,7 +47,7 @@ const Header = ({ toggleMinimized }: HeaderProps) => {
                         options={languages}
                         optionLabel="label"
                         optionValue="value"
-                        className="w-32 p-column-filter text-sm bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md h-9 flex justify-center items-center"
+                        className="w-32 text-sm font-medium text-[var(--color-primary)] border border-[var(--color-border)] rounded-md h-9 flex justify-center items-center"
                         placeholder="Select Language"
                     />
                 </div>
@@ -62,7 +57,7 @@ const Header = ({ toggleMinimized }: HeaderProps) => {
                     options={themes.map((t) => ({ label: t, value: t }))}
                     onChange={(e) => setTheme(e.value)}
                     placeholder="Select Theme"
-                    className="w-32 p-column-filter text-sm bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md h-9 flex justify-center items-center"
+                    className="w-32 text-sm font-medium text-[var(--color-primary)] border border-[var(--color-border)] rounded-md h-9 flex justify-center items-center"
                 />
             </div>
         </header>

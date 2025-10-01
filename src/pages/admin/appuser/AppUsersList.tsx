@@ -28,7 +28,7 @@ export default function AppUsersList() {
         toast, isSuccessDialogOpen, setIsSuccessDialogOpen, formatDate, exportToExcel,
         importFromExcel, addData, handleDelete, useColumnConfig, visible, setVisible, calendarCreateDateFrom, setCalendarCreateDateFrom,
         calendarCreateDateTo, setCalendarCreateDateTo, setLoading, parseAndFormatImages,
-        selectedItem, sidebarVisible, setSidebarVisible,handleSelectItem }
+        selectedItem, sidebarVisible, setSidebarVisible, handleSelectItem }
         = useListPage<typeof query, AppUser>({
             query: query,
             props: {
@@ -202,7 +202,7 @@ export default function AppUsersList() {
                 {/* <Tooltip className='text-xs font-semibold hide-tooltip-mobile' target={`#${uniqueId}`} content={fileName} showDelay={200} position="top" /> */}
             </div>
         );
-    };   
+    };
 
     return (
         <div className='relative h-screen flex flex-col overflow-auto'>
@@ -214,7 +214,7 @@ export default function AppUsersList() {
                 <Loader />
             ) : (
                 <>
-                    <div className="flex mx-2 flex-wrap justify-between items-center gap-3 border text-[var(--color-dark)] border-[var(--color-border)] rounded-md p-1 lg:my-1">
+                    <div className="flex mx-2 flex-wrap justify-start items-center gap-3 border text-[var(--color-dark)] border-[var(--color-border)] rounded-md p-1 lg:my-1">
                         <div className="flex sm:flex md:flex lg:hidden card justify-content-center">
                             <Toast ref={toast}></Toast>
                             <SplitButton
@@ -291,12 +291,6 @@ export default function AppUsersList() {
                             >
                                 {t("globals.clearAll")}
                             </Button>
-                            <Button
-                                onClick={() => setVisible(true)}
-                                className="p-1 lg:p-2 bg-[var(--color-primary)] text-[var(--color-white)] border border-[var(--color-border)] text-xs lg:text-sm rounded-md"
-                            >
-                                <IoMdSettings size={20} />
-                            </Button>
                         </div>
 
                         <Dialog
@@ -314,7 +308,7 @@ export default function AppUsersList() {
                             }}
                         >
                             <div className="my-2">
-                                <label className="flex items-center justify-end space-x-2 mb-2">
+                                <label className="flex items-center justify-start space-x-2 mb-3">
                                     <Checkbox
                                         onChange={handleSelectAll}
                                         checked={visibleColumns.length === columnsConfig.length}
@@ -414,6 +408,20 @@ export default function AppUsersList() {
                                 <IoMdRefresh size={18} />
                             </Button>
                         </div>
+
+                        <div className="flex card justify-content-center">
+                            <Button
+                                onClick={() => setVisible(true)}
+                                className="p-1 lg:p-2 bg-[var(--color-primary)] text-[var(--color-white)] border border-[var(--color-border)] text-xs lg:text-sm rounded-md"
+                                tooltip={t("globals.columnVisibility")}
+                                tooltipOptions={{
+                                    position: 'top',
+                                    className: 'font-normal rounded text-xs'
+                                }}
+                            >
+                                <IoMdSettings size={20} />
+                            </Button>
+                        </div>
                     </div>
 
                     <div className="m-2 ">
@@ -425,7 +433,7 @@ export default function AppUsersList() {
                                 dataKey="id"
                                 showGridlines
                                 resizableColumns
-                                columnResizeMode="fit"
+                                columnResizeMode="expand"
                                 filters={filters}
                                 sortField={sortField}
                                 sortOrder={sortOrder as 1 | 0 | -1}
@@ -436,6 +444,7 @@ export default function AppUsersList() {
                                 rowsPerPageOptions={[10, 25, 50]}
                                 rows={rows}
                                 first={first}
+                                rowHover
                                 totalRecords={totalRecords}
                                 onPage={onPage}
                                 globalFilter={globalFilterValue}
@@ -1220,23 +1229,27 @@ export default function AppUsersList() {
                                                     (file: CustomFile, index: number) => (
                                                         <li
                                                             key={index}
-                                                            className="w-[150px] h-[150px] flex items-center justify-center"
+                                                            className="flex items-center justify-center"
                                                         >
-                                                            <Image
-                                                                src={`${import.meta.env.VITE_API_URL}/ImportFiles/${file.filePath.replace(/\\/g, "/")}`}
-                                                                alt={`Uploaded file ${index + 1}`}
-                                                                className="w-full h-full object-cover rounded-full shadow-lg"
-                                                            />
+                                                            <div className="w-[200px] h-[200px] rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                                                                <Image
+                                                                    src={`${import.meta.env.VITE_API_URL}/ImportFiles/${file.filePath.replace(/\\/g, "/")}`}
+                                                                    alt={`Uploaded file ${index + 1}`}
+                                                                    className="w-full h-full object-cover"
+                                                                />
+                                                            </div>
                                                         </li>
                                                     ))}
                                             </ul>
                                         </div>
                                     ) : (
-                                        <Image
-                                            src={userAvtar}
-                                            alt="User Photo"
-                                            className="w-full h-full object-cover rounded-full shadow-lg"
-                                        />
+                                        <div className="w-[200px] h-[200px] rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                                            <Image
+                                                src={userAvtar}
+                                                alt="User Photo"
+                                                className="w-full h-full object-cover"
+                                            />
+                                        </div>
                                     )}
                                 </div>
 
