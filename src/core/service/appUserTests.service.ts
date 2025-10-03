@@ -81,7 +81,6 @@ export const convertLangItem = async (id: any, lang: any): Promise<any> => {
 
 export const appUserTestPageDataService = getGridData("AppUserTest");
 
-
 export const AppUserTestsService = () => {
 	return useBaseService<AppUserTest>("AppUserTest");
 };
