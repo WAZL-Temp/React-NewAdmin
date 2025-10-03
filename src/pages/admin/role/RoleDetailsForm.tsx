@@ -310,191 +310,192 @@ const RoleDetailsForm = () => {
     };
 
     return (
-        <div className="relative h-screen flex flex-col overflow-y-auto overflow-x-hidden">
-            <div className="flex items-center p-1 shadow-md bg-[var(--color-white)] text-[var(--color-dark)] w-full fixed  top-30 z-20">
-                <Button
-                    className="backBtn cursor-pointer flex items-center"
-                    onClick={handleBackToUser}
-                >
-                    <BsArrowLeft className="h-6 w-6 cursor-pointer mx-3" />
-                </Button>
-                <h1 className=" capitalize text-[14px] font-semibold ">{t("globals.backto")} {t("appUsers.form_detail.fields.modelname")}</h1>
-            </div>
-
-            <div className="flex flex-col p-4 border-none mb-10 sm:mb-24">
-                <div className="import-grid pb-2 lg:pb-4 mt-5 lg:mt-10">
-                    <div className="flex flex-col">
-                        <div className=" flex items-center">
-                            <label
-                                htmlFor="name"
-                                className="text-sm font-bold py-2"
-                            >
-                                {t("appUsers.columns.fields.name")}
-                            </label>
-                            <span className=" text-red-600 pl-2">*</span>
-                            <TooltipWithText text={t('appUsers.columns.fields.name')} />
-                        </div>
-
-                        <InputText
-                            id="name"
-                            className="w-full lg:w-20rem  rounded-md py-2 bg-[var(--color-white)] px-3 border text-sm border-[var(--color-gray)] focus:border-blue-500 focus:ring focus:ring-blue-200"
-                            type="text"
-                            placeholder={t('appUsers.columns.fields.name')}
-                            name="name"
-                            value={model.name}
-                            onChange={handleInputChange}
-                        />
-                    </div>
-
-                    <div className="flex flex-col">
-                        <div className=" flex items-center">
-                            <label
-                                htmlFor="role"
-                                className="text-sm font-bold py-2 "
-                            >
-                                {t("appUsers.columns.fields.role")}
-                            </label>
-                            <span className=" text-red-600 pl-2">*</span>
-                            <TooltipWithText text={t("appUsers.columns.fields.role")} />
-                        </div>
-                        <Dropdown
-                            id="select"
-                            name="select"
-                            value={selectedRole}
-                            onChange={(e) => handleDropdownChange(e.value)}
-                            options={roleList}
-                            placeholder={t("appUsers.columns.fields.role")}
-                            optionLabel="name"
-                            filter
-                            className="w-full lg:w-20rem text-sm bg-[var(--color-white)]  flex items-center h-[40px]"
-                            emptyFilterMessage={t("globals.noResults")}
-                        />
-                    </div>
+        <div className='relative h-screen flex flex-col'>
+            <div className="flex flex-col overflow-y-auto overflow-x-hidden">
+                <div className="flex items-center p-1 shadow-md bg-[var(--color-white)] text-[var(--color-dark)] w-full fixed  top-30 z-20">
+                    <Button
+                        className="backBtn cursor-pointer flex items-center"
+                        onClick={handleBackToUser}
+                    >
+                        <BsArrowLeft className="h-6 w-6 cursor-pointer mx-3" />
+                    </Button>
+                    <h1 className=" capitalize text-[14px] font-semibold ">{t("globals.backto")} {t("appUsers.form_detail.fields.modelname")}</h1>
                 </div>
-                <small className="text-red-500 my-2 block">{errorMsg}</small>
 
-                <DataTable value={roleData} className="p-datatable-gridlines datatable-responsive tableResponsive" >
-                    <Column
-                        headerStyle={{
-                            backgroundColor: "var(--color-primary)",
-                            color: "var(--color-white)",
-                            textAlign: "center",
-                        }}
-                        field="name"
-                        header={t('appUsers.columns.fields.name')}
-                        style={{ width: '50px', minWidth: '50px', maxWidth: '50px', background: "var(--color-white)", color: 'var(--color-dark)' }}
-                        className="text-sm sticky text-slate-600 font-semibold whitespace-nowrap overflow-hidden text-ellipsis"
-                    />
-                    <Column
-                        header={t('globals.action')}
-                        headerStyle={{
-                            backgroundColor: "var(--color-primary)",
-                            color: "var(--color-white)",
-                            textAlign: "center",
-                            fontSize: "13px"
-                        }}
-                        className='text-xs '
-                        body={(item) => {
-                            return (
+                <div className="flex flex-col p-2 border-none mb-10 sm:mb-24">
+                    <div className="import-grid pb-2 lg:pb-4 mt-5 lg:mt-10">
+                        <div className="flex flex-col">
+                            <div className=" flex items-center">
+                                <label
+                                    htmlFor="name"
+                                    className="text-sm font-bold py-2"
+                                >
+                                    {t("appUsers.columns.fields.name")}
+                                </label>
+                                <span className=" text-red-600 pl-2">*</span>
+                                <TooltipWithText text={t('appUsers.columns.fields.name')} />
+                            </div>
+
+                            <InputText
+                                id="name"
+                                className="w-full lg:w-20rem  rounded-md py-2 bg-[var(--color-white)] px-3 border text-sm border-[var(--color-gray)] focus:border-blue-500 focus:ring focus:ring-blue-200"
+                                type="text"
+                                placeholder={t('appUsers.columns.fields.name')}
+                                name="name"
+                                value={model.name}
+                                onChange={handleInputChange}
+                            />
+                        </div>
+
+                        <div className="flex flex-col">
+                            <div className=" flex items-center">
+                                <label
+                                    htmlFor="role"
+                                    className="text-sm font-bold py-2 "
+                                >
+                                    {t("appUsers.columns.fields.role")}
+                                </label>
+                                <span className=" text-red-600 pl-2">*</span>
+                                <TooltipWithText text={t("appUsers.columns.fields.role")} />
+                            </div>
+                            <Dropdown
+                                id="select"
+                                name="select"
+                                value={selectedRole}
+                                onChange={(e) => handleDropdownChange(e.value)}
+                                options={roleList}
+                                placeholder={t("appUsers.columns.fields.role")}
+                                optionLabel="name"
+                                filter
+                                className="w-full lg:w-20rem text-sm bg-[var(--color-white)]  flex items-center h-[40px]"
+                                emptyFilterMessage={t("globals.noResults")}
+                            />
+                        </div>
+                    </div>
+                    <small className="text-red-500 my-2 block">{errorMsg}</small>
+
+                    <DataTable value={roleData} className="p-datatable-gridlines datatable-responsive tableResponsive" >
+                        <Column
+                            headerStyle={{
+                                backgroundColor: "var(--color-primary)",
+                                color: "var(--color-white)",
+                                textAlign: "center",
+                            }}
+                            field="name"
+                            header={t('appUsers.columns.fields.name')}
+                            style={{ width: '50px', minWidth: '50px', maxWidth: '50px', background: "var(--color-white)", color: 'var(--color-dark)' }}
+                            className="text-sm sticky text-slate-600 font-semibold whitespace-nowrap overflow-hidden text-ellipsis"
+                        />
+                        <Column
+                            header={t('globals.action')}
+                            headerStyle={{
+                                backgroundColor: "var(--color-primary)",
+                                color: "var(--color-white)",
+                                textAlign: "center",
+                                fontSize: "13px"
+                            }}
+                            className='text-xs '
+                            body={(item) => {
+                                return (
+                                    <MultiSelect
+                                        id={`action-${item.id}`}
+                                        name="action"
+                                        value={(item.selectedActions || []).map((action: SourceOption) => action.value)}
+                                        options={item.actions}
+                                        onChange={(e) => handleMultiSelectChange(e, item, 'selectedActions')}
+                                        optionLabel="name"
+                                        optionValue="value"
+                                        filter
+                                        placeholder={t("roles.columns.fields.actions")}
+                                        className="w-full border bg-[var(--color-white)] text-[var(--color-dark)] border-[var(--color-gray)] rounded-md shadow-sm"
+                                        emptyFilterMessage={t("globals.noResults")}
+                                    />
+                                )
+                            }}
+                        />
+                        <Column
+                            header={t("roles.columns.fields.hideColumns")}
+                            headerStyle={{
+                                backgroundColor: "var(--color-primary)",
+                                color: "var(--color-white)",
+                                textAlign: "center",
+                                fontSize: "13px"
+                            }}
+                            className='text-xs '
+                            body={(item) => (
                                 <MultiSelect
-                                    id={`action-${item.id}`}
-                                    name="action"
-                                    value={(item.selectedActions || []).map((action: SourceOption) => action.value)}
-                                    options={item.actions}
-                                    onChange={(e) => handleMultiSelectChange(e, item, 'selectedActions')}
+                                    id={`hideColumn-${item.id}`}
+                                    name="hideColumn"
+                                    value={(item.selectedHideColumns || []).map((col: { value: SourceOption; }) => col.value)}
+                                    options={item.hideColumns}
+                                    onChange={(e) => handleMultiSelectChange(e, item, 'selectedHideColumns')}
                                     optionLabel="name"
                                     optionValue="value"
                                     filter
-                                    placeholder={t("roles.columns.fields.actions")}
+                                    placeholder={t("roles.columns.fields.hideColumns")}
                                     className="w-full border bg-[var(--color-white)] text-[var(--color-dark)] border-[var(--color-gray)] rounded-md shadow-sm"
                                     emptyFilterMessage={t("globals.noResults")}
                                 />
-                            )
-                        }}
-                    />
-                    <Column
-                        header={t("roles.columns.fields.hideColumns")}
-                        headerStyle={{
-                            backgroundColor: "var(--color-primary)",
-                            color: "var(--color-white)",
-                            textAlign: "center",
-                            fontSize: "13px"
-                        }}
-                        className='text-xs '
-                        body={(item) => (
-                            <MultiSelect
-                                id={`hideColumn-${item.id}`}
-                                name="hideColumn"
-                                value={(item.selectedHideColumns || []).map((col: { value: SourceOption; }) => col.value)}
-                                options={item.hideColumns}
-                                onChange={(e) => handleMultiSelectChange(e, item, 'selectedHideColumns')}
-                                optionLabel="name"
-                                optionValue="value"
-                                filter
-                                placeholder={t("roles.columns.fields.hideColumns")}
-                                className="w-full border bg-[var(--color-white)] text-[var(--color-dark)] border-[var(--color-gray)] rounded-md shadow-sm"
-                                emptyFilterMessage={t("globals.noResults")}
-                            />
-                        )}
-                    />
-                    <Column
-                        header={t("roles.columns.fields.statuses")}
-                        headerStyle={{
-                            backgroundColor: "var(--color-primary)",
-                            color: "var(--color-white)",
-                            textAlign: "center",
-                        }}
-                        body={(item) => {
-                            return (
-                                <MultiSelect
-                                    id={`status-${item.id}`}
-                                    name="status"
-                                    value={(item.selectedStatuses || []).map((status: SourceOption) =>
-                                        status.value === "1" ? status.label : status.value
-                                    )}
-                                    options={item.statuses}
-                                    onChange={(e) => handleMultiSelectChange(e, item, 'selectedStatuses')}
-                                    optionLabel="name"
-                                    optionValue="label"
-                                    filter
-                                    placeholder={t("roles.columns.fields.statuses")}
-                                    className="w-full border bg-[var(--color-white)] text-[var(--color-dark)] border-[var(--color-gray)] rounded-md shadow-sm"
-                                    emptyFilterMessage={t("globals.noResults")}
-                                />
-                            )
-                        }}
-                    />
-                </DataTable>
-            </div>
-
-            <div className="fixed flex bottom-0 z-auto bg-[var(--color-white)] shadow-lg border-t border-[var(--color-gray)] p-2 available-width">
-                <div className="flex justify-end items-end gap-2 px-3">
-                    <Button
-                        type="button"
-                        className={`p-2 w-[100px] font-medium text-[13px] flex items-center justify-center 
-                                 bg-[#059669] text-white disabled:bg-[#9ca3af] disabled:text-black disabled:cursor-not-allowed`}
-                        onClick={save}                    >
-                        <span>{t('globals.save')}</span> <FaSave size={15} />
-                    </Button>
+                            )}
+                        />
+                        <Column
+                            header={t("roles.columns.fields.statuses")}
+                            headerStyle={{
+                                backgroundColor: "var(--color-primary)",
+                                color: "var(--color-white)",
+                                textAlign: "center",
+                            }}
+                            body={(item) => {
+                                return (
+                                    <MultiSelect
+                                        id={`status-${item.id}`}
+                                        name="status"
+                                        value={(item.selectedStatuses || []).map((status: SourceOption) =>
+                                            status.value === "1" ? status.label : status.value
+                                        )}
+                                        options={item.statuses}
+                                        onChange={(e) => handleMultiSelectChange(e, item, 'selectedStatuses')}
+                                        optionLabel="name"
+                                        optionValue="label"
+                                        filter
+                                        placeholder={t("roles.columns.fields.statuses")}
+                                        className="w-full border bg-[var(--color-white)] text-[var(--color-dark)] border-[var(--color-gray)] rounded-md shadow-sm"
+                                        emptyFilterMessage={t("globals.noResults")}
+                                    />
+                                )
+                            }}
+                        />
+                    </DataTable>
                 </div>
-            </div>
 
-            <Dialog
-                visible={showSuccessDialog}
-                onHide={handleCloseDialog}
-                className="w-[350px]">
-                <div className="flex flex-col items-center">
-                    <Image
-                        src={successImg}
-                        alt="Update Image"
-                        className="w-24 h-24 mb-4"
-                    />
-                    <div className="text-center flex flex-col gap-2">
-                        <p className="text-[16px] font-semibold text-slate-800">{model.name ? t('globals.addDialogMsg', { model: 'Role' }) : t('globals.updateDialogMsg', { model: 'Role' })}</p>
+                <div className="fixed flex bottom-0 z-auto bg-[var(--color-white)] shadow-lg border-t border-[var(--color-gray)] p-2 available-width">
+                    <div className="flex justify-end items-end gap-2 px-3">
+                        <Button
+                            type="button"
+                            className={`p-2 w-[100px] font-medium text-[13px] flex items-center justify-center 
+                                 bg-[#059669] text-white disabled:bg-[#9ca3af] disabled:text-black disabled:cursor-not-allowed`}
+                            onClick={save}                    >
+                            <span>{t('globals.save')}</span> <FaSave size={15} />
+                        </Button>
                     </div>
                 </div>
-            </Dialog>
 
+                <Dialog
+                    visible={showSuccessDialog}
+                    onHide={handleCloseDialog}
+                    className="w-[350px]">
+                    <div className="flex flex-col items-center">
+                        <Image
+                            src={successImg}
+                            alt="Update Image"
+                            className="w-24 h-24 mb-4"
+                        />
+                        <div className="text-center flex flex-col gap-2">
+                            <p className="text-[16px] font-semibold text-slate-800">{model.name ? t('globals.addDialogMsg', { model: 'Role' }) : t('globals.updateDialogMsg', { model: 'Role' })}</p>
+                        </div>
+                    </div>
+                </Dialog>
+            </div>
         </div>
     );
 };

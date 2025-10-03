@@ -22,6 +22,7 @@ export { Paginator } from 'primereact/paginator';
 export { Skeleton } from 'primereact/skeleton';
 export { RadioButton } from 'primereact/radiobutton';
 export { Sidebar } from "primereact/sidebar";
+export { TabView, TabPanel } from 'primereact/tabview';
 
 
 // export type { StepperRefAttributes } from "primereact/stepper";
@@ -30,7 +31,6 @@ export type { RadioButtonChangeEvent } from "primereact/radiobutton";
 export type { MultiSelectChangeEvent } from "primereact/multiselect";
 export type { Dropdown as DropdownType, DropdownProps } from "primereact/dropdown";
 export type { MultiSelect as MultiSelectType, MultiSelectProps } from "primereact/multiselect";
-
 
 export { TiEye } from "react-icons/ti";
 export { RiPencilFill } from "react-icons/ri";

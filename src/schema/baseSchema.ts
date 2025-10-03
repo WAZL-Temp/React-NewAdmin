@@ -140,10 +140,15 @@ const numberOrDoubleField = (fieldName: string, t: TransFn) =>
         message: t('validators.invalid', { field: fieldName }),
     });
 
+const anyValueField = (fieldName: string, t: TransFn) =>
+  z.any({
+    invalid_type_error: t('validators.invalid', { field: fieldName }),
+    required_error: t('validators.required', { field: fieldName }),
+  });
 
 export {
     stringOnlyAlphabets, stringAlphanumeric, stringAlphanumericWithSpecialChars,
     stringOnlySpecialChars, gstField, numericField, stringNumeric,
     stringMobileNumber, stringDateFormat, stringEmail, stringPassword, requiredStringField,
-    booleanField, fileUploadField, genderField, booleanRadioField, numberOrDoubleField
+    booleanField, fileUploadField, genderField, booleanRadioField, numberOrDoubleField,anyValueField
 };
