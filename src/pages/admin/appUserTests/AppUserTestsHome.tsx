@@ -63,10 +63,10 @@ export default function AppUserTestsHome() {
 
             <section className="p-2">
               <div className="summary-grid">
-                <SummaryCard title={t("globals.total")} value={summaryData?.total ?? 0} icon={<CiShoppingCart className="text-blue-600 text-xl lg:text-3xl" />} bgColor="bg-blue-100" iconBgColor="bg-blue-200" />
-                <SummaryCard title={t("globals.average")} value={summaryData?.avgNo ?? 0} icon={<MdOutlineLocationOn className="text-orange-600 text-xl lg:text-3xl" />} bgColor="bg-orange-100" iconBgColor="bg-orange-200" />
-                <SummaryCard title={t("globals.maxNo")} value={summaryData?.maxNo ?? 0} icon={<GoInbox className="text-cyan-600 text-xl lg:text-3xl" />} bgColor="bg-cyan-100" iconBgColor="bg-cyan-200" />
-                <SummaryCard title={t("globals.minNo")} value={summaryData?.minNo ?? 0} icon={<FaRegComment className="text-purple-600 text-xl lg:text-3xl" />} bgColor="bg-purple-100" iconBgColor="bg-purple-200" />
+                <SummaryCard title={t("globals.total")} value={summaryData?.total ?? 0} icon={<CiShoppingCart className="text-[var(--color-primary)] text-xl lg:text-3xl" />} />
+                <SummaryCard title={t("globals.average")} value={summaryData?.avgNo ?? 0} icon={<MdOutlineLocationOn className="text-[var(--color-primary)] text-xl lg:text-3xl" />} />
+                <SummaryCard title={t("globals.maxNo")} value={summaryData?.maxNo ?? 0} icon={<GoInbox className="text-[var(--color-primary)] text-xl lg:text-3xl" />} />
+                <SummaryCard title={t("globals.minNo")} value={summaryData?.minNo ?? 0} icon={<FaRegComment className="text-[var(--color-primary)] text-xl lg:text-3xl" />} />
               </div>
             </section>
 
@@ -74,7 +74,7 @@ export default function AppUserTestsHome() {
               <div onClick={handleListClick}>
                 <Button
                   label={t('globals.viewAll')}
-                  className="rounded-md bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white p-2 border-none text-sm"
+                  className="rounded-md homecard text-black p-2 border-none text-sm"
                 />
               </div>
             </section>
@@ -148,14 +148,24 @@ export default function AppUserTestsHome() {
   )
 }
 
-const SummaryCard = ({ title, value, icon, bgColor, iconBgColor }: { title: string; value: number; icon: React.ReactNode; bgColor: string; iconBgColor: string }) => (
-  <div className={`${bgColor} shadow-xl p-3 lg:p-4 border border-[var(--color-border)] rounded-xl transition-transform transform hover:scale-105 hover:shadow-2xl`}>
+const SummaryCard = ({
+  title,
+  value,
+  icon,
+}: {
+  title: string;
+  value: number;
+  icon: React.ReactNode;
+}) => (
+  <div
+    className="homecard shadow-xl p-2 lg:p-3 border border-[var(--color-border)] rounded-xl transition-transform transform hover:scale-105 hover:shadow-2xl"
+  >
     <div className="flex justify-between mb-3">
       <div>
-        <span className="block text-black font-semibold text-sm mb-2">{title}</span>
-        <div className="text-black font-bold text-xl lg:text-3xl">{value}</div>
+        <span className="block text-white font-semibold text-sm mb-2">{title}</span>
+        <div className="text-white font-semibold text-lg lg:text-xl">{value}</div>
       </div>
-      <div className={`flex items-center justify-center ${iconBgColor} rounded-full w-14 h-14`}>
+      <div className="flex items-center justify-center bg-white rounded-full w-14 h-14">
         {icon}
       </div>
     </div>
@@ -180,19 +190,19 @@ const ItemSlider = ({ user }: { user: AppUserTest }) => {
           </div>
           <div className="text-center">
             <h4 className="text-base sm:text-lg font-semibold text-gray-900">{user.name}</h4>
-            <p className="text-xs sm:text-sm text-gray-600 mb-4">{user.emailId}</p>
+            {/* <p className="text-xs sm:text-sm text-gray-600 mb-4">{user.emailId}</p> */}
           </div>
           <div className="flex items-center justify-center gap-3">
             <div
               onClick={() => navigate(`/${baseModelName}/${user.id}`)}
-              className="flex p-[6px] items-center justify-center rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white hover:bg-[var(--color-primary)] transition cursor-pointer view-tooltip-target"
+              className="flex p-[6px] items-center justify-center rounded-full homecard text-white hover:bg-[var(--color-primary)] transition cursor-pointer view-tooltip-target"
             >
               <Tooltip target=".view-tooltip-target" content={t('globals.view')} position="top" className='text-xs font-semibold' />
               <CgEye className="text-white w-7 h-7 " />
             </div>
             <div
               onClick={() => navigate(`/${baseModelName}/edit/${user.id}`)}
-              className="p-[6px] flex items-center justify-center rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white hover:bg-[var(--color-primary)] transition cursor-pointer edit-tooltip-target"
+              className="p-[6px] flex items-center justify-center rounded-full homecard text-white hover:bg-[var(--color-primary)] transition cursor-pointer edit-tooltip-target"
             >
               <Tooltip target=".edit-tooltip-target" content={t('globals.edit')} position="top" className='text-xs font-semibold' />
               <RiFileEditLine className="text-white w-7 h-7" />
@@ -243,7 +253,7 @@ const ItemList = ({ title, users }: { title: string; users: UserData[] }) => {
                 <div className="flex justify-center md:justify-start gap-3 sm:gap-4 mt-3 sm:mt-4">
                   <Button
                     icon="pi pi-file-edit"
-                    className="flex items-center gap-2 text-white bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] hover:text-white px-3 py-2 border border-[var(--color-primary)] rounded-md text-xs whitespace-nowrap"
+                    className="flex items-center gap-2 text-white homecard hover:text-white px-3 py-2 border border-[var(--color-primary)] rounded-md text-xs whitespace-nowrap"
                     onClick={() => navigate(`/${baseModelName}/edit/${user.id}`)}
                   >
                     {t('globals.edit')}
@@ -291,7 +301,7 @@ const ItemCard = ({ user }: { user: AppUserTest }) => {
         <Button
           label={t('globals.view')}
           icon="pi pi-arrow-right"
-          className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white py-2 px-5 rounded-full hover:bg-[var(--color-primary)] transition duration-300 text-sm"
+          className="homecard text-white py-2 px-5 rounded-full hover:bg-[var(--color-primary)] transition duration-300 text-sm"
           onClick={() => navigate(`/appUserTests/${user.id}`)}
         />
       </div>
