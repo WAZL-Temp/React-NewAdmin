@@ -1,4 +1,4 @@
-import { useState,useMemo } from 'react';
+import { useState } from 'react';
 import { AppUserTestsService } from '../../../core/service/appUserTests.service';
 import { BsArrowLeft, Button, Column, DataTable, DataTableFilterMeta, Dialog, FilterMatchMode, Image, InputText, RiEyeFill, RiFileDownloadFill, RiFileFill, SplitButton, Tooltip } from '../../../sharedBase/globalImports';
 import { useTranslation } from '../../../sharedBase/globalUtils';
@@ -18,14 +18,14 @@ const AppUserTestsImport = () => {
   const [importedData, setImportedData] = useState<AppUserTest[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<any>(null);
-   const fileUploadService = useFileUploadService("AppUserTest");
+  const fileUploadService = useFileUploadService("AppUserTest");
   const [validFile, setValidFile] = useState(false);
   const [importValidateComplete, setImportValidateComplete] = useState(false);
   const [totalRecords, setTotalRecords] = useState<number>(0);
   const [importSyncComplete, setImportSyncComplete] = useState(false);
   const [loadingSync, setLoadingSync] = useState(false);
-  // const baseModelName = "appUserTests";
-const typeName= "appUserTest";
+  const baseModelName = "appUserTest";
+  const typeName= "appUserTest";
   const appUserTestsService = AppUserTestsService();
   const [filters, setFilters] = useState<DataTableFilterMeta>({ global: { value: null, matchMode: FilterMatchMode.CONTAINS } });
 
@@ -90,7 +90,7 @@ const typeName= "appUserTest";
     try {
 
       if (!uploadedFile) {
-        console.error("No file uploaded")
+        console.error("No file uploaded");
         return
       }
       setImportSyncComplete(true);
@@ -104,16 +104,17 @@ const typeName= "appUserTest";
         }, 2000);
       }
     } catch (error) {
-      console.error("Error syncing data:", error)
+      console.error("Error syncing data:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   const handleFileUpload = (files: CustomFile) => {
     setUploadedFile(files);
   };
-const columnsConfigDefault = useMemo(() =>[
+
+  const columnsConfigDefault = useMemo(() =>[
 			 {field: 'id', header: t("appUserTests.columns.fields.id"), isDefault: true, show: true }, 
 			 {field: 'name', header: t("appUserTests.columns.fields.name"), isDefault: true, show: true }, 
 			 {field: 'firstName', header: t("appUserTests.columns.fields.firstName"), isDefault: true, show: true }, 
@@ -165,7 +166,6 @@ const columnsConfigDefault = useMemo(() =>[
 			 {field: 'isDelete', header: t("appUserTests.columns.fields.isDelete"), isDefault: true, show: true }, 
  		].filter(col => col.field),
         [t]);
-  
   const renderFileCell = (rowData: RowData, field: string, rowIndex: number) => {
     let fileName = "";
     const uniqueId = `tooltip-${field}-${rowIndex}`;
@@ -189,7 +189,7 @@ const columnsConfigDefault = useMemo(() =>[
     );
   };
 
- const handleFilterChangeLocal = (field: string, value: string | number | boolean | null | Array<string | number | boolean>) => {
+  const handleFilterChangeLocal = (field: string, value: string | number | boolean | null | Array<string | number | boolean>) => {
     setFilters(prevFilters => ({
       ...prevFilters,
       [field]: Array.isArray(value)
@@ -197,6 +197,7 @@ const columnsConfigDefault = useMemo(() =>[
         : { value, matchMode: FilterMatchMode.CONTAINS },
     }));
   };
+
   return (
     <div className="relative flex flex-col h-screen overflow-y-auto overflow-x-hidden mb-20">
       <div className="flex items-center topbar p-1 bg-[var(--color-white] text-[var(--color-dark)] w-full fixed top-30 z-20">
@@ -206,7 +207,7 @@ const columnsConfigDefault = useMemo(() =>[
         >
           <BsArrowLeft className=" h-7 w-7 cursor-pointer mx-3" />
         </Button>
-        <h1 className=" capitalize text-[14px] font-semibold ">{t("globals.backto")} {t("appUserTests.form_detail.fields.modelname")}</h1>
+        <h1 className=" capitalize text-[14px] font-semibold ">{t("globals.backto")} {t("appUsers.form_detail.fields.modelname")}</h1>
       </div>
 
       <div className="flex flex-col h-full pt-10 px-4">
@@ -266,7 +267,7 @@ const columnsConfigDefault = useMemo(() =>[
           <div className="bg-[var(--color-white] border-[var(--color-border)] rounded-md my-4">
             <div className=" container-fluid pb-28">
               {loading ? (
-                <TableSkeleton cols={columnsConfigDefault} />
+                <TableSkeleton cols={columns} />
               ) : (
                 <>
                   <DataTable
@@ -292,9 +293,16 @@ const columnsConfigDefault = useMemo(() =>[
                     className="p-datatable-gridlines  datatable-responsive bg-[var(--color-white)]"
                   >
                     <Column
-                      field="importAction" header={t("appUserTests.form_detail.fields.importAction")} sortable
+                      field="importAction" header={t("appUsers.form_detail.fields.importAction")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("importAction", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <>
                           <div id={`tooltip-importAction-${rowIndex}`} className="text-left truncate font-medium">
@@ -305,9 +313,16 @@ const columnsConfigDefault = useMemo(() =>[
                       )}
                     />
                     <Column
-                      field="importRemark" header={t("appUserTests.form_detail.fields.importRemark")} sortable
+                      field="importRemark" header={t("appUsers.form_detail.fields.importRemark")} sortable
                       headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
                       style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("importRemark", e.target.value)}
+                        />
+                      }
                       body={(rowData, { rowIndex }) => (
                         <>
                           <div id={`tooltip-importRemark-${rowIndex}`} className="text-left truncate font-medium">
@@ -330,7 +345,7 @@ onChange={(e) => handleFilterChangeLocal("name", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.name}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
@@ -350,7 +365,7 @@ onChange={(e) => handleFilterChangeLocal("firstName", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-firstName-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-firstName-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.firstName}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-firstName-${rowIndex}`} content={rowData.firstName} showDelay={200} position="top" />
@@ -370,7 +385,7 @@ onChange={(e) => handleFilterChangeLocal("lastName", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-lastName-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-lastName-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.lastName}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-lastName-${rowIndex}`} content={rowData.lastName} showDelay={200} position="top" />
@@ -390,7 +405,7 @@ onChange={(e) => handleFilterChangeLocal("mobile", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-mobile-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-mobile-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.mobile}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-mobile-${rowIndex}`} content={rowData.mobile} showDelay={200} position="top" />
@@ -410,7 +425,7 @@ onChange={(e) => handleFilterChangeLocal("mobileVerified", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-mobileVerified-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-mobileVerified-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.mobileVerified ? "true" : "false"}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-mobileVerified-${rowIndex}`} content={rowData.mobileVerified ? "true" : "false"} showDelay={200} position="top" />
@@ -430,7 +445,7 @@ onChange={(e) => handleFilterChangeLocal("emailId", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-emailId-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-emailId-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.emailId}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-emailId-${rowIndex}`} content={rowData.emailId} showDelay={200} position="top" />
@@ -450,7 +465,7 @@ onChange={(e) => handleFilterChangeLocal("emailVerified", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-emailVerified-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-emailVerified-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.emailVerified ? "true" : "false"}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-emailVerified-${rowIndex}`} content={rowData.emailVerified ? "true" : "false"} showDelay={200} position="top" />
@@ -470,7 +485,7 @@ onChange={(e) => handleFilterChangeLocal("shopName", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-shopName-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-shopName-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.shopName}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-shopName-${rowIndex}`} content={rowData.shopName} showDelay={200} position="top" />
@@ -490,7 +505,7 @@ onChange={(e) => handleFilterChangeLocal("password", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-password-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-password-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.password}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-password-${rowIndex}`} content={rowData.password} showDelay={200} position="top" />
@@ -510,7 +525,7 @@ onChange={(e) => handleFilterChangeLocal("pincode", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-pincode-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-pincode-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.pincode}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-pincode-${rowIndex}`} content={rowData.pincode} showDelay={200} position="top" />
@@ -530,7 +545,7 @@ onChange={(e) => handleFilterChangeLocal("state", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-state-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-state-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.state}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-state-${rowIndex}`} content={rowData.state} showDelay={200} position="top" />
@@ -550,7 +565,7 @@ onChange={(e) => handleFilterChangeLocal("district", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-district-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-district-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.district}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-district-${rowIndex}`} content={rowData.district} showDelay={200} position="top" />
@@ -570,7 +585,7 @@ onChange={(e) => handleFilterChangeLocal("address", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-address-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-address-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.address}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-address-${rowIndex}`} content={rowData.address} showDelay={200} position="top" />
@@ -590,7 +605,7 @@ onChange={(e) => handleFilterChangeLocal("addressLine", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-addressLine-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-addressLine-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.addressLine}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-addressLine-${rowIndex}`} content={rowData.addressLine} showDelay={200} position="top" />
@@ -610,7 +625,7 @@ onChange={(e) => handleFilterChangeLocal("verifyShopLabel", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-verifyShopLabel-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-verifyShopLabel-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.verifyShopLabel}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-verifyShopLabel-${rowIndex}`} content={rowData.verifyShopLabel} showDelay={200} position="top" />
@@ -630,7 +645,7 @@ onChange={(e) => handleFilterChangeLocal("gst", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-gst-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-gst-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.gst}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-gst-${rowIndex}`} content={rowData.gst} showDelay={200} position="top" />
@@ -649,7 +664,7 @@ onChange={(e) => handleFilterChangeLocal("gstCertificate", e.target.value)}
 /> 
  }
 body={(rowData, { rowIndex }) => (
-<div className="text-left truncate font-medium">
+<div className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {renderFileCell(rowData, 'gstCertificate', rowIndex)}
  </div>
 )} /> 
@@ -665,7 +680,7 @@ onChange={(e) => handleFilterChangeLocal("photoShopFront", e.target.value)}
 /> 
  }
 body={(rowData, { rowIndex }) => (
-<div className="text-left truncate font-medium">
+<div className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {renderFileCell(rowData, 'photoShopFront', rowIndex)}
  </div>
 )} /> 
@@ -681,7 +696,7 @@ onChange={(e) => handleFilterChangeLocal("visitingCard", e.target.value)}
 /> 
  }
 body={(rowData, { rowIndex }) => (
-<div className="text-left truncate font-medium">
+<div className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {renderFileCell(rowData, 'visitingCard', rowIndex)}
  </div>
 )} /> 
@@ -697,7 +712,7 @@ onChange={(e) => handleFilterChangeLocal("cheque", e.target.value)}
 /> 
  }
 body={(rowData, { rowIndex }) => (
-<div className="text-left truncate font-medium">
+<div className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {renderFileCell(rowData, 'cheque', rowIndex)}
  </div>
 )} /> 
@@ -714,7 +729,7 @@ onChange={(e) => handleFilterChangeLocal("gstOtp", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-gstOtp-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-gstOtp-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.gstOtp}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-gstOtp-${rowIndex}`} content={rowData.gstOtp} showDelay={200} position="top" />
@@ -734,7 +749,7 @@ onChange={(e) => handleFilterChangeLocal("isActive", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-isActive-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-isActive-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.isActive ? "true" : "false"}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isActive-${rowIndex}`} content={rowData.isActive ? "true" : "false"} showDelay={200} position="top" />
@@ -754,7 +769,7 @@ onChange={(e) => handleFilterChangeLocal("isAdmin", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-isAdmin-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-isAdmin-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.isAdmin ? "true" : "false"}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isAdmin-${rowIndex}`} content={rowData.isAdmin ? "true" : "false"} showDelay={200} position="top" />
@@ -774,7 +789,7 @@ onChange={(e) => handleFilterChangeLocal("hasImpersonateAccess", e.target.value)
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-hasImpersonateAccess-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-hasImpersonateAccess-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.hasImpersonateAccess ? "true" : "false"}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-hasImpersonateAccess-${rowIndex}`} content={rowData.hasImpersonateAccess ? "true" : "false"} showDelay={200} position="top" />
@@ -793,7 +808,7 @@ onChange={(e) => handleFilterChangeLocal("photoAttachment", e.target.value)}
 /> 
  }
 body={(rowData, { rowIndex }) => (
-<div className="text-left truncate font-medium">
+<div className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {renderFileCell(rowData, 'photoAttachment', rowIndex)}
  </div>
 )} /> 
@@ -810,7 +825,7 @@ onChange={(e) => handleFilterChangeLocal("roleLabel", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-roleLabel-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-roleLabel-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.roleLabel}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-roleLabel-${rowIndex}`} content={rowData.roleLabel} showDelay={200} position="top" />
@@ -830,7 +845,7 @@ onChange={(e) => handleFilterChangeLocal("publishLabel", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-publishLabel-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-publishLabel-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.publishLabel}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-publishLabel-${rowIndex}`} content={rowData.publishLabel} showDelay={200} position="top" />
@@ -849,7 +864,7 @@ onChange={(e) => handleFilterChangeLocal("lastLogin", e.target.value)}
 /> 
  }
 body={(rowData, { rowIndex }) => (
-<div id={`tooltip-lastLogin-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-lastLogin-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {formatDate(rowData.lastLogin)}
  </div>
 )} /> 
@@ -866,7 +881,7 @@ onChange={(e) => handleFilterChangeLocal("defaultLanguage", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-defaultLanguage-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-defaultLanguage-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.defaultLanguage}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-defaultLanguage-${rowIndex}`} content={rowData.defaultLanguage} showDelay={200} position="top" />
@@ -886,7 +901,7 @@ onChange={(e) => handleFilterChangeLocal("isPremiumUser", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-isPremiumUser-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-isPremiumUser-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.isPremiumUser ? "true" : "false"}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isPremiumUser-${rowIndex}`} content={rowData.isPremiumUser ? "true" : "false"} showDelay={200} position="top" />
@@ -906,7 +921,7 @@ onChange={(e) => handleFilterChangeLocal("totalPlot", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-totalPlot-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-totalPlot-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.totalPlot}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-totalPlot-${rowIndex}`} content={rowData.totalPlot} showDelay={200} position="top" />
@@ -926,7 +941,7 @@ onChange={(e) => handleFilterChangeLocal("reportedToName", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-reportedToName-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-reportedToName-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.reportedToName}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-reportedToName-${rowIndex}`} content={rowData.reportedToName} showDelay={200} position="top" />
@@ -946,7 +961,7 @@ onChange={(e) => handleFilterChangeLocal("reportedByName", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-reportedByName-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-reportedByName-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.reportedByName}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-reportedByName-${rowIndex}`} content={rowData.reportedByName} showDelay={200} position="top" />
@@ -966,7 +981,7 @@ onChange={(e) => handleFilterChangeLocal("genderLabel", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-genderLabel-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-genderLabel-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.genderLabel}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-genderLabel-${rowIndex}`} content={rowData.genderLabel} showDelay={200} position="top" />
@@ -985,7 +1000,7 @@ onChange={(e) => handleFilterChangeLocal("createDate", e.target.value)}
 /> 
  }
 body={(rowData, { rowIndex }) => (
-<div id={`tooltip-createDate-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-createDate-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {formatDate(rowData.createDate)}
  </div>
 )} /> 
@@ -1002,7 +1017,7 @@ onChange={(e) => handleFilterChangeLocal("createById", e.target.value)}
  }
 body={(rowData, { rowIndex }) => (
 <>
-<div id={`tooltip-createById-${rowIndex}`} className="text-left truncate font-medium">
+<div id={`tooltip-createById-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
  {rowData.createById}
  </div>
 <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-createById-${rowIndex}`} content={rowData.createById} showDelay={200} position="top" />
