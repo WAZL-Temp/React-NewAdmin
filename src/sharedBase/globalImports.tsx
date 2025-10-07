@@ -65,6 +65,10 @@ export { FiUploadCloud } from "react-icons/fi";
 export { IoCheckmarkCircleSharp } from "react-icons/io5";
 export { IoList } from "react-icons/io5";
 export { IoLanguage } from "react-icons/io5";
+export { MdGridView } from "react-icons/md";
+export { RiTestTubeLine } from "react-icons/ri";
+export { BiCategory } from "react-icons/bi";
+export { MdOutlineArrowDropDown } from "react-icons/md";
 
 export type { MenuItem } from "primereact/menuitem";
 export type { CarouselResponsiveOption } from 'primereact/carousel';

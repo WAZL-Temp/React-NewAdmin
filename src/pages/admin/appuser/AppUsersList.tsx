@@ -11,6 +11,7 @@ import { AppUserService, convertLang } from "../../../core/service/appUsers.serv
 import Loader from "../../../components/Loader";
 import userAvtar from "../../../assets/images/user-avatar.png";
 import { CustomFile } from "../../../core/model/customfile";
+import { useAppUserTabStore } from "../../../store/useAppUserTabStore";
 
 export default function AppUsersList() {
     const navigate = useNavigate();
@@ -39,6 +40,12 @@ export default function AppUsersList() {
             }
         });
     const [activeIndex, setActiveIndex] = useState(0);
+    const { tab } = useAppUserTabStore();
+
+    useEffect(() => {
+        if (tab === "inactive") setActiveIndex(1);
+        else setActiveIndex(0);
+    }, [tab]);
 
     const columnsConfigDefault = useMemo(() => [
         { field: "createDate", header: t("appUsers.columns.fields.createDate"), isDefault: true, show: true },
@@ -216,7 +223,6 @@ export default function AppUsersList() {
     const renderTable = (data: AppUser[]) => (
         <DataTable
             key={i18n.language}
-            //  key={t("datatable")}
             ref={dtRef}
             value={data}
             dataKey="id"
@@ -1001,7 +1007,7 @@ export default function AppUsersList() {
     );
 
     const tabsChange = (e: any) => {
-        setActiveIndex(e.index);        
+        setActiveIndex(e.index);
         setGlobalFilterValue('');
         query.setSearch({});
         query.tableSearch.searchRowFilter = {};
@@ -1137,17 +1143,17 @@ export default function AppUsersList() {
                             <div className="selectable-columns-container">
                                 <div className="selectable-columns-grid">
                                     {columnsConfigDefault.map((col) => (
-                                        <label key={col.field} className="flex items-center space-x-2">
-                                            <>
+                                        !col.isDefault ? (
+                                            <label key={col.field} className="flex items-center space-x-2">
                                                 <Checkbox
                                                     onChange={() => handleColumnChange(col.field)}
                                                     checked={visibleColumns.includes(col.field)}
-                                                    disabled={col.isDefault}
+                                                // disabled={col.isDefault}
                                                 >
                                                 </Checkbox>
                                                 <span className="text-sm sm:text-xs font-normal text-black">{col.header}</span>
-                                            </>
-                                        </label>
+                                            </label>
+                                        ) : null
                                     ))}
                                 </div>
                             </div>
@@ -1243,6 +1249,7 @@ export default function AppUsersList() {
                     <div>
                         {!query.isLoading && (
                             <TabView
+                                key={activeIndex}
                                 activeIndex={activeIndex}
                                 onTabChange={(e) => { tabsChange(e); }}
                             >

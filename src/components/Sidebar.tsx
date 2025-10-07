@@ -1,117 +1,264 @@
-import { useAuthStore } from "../store/auth.store";
-import { AiFillHome, Button, FiShoppingBag, FiUser, InputText, IoList, IoPersonSharp, RiLogoutCircleLine, RxCross2 } from "../sharedBase/globalImports";
-import { useLocation, useNavigate, useTranslation } from '../sharedBase/globalUtils';
-import { UserInfo } from "../types/auth";
-import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
-import { useEffect, useState } from "react";
-import { Action } from "../types/listpage";
-import { RoleDetail } from "../core/model/roledetail";
+"use client"
 
-interface SidebarProps {
-  isSidebarOpen: boolean;
-  toggleSidebar: () => void;
-  isMinimized: boolean;
-  toggleMinimized: () => void;
+import type React from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
+import { useAppUserTabStore } from "../store/useAppUserTabStore"
+import { useTranslation } from "../sharedBase/globalUtils"
+import { UserInfo } from "../types/auth";
+import { useAuthStore } from "../store/auth.store"
+import { AiFillHome, BiCategory, Button, FiUser, InputText, IoList, IoPersonSharp, MdGridView, MdOutlineArrowDropDown, RiLogoutCircleLine, RxCross2, Toast } from "../sharedBase/globalImports"
+
+type SidebarProps = {
+  isSidebarOpen: boolean
+  toggleSidebar: () => void
+  isMinimized: boolean
+  toggleMinimized: (next?: boolean) => void
+  currentPath?: string
+  onNavigate?: (path: string) => void
+  canAccess?: (key: string) => boolean
+  translate?: (key: string) => string
 }
 
-const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) => {
-  const { t, i18n } = useTranslation();
+const cx = (...classes: (string | false | null | undefined)[]) => classes.filter(Boolean).join(" ")
+
+type TabType = "active" | "inactive"
+type SubItem = {
+  label: string
+  to: string
+  icon: React.ReactNode
+  accessKey: string
+  activeWhen: (p: string) => boolean
+  tabType?: TabType
+  count?: number
+}
+type MenuSection = {
+  key: string
+  label: string
+  icon: React.ReactNode
+  to?: string
+  accessKey?: string
+  count?: number
+  showToastOnMinimized?: boolean
+  isOpenWhen?: (p: string) => boolean
+  items?: SubItem[]
+}
+
+export default function Sidebar({
+  isSidebarOpen,
+  toggleSidebar,
+  isMinimized,
+  toggleMinimized,
+  currentPath,
+  onNavigate,
+  canAccess,
+}: SidebarProps) {
+  const { t } = useTranslation();
+
+  const [searchTerm, setSearchTerm] = useState("")
+  const [openSection, setOpenSection] = useState<string | null>(null)
+  const toast = useRef<Toast>(null)
+  const { setTab } = useAppUserTabStore();
   const { login, userInfo } = useAuthStore();
-  const [roleData, setRoleData] = useState<RoleDetail[] | null>(null);
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { data: roleDetailsData } = useFetchRoleDetailsData();
-  const [searchTerm, setSearchTerm] = useState("");
 
-  const menuItems = [
+  const path = useMemo(
+    () => currentPath || (typeof window !== "undefined" ? window.location.pathname : "/"),
+    [currentPath],
+  )
+
+  const can = (key?: string) => (key ? (canAccess ? canAccess(key) : true) : true)
+  const filtered = (label: string) => label.toLowerCase().includes(searchTerm.toLowerCase())
+
+  const sectionClass =
+    "text-[var(--color-white)] hover:bg-[var(--color-white)/20] hover:text-[var(--color-white)] transition-colors"
+
+  const menuConfig: MenuSection[] = [
     {
-      label: t("globals.homes"),
-      path: "/appuser/home",
-      icon: <AiFillHome size={18} className={`flex-shrink-0 ${isMinimized ? '' : 'mr-2'}`}/>,
-      type: "navigate"
+      key: "appUser",
+      label: t("appUsers.form_detail.fields.modelname"),
+      icon: <FiUser size={18} className="flex-shrink-0" />,
+      count: 1880,
+      showToastOnMinimized: false,
+      isOpenWhen: (p) => p.startsWith("/appuser"),
+      items: [
+        {
+          label: t("globals.homes"),
+          to: "/appuser/home",
+          icon: <AiFillHome size={14} />,
+          accessKey: "appuser:home",
+          activeWhen: (p) => p === "/appuser/home",
+        },
+        {
+          label: t("globals.list"),
+          to: "/appuser",
+          icon: <IoList size={14} />,
+          accessKey: "appuser:list",
+          activeWhen: (p) => p === "/appuser",
+        },
+        {
+          label: t("globals.grid"),
+          to: "/appuser/grid",
+          icon: <MdGridView size={14} />,
+          accessKey: "appuser:grid",
+          activeWhen: (p) => p === "/appuser/grid",
+        },
+        {
+          label: t("Active Users"),
+          to: "/appuser",
+          icon: <FiUser size={14} />,
+          accessKey: "appuser:list",
+          activeWhen: (p) => p === "/appuser",
+          tabType: "active",
+          count: 141,
+        },
+        {
+          label: t("Inactive Users"),
+          to: "/appuser",
+          icon: <FiUser size={14} />,
+          accessKey: "appuser:list",
+          activeWhen: (p) => p === "/appuser",
+          tabType: "inactive",
+          count: 0,
+        },
+      ],
     },
     {
-      label: t("globals.list"),
-      path: "/appuser/grid",
-      icon: <IoList size={18} className={`flex-shrink-0 ${isMinimized ? '' : 'mr-2'}`}/>,
-      type: "navigate"
-    },
-    {
+      key: "appUserTest",
       label: t("appUserTests.form_detail.fields.modelname"),
-      path: "/appUserTests",
-      icon: <FiUser size={18} className={`flex-shrink-0 ${isMinimized ? '' : 'mr-2'}`}/>,
-      type: "handleNavigation",
-      accessName: "AppUserTest",
-      requires: { role: "appusertest", action: "List" }
+      icon: <FiUser size={18} className="flex-shrink-0" />,
+      count: 544,
+      showToastOnMinimized: false,
+      isOpenWhen: (p) => p.startsWith("/appUserTests"),
+      items: [
+        {
+          label: t("globals.homes"),
+          to: "/appUserTests/home",
+          icon: <AiFillHome size={14} />,
+          accessKey: "appUserTests:home",
+          activeWhen: (p) => p === "/appUserTests/home",
+        },
+        {
+          label: t("globals.list"),
+          to: "/appUserTests",
+          icon: <IoList size={14} />,
+          accessKey: "appUserTests:list",
+          activeWhen: (p) => p === "/appUserTests",
+        },
+        {
+          label: t("globals.grid"),
+          to: "/appUserTests/grid",
+          icon: <MdGridView size={14} />,
+          accessKey: "appUserTests:grid",
+          activeWhen: (p) => p === "/appUserTests/grid",
+        },
+      ],
     },
     {
-      label: `${t("appUserTests.form_detail.fields.modelname")} ${t("globals.list")}`,
-      path: "/appUserTests/grid",
-      icon: <IoList size={18} className={`flex-shrink-0 ${isMinimized ? '' : 'mr-2'}`}/>,
-      type: "navigate"
-    },
-    {
-      label: t("products.form_detail.fields.modelname"),
-      path: "/product",
-      icon: <FiShoppingBag size={18} className={`flex-shrink-0 ${isMinimized ? '' : 'mr-2'}`}/>,
-      type: "handleNavigation",
-      accessName: "Product",
-      requires: { role: "product", action: "List" }
-    },
-    {
+      key: "category",
       label: t("categories.form_detail.fields.modelname"),
-      path: "/categories",
-      icon: <FiUser size={18} className={`flex-shrink-0 ${isMinimized ? '' : 'mr-2'}`}/>,
-      type: "navigate"
+      icon: <BiCategory size={18} className="flex-shrink-0" />,
+      count: 84,
+      showToastOnMinimized: false,
+      isOpenWhen: (p) => p.startsWith("/category") || p.startsWith("/categories"),
+      items: [
+        {
+          label: t("globals.homes"),
+          to: "/category/home",
+          icon: <AiFillHome size={14} />,
+          accessKey: "category:home",
+          activeWhen: (p) => p === "/category/home",
+        },
+        {
+          label: t("globals.list"),
+          to: "/category/list",
+          icon: <IoList size={14} />,
+          accessKey: "category:list",
+          activeWhen: (p) => p === "/category/list",
+        },
+        {
+          label: t("globals.grid"),
+          to: "/category/grid",
+          icon: <MdGridView size={14} />,
+          accessKey: "category:grid",
+          activeWhen: (p) => p === "/category/grid",
+        },
+      ],
     },
     {
+      key: "role",
       label: t("appUsers.columns.fields.role"),
-      path: "/role",
-      icon: <IoPersonSharp size={18} className={`flex-shrink-0 ${isMinimized ? '' : 'mr-2'}`}/>,
-      type: "navigate"
-    }
-  ];
-
-  const visibleMenuItems = menuItems.filter((item) => {
-    const label = item.label?.toLocaleLowerCase(i18n.language);
-    const query = searchTerm?.toLocaleLowerCase(i18n.language);
-    return label.includes(query);
-  });
+      icon: <IoPersonSharp size={16} className="flex-shrink-0" />,
+      to: "/role",
+      accessKey: "role:open",
+    },
+  ]
 
   useEffect(() => {
-    if (roleDetailsData && Array.isArray(roleDetailsData)) {
-      const parsedData = roleDetailsData.map((item: RoleDetail) => ({
-        ...item,
-        action: item.action ? JSON.parse(item.action) : [],
-        hideColumn: item.hideColumn ? JSON.parse(item.hideColumn) : [],
-        status: item.status ? JSON.parse(item.status) : [],
-        dbStatus: item.dbStatus ? JSON.parse(item.dbStatus) : {},
-      }));
+    if (isMinimized) return
+    const match =
+      menuConfig.find((s) => (s.isOpenWhen ? s.isOpenWhen(path) : false)) ||
+      menuConfig.find((s) => s.items?.some((it) => it.activeWhen(path)))
+    setOpenSection(match ? match.key : null)
+  }, [path, isMinimized]) // eslint-disable-line react-hooks/exhaustive-deps
 
-      setRoleData(parsedData);
-    }
-  }, [roleDetailsData]);
+  const navigateTo = (to: string) => {
+    if (onNavigate) onNavigate(to);
+    if (!isMinimized) toggleSidebar();
+  }
 
-  useEffect(() => {
+  const handleOpenFromMinimized = (sectionKey: string, showCountToast: boolean, label?: string, count?: number) => {
     if (isMinimized) {
-      document.body.classList.add("sidebar-collapsed");
-      document.body.classList.remove("sidebar-expanded");
+      toggleMinimized(false)
+      setTimeout(() => setOpenSection(sectionKey), 150)
+      if (showCountToast && typeof count === "number" && label) {
+        toast.current?.show({
+          severity: "info",
+          summary: `${label} Count`,
+          detail: `${count}`,
+          life: 2000,
+          className: "bg-[var(--color-white)] text-[var(--color-primary)] text-xs rounded",
+        })
+      }
     } else {
-      document.body.classList.add("sidebar-expanded");
-      document.body.classList.remove("sidebar-collapsed");
+      setOpenSection((prev) => (prev === sectionKey ? null : sectionKey))
     }
-  }, [isMinimized]);
+  }
 
-  const hasAccess = (roleData: any, requiredAction: string) => {
-    if (!roleData) return false;
-
-    const actions = roleData?.action;
-    let newAction = false;
-
-    if (actions.length) {
-      newAction = actions?.some((action: Action) => action.name.toLowerCase() === requiredAction.toLowerCase());
-    }
-    return newAction;
+  const renderSubItem = (item: SubItem) => {
+    const { label, to, icon, accessKey, activeWhen, tabType, count } = item
+    if (!can(accessKey) || !filtered(label)) return null
+    const active = activeWhen(path)
+    return (
+      <Button
+        key={`${label}-${to}`}
+        onClick={() => {
+          if (tabType) {
+            setTab(tabType);
+          }
+          navigateTo(to)
+        }}
+        className={cx(
+          "w-full flex items-center justify-between gap-2 rounded px-2 py-2 text-xs transition-all duration-200",
+          active ? "bg-[var(--color-white)] text-[var(--color-primary)] font-medium shadow-sm" : sectionClass,
+        )}
+      >
+        <div className="flex items-start text-left gap-2">
+          {icon}
+          {!isMinimized && <span>{label}</span>}
+        </div>
+        {count !== undefined && (
+          <span
+            className={cx(
+              "text-[8px] font-bold px-1.5 rounded-full min-w-[25px] text-center",
+              active
+                ? "bg-[var(--color-primary)] text-[var(--color-white)]"
+                : "bg-[var(--color-white)] text-[var(--color-primary)]",
+            )}
+          >
+            {count}
+          </span>
+        )}
+      </Button>
+    )
   }
 
   const handleLogout = () => {
@@ -119,41 +266,21 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
     userInfo(null as unknown as UserInfo);
     window.location.href = "/";
     toggleSidebar();
-  };
-
-  const hasAccessToPage = (actionName: string) => {
-    return roleData?.some((action: any) => action.name.toLowerCase() === actionName.toLowerCase()) ?? false;
-  }
-
-  const handleNavigation = (path: string, actionName: string) => {
-    if (hasAccessToPage(actionName)) {
-      navigate(path);
-    } else {
-      navigate("/404");
-    }
-    if (!isMinimized) {
-      toggleSidebar();
-    }
   }
 
   return (
-    <> {isSidebarOpen && (
-      <div
-        className="fixed inset-0 bg-black/30 z-40 md:hidden"
-        onClick={toggleSidebar}
-      />
-    )}
+    <>
+      {isSidebarOpen && <div className="fixed inset-0 bg-black/30 z-40 md:hidden" onClick={toggleSidebar} />}
 
       <aside
         className={`flex-shrink-0 fixed inset-y-0 left-0 z-50 sidebar bg-[var(--color-primary)] text-[var(--color-white)] border border-muted/40 transform transition-transform duration-300 ease-in-out 
         ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} 
         md:relative md:translate-x-0
-        ${isMinimized ? "w-16" : "w-[170px]"} flex flex-col justify-between h-full`}
+        ${isMinimized ? "w-20" : "w-[200px]"} flex flex-col justify-between h-full overflow-hidden group`}
       >
-
-        <div className="bg-[var(--color-primary)] sidebar md:hidden lg:hidden mb-14">
+        <div className="bg-[var(--color-primary)] sidebar md:hidden lg:hidden mb-14 md:mb-0 lg:mb-0">
           <button
-            className="absolute top-4 right-4 text-[var(--color-primary)] bg-[var(--color-white)] p-1 rounded-md"
+            className="absolute top-4 right-4 text-[var(--color-primary)] bg-[var(--color-white)] p-2 rounded-md"
             onClick={toggleSidebar}
           >
             <RxCross2 size={20} />
@@ -166,71 +293,113 @@ const Sidebar = ({ isSidebarOpen, toggleSidebar, isMinimized }: SidebarProps) =>
               type="search"
               placeholder={t("globals.globalSearch")}
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] text-xs rounded-md pl-2 lg:py-2 py-1"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
+              className="w-full text-[var(--color-dark)] bg-[var(--color-white)] border border-[var(--color-border)] text-xs rounded-md pl-2 py-2"
             />
           </div>
         )}
 
+        <Toast ref={toast} position="top-center" />
+
         <nav
-          className={`flex-1 overflow-y-auto overflow-x-hidden p-2 lg:p-3 space-y-2 bg-[var(--color-primary)] text-[var(--color-white)] `}
+          className={cx(
+            "flex-1 overflow-y-auto px-2 space-y-2 sidebar-scroll transition-all duration-300",
+            isMinimized ? "pt-5" : "",
+          )}
         >
-          {visibleMenuItems.map((item) => {
-            if (item.requires) {
-              const roleObj = roleData?.find(
-                (r: any) => r.name?.toLowerCase() === item.requires!.role.toLowerCase()
-              );
-              if (!hasAccess(roleObj, item.requires.action)) return null;
-            }
+          {menuConfig.map((section) => {
+            const showSection = filtered(section.label) && can(section.accessKey)
+            if (!showSection) return null
 
-            const isActive = location.pathname.startsWith(item.path);
-
-            const onClick = () => {
-              if (item.type === "handleNavigation") {
-                handleNavigation(item.path, item.accessName || item.label);
-              } else {
-                navigate(item.path);
-                if (!isMinimized) toggleSidebar();
-              }
-            };
+            const isOpen = openSection === section.key
+            const hasChildren = (section.items?.length || 0) > 0
 
             return (
-              <Button
-                key={item.path}
-                onClick={onClick}
-                className={`w-full flex items-center justify-start ${isMinimized ? "px-1" : "px-2"} py-2 rounded
-                ${isActive ? "bg-[var(--color-white)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-white)]"}
-                hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]`}
-                tooltip={isMinimized ? item.label : undefined}
-                tooltipOptions={{ position: "right", className: "font-normal rounded text-xs" }}
-              >
-                {item.icon}
-                {!isMinimized && (
-                  <span className="text-xs font-medium text-left truncate ml-2">{item.label}</span>
+              <div key={section.key} >
+                {filtered(section.label ?? (section.items && section.items[0]?.label) ?? "") && (
+                  <div className="flex flex-col mt-2">
+                    <Button
+                      onClick={() => {
+                        if (section.to && !hasChildren) {
+                          navigateTo(section.to)
+                          return
+                        }
+                        handleOpenFromMinimized(section.key, !!section.showToastOnMinimized, section.label, section.count)
+                      }}
+                      className={cx(
+                        "flex w-full px-2 py-2 rounded",
+                        sectionClass,
+                        isMinimized ? "flex-col items-center justify-center" : "flex-row items-center justify-start",
+                      )}
+                      tooltip={isMinimized ? section.label : undefined}
+                      tooltipOptions={{ position: "right", className: "font-normal rounded text-xs" }}
+                    >
+                      <div className={cx("relative inline-flex", isMinimized ? "mt-2" : "mt-0")}>
+                        {section.icon}
+                        {isMinimized && section.count && (
+                          <span className="absolute -top-3 -right-3 bg-[var(--color-white)] text-[var(--color-primary)] text-[8px] font-bold px-1.5 rounded-full shadow-sm">
+                            {section.count}
+                          </span>
+                        )}
+                      </div>
+
+                      {isMinimized ? (
+                        <span className="text-[8px] font-medium mt-1 text-center truncate w-[50px]">{section.label}</span>
+                      ) : (
+                        <div className="flex items-center justify-between w-full ml-2">
+                          <span className="text-xs font-medium text-left truncate w-[80px]">{section.label}</span>
+
+                          <div className="flex items-center gap-1 min-w-[45px] justify-end">
+                            {section.count && (
+                              <span className="bg-[var(--color-white)] text-[var(--color-primary)] text-[8px] font-bold px-1.5 rounded-full text-center w-[30px]">
+                                {section.count}
+                              </span>
+                            )}
+                            {hasChildren && (
+                              <span
+                                className={cx(
+                                  "text-xs transform transition-transform duration-200",
+                                  isOpen ? "rotate-180" : "rotate-0",
+                                )}
+                                aria-hidden
+                              >
+                                <MdOutlineArrowDropDown size={20} />
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </Button>
+
+                    {!isMinimized && hasChildren && isOpen && (
+                      <div className="pl-4 space-y-1 mt-1">{section.items!.map((it) => renderSubItem(it))}</div>
+                    )}
+                  </div>
                 )}
-              </Button>
-            );
+              </div>
+            )
           })}
         </nav>
 
-        <footer className="flex items-center p-2 lg:px-3 border-t bg-[var(--color-primary)] text-[var(--color-white)] ">
+        <footer className="border-t border-[var(--color-border)] p-2">
           <Button
             onClick={handleLogout}
-            className={`w-full flex items-center justify-start ${isMinimized ? "px-1 " : "px-2"} py-2 rounded  
-            bg-[var(--color-primary)] text-[var(--color-white)] hover:bg-[var(--color-white)] hover:text-[var(--color-primary)] `}
+            className={cx(
+              "flex items-center w-full px-2 py-2 rounded",
+              sectionClass,
+              isMinimized ? "flex-col justify-center" : "flex-row justify-start"
+            )}
             tooltip={isMinimized ? t("globals.logout") : undefined}
             tooltipOptions={{
               position: 'right',
               className: 'font-normal rounded text-xs'
             }}
           >
-            <RiLogoutCircleLine size={18} className={` flex-shrink-0 ${isMinimized ? '' : 'mr-3'}`} />
-            {(!isMinimized) && <span className="text-xs font-medium text-left truncate">{t("globals.logout")}</span>}
+            <RiLogoutCircleLine size={16} className="flex-shrink-0 " />
+            {!isMinimized && <span className="ml-2 text-xs font-medium text-left">Logout</span>}
           </Button>
         </footer>
       </aside>
     </>
-  );
-};
-
-export default Sidebar;
+  )
+}
