@@ -80,7 +80,8 @@
     "viewData": "View Data",
     "editData": "Edit Data",
     "deleteData": "Delete Data",
-    "convertLang": "Convert Language"
+    "convertLang": "Convert Language",
+    "grid":"Grid"
   },
   "appUsers": {
     "columns": {
@@ -276,7 +277,8 @@
     "form_list": {
       "fields": {}
     }
-  },
+  }
+,
 "appUserTests": {
     "columns": {
       "fields": {

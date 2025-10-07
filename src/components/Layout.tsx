@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Sidebar from './Sidebar';
 import Header from './Header';
 import { useTheme } from '../hooks/useTheme';
 import { Dropdown, FaBars } from '../sharedBase/globalImports';
-import { useLocation, useTranslation } from '../sharedBase/globalUtils';
+import { useLocation, useNavigate, useTranslation } from '../sharedBase/globalUtils';
 import { useLanguageStore } from "../store/useLanguage.store";
 
 interface LayoutProps {
@@ -11,6 +11,7 @@ interface LayoutProps {
 }
 
 const Layout = ({ children }: LayoutProps) => {
+  const navigate = useNavigate();
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
@@ -22,6 +23,7 @@ const Layout = ({ children }: LayoutProps) => {
     { label: t("globals.hindi"), value: "hi" },
     { label: t("globals.marathi"), value: "mr" },
   ];
+  const currentPath = useMemo(() => location.pathname ?? "/", [location.pathname]);
 
   useEffect(() => {
     i18n.changeLanguage(selectedLanguage);
@@ -76,7 +78,7 @@ const Layout = ({ children }: LayoutProps) => {
                 options={languages}
                 optionLabel="label"
                 optionValue="value"
-                className="w-[80px] sm:w-22 text-xs font-medium text-[var(--color-primary)]"
+                className="w-28 text-xs font-medium text-[var(--color-primary)]"
               />
             </div>
 
@@ -84,7 +86,7 @@ const Layout = ({ children }: LayoutProps) => {
               value={theme}
               options={themes.map((t) => ({ label: t, value: t }))}
               onChange={(e) => setTheme(e.value)}
-              className="w-[80px] sm:w-22 text-xs font-medium text-[var(--color-primary)]"
+              className="w-28 text-xs font-medium text-[var(--color-primary)]"
             />
 
           </div>
@@ -99,6 +101,9 @@ const Layout = ({ children }: LayoutProps) => {
             toggleSidebar={toggleSidebar}
             isMinimized={isMinimized}
             toggleMinimized={toggleMinimized}
+            currentPath={currentPath}
+            onNavigate={(to) => navigate(to)}
+            canAccess={() => true}
           />
         )}
         <main className="flex-1 min-w-0 overflow-hidden">{children}</main>

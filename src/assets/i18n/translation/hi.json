@@ -82,7 +82,8 @@
     "viewData": "डेटा देखें",
     "editData": "डेटा संपादित करें",
     "deleteData": "डेटा हटाएं",
-    "convertLang": "भाषा बदलें"
+    "convertLang": "भाषा बदलें",
+    "grid": "ग्रिड"
   },
   "appUsers": {
     "columns": {

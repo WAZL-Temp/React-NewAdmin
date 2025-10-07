@@ -384,7 +384,7 @@ export default function AppUserListGrid() {
                                     tooltip={t("globals.exportExcel")}
                                     tooltipOptions={{
                                         position: 'top',
-                                        className: 'font-normal rounded text-sm p-1'
+                                        className: 'font-normal rounded text-xs p-1'
                                     }}
                                 >
                                     <TbFileExcel size={18} />
@@ -399,7 +399,7 @@ export default function AppUserListGrid() {
                                     onClick={() => importFromExcel(navigate, baseModelName)}
                                     tooltipOptions={{
                                         position: 'top',
-                                        className: 'font-normal rounded text-sm p-1'
+                                        className: 'font-normal rounded text-xs p-1'
                                     }}
                                 >
                                     <MdOutlineUploadFile size={18} />
@@ -413,7 +413,7 @@ export default function AppUserListGrid() {
                                 tooltip={t("globals.refresh")}
                                 tooltipOptions={{
                                     position: 'top',
-                                    className: 'font-normal rounded text-sm p-1'
+                                    className: 'font-normal rounded text-xs p-1'
                                 }}
                             >
                                 <IoMdRefresh size={18} />
