@@ -4,6 +4,7 @@ import { EnumDetail } from "../core/model/enumdetail";
 import { EnumDetailsService } from "../core/service/enumDetails.service";
 import { AppuserRoleService } from "../core/service/appUserRole.service";
 import { RoleDetail } from "../core/model/roledetail";
+import {  DashboardInfoResponse, DashboardInfoService } from "../core/service/dashboardInfo.service";
 
 export const useFetchDataEnum = (type: string) => {
   const [data, setData] = useState<EnumDetail[]>([]);
@@ -77,7 +78,7 @@ export const useFetchRoleDetailsData = () => {
   const [error, setError] = useState<string | null>(null);
 
   // ✅ use hook properly
-  const { fetchRoleData,roleData } = AppuserRoleService();
+  const { fetchRoleData, roleData } = AppuserRoleService();
 
   useEffect(() => {
     const fetchRoleDetails = async () => {
@@ -101,6 +102,39 @@ export const useFetchRoleDetailsData = () => {
 
     fetchRoleDetails();
   }, [roleData]);
+
+  return { data, loading, error };
+};
+
+
+export const useFetchDashboardInfoData = () => {
+  const [data, setData] = useState<DashboardInfoResponse>({});
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { fetchDashboardInfoData, dashboardInfoData } = DashboardInfoService();
+
+  useEffect(() => {
+    const fetchRoleDetails = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const response = await fetchDashboardInfoData();
+
+        if (response && Object.keys(response).length > 0) {
+          setData(response);
+        } else {
+          setError("No role data found.");
+        }
+      } catch {
+        setError("Failed to fetch role details");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRoleDetails();
+  }, [dashboardInfoData]);
 
   return { data, loading, error };
 };

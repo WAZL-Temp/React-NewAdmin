@@ -372,6 +372,19 @@ export const useBaseService = <T extends BaseModel>(type: string) => {
         return await response.json();
     }
 
+    const getDashboardInfo = async (): Promise<T[]> => {
+        const form = { 'id': 0, 'value': 0 };
+        
+        const response = await fetch(`${apiUrl}/GetDashboardData`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify(form),
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch DashboardData data");
+        return await response.json();
+    }
+
 
     return {
         setToken,
@@ -387,6 +400,7 @@ export const useBaseService = <T extends BaseModel>(type: string) => {
         handleDelete, fileUpload, fileDownload, unique, getRoleData,
         getGridData,
         type,
-        getLookup
+        getLookup,
+        getDashboardInfo
     };
 };

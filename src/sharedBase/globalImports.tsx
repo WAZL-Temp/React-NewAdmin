@@ -68,7 +68,8 @@ export { IoLanguage } from "react-icons/io5";
 export { MdGridView } from "react-icons/md";
 export { RiTestTubeLine } from "react-icons/ri";
 export { BiCategory } from "react-icons/bi";
-export { MdOutlineArrowDropDown } from "react-icons/md";
+export { IoIosArrowDown } from "react-icons/io";
+export { FaUserCheck, FaUserSlash, FaUserTimes } from "react-icons/fa";
 
 export type { MenuItem } from "primereact/menuitem";
 export type { CarouselResponsiveOption } from 'primereact/carousel';

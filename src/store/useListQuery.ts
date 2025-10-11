@@ -12,6 +12,7 @@ export interface UseListQueryResult<T> {
   tableSearch: TableSearchParams;
   condition: ConditionParams;
   roleCondition: RoleConditionParams;
+  tabName: string;
   deleteItem: (id: number) => void;
   load: () => void;
   setSearch: (search: SearchParams) => void;
@@ -19,6 +20,7 @@ export interface UseListQueryResult<T> {
   clearSearch: (type: "search" | "table" | "both") => void;
   setCondition: (condition: ConditionParams) => void;
   setRoleCondition: (roleCondition: RoleConditionParams) => void;
+  setTabName: (tabName: string) => void;
   fetchGridData: (pageNo: number, pageSize: number, orderBy: string, table: string) => Promise<{ data: T[]; total: number } | undefined>;
 }
 
@@ -47,6 +49,7 @@ export const useListQuery = <T extends BaseModel>(
   const [roleCondition, setRoleConditionState] = useState<RoleConditionParams>(cachedState?.roleCondition || {});
   // const isRoleConditionReady = Object.keys(roleCondition).length > 0;
   const hasSetRoleCondition = useRef(false);
+  const [tabName, setTabNameState] = useState<string>(cachedState?.tabName || '');
 
   const payload = { ...condition, ...search, ...roleCondition };
   const isPayloadEmpty = Object.keys(payload).length === 0;
@@ -74,6 +77,7 @@ export const useListQuery = <T extends BaseModel>(
       tableSearch,
       condition,
       roleCondition,
+      tabName,
     });
   };
 
@@ -85,6 +89,7 @@ export const useListQuery = <T extends BaseModel>(
         tableSearch,
         condition,
         roleCondition,
+        tabName,
       });
       return updated;
     });
@@ -98,6 +103,7 @@ export const useListQuery = <T extends BaseModel>(
         tableSearch: updated,
         condition,
         roleCondition,
+        tabName,
       });
       return updated;
     });
@@ -140,13 +146,14 @@ export const useListQuery = <T extends BaseModel>(
 
   const setRoleCondition = (newRoleCondition: RoleConditionParams) => {
     hasSetRoleCondition.current = true;
-    setRoleConditionState((prev: RoleConditionParams) => {
-      const updated = { ...prev, ...newRoleCondition };
+    setRoleConditionState(() => {
+      const updated = { ...newRoleCondition };
       queryClient.setQueryData([`list-${service.type}-state`], {
         search,
         tableSearch,
         condition,
         roleCondition: updated,
+        tabName,
       });
       return updated;
     });
@@ -172,6 +179,19 @@ export const useListQuery = <T extends BaseModel>(
     }
   };
 
+  const setTabName = (newTabName: string) => {
+    setTabNameState(() => {
+      queryClient.setQueryData([`list-${service.type}-state`], {
+        search,
+        tableSearch,
+        condition,
+        roleCondition,
+        tabName: newTabName,
+      });
+      return newTabName;
+    });
+  };
+
   return {
     data: data as T[] | undefined,
     isLoading,
@@ -180,6 +200,7 @@ export const useListQuery = <T extends BaseModel>(
     tableSearch,
     condition,
     roleCondition,
+    tabName,
     deleteItem: deleteMutation.mutate,
     load,
     setSearch,
@@ -187,6 +208,7 @@ export const useListQuery = <T extends BaseModel>(
     clearSearch,
     setCondition,
     setRoleCondition,
+    setTabName,
     fetchGridData
   };
 };

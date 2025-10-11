@@ -6,7 +6,8 @@ import { useAppUserTabStore } from "../store/useAppUserTabStore"
 import { useTranslation } from "../sharedBase/globalUtils"
 import { UserInfo } from "../types/auth";
 import { useAuthStore } from "../store/auth.store"
-import { AiFillHome, BiCategory, Button, FiUser, InputText, IoList, IoPersonSharp, MdGridView, MdOutlineArrowDropDown, RiLogoutCircleLine, RxCross2, Toast } from "../sharedBase/globalImports"
+import { AiFillHome, BiCategory, Button, FiUser, InputText, IoList, IoPersonSharp, MdGridView, IoIosArrowDown, RiLogoutCircleLine, RxCross2, Toast, FaUserSlash, FaUserCheck, FaUserTimes } from "../sharedBase/globalImports"
+import { useFetchDashboardInfoData } from "../sharedBase/lookupService"
 
 type SidebarProps = {
   isSidebarOpen: boolean
@@ -21,7 +22,7 @@ type SidebarProps = {
 
 const cx = (...classes: (string | false | null | undefined)[]) => classes.filter(Boolean).join(" ")
 
-type TabType = "active" | "inactive"
+type TabType = "active" | "inactive" | "isDelete"
 type SubItem = {
   label: string
   to: string
@@ -59,6 +60,8 @@ export default function Sidebar({
   const toast = useRef<Toast>(null)
   const { setTab } = useAppUserTabStore();
   const { login, userInfo } = useAuthStore();
+  const { data: dashboardInfoData } = useFetchDashboardInfoData();
+
 
   const path = useMemo(
     () => currentPath || (typeof window !== "undefined" ? window.location.pathname : "/"),
@@ -102,22 +105,31 @@ export default function Sidebar({
           activeWhen: (p) => p === "/appuser/grid",
         },
         {
-          label: t("Active Users"),
+          label: "Active Users",
           to: "/appuser",
-          icon: <FiUser size={14} />,
+          icon: <FaUserCheck size={14} />,
           accessKey: "appuser:list",
           activeWhen: (p) => p === "/appuser",
           tabType: "active",
-          count: 141,
+          count: dashboardInfoData.appUser?.[0]?.activeCount ?? 0,
         },
         {
-          label: t("Inactive Users"),
+          label: "Inactive Users",
           to: "/appuser",
-          icon: <FiUser size={14} />,
+          icon: <FaUserSlash size={14} />,
           accessKey: "appuser:list",
           activeWhen: (p) => p === "/appuser",
           tabType: "inactive",
-          count: 0,
+          count: dashboardInfoData.appUser?.[0]?.inactiveCount ?? 0,
+        },
+        {
+          label: "Delete Users",
+          to: "/appuser",
+          icon: <FaUserTimes size={14} />,
+          accessKey: "appuser:list",
+          activeWhen: (p) => p === "/appuser",
+          tabType: "isDelete",
+          count: dashboardInfoData.appUser?.[0]?.deletedCount ?? 0,
         },
       ],
     },
@@ -224,9 +236,9 @@ export default function Sidebar({
   }
 
   const renderSubItem = (item: SubItem) => {
-    const { label, to, icon, accessKey, activeWhen, tabType, count } = item
+    const { label, to, icon, accessKey, tabType, count } = item
     if (!can(accessKey) || !filtered(label)) return null
-    const active = activeWhen(path)
+    // const active = activeWhen(path);
     return (
       <Button
         key={`${label}-${to}`}
@@ -238,7 +250,7 @@ export default function Sidebar({
         }}
         className={cx(
           "w-full flex items-center justify-between gap-2 rounded px-2 py-2 text-xs transition-all duration-200",
-          active ? "bg-[var(--color-white)] text-[var(--color-primary)] font-medium shadow-sm" : sectionClass,
+          "text-[var(--color-white)] hover:bg-[var(--color-white)] hover:text-[var(--color-primary)] font-medium shadow-none"
         )}
       >
         <div className="flex items-start text-left gap-2">
@@ -248,10 +260,11 @@ export default function Sidebar({
         {count !== undefined && (
           <span
             className={cx(
-              "text-[8px] font-bold px-1.5 rounded-full min-w-[25px] text-center",
-              active
-                ? "bg-[var(--color-primary)] text-[var(--color-white)]"
-                : "bg-[var(--color-white)] text-[var(--color-primary)]",
+              "ml-auto flex items-center justify-center",
+              "text-[8px] font-bold rounded-full min-w-[22px] h-[22px]",
+              "bg-[var(--color-white)] text-[var(--color-primary)]",
+              "hover:bg-[var(--color-primary)] hover:text-[var(--color-white)]",
+              "transition-all duration-200"
             )}
           >
             {count}
@@ -327,7 +340,7 @@ export default function Sidebar({
                         handleOpenFromMinimized(section.key, !!section.showToastOnMinimized, section.label, section.count)
                       }}
                       className={cx(
-                        "flex w-full px-2 py-2 rounded",
+                        "flex w-full px-2 py-2 rounded shadow-none",
                         sectionClass,
                         isMinimized ? "flex-col items-center justify-center" : "flex-row items-center justify-start",
                       )}
@@ -337,7 +350,8 @@ export default function Sidebar({
                       <div className={cx("relative inline-flex", isMinimized ? "mt-2" : "mt-0")}>
                         {section.icon}
                         {isMinimized && section.count && (
-                          <span className="absolute -top-3 -right-3 bg-[var(--color-white)] text-[var(--color-primary)] text-[8px] font-bold px-1.5 rounded-full shadow-sm">
+                          <span
+                           className="flex items-center justify-center absolute -top-4 -right-4 bg-[var(--color-white)] text-[var(--color-primary)] text-[8px] px-2 font-bold rounded-full w-[22px] h-[22px] shadow-sm">
                             {section.count}
                           </span>
                         )}
@@ -351,7 +365,8 @@ export default function Sidebar({
 
                           <div className="flex items-center gap-1 min-w-[45px] justify-end">
                             {section.count && (
-                              <span className="bg-[var(--color-white)] text-[var(--color-primary)] text-[8px] font-bold px-1.5 rounded-full text-center w-[30px]">
+                              <span
+                                className="flex items-center justify-center bg-[var(--color-white)] text-[var(--color-primary)] text-[8px] font-bold rounded-full w-[22px] h-[22px] shadow-sm transition-all duration-200">
                                 {section.count}
                               </span>
                             )}
@@ -363,7 +378,7 @@ export default function Sidebar({
                                 )}
                                 aria-hidden
                               >
-                                <MdOutlineArrowDropDown size={20} />
+                                <IoIosArrowDown size={15} />
                               </span>
                             )}
                           </div>

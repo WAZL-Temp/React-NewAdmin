@@ -125,13 +125,14 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
                 );
                 setRoleData(itemData ?? null);
 
-                if (itemData?.dbStatus) {
-                    const parsedDbStatus = typeof itemData.dbStatus === "string" ? JSON.parse(itemData.dbStatus) : itemData.dbStatus;
-                    query?.setRoleCondition(parsedDbStatus);
-                } else {
-                    query?.setRoleCondition({});
-                }
+                // if (itemData?.dbStatus) {
+                //     const parsedDbStatus = typeof itemData.dbStatus === "string" ? JSON.parse(itemData.dbStatus) : itemData.dbStatus;
+                //     query?.setRoleCondition(parsedDbStatus);
+                // } else {
+                //     query?.setRoleCondition({});
+                // }
                 // await query.load();
+                // query?.setRoleCondition({ isActive: "1" });
             }
         };
 

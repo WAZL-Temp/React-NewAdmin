@@ -55,8 +55,9 @@ export interface TableSearchParams {
 }
 
 export interface CachedState {
-    search: SearchParams;
-    tableSearch: TableSearchParams;
-    condition: ConditionParams;
-    roleCondition: RoleConditionParams;
+  search: SearchParams;
+  tableSearch: TableSearchParams;
+  condition: ConditionParams;
+  roleCondition: RoleConditionParams;
+  tabName: string;
 }
