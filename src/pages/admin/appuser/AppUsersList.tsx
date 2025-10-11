@@ -12,6 +12,13 @@ import Loader from "../../../components/Loader";
 import userAvtar from "../../../assets/images/user-avatar.png";
 import { CustomFile } from "../../../core/model/customfile";
 import { useAppUserTabStore } from "../../../store/useAppUserTabStore";
+import { useFetchDashboardInfoData } from "../../../sharedBase/lookupService";
+
+interface TabItem {
+    condition: Record<string, string | number>;
+    name: string;
+    count: number;
+}
 
 export default function AppUsersList() {
     const navigate = useNavigate();
@@ -40,11 +47,48 @@ export default function AppUsersList() {
             }
         });
     const [activeIndex, setActiveIndex] = useState(0);
-    const { tab } = useAppUserTabStore();
+    const tab = useAppUserTabStore((state) => state.tab);
+    const { data: dashboardInfoData } = useFetchDashboardInfoData();
+    const [tabList, setTabList] = useState<TabItem[]>([]);
 
     useEffect(() => {
-        if (tab === "inactive") setActiveIndex(1);
-        else setActiveIndex(0);
+        if (dashboardInfoData) {
+            if (dashboardInfoData.appUser) {
+                setTabList([
+                    // ,"isDelete":0,"isDelete":0
+                    { condition: { "isActive": 1 }, name: "Active", count: dashboardInfoData.appUser[0]?.activeCount ?? 0 },
+                    { condition: { "isActive": 0 }, name: "In Active", count: dashboardInfoData.appUser[0]?.inactiveCount ?? 0 },
+                    { condition: { "isDelete": 0 }, name: "Deleted", count: dashboardInfoData.appUser[0]?.deletedCount ?? 0 },
+                ]);
+                 if (tabList.length > 0) {
+                const data = tabList[0].condition;
+                query?.setRoleCondition(data);
+            }
+            } else {
+                setTabList([]);
+            }
+            if (tabList.length > 0) {
+                const data = tabList[0].condition;
+                query?.setRoleCondition(data);
+            }
+        }
+    }, [dashboardInfoData,tabList.length]);
+
+    useEffect(() => {
+        console.log("tabName", query.tabName);
+
+        if (query.tabName) {
+            const index = tabList.findIndex(tab => tab.name === query.tabName);
+            setActiveIndex(index !== -1 ? index : 0);
+        }
+    }, [query.tabName, tabList]);
+
+    useEffect(() => {
+        if (tab) {
+            if (tab === "inactive") setActiveIndex(1);
+            else if (tab === "isDelete") setActiveIndex(2);
+            else setActiveIndex(0);
+        }
     }, [tab]);
 
     const columnsConfigDefault = useMemo(() => [
@@ -84,15 +128,6 @@ export default function AppUsersList() {
         { field: "gender", header: t("appUsers.columns.fields.gender"), isDefault: false, show: false },
     ].filter(col => col.field),
         [t]);
-
-    const activeUsers = useMemo(
-        () => query?.data?.filter((row: AppUser) => row.isActive === true) || [],
-        [query?.data]
-    );
-    const inactiveUsers = useMemo(
-        () => query?.data?.filter((row: AppUser) => row.isActive === false) || [],
-        [query?.data]
-    );
 
     const { columnsConfig, visibleColumns, handleSelectAll, handleColumnChange } = useColumnConfig(columnsConfigDefault, roleData);
 
@@ -1008,6 +1043,11 @@ export default function AppUsersList() {
 
     const tabsChange = (e: any) => {
         setActiveIndex(e.index);
+        const selectedTab = tabList[e.index];
+
+        if (selectedTab) {
+            fetchDataCondition(selectedTab);
+        }
         setGlobalFilterValue('');
         query.setSearch({});
         query.tableSearch.searchRowFilter = {};
@@ -1024,7 +1064,15 @@ export default function AppUsersList() {
             });
             return clearedFilters;
         });
-    }
+    };
+
+    const fetchDataCondition = (item: TabItem) => {
+        const condition = item.condition ? item.condition : {};
+        query.setTabName(item.name);
+        query.setRoleCondition({});
+        query.setRoleCondition(condition);
+        query.load();
+    };
 
     return (
         <div className='relative h-screen flex flex-col overflow-auto'>
@@ -1248,18 +1296,31 @@ export default function AppUsersList() {
 
                     <div>
                         {!query.isLoading && (
-                            <TabView
-                                key={activeIndex}
-                                activeIndex={activeIndex}
-                                onTabChange={(e) => { tabsChange(e); }}
-                            >
-                                <TabPanel header={`Active (${activeUsers.length})`}>
-                                    {renderTable(activeUsers)}
-                                </TabPanel>
-                                <TabPanel header={`Inactive (${inactiveUsers.length})`}>
-                                    {renderTable(inactiveUsers)}
-                                </TabPanel>
-                            </TabView>
+                            // <TabView
+                            //     key={activeIndex}
+                            //     activeIndex={activeIndex}
+                            //     onTabChange={(e) => { tabsChange(e); }}
+                            // >
+                            //     <TabPanel header={`Active (${activeUsers.length})`}>
+                            //         {renderTable(activeUsers)}
+                            //     </TabPanel>
+                            //     <TabPanel header={`Inactive (${inactiveUsers.length})`}>
+                            //         {renderTable(inactiveUsers)}
+                            //     </TabPanel>
+                            // </TabView>
+
+                            tabList.length > 0 && (
+                                <TabView
+                                    activeIndex={activeIndex}
+                                    onTabChange={tabsChange}
+                                >
+                                    {tabList.map((tab, i) => (
+                                        <TabPanel key={i} header={`${tab.name} (${tab.count})`}>
+                                            {renderTable(query.data ?? [])}
+                                        </TabPanel>
+                                    ))}
+                                </TabView>
+                            )
                         )}
                     </div>
 
