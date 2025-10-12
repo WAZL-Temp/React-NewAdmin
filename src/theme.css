@@ -16,6 +16,7 @@
     --color-info: #3b82f6;
     --color-success: #05b86e;
     --color-gray: #cbd5e1;
+    --color-primary-soft: #60a5fa;
 }
 
 /* Dark Theme */
@@ -32,6 +33,7 @@
     --color-info: #3b82f6;
     --color-success: #218838;
     --color-gray: #cbd5e1;
+    --color-primary-soft: #93c5fd;
 }
 
 /* Modern Theme */
@@ -49,6 +51,7 @@
     --color-warning: #eab308;
     --color-danger: #dc2626;
     --color-border: #e5e7eb;
+    --color-primary-soft: #8b93f9;
 }
 
 /* Glacier Theme */
@@ -66,6 +69,7 @@
     --color-warning: #f59e0b;
     --color-danger: #dc2626;
     --color-border: #e2e8f0;
+    --color-primary-soft: #3dd3f6;
 }
 
 /* Aurora Theme */
@@ -83,6 +87,7 @@
     --color-warning: #facc15;
     --color-danger: #e11d48;
     --color-border: #e5e7eb;
+    --color-primary-soft: #b767f0;
 }
 
 /* Sapphire Theme */
@@ -100,6 +105,7 @@
     --color-warning: #facc15;
     --color-danger: #dc2626;
     --color-border: #dbeafe;
+    --color-primary-soft: #4f77f0;
 }
 
 /* Blossom Theme */
@@ -117,6 +123,7 @@
     --color-warning: #fde68a;
     --color-danger: #fca5a5;
     --color-border: #fbcfe8;
+    --color-primary-soft: #f79dc4;
 }
 
 /* Breeze Theme */
@@ -134,6 +141,7 @@
     --color-warning: #fcd34d;
     --color-danger: #fca5a5;
     --color-border: #e0f2fe;
+    --color-primary-soft: #7dd9fb;
 }
 
 /* Peach Theme */
@@ -151,6 +159,7 @@
     --color-warning: #fcd34d;
     --color-danger: #fca5a5;
     --color-border: #fed7aa;
+    --color-primary-soft: #f7c08f;
 }
 
 /* Mint Theme */
@@ -168,6 +177,7 @@
     --color-warning: #fde68a;
     --color-danger: #fca5a5;
     --color-border: #d1fae5;
+    --color-primary-soft: #6ae3b5;
 }
 
 /* Lavender Theme */
@@ -185,6 +195,7 @@
     --color-warning: #fef3c7;
     --color-danger: #fecaca;
     --color-border: #ede9fe;
+    --color-primary-soft: #b4a5f6;
 }
 
 /* Sky Theme */
@@ -202,6 +213,7 @@
     --color-warning: #fcd34d;
     --color-danger: #fca5a5;
     --color-border: #e0e7ff;
+    --color-primary-soft: #9ac3f7;
 }
 
 .bg-primary {

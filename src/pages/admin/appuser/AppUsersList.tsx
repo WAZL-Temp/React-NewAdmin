@@ -54,34 +54,31 @@ export default function AppUsersList() {
     useEffect(() => {
         if (dashboardInfoData) {
             if (dashboardInfoData.appUser) {
-                setTabList([
-                    // ,"isDelete":0,"isDelete":0
-                    { condition: { "isActive": 1 }, name: "Active", count: dashboardInfoData.appUser[0]?.activeCount ?? 0 },
-                    { condition: { "isActive": 0 }, name: "In Active", count: dashboardInfoData.appUser[0]?.inactiveCount ?? 0 },
-                    { condition: { "isDelete": 0 }, name: "Deleted", count: dashboardInfoData.appUser[0]?.deletedCount ?? 0 },
-                ]);
-                 if (tabList.length > 0) {
-                const data = tabList[0].condition;
-                query?.setRoleCondition(data);
-            }
+                const newTabs: TabItem[] = [
+                    { condition: { isActive: 1 }, name: "Active", count: dashboardInfoData.appUser[0]?.activeCount ?? 0 },
+                    { condition: { isActive: 0 }, name: "In Active", count: dashboardInfoData.appUser[0]?.inactiveCount ?? 0 },
+                    { condition: { isDelete: 0 }, name: "Deleted", count: dashboardInfoData.appUser[0]?.deletedCount ?? 0 },
+                ];
+
+                setTabList(newTabs);
+                if (!query.tabName) {
+                    query.setRoleCondition(newTabs[0].condition);
+                }
             } else {
                 setTabList([]);
             }
-            if (tabList.length > 0) {
-                const data = tabList[0].condition;
-                query?.setRoleCondition(data);
-            }
         }
-    }, [dashboardInfoData,tabList.length]);
+    }, [dashboardInfoData, tabList.length]);// eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
-        console.log("tabName", query.tabName);
-
-        if (query.tabName) {
-            const index = tabList.findIndex(tab => tab.name === query.tabName);
-            setActiveIndex(index !== -1 ? index : 0);
+        if (query.tabName && tabList.length > 0) {
+            const index = tabList.findIndex(tab => tab.name.toLowerCase().replace(" ", "") === query.tabName.toLowerCase().replace(" ", ""));
+            if (index !== -1) {
+                setActiveIndex(index);
+                query.setRoleCondition(tabList[index].condition);
+            }
         }
-    }, [query.tabName, tabList]);
+    }, [query.tabName, tabList]);// eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         if (tab) {
@@ -89,7 +86,11 @@ export default function AppUsersList() {
             else if (tab === "isDelete") setActiveIndex(2);
             else setActiveIndex(0);
         }
-    }, [tab]);
+        const selectedTab = tabList[tab ? (tab === "inactive" ? 1 : tab === "isDelete" ? 2 : 0) : 0];
+        if (!selectedTab) return;
+
+        query.setRoleCondition(selectedTab.condition);
+    }, [tab]);// eslint-disable-line react-hooks/exhaustive-deps
 
     const columnsConfigDefault = useMemo(() => [
         { field: "createDate", header: t("appUsers.columns.fields.createDate"), isDefault: true, show: true },
@@ -1045,9 +1046,9 @@ export default function AppUsersList() {
         setActiveIndex(e.index);
         const selectedTab = tabList[e.index];
 
-        if (selectedTab) {
-            fetchDataCondition(selectedTab);
-        }
+        if (!selectedTab) return;
+        fetchDataCondition(selectedTab);
+
         setGlobalFilterValue('');
         query.setSearch({});
         query.tableSearch.searchRowFilter = {};
@@ -1069,9 +1070,7 @@ export default function AppUsersList() {
     const fetchDataCondition = (item: TabItem) => {
         const condition = item.condition ? item.condition : {};
         query.setTabName(item.name);
-        query.setRoleCondition({});
         query.setRoleCondition(condition);
-        query.load();
     };
 
     return (
@@ -1296,19 +1295,6 @@ export default function AppUsersList() {
 
                     <div>
                         {!query.isLoading && (
-                            // <TabView
-                            //     key={activeIndex}
-                            //     activeIndex={activeIndex}
-                            //     onTabChange={(e) => { tabsChange(e); }}
-                            // >
-                            //     <TabPanel header={`Active (${activeUsers.length})`}>
-                            //         {renderTable(activeUsers)}
-                            //     </TabPanel>
-                            //     <TabPanel header={`Inactive (${inactiveUsers.length})`}>
-                            //         {renderTable(inactiveUsers)}
-                            //     </TabPanel>
-                            // </TabView>
-
                             tabList.length > 0 && (
                                 <TabView
                                     activeIndex={activeIndex}
