@@ -54,7 +54,6 @@ export default function Sidebar({
   canAccess,
 }: SidebarProps) {
   const { t } = useTranslation();
-
   const [searchTerm, setSearchTerm] = useState("")
   const [openSection, setOpenSection] = useState<string | null>(null)
   const toast = useRef<Toast>(null)
@@ -106,28 +105,28 @@ export default function Sidebar({
         },
         {
           label: "Active Users",
-          to: "/appuser",
+          to: "/appuser?tab=active",
           icon: <FaUserCheck size={14} />,
           accessKey: "appuser:list",
-          activeWhen: (p) => p === "/appuser",
+          activeWhen: (p) => p === "/appuser?tab=active",
           tabType: "active",
           count: dashboardInfoData.appUser?.[0]?.activeCount ?? 0,
         },
         {
           label: "Inactive Users",
-          to: "/appuser",
+          to: "/appuser?tab=inactive",
           icon: <FaUserSlash size={14} />,
           accessKey: "appuser:list",
-          activeWhen: (p) => p === "/appuser",
+          activeWhen: (p) => p === "/appuser?tab=inactive",
           tabType: "inactive",
           count: dashboardInfoData.appUser?.[0]?.inactiveCount ?? 0,
         },
         {
           label: "Delete Users",
-          to: "/appuser",
+          to: "/appuser?tab=isDelete",
           icon: <FaUserTimes size={14} />,
           accessKey: "appuser:list",
-          activeWhen: (p) => p === "/appuser",
+          activeWhen: (p) => p === "/appuser?tab=isDelete",
           tabType: "isDelete",
           count: dashboardInfoData.appUser?.[0]?.deletedCount ?? 0,
         },
@@ -236,9 +235,10 @@ export default function Sidebar({
   }
 
   const renderSubItem = (item: SubItem) => {
-    const { label, to, icon, accessKey, tabType, count } = item
+    const { label, to, icon, accessKey, tabType, activeWhen, count } = item
     if (!can(accessKey) || !filtered(label)) return null
-    // const active = activeWhen(path);
+    const active = activeWhen(path);
+
     return (
       <Button
         key={`${label}-${to}`}
@@ -249,8 +249,10 @@ export default function Sidebar({
           navigateTo(to)
         }}
         className={cx(
-          "w-full flex items-center justify-between gap-2 rounded px-2 py-2 text-xs transition-all duration-200",
-          "text-[var(--color-white)] hover:bg-[var(--color-white)] hover:text-[var(--color-primary)] font-medium shadow-none"
+          "w-full flex items-center justify-between gap-2 rounded px-2 py-2 text-xs font-medium transition-all duration-200 shadow-none",
+          active
+            ? "bg-[var(--color-white)] text-[var(--color-primary)]"
+            : "text-[var(--color-white)] hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]"
         )}
       >
         <div className="flex items-start text-left gap-2">
@@ -260,11 +262,10 @@ export default function Sidebar({
         {count !== undefined && (
           <span
             className={cx(
-              "ml-auto flex items-center justify-center",
-              "text-[8px] font-bold rounded-full min-w-[22px] h-[22px]",
-              "bg-[var(--color-white)] text-[var(--color-primary)]",
-              "hover:bg-[var(--color-primary)] hover:text-[var(--color-white)]",
-              "transition-all duration-200"
+              "ml-auto flex items-center justify-center text-[8px] font-bold rounded-full min-w-[22px] h-[22px]",
+              active
+                ? "bg-[var(--color-primary)] text-[var(--color-white)]"
+                : "bg-[var(--color-white)] text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-[var(--color-white)]"
             )}
           >
             {count}
@@ -323,14 +324,13 @@ export default function Sidebar({
           {menuConfig.map((section) => {
             const showSection = filtered(section.label) && can(section.accessKey)
             if (!showSection) return null
-
             const isOpen = openSection === section.key
             const hasChildren = (section.items?.length || 0) > 0
 
             return (
               <div key={section.key} >
                 {filtered(section.label ?? (section.items && section.items[0]?.label) ?? "") && (
-                  <div className="flex flex-col mt-2">
+                  <div className="flex flex-col mt-2 ">
                     <Button
                       onClick={() => {
                         if (section.to && !hasChildren) {
@@ -340,9 +340,13 @@ export default function Sidebar({
                         handleOpenFromMinimized(section.key, !!section.showToastOnMinimized, section.label, section.count)
                       }}
                       className={cx(
-                        "flex w-full px-2 py-2 rounded shadow-none",
-                        sectionClass,
-                        isMinimized ? "flex-col items-center justify-center" : "flex-row items-center justify-start",
+                        "flex w-full px-2 py-2 rounded shadow-none transition-all duration-200 group ",
+                        isMinimized
+                          ? "flex-col items-center justify-center"
+                          : "flex-row items-center justify-start",
+                        path === section.to
+                          ? "bg-[var(--color-white)] text-[var(--color-primary)]"
+                          : "bg-[var(--color-primary)] text-[var(--color-white)] hover:bg-[var(--color-white)] hover:text-[var(--color-primary)]"
                       )}
                       tooltip={isMinimized ? section.label : undefined}
                       tooltipOptions={{ position: "right", className: "font-normal rounded text-xs" }}
@@ -351,7 +355,7 @@ export default function Sidebar({
                         {section.icon}
                         {isMinimized && section.count && (
                           <span
-                           className="flex items-center justify-center absolute -top-4 -right-4 bg-[var(--color-white)] text-[var(--color-primary)] text-[8px] px-2 font-bold rounded-full w-[22px] h-[22px] shadow-sm">
+                            className="flex items-center justify-center absolute -top-4 -right-4 bg-[var(--color-white)] text-[var(--color-primary)] text-[8px] px-2 font-bold rounded-full w-[22px] h-[22px] shadow-sm">
                             {section.count}
                           </span>
                         )}
@@ -386,9 +390,18 @@ export default function Sidebar({
                       )}
                     </Button>
 
-                    {!isMinimized && hasChildren && isOpen && (
-                      <div className="pl-4 space-y-1 mt-1">{section.items!.map((it) => renderSubItem(it))}</div>
-                    )}
+                    <div
+                      className={cx(
+                        "bg-[var(--color-primary-soft)] pl-4 mt-1 space-y-1 overflow-hidden transition-all duration-300 ease-in-out",
+                        !isMinimized && hasChildren
+                          ? isOpen
+                            ? "max-h-96 opacity-100 translate-y-0"
+                            : "max-h-0 opacity-0 -translate-y-2"
+                          : "hidden"
+                      )}
+                    >
+                      {section.items?.map((it) => renderSubItem(it))}
+                    </div>
                   </div>
                 )}
               </div>
