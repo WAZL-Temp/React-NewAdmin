@@ -70,6 +70,13 @@ export { RiTestTubeLine } from "react-icons/ri";
 export { BiCategory } from "react-icons/bi";
 export { IoIosArrowDown } from "react-icons/io";
 export { FaUserCheck, FaUserSlash, FaUserTimes } from "react-icons/fa";
+export { RiFilter2Fill } from "react-icons/ri";
+export { RiOrderPlayFill } from "react-icons/ri";
+export { IoHeart } from "react-icons/io5";
+export { TbReportSearch } from "react-icons/tb";
+export { IoPeopleSharp } from "react-icons/io5";
+export { IoGiftSharp } from "react-icons/io5";
+
 
 export type { MenuItem } from "primereact/menuitem";
 export type { CarouselResponsiveOption } from 'primereact/carousel';
