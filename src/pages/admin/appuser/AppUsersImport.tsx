@@ -253,24 +253,25 @@ const AppUsersImport = () => {
                   <DataTable
                     value={importedData}
                     dataKey="id"
+                    showGridlines
                     resizableColumns
-                    scrollable
-                    // scrollHeight="53vh"
+                    columnResizeMode="expand"
                     filterDisplay="row"
                     filters={filters}
                     onFilter={(e) => setFilters(e.filters)}
-                    scrollHeight="calc(100vh - 300px)"
-                    showGridlines
                     paginator
                     first={first}
                     rows={rows}
+                    rowHover
                     totalRecords={totalRecords}
                     onPage={onPage}
                     paginatorTemplate={t('globals.layout')}
                     currentPageReportTemplate={t('globals.report')}
                     emptyMessage={t('globals.emptyMessage')}
                     rowsPerPageOptions={[10, 25, 50]}
-                    className="p-datatable-gridlines  datatable-responsive bg-[var(--color-white)]"
+                    className="p-datatable-gridlines datatable-responsive bg-[var(--color-white)]"
+                    scrollable
+                    scrollHeight="calc(100vh - 300px)"
                   >
                     <Column
                       field="importAction" header={t("appUsers.form_detail.fields.importAction")} sortable

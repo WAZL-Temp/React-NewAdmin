@@ -6,7 +6,7 @@ import { useAppUserTabStore } from "../store/useAppUserTabStore"
 import { useTranslation } from "../sharedBase/globalUtils"
 import { UserInfo } from "../types/auth";
 import { useAuthStore } from "../store/auth.store"
-import { AiFillHome, BiCategory, Button, FiUser, InputText, IoList, IoPersonSharp, MdGridView, IoIosArrowDown, RiLogoutCircleLine, RxCross2, Toast, FaUserSlash, FaUserCheck, FaUserTimes } from "../sharedBase/globalImports"
+import { AiFillHome, BiCategory, Button, FiUser, InputText, IoList, IoPersonSharp, MdGridView, IoIosArrowDown, RiLogoutCircleLine, RxCross2, Toast, FaUserSlash, FaUserCheck, FaUserTimes, IoGiftSharp, IoPeopleSharp, TbReportSearch, IoMdSettings, IoHeart, RiOrderPlayFill, RiFilter2Fill } from "../sharedBase/globalImports"
 import { useFetchDashboardInfoData } from "../sharedBase/lookupService"
 
 type SidebarProps = {
@@ -199,7 +199,56 @@ export default function Sidebar({
       label: t("appUsers.columns.fields.role"),
       icon: <IoPersonSharp size={16} className="flex-shrink-0" />,
       to: "/role",
-      accessKey: "role:open",
+      accessKey: "",
+    },
+    {
+      key: "filter",
+      label: "Filter",
+      icon: <RiFilter2Fill  size={16} className="flex-shrink-0" />,
+      to: "",
+      accessKey: "filters:open",
+    },
+    {
+      key: "orders",
+      label: "Orders",
+      icon: <RiOrderPlayFill size={16} className="flex-shrink-0" />,
+      to: "",
+      accessKey: "orders:open",
+    },
+    {
+      key: "wishlist",
+      label: "Wishlist",
+      icon: <IoHeart size={16} className="flex-shrink-0" />,
+      to: "",
+      accessKey: "wishlist:open",
+    },
+    {
+      key: "settings",
+      label: "Settings",
+      icon: <IoMdSettings size={16} className="flex-shrink-0" />,
+      to: "",
+      accessKey: "settings:open",
+    },
+     {
+      key: "reports",
+      label: "Reports",
+      icon: <TbReportSearch size={16} className="flex-shrink-0" />,
+      to: "",
+      accessKey: "reports:open",
+    },
+     {
+      key: "customers",
+      label: "Customers",
+      icon: <IoPeopleSharp size={16} className="flex-shrink-0" />,
+      to: "",
+      accessKey: "customers:open",
+    },
+     {
+      key: "offers",
+      label: "Offers",
+      icon: <IoGiftSharp size={16} className="flex-shrink-0" />,
+      to: "",
+      accessKey: "offers:open",
     },
   ]
 
@@ -330,7 +379,7 @@ export default function Sidebar({
             return (
               <div key={section.key} >
                 {filtered(section.label ?? (section.items && section.items[0]?.label) ?? "") && (
-                  <div className="flex flex-col mt-2 ">
+                  <div className="flex flex-col my-2">
                     <Button
                       onClick={() => {
                         if (section.to && !hasChildren) {
