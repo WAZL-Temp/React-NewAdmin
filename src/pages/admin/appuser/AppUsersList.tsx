@@ -15,7 +15,7 @@ import { useAppUserTabStore } from "../../../store/useAppUserTabStore";
 import { useFetchDashboardInfoData } from "../../../sharedBase/lookupService";
 
 interface TabItem {
-    condition: Record<string, string | number>;
+    condition: Record<string, string | number | boolean>;
     name: string;
     count: number;
 }
@@ -57,7 +57,7 @@ export default function AppUsersList() {
                 const newTabs: TabItem[] = [
                     { condition: { isActive: 1 }, name: "Active", count: dashboardInfoData.appUser[0]?.activeCount ?? 0 },
                     { condition: { isActive: 0 }, name: "In Active", count: dashboardInfoData.appUser[0]?.inactiveCount ?? 0 },
-                    { condition: { isDelete: 0 }, name: "Deleted", count: dashboardInfoData.appUser[0]?.deletedCount ?? 0 },
+                    { condition: { isDelete: true }, name: "Deleted", count: dashboardInfoData.appUser[0]?.deletedCount ?? 0 },
                 ];
 
                 setTabList(newTabs);
@@ -1393,20 +1393,17 @@ export default function AppUsersList() {
                                 <Button
                                     label="View"
                                     icon="pi pi-eye"
-                                    className="w-full sm:w-auto bg-[var(--color-primary)] text-[var(--color-white)] px-4 py-2 text-sm rounded-md font-semibold"
-                                    onClick={() => openItem(selectedItem!, "view")}
+                                    className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[var(--color-primary)] text-[var(--color-white)] px-5 py-2.5 text-sm font-semibold rounded-lg leading-normal"
                                 />
                                 <Button
                                     label="Edit"
                                     icon="pi pi-pencil"
-                                    className="w-full sm:w-auto bg-[var(--color-primary)] text-[var(--color-white)] px-4 py-2 text-sm rounded-md font-semibold"
-                                    onClick={() => openItem(selectedItem!, "edit")}
+                                    className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[var(--color-primary)] text-[var(--color-white)] px-5 py-2.5 text-sm font-semibold rounded-lg leading-normal"
                                 />
                                 <Button
                                     label="Close"
                                     icon="pi pi-times"
-                                    className="w-full sm:w-auto bg-[var(--color-primary)] text-[var(--color-white)] px-4 py-2 text-sm rounded-md font-semibold"
-                                    onClick={() => setSidebarVisible(false)}
+                                    className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[var(--color-primary)] text-[var(--color-white)] px-5 py-2.5 text-sm font-semibold rounded-lg leading-normal"
                                 />
                             </div>
                         </div>

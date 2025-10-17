@@ -1315,20 +1315,17 @@ export default function AppUserListGrid() {
                                 <Button
                                     label="View"
                                     icon="pi pi-eye"
-                                    className="w-full sm:w-auto bg-[var(--color-primary)] text-[var(--color-white)] px-4 py-2 text-sm rounded-md font-semibold"
-                                    onClick={() => openItem(selectedItem!, "view")}
+                                    className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[var(--color-primary)] text-[var(--color-white)] px-5 py-2.5 text-sm font-semibold rounded-lg leading-normal"
                                 />
                                 <Button
                                     label="Edit"
                                     icon="pi pi-pencil"
-                                    className="w-full sm:w-auto bg-[var(--color-primary)] text-[var(--color-white)] px-4 py-2 text-sm rounded-md font-semibold"
-                                    onClick={() => openItem(selectedItem!, "edit")}
+                                    className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[var(--color-primary)] text-[var(--color-white)] px-5 py-2.5 text-sm font-semibold rounded-lg leading-normal"
                                 />
                                 <Button
                                     label="Close"
                                     icon="pi pi-times"
-                                    className="w-full sm:w-auto bg-[var(--color-primary)] text-[var(--color-white)] px-4 py-2 text-sm rounded-md font-semibold"
-                                    onClick={() => setSidebarVisible(false)}
+                                    className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[var(--color-primary)] text-[var(--color-white)] px-5 py-2.5 text-sm font-semibold rounded-lg leading-normal"
                                 />
                             </div>
                         </div>

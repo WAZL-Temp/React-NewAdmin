@@ -70,6 +70,13 @@ export default function Sidebar({
   const can = (key?: string) => (key ? (canAccess ? canAccess(key) : true) : true)
   const filtered = (label: string) => label.toLowerCase().includes(searchTerm.toLowerCase())
 
+  const sectionMatchesSearch = (section: MenuSection) => {
+    if (!searchTerm) return true
+    if (filtered(section.label)) return true
+    if (section.items?.some(item => filtered(item.label))) return true
+    return false
+  }
+
   const sectionClass =
     "text-[var(--color-white)] hover:bg-[var(--color-white)/20] hover:text-[var(--color-white)] transition-colors"
 
@@ -204,7 +211,7 @@ export default function Sidebar({
     {
       key: "filter",
       label: "Filter",
-      icon: <RiFilter2Fill  size={16} className="flex-shrink-0" />,
+      icon: <RiFilter2Fill size={16} className="flex-shrink-0" />,
       to: "",
       accessKey: "filters:open",
     },
@@ -229,21 +236,21 @@ export default function Sidebar({
       to: "",
       accessKey: "settings:open",
     },
-     {
+    {
       key: "reports",
       label: "Reports",
       icon: <TbReportSearch size={16} className="flex-shrink-0" />,
       to: "",
       accessKey: "reports:open",
     },
-     {
+    {
       key: "customers",
       label: "Customers",
       icon: <IoPeopleSharp size={16} className="flex-shrink-0" />,
       to: "",
       accessKey: "customers:open",
     },
-     {
+    {
       key: "offers",
       label: "Offers",
       icon: <IoGiftSharp size={16} className="flex-shrink-0" />,
@@ -285,7 +292,7 @@ export default function Sidebar({
 
   const renderSubItem = (item: SubItem) => {
     const { label, to, icon, accessKey, tabType, activeWhen, count } = item
-    if (!can(accessKey) || !filtered(label)) return null
+    if (!can(accessKey)) return null
     const active = activeWhen(path);
 
     return (
@@ -343,7 +350,7 @@ export default function Sidebar({
       >
         <div className="bg-[var(--color-primary)] sidebar md:hidden lg:hidden mb-14 md:mb-0 lg:mb-0">
           <button
-            className="absolute top-4 right-4 text-[var(--color-primary)] bg-[var(--color-white)] p-2 rounded-md"
+            className="absolute top-4 right-4 text-[var(--color-primary)] bg-[var(--color-white)] p-1 rounded-md"
             onClick={toggleSidebar}
           >
             <RxCross2 size={20} />
@@ -371,7 +378,7 @@ export default function Sidebar({
           )}
         >
           {menuConfig.map((section) => {
-            const showSection = filtered(section.label) && can(section.accessKey)
+            const showSection = sectionMatchesSearch(section) && can(section.accessKey)
             if (!showSection) return null
             const isOpen = openSection === section.key
             const hasChildren = (section.items?.length || 0) > 0
