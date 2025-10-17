@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AppUserService } from '../../../core/service/appUsers.service';
-import { BsArrowLeft, Button, Column, DataTable, DataTableFilterMeta, Dialog, FilterMatchMode, Image, InputText, RiEyeFill, RiFileDownloadFill, RiFileFill, SplitButton, Tooltip } from '../../../sharedBase/globalImports';
+import { BsArrowLeft, Button, Column, DataTable, DataTableFilterMeta, Dialog, FilterMatchMode, Image, InputText, RiEyeFill, RiFileDownloadFill, RiFileFill, SplitButton } from '../../../sharedBase/globalImports';
 import { useTranslation } from '../../../sharedBase/globalUtils';
 import { useFileUploadService } from "../../../core/service/fileUpload.service";
 import FileUploadMain from '../../../components/FileUploadMain';
@@ -117,9 +117,9 @@ const AppUsersImport = () => {
     { field: 'importAction', header: t("appUsers.form_detail.fields.importAction") },
     { field: 'importRemark', header: t("appUsers.form_detail.fields.importRemark") },
     { field: 'createDate', header: t("appUsers.columns.fields.createDate") },
+    { field: 'name', header: t("appUsers.columns.fields.name") },
     { field: 'firstName', header: t("appUsers.columns.fields.firstName") },
     { field: 'lastName', header: t("appUsers.columns.fields.lastName") },
-    { field: 'name', header: t("appUsers.columns.fields.name") },
     { field: 'mobile', header: t("appUsers.columns.fields.mobile") },
     { field: 'mobileVerified', header: t("appUsers.columns.fields.mobileVerified") },
     { field: 'emailId', header: t("appUsers.columns.fields.emailId") },
@@ -139,11 +139,17 @@ const AppUsersImport = () => {
     { field: 'photoShopFront', header: t("appUsers.columns.fields.photoShopFront") },
     { field: 'visitingCard', header: t("appUsers.columns.fields.visitingCard") },
     { field: 'cheque', header: t("appUsers.columns.fields.cheque") },
-    { field: 'photoAttachment', header: t("appUsers.columns.fields.photoAttachment") },
+    { field: "gstOtp", header: t("appUsers.columns.fields.gstOtp") },
     { field: 'hasImpersonateAccess', header: t("appUsers.columns.fields.hasImpersonateAccess") },
+    { field: 'photoAttachment', header: t("appUsers.columns.fields.photoAttachment") },
     { field: 'role', header: t("appUsers.columns.fields.role") },
     { field: 'publish', header: t("appUsers.columns.fields.publish") },
     { field: 'lastLogin', header: t("appUsers.columns.fields.lastLogin") },
+    { field: "defaultLanguage", header: t("appUsers.columns.fields.defaultLanguage") },
+    { field: "totalPlot", header: t("appUsers.columns.fields.totalPlot") },
+    { field: "reportedByName", header: t("appUsers.columns.fields.reportedBy") },
+    { field: "reportedToName", header: t("appUsers.columns.fields.reportedTo") },
+    { field: "gender", header: t("appUsers.columns.fields.gender") },
   ];
 
   const renderFileCell = (rowData: RowData, field: string, rowIndex: number) => {
@@ -164,7 +170,7 @@ const AppUsersImport = () => {
     return (
       <div id={uniqueId} className='text-[13px] overflow-hidden overflow-ellipsis whitespace-nowrap'>
         {(fileName)}
-        <Tooltip className=' text-xs font-semibold hide-tooltip-mobile' target={`#${uniqueId}`} content={fileName} showDelay={200} position="top" />
+        {/* <Tooltip className=' text-xs font-semibold hide-tooltip-mobile' target={`#${uniqueId}`} content={fileName} showDelay={200} position="top" /> */}
       </div>
     );
   };
@@ -289,7 +295,7 @@ const AppUsersImport = () => {
                           <div id={`tooltip-importAction-${rowIndex}`} className="text-left truncate font-medium">
                             {rowData.importAction}
                           </div>
-                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-importAction-${rowIndex}`} content={rowData.importAction} showDelay={200} position="top" />
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-importAction-${rowIndex}`} content={rowData.importAction} showDelay={200} position="top" /> */}
                         </>
                       )}
                     />
@@ -309,7 +315,7 @@ const AppUsersImport = () => {
                           <div id={`tooltip-importRemark-${rowIndex}`} className="text-left truncate font-medium">
                             {rowData.importRemark}
                           </div>
-                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-importRemark-${rowIndex}`} content={rowData.importRemark} showDelay={200} position="top" />
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-importRemark-${rowIndex}`} content={rowData.importRemark} showDelay={200} position="top" /> */}
                         </>
                       )}
                     />
@@ -348,7 +354,7 @@ const AppUsersImport = () => {
                           <div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium">
                             {rowData.name}
                           </div>
-                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" /> */}
                         </>
                       )}
                     />
@@ -368,7 +374,7 @@ const AppUsersImport = () => {
                           <div id={`tooltip-firstName-${rowIndex}`} className="text-left truncate font-medium">
                             {rowData.firstName}
                           </div>
-                          <Tooltip className=" text-xs font-semibold  hide-tooltip-mobile" target={`#tooltip-firstName-${rowIndex}`} content={rowData.firstName} showDelay={200} position="top" />
+                          {/* <Tooltip className=" text-xs font-semibold  hide-tooltip-mobile" target={`#tooltip-firstName-${rowIndex}`} content={rowData.firstName} showDelay={200} position="top" /> */}
                         </>
                       )}
                     />
@@ -388,7 +394,7 @@ const AppUsersImport = () => {
                           <div id={`tooltip-lastName-${rowIndex}`} className="text-left truncate font-medium">
                             {rowData.lastName}
                           </div>
-                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-lastName-${rowIndex}`} content={rowData.lastName} showDelay={200} position="top" />
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-lastName-${rowIndex}`} content={rowData.lastName} showDelay={200} position="top" /> */}
                         </>
                       )}
                     />
@@ -408,7 +414,7 @@ const AppUsersImport = () => {
                           <div id={`tooltip-mobile-${rowIndex}`} className="text-left truncate font-medium">
                             {rowData.mobile}
                           </div>
-                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-mobile-${rowIndex}`} content={rowData.mobile} showDelay={200} position="top" />
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-mobile-${rowIndex}`} content={rowData.mobile} showDelay={200} position="top" /> */}
                         </>
                       )}
                     />
@@ -428,7 +434,7 @@ const AppUsersImport = () => {
                           <div id={`tooltip-mobileVerified-${rowIndex}`} className="text-left truncate font-medium">
                             {rowData.mobileVerified ? "true" : "false"}
                           </div>
-                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-mobileVerified-${rowIndex}`} content={rowData.mobileVerified ? "true" : "false"} showDelay={200} position="top" />
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-mobileVerified-${rowIndex}`} content={rowData.mobileVerified ? "true" : "false"} showDelay={200} position="top" /> */}
                         </>
                       )}
                     />
@@ -448,7 +454,7 @@ const AppUsersImport = () => {
                           <div id={`tooltip-emailId-${rowIndex}`} className="text-left truncate font-medium">
                             {rowData.emailId}
                           </div>
-                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-emailId-${rowIndex}`} content={rowData.emailId} showDelay={200} position="top" />
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-emailId-${rowIndex}`} content={rowData.emailId} showDelay={200} position="top" /> */}
                         </>
                       )}
                     />
@@ -468,7 +474,7 @@ const AppUsersImport = () => {
                           <div id={`tooltip-emailVerified-${rowIndex}`} className="text-left truncate font-medium">
                             {rowData.emailVerified ? "true" : "false"}
                           </div>
-                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-emailVerified-${rowIndex}`} content={rowData.emailVerified ? "true" : "false"} showDelay={200} position="top" />
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-emailVerified-${rowIndex}`} content={rowData.emailVerified ? "true" : "false"} showDelay={200} position="top" /> */}
                         </>
                       )}
                     />
@@ -488,7 +494,7 @@ const AppUsersImport = () => {
                           <div id={`tooltip-shopName-${rowIndex}`} className="text-left truncate font-medium">
                             {rowData.shopName}
                           </div>
-                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-shopName-${rowIndex}`} content={rowData.shopName} showDelay={200} position="top" />
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-shopName-${rowIndex}`} content={rowData.shopName} showDelay={200} position="top" /> */}
                         </>
                       )}
                     />
@@ -508,7 +514,7 @@ const AppUsersImport = () => {
                           <div id={`tooltip-password-${rowIndex}`} className="text-left truncate font-medium">
                             {rowData.password}
                           </div>
-                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-password-${rowIndex}`} content={rowData.password} showDelay={200} position="top" />
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-password-${rowIndex}`} content={rowData.password} showDelay={200} position="top" /> */}
                         </>
                       )}
                     />
@@ -528,7 +534,7 @@ const AppUsersImport = () => {
                           <div id={`tooltip-pincode-${rowIndex}`} className="text-left truncate font-medium">
                             {rowData.pincode}
                           </div>
-                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-pincode-${rowIndex}`} content={rowData.pincode} showDelay={200} position="top" />
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-pincode-${rowIndex}`} content={rowData.pincode} showDelay={200} position="top" /> */}
                         </>
                       )}
                     />
@@ -548,7 +554,7 @@ const AppUsersImport = () => {
                           <div id={`tooltip-state-${rowIndex}`} className="text-left truncate font-medium">
                             {rowData.state}
                           </div>
-                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-state-${rowIndex}`} content={rowData.state} showDelay={200} position="top" />
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-state-${rowIndex}`} content={rowData.state} showDelay={200} position="top" /> */}
                         </>
                       )}
                     />
@@ -568,7 +574,7 @@ const AppUsersImport = () => {
                           <div id={`tooltip-district-${rowIndex}`} className="text-left truncate font-medium">
                             {rowData.pincode}
                           </div>
-                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-district-${rowIndex}`} content={rowData.district} showDelay={200} position="top" />
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-district-${rowIndex}`} content={rowData.district} showDelay={200} position="top" /> */}
                         </>
                       )}
                     />
@@ -588,7 +594,7 @@ const AppUsersImport = () => {
                           <div id={`tooltip-address-${rowIndex}`} className="text-left truncate font-medium">
                             {rowData.address}
                           </div>
-                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-address-${rowIndex}`} content={rowData.address} showDelay={200} position="top" />
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-address-${rowIndex}`} content={rowData.address} showDelay={200} position="top" /> */}
                         </>
                       )}
                     />
@@ -608,27 +614,7 @@ const AppUsersImport = () => {
                           <div id={`tooltip-addressLine-${rowIndex}`} className="text-left truncate font-medium">
                             {rowData.addressLine}
                           </div>
-                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-addressLine-${rowIndex}`} content={rowData.addressLine} showDelay={200} position="top" />
-                        </>
-                      )}
-                    />
-                    <Column
-                      field="gst" header={t("appUsers.columns.fields.gst")} sortable
-                      headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                      style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                      filter
-                      filterElement={
-                        <InputText
-                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                          onChange={(e) => handleFilterChangeLocal("gst", e.target.value)}
-                        />
-                      }
-                      body={(rowData, { rowIndex }) => (
-                        <>
-                          <div id={`tooltip-gst-${rowIndex}`} className="text-left truncate font-medium">
-                            {rowData.gst}
-                          </div>
-                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-gst-${rowIndex}`} content={rowData.gst} showDelay={200} position="top" />
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-addressLine-${rowIndex}`} content={rowData.addressLine} showDelay={200} position="top" /> */}
                         </>
                       )}
                     />
@@ -648,7 +634,27 @@ const AppUsersImport = () => {
                           <div id={`tooltip-verifyShop-${rowIndex}`} className="text-left truncate font-medium">
                             {rowData.verifyShop}
                           </div>
-                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-verifyShop-${rowIndex}`} content={rowData.verifyShop} showDelay={200} position="top" />
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-verifyShop-${rowIndex}`} content={rowData.verifyShop} showDelay={200} position="top" /> */}
+                        </>
+                      )}
+                    />
+                    <Column
+                      field="gst" header={t("appUsers.columns.fields.gst")} sortable
+                      headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                      style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("gst", e.target.value)}
+                        />
+                      }
+                      body={(rowData, { rowIndex }) => (
+                        <>
+                          <div id={`tooltip-gst-${rowIndex}`} className="text-left truncate font-medium">
+                            {rowData.gst}
+                          </div>
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-gst-${rowIndex}`} content={rowData.gst} showDelay={200} position="top" /> */}
                         </>
                       )}
                     />
@@ -736,7 +742,7 @@ const AppUsersImport = () => {
                           <div id={`tooltip-gstOtp-${rowIndex}`} className="text-left truncate font-medium">
                             {rowData.gstOtp}
                           </div>
-                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-gstOtp-${rowIndex}`} content={rowData.gstOtp} showDelay={200} position="top" />
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-gstOtp-${rowIndex}`} content={rowData.gstOtp} showDelay={200} position="top" /> */}
                         </>
                       )}
                     />
@@ -756,7 +762,7 @@ const AppUsersImport = () => {
                           <div id={`tooltip-isActive-${rowIndex}`} className="text-left truncate font-medium">
                             {rowData.isActive ? "true" : "false"}
                           </div>
-                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isActive-${rowIndex}`} content={rowData.isActive} showDelay={200} position="top" />
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isActive-${rowIndex}`} content={rowData.isActive} showDelay={200} position="top" /> */}
                         </>
                       )}
                     />
@@ -776,7 +782,7 @@ const AppUsersImport = () => {
                           <div id={`tooltip-isAdmin-${rowIndex}`} className="text-left truncate font-medium">
                             {rowData.isAdmin ? "true" : "false"}
                           </div>
-                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isAdmin-${rowIndex}`} content={rowData.isAdmin ? "true" : "false"} showDelay={200} position="top" />
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isAdmin-${rowIndex}`} content={rowData.isAdmin ? "true" : "false"} showDelay={200} position="top" /> */}
                         </>
                       )}
                     />
@@ -796,7 +802,7 @@ const AppUsersImport = () => {
                           <div id={`tooltip-hasImpersonateAccess-${rowIndex}`} className="text-left truncate font-medium">
                             {rowData.hasImpersonateAccess ? "true" : "false"}
                           </div>
-                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-hasImpersonateAccess-${rowIndex}`} content={rowData.hasImpersonateAccess ? "true" : "false"} showDelay={200} position="top" />
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-hasImpersonateAccess-${rowIndex}`} content={rowData.hasImpersonateAccess ? "true" : "false"} showDelay={200} position="top" /> */}
                         </>
                       )}
                     />
@@ -833,7 +839,7 @@ const AppUsersImport = () => {
                           <div id={`tooltip-roleLabel-${rowIndex}`} className="text-left truncate font-medium">
                             {rowData.roleLabel}
                           </div>
-                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-roleLabel-${rowIndex}`} content={rowData.roleLabel} showDelay={200} position="top" />
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-roleLabel-${rowIndex}`} content={rowData.roleLabel} showDelay={200} position="top" /> */}
                         </>
                       )}
                     />
@@ -853,7 +859,7 @@ const AppUsersImport = () => {
                           <div id={`tooltip-publishLabel-${rowIndex}`} className="text-left truncate font-medium">
                             {rowData.publishLabel}
                           </div>
-                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-publishLabel-${rowIndex}`} content={rowData.publishLabel} showDelay={200} position="top" />
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-publishLabel-${rowIndex}`} content={rowData.publishLabel} showDelay={200} position="top" /> */}
                         </>
                       )}
                     />
@@ -873,7 +879,27 @@ const AppUsersImport = () => {
                           <div id={`tooltip-lastLogin-${rowIndex}`} className="text-left truncate font-medium">
                             {formatDate(rowData.lastLogin)}
                           </div>
-                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-lastLogin-${rowIndex}`} content={formatDate(rowData.lastLogin)} showDelay={200} position="top" />
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-lastLogin-${rowIndex}`} content={formatDate(rowData.lastLogin)} showDelay={200} position="top" /> */}
+                        </>
+                      )}
+                    />
+                    <Column
+                      field="totalPlot" header={t("appUsers.columns.fields.totalPlot")} sortable
+                      headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                      style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("totalPlot", e.target.value)}
+                        />
+                      }
+                      body={(rowData, { rowIndex }) => (
+                        <>
+                          <div id={`tooltip-totalPlot-${rowIndex}`} className="text-left truncate font-medium">
+                            {rowData.totalPlot}
+                          </div>
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-totalPlot-${rowIndex}`} content={rowData.totalPlot} showDelay={200} position="top" /> */}
                         </>
                       )}
                     />
@@ -893,7 +919,7 @@ const AppUsersImport = () => {
                           <div id={`tooltip-defaultLanguage-${rowIndex}`} className="text-left truncate font-medium">
                             {rowData.defaultLanguage}
                           </div>
-                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-defaultLanguage-${rowIndex}`} content={rowData.defaultLanguage} showDelay={200} position="top" />
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-defaultLanguage-${rowIndex}`} content={rowData.defaultLanguage} showDelay={200} position="top" /> */}
                         </>
                       )}
                     />
@@ -913,7 +939,67 @@ const AppUsersImport = () => {
                           <div id={`tooltip-isPremiumUser-${rowIndex}`} className="text-left truncate font-medium">
                             {rowData.isPremiumUser ? "true" : "false"}
                           </div>
-                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isPremiumUser-${rowIndex}`} content={rowData.isPremiumUser ? "true" : "false"} showDelay={200} position="top" />
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isPremiumUser-${rowIndex}`} content={rowData.isPremiumUser ? "true" : "false"} showDelay={200} position="top" /> */}
+                        </>
+                      )}
+                    />
+                    <Column
+                      field="reportedByName" header={t("appUsers.columns.fields.reportedBy")} sortable
+                      headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                      style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("reportedByName", e.target.value)}
+                        />
+                      }
+                      body={(rowData, { rowIndex }) => (
+                        <>
+                          <div id={`tooltip-reportedByName-${rowIndex}`} className="text-left truncate font-medium">
+                            {rowData.reportedByName}
+                          </div>
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-reportedByName-${rowIndex}`} content={rowData.reportedByName} showDelay={200} position="top" /> */}
+                        </>
+                      )}
+                    />
+                    <Column
+                      field="reportedToName" header={t("appUsers.columns.fields.reportedTo")} sortable
+                      headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                      style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("reportedToName", e.target.value)}
+                        />
+                      }
+                      body={(rowData, { rowIndex }) => (
+                        <>
+                          <div id={`tooltip-reportedToName-${rowIndex}`} className="text-left truncate font-medium">
+                            {rowData.reportedToName}
+                          </div>
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-reportedToName-${rowIndex}`} content={rowData.reportedToName} showDelay={200} position="top" /> */}
+                        </>
+                      )}
+                    />
+                    <Column
+                      field="gender" header={t("appUsers.columns.fields.gender")} sortable
+                      headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+                      style={{ width: "200px", backgroundColor: "var(--color-white)" }}
+                      filter
+                      filterElement={
+                        <InputText
+                          className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+                          onChange={(e) => handleFilterChangeLocal("gender", e.target.value)}
+                        />
+                      }
+                      body={(rowData, { rowIndex }) => (
+                        <>
+                          <div id={`tooltip-gender-${rowIndex}`} className="text-left truncate font-medium">
+                            {rowData.gender}
+                          </div>
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-gender-${rowIndex}`} content={rowData.gender} showDelay={200} position="top" /> */}
                         </>
                       )}
                     />
