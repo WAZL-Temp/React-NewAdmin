@@ -61,3 +61,9 @@ export interface CachedState {
   roleCondition: RoleConditionParams;
   tabName: string;
 }
+
+export interface TabItem {
+    condition: Record<string, string | number | boolean>;
+    name: string;
+    count: number;
+}

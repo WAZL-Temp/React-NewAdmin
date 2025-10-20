@@ -64,7 +64,7 @@ const Layout = ({ children }: LayoutProps) => {
       {showSidebar && (
         <header className="flex h-14 md:hidden lg:hidden items-center justify-between bg-[var(--color-primary)] border-b px-2 w-full">
           <button
-            className="text-[var(--color-white)] p-2 rounded-md"
+            className="text-[var(--color-white)] p-2 rounded-md z-50 relative"
             onClick={toggleSidebar}
           >
             <FaBars size={22} />
