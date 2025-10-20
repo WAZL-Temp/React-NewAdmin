@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useListPage } from "../../../hooks/useListPage";
 import { BiSolidTrash, Button, Calendar, Column, DataTable, Dialog, HiOutlinePlus, IoMdSettings, Image, InputText, IoMdRefresh, MdOutlineUploadFile, MenuItem, RiPencilFill, SplitButton, TbFileExcel, TiEye, Toast, Tooltip, FilterMatchMode, Checkbox, IoLanguage, Sidebar, TabView, TabPanel } from "../../../sharedBase/globalImports";
 import { useTranslation, useNavigate } from '../../../sharedBase/globalUtils';
 import successimg from '../../../assets/images/success.gif';
 import confirmImg from '../../../assets/images/are-you-sure.jpg';
 import { AppUser } from "../../../core/model/appUser";
-import { RowData } from "../../../types/listpage";
+import { RowData, TabItem } from "../../../types/listpage";
 import { useListQuery } from "../../../store/useListQuery";
 import { AppUserService, convertLang } from "../../../core/service/appUsers.service";
 import Loader from "../../../components/Loader";
@@ -14,11 +14,6 @@ import { CustomFile } from "../../../core/model/customfile";
 import { useAppUserTabStore } from "../../../store/useAppUserTabStore";
 import { useFetchDashboardInfoData } from "../../../sharedBase/lookupService";
 
-interface TabItem {
-    condition: Record<string, string | number | boolean>;
-    name: string;
-    count: number;
-}
 
 export default function AppUsersList() {
     const navigate = useNavigate();
@@ -29,6 +24,8 @@ export default function AppUsersList() {
     // search    
     const userService = AppUserService();
     const query = useListQuery<AppUser>(userService);
+    const tab = useAppUserTabStore((state) => state.tab);
+    const { data: dashboardInfoData } = useFetchDashboardInfoData();
     const {
         roleData, hasAccess, globalFilterValue, setGlobalFilterValue, onGlobalFilterChange, refreshItemData, isDeleteDialogVisible,
         deleteItem, closeDeleteDialog, setFilters, onSort, onPage, first, rows, sortField, sortOrder, totalRecords,
@@ -36,7 +33,8 @@ export default function AppUsersList() {
         toast, isSuccessDialogOpen, setIsSuccessDialogOpen, formatDate, exportToExcel,
         importFromExcel, addData, handleDelete, useColumnConfig, visible, setVisible, calendarCreateDateFrom, setCalendarCreateDateFrom,
         calendarCreateDateTo, setCalendarCreateDateTo, setLoading, parseAndFormatImages,
-        selectedItem, sidebarVisible, setSidebarVisible, handleSelectItem }
+        selectedItem, sidebarVisible, setSidebarVisible, handleSelectItem,
+        activeIndex, setActiveIndex, tabList, setTabList }
         = useListPage<typeof query, AppUser>({
             query: query,
             props: {
@@ -46,23 +44,22 @@ export default function AppUsersList() {
                 service: userService
             }
         });
-    const [activeIndex, setActiveIndex] = useState(0);
-    const tab = useAppUserTabStore((state) => state.tab);
-    const { data: dashboardInfoData } = useFetchDashboardInfoData();
-    const [tabList, setTabList] = useState<TabItem[]>([]);
 
     useEffect(() => {
         if (dashboardInfoData) {
             if (dashboardInfoData.appUser) {
-                const newTabs: TabItem[] = [
+                const tabList: TabItem[] = [
                     { condition: { isActive: 1 }, name: "Active", count: dashboardInfoData.appUser[0]?.activeCount ?? 0 },
                     { condition: { isActive: 0 }, name: "In Active", count: dashboardInfoData.appUser[0]?.inactiveCount ?? 0 },
                     { condition: { isDelete: true }, name: "Deleted", count: dashboardInfoData.appUser[0]?.deletedCount ?? 0 },
                 ];
 
-                setTabList(newTabs);
-                if (!query.tabName) {
-                    query.setRoleCondition(newTabs[0].condition);
+                setTabList(tabList);
+                if (tabList.length > 0) {
+                    if (!query.tabName) {
+                        const data = tabList[0].condition;
+                        query.setRoleCondition(data);
+                    }
                 }
             } else {
                 setTabList([]);
@@ -1295,18 +1292,19 @@ export default function AppUsersList() {
 
                     <div>
                         {!query.isLoading && (
-                            tabList.length > 0 && (
-                                <TabView
-                                    activeIndex={activeIndex}
-                                    onTabChange={tabsChange}
-                                >
-                                    {tabList.map((tab, i) => (
-                                        <TabPanel key={i} header={`${tab.name} (${tab.count})`}>
-                                            {renderTable(query.data ?? [])}
-                                        </TabPanel>
-                                    ))}
-                                </TabView>
-                            )
+                            <>
+                                {tabList.length > 0 ? (
+                                    <TabView activeIndex={activeIndex} onTabChange={tabsChange}>
+                                        {tabList.map((tab, i) => (
+                                            <TabPanel key={i} header={`${tab.name} (${tab.count})`}>
+                                                {renderTable(query.data ?? [])}
+                                            </TabPanel>
+                                        ))}
+                                    </TabView>
+                                ) : (
+                                    renderTable(query.data ?? [])
+                                )}
+                            </>
                         )}
                     </div>
 

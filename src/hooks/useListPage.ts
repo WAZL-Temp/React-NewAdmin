@@ -2,7 +2,7 @@ import { useState, useRef, useMemo, useEffect, useCallback } from "react";
 import { DataTable, DataTableFilterMeta, DataTablePageEvent, DataTableSortEvent, DataTableValueArray, FilterMatchMode, Toast } from "../sharedBase/globalImports";
 import { format, parseISO, useNavigate } from '../sharedBase/globalUtils';
 import { useBaseService } from "../sharedBase/baseService";
-import { Action, ColumnConfig, RoleData } from "../types/listpage";
+import { Action, ColumnConfig, RoleData, TabItem } from "../types/listpage";
 import { UseListQueryResult } from "../store/useListQuery";
 import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
 import { RoleDetail } from "../core/model/roledetail";
@@ -115,30 +115,41 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
     const [loading, setLoading] = useState(false);
     const [selectedItem, setSelectedItem] = useState<TItem | null>(null);
     const [sidebarVisible, setSidebarVisible] = useState(false);
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [tabList, setTabList] = useState<TabItem[]>([]);
 
     useEffect(() => {
-        const fetchRoleDetails = async () => {
-            if (roleDetailsData && roleDetailsData.length > 0) {
+        const loadRoleData = async () => {
+            if (!query) return;
+            if (query.hasSetRoleCondition || query.tabName) return;
 
+            if (roleDetailsData && roleDetailsData.length > 0) {
                 const itemData = (roleDetailsData as RoleDetail[]).find(
                     (r: RoleDetail) => typeof r.name === "string" && r.name.toLowerCase() === (props.typeName ?? "").toLowerCase()
                 );
                 setRoleData(itemData ?? null);
 
-                // if (itemData?.dbStatus) {
-                //     const parsedDbStatus = typeof itemData.dbStatus === "string" ? JSON.parse(itemData.dbStatus) : itemData.dbStatus;
-                //     query?.setRoleCondition(parsedDbStatus);
-                // } else {
-                //     query?.setRoleCondition({});
-                // }
+                if (query && itemData && itemData.dbStatus) {
+                    if (itemData?.dbStatus) {
+                        // ** for roleCondition setting from dbStatus column
+                        // const parsedDbStatus = typeof itemData.dbStatus === "string" ? JSON.parse(itemData.dbStatus) : itemData.dbStatus;
+                        // query?.setRoleCondition(parsedDbStatus);
+                    } else {
+                        // query?.setRoleCondition({});
+                    }
+                    return;
+                }
                 // await query.load();
                 // query?.setRoleCondition({ isActive: "1" });
-            }
-        };
 
-        if (roleDetailsData && roleDetailsData.length > 0) {
-            fetchRoleDetails();
+            }
+            //  fallback to setting empty roleCondition
+            // if (!query.hasSetRoleCondition && !query.tabName) {
+            //     query.setRoleCondition({});
+            // }
         }
+        const timeout = setTimeout(loadRoleData, 150);
+        return () => clearTimeout(timeout);
     }, [roleDetailsData, props.typeName]);
 
     useEffect(() => {
@@ -439,6 +450,7 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
         setIsSuccessDialogOpen, formatDate, hasAccess, exportToExcel, importFromExcel, addData, handleDelete, useColumnConfig,
         visible, setVisible, calendarCreateDateFrom, setCalendarCreateDateFrom, stripHtml,
         calendarCreateDateTo, setCalendarCreateDateTo, loading, setLoading, parseAndFormatImages,
-        selectedItem, setSelectedItem, sidebarVisible, setSidebarVisible, handleSelectItem
+        selectedItem, setSelectedItem, sidebarVisible, setSidebarVisible, handleSelectItem,
+        activeIndex, setActiveIndex, tabList, setTabList
     };
 }
