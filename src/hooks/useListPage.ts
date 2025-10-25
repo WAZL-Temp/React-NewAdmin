@@ -13,6 +13,7 @@ type UseListPageCommonProps = {
     baseModelName?: string;
     typeName?: string;
     service: ReturnType<typeof useBaseService>;
+    autoLoad?: boolean;
     onFilterChange?: (value: string) => void;
     onConfirmDelete?: (id: number) => void;
     onDeleteItem?: (id: number) => void;
@@ -117,6 +118,12 @@ export function useListPage<TQuery extends UseListQueryResult<TItem>, TItem>({ q
     const [sidebarVisible, setSidebarVisible] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
     const [tabList, setTabList] = useState<TabItem[]>([]);
+
+    useEffect(() => {
+        if (props.autoLoad) {
+            query.load();
+        }
+    }, [props.autoLoad]);
 
     useEffect(() => {
         const loadRoleData = async () => {

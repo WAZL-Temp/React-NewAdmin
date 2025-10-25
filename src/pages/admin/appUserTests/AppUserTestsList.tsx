@@ -35,7 +35,8 @@ export default function AppUserTestsList() {
                 initialFilterValue: '',
                 baseModelName: baseModelName,
                 typeName: typeName,
-                service: appUserTestsService
+                service: appUserTestsService,
+                autoLoad: true,
             }
         });
 

@@ -2,7 +2,7 @@ import { useState, useRef, useMemo, useEffect, useCallback } from "react";
 import { DataTable, DataTableFilterMeta, DataTableValueArray, FilterMatchMode, Toast } from "../sharedBase/globalImports";
 import { format, parseISO, useNavigate, useTranslation } from '../sharedBase/globalUtils';
 import { useBaseService } from "../sharedBase/baseService";
-import { Action, ColumnConfig, RoleData } from "../types/listpage";
+import { Action, ColumnConfig, RoleData, TabItem } from "../types/listpage";
 import { UseListQueryResult } from "../store/useListQuery";
 import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
 import { RoleDetail } from "../core/model/roledetail";
@@ -15,6 +15,7 @@ type UseListPageCommonProps = {
     typeName?: string;
     service: ReturnType<typeof useBaseService>;
     pageGridService?: ReturnType<typeof getGridData>;
+    tabsData?: TabItem[];
     onFilterChange?: (value: string) => void;
     onConfirmDelete?: (id: number) => void;
     onDeleteItem?: (id: number) => void;
@@ -126,19 +127,27 @@ export function useListGridPage<TQuery extends UseListQueryResult<TItem>, TItem>
     const [calendarCreateDateTo, setCalendarCreateDateTo] = useState<Date | undefined | null>(null);
     const [selectedItem, setSelectedItem] = useState<TItem | null>(null);
     const [sidebarVisible, setSidebarVisible] = useState(false);
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [tabList, setTabList] = useState<TabItem[]>([]);
+    const gridRunning = useRef(false);
 
     useEffect(() => {
-        setCurrentPageReportTemplate(t('globals.report'));
-    }, [t])
-
-    useEffect(() => {
-        if (
-            !hasInitialized.current &&
-            query.roleCondition &&
-            Object.keys(query.roleCondition).length > 0
-        ) {
+        if (!hasInitialized.current && props.tabsData && props.tabsData.length > 0) {
             hasInitialized.current = true;
+            setTabList(props.tabsData);
 
+            const firstCondition = props.tabsData[0].condition;
+            if (firstCondition) {
+                query.setRoleCondition(firstCondition);
+
+                const finalCondition = {
+                    ...query.condition,
+                    ...query.search,
+                    ...firstCondition,
+                };
+                gridData(finalCondition);
+            }
+        } else {
             const finalCondition = {
                 ...query.condition,
                 ...query.search,
@@ -147,29 +156,63 @@ export function useListGridPage<TQuery extends UseListQueryResult<TItem>, TItem>
 
             gridData(finalCondition);
         }
-    }, [query.roleCondition, query.condition, query.search]);
+    }, [props.tabsData]);
 
     useEffect(() => {
-        const fetchRoleDetails = async () => {
-            if (roleDetailsData && roleDetailsData.length > 0) {
+        setCurrentPageReportTemplate(t('globals.report'));
+    }, [t])
 
+    // useEffect(() => {
+    //     if (
+    //         !hasInitialized.current &&
+    //         query.roleCondition &&
+    //         Object.keys(query.roleCondition).length > 0
+    //     ) {
+    //         hasInitialized.current = true;
+
+    //         const finalCondition = {
+    //             ...query.condition,
+    //             ...query.search,
+    //             ...query.roleCondition,
+    //         };
+
+    //         gridData(finalCondition);
+    //     }
+
+    // }, [query.roleCondition, query.condition, query.search]);
+
+    useEffect(() => {
+        const loadRoleData = async () => {
+            if (!query) return;
+            if (query.hasSetRoleCondition || query.tabName) return;
+
+            if (roleDetailsData && roleDetailsData.length > 0) {
                 const itemData = (roleDetailsData as RoleDetail[]).find(
                     (r: RoleDetail) => typeof r.name === "string" && r.name.toLowerCase() === (props.typeName ?? "").toLowerCase()
                 );
                 setRoleData(itemData ?? null);
 
-                if (itemData?.dbStatus) {
-                    const parsedDbStatus = typeof itemData.dbStatus === "string" ? JSON.parse(itemData.dbStatus) : itemData.dbStatus;
-                    query?.setRoleCondition(parsedDbStatus);
-                } else {
-                    query?.setRoleCondition({});
+                if (query && itemData && itemData.dbStatus) {
+                    if (itemData?.dbStatus) {
+                        // ** for roleCondition setting from dbStatus column
+                        // const parsedDbStatus = typeof itemData.dbStatus === "string" ? JSON.parse(itemData.dbStatus) : itemData.dbStatus;
+                        // query?.setRoleCondition(parsedDbStatus);
+                    } else {
+                        // query?.setRoleCondition({});
+                    }
+                    return;
                 }
-            }
-        };
+                // await query.load();
+                // query?.setRoleCondition({ isActive: "1" });
 
-        if (roleDetailsData && roleDetailsData.length > 0) {
-            fetchRoleDetails();
+            }
+            //  fallback to setting empty roleCondition
+            // if (!query.hasSetRoleCondition && !query.tabName) {
+            //     query.setRoleCondition({});
+            // }
         }
+        const timeout = setTimeout(loadRoleData, 150);
+        return () => clearTimeout(timeout);
     }, [roleDetailsData, props.typeName]);
 
 
@@ -399,7 +442,11 @@ export function useListGridPage<TQuery extends UseListQueryResult<TItem>, TItem>
     };
 
     const gridData = async (conditionOverride?: Record<string, unknown>) => {
+        if (gridRunning.current) return;
+        gridRunning.current = true;
+
         try {
+
             const finalCondition = conditionOverride ?? {
                 ...query.condition,
                 ...query.search,
@@ -433,6 +480,7 @@ export function useListGridPage<TQuery extends UseListQueryResult<TItem>, TItem>
             setTotalRecords(0);
             setCurrentPageReportTemplate(t('globals.report', { totalRecords: 0 }));
         } finally {
+            gridRunning.current = false;
             setLoading(false);
         }
     }
@@ -611,6 +659,7 @@ export function useListGridPage<TQuery extends UseListQueryResult<TItem>, TItem>
         loading, setLoading, setFirst, onLazyLoad, selectedRow, setSelectedRow,
         multiSortMeta, setMultiSortMeta, currentPageReportTemplate, data, setData, calendarCreateDateFrom, setCalendarCreateDateFrom,
         calendarCreateDateTo, setCalendarCreateDateTo, parseAndFormatImages, stripHtml,
-        selectedItem, setSelectedItem, sidebarVisible, setSidebarVisible, handleSelectItem
+        selectedItem, setSelectedItem, sidebarVisible, setSidebarVisible, handleSelectItem,
+        activeIndex, setActiveIndex, tabList, setTabList, gridData
     };
 }

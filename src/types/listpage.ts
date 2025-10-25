@@ -55,15 +55,15 @@ export interface TableSearchParams {
 }
 
 export interface CachedState {
-  search: SearchParams;
-  tableSearch: TableSearchParams;
-  condition: ConditionParams;
-  roleCondition: RoleConditionParams;
-  tabName: string;
+    search: SearchParams;
+    tableSearch: TableSearchParams;
+    condition: ConditionParams;
+    roleCondition: RoleConditionParams;
+    tabName: string;
 }
 
 export interface TabItem {
-    condition: Record<string, string | number | boolean>;
+    condition: Record<string, string | number | boolean | undefined>;
     name: string;
     count: number;
 }
