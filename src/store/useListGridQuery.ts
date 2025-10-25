@@ -25,7 +25,7 @@ export interface UseListQueryResult<T> {
   hasSetRoleCondition?: boolean;
 }
 
-export const useListQuery = <T extends BaseModel>(
+export const useListGridQuery = <T extends BaseModel>(
   baseService: ReturnType<typeof useBaseService>
 ): UseListQueryResult<T> => {
   const queryClient = useQueryClient();
@@ -48,23 +48,16 @@ export const useListQuery = <T extends BaseModel>(
   );
   const [condition, setConditionState] = useState<ConditionParams>(cachedState?.condition || {});
   const [roleCondition, setRoleConditionState] = useState<RoleConditionParams>(cachedState?.roleCondition || {});
-  // const isRoleConditionReady = Object.keys(roleCondition).length > 0;
   const hasSetRoleConditionRef = useRef(false);
   const [tabName, setTabNameState] = useState<string>(cachedState?.tabName || '');
 
   const payload = { ...condition, ...search, ...roleCondition };
-  // this created issued with waiting forever when roleCondition is not set from outside**********
-  // const isPayloadEmpty = Object.keys(payload).length === 0;
-  // const shouldWait = Object.keys(roleCondition).length === 0 && !hasSetRoleConditionRef.current;
-  // const isQueryEnabled = !isPayloadEmpty;
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: [`list-${service.type}`],
     queryFn: () => service.getAll(payload),
     staleTime: 1000 * 60 * 5,
     enabled: false,
-    // enabled: isQueryEnabled,
-    // select: (data) => Array.isArray(data) ? [...data].reverse() : data,
   });
 
   const deleteMutation = useMutation({
@@ -148,9 +141,9 @@ export const useListQuery = <T extends BaseModel>(
   };
 
   const setRoleCondition = (newRoleCondition: RoleConditionParams) => {
-    // hasSetRoleConditionRef.current = true;
     setRoleConditionState(() => {
       const updated = { ...newRoleCondition };
+
       queryClient.setQueryData([`list-${service.type}-state`], {
         search,
         tableSearch,
@@ -158,9 +151,6 @@ export const useListQuery = <T extends BaseModel>(
         roleCondition: updated,
         tabName,
       });
-      // setTimeout(() => {
-      //   refetch();
-      // }, 0);
       return updated;
     });
   };

@@ -2,12 +2,13 @@
 
 import type React from "react"
 import { useEffect, useMemo, useRef, useState } from "react"
-import { useAppUserTabStore } from "../store/useAppUserTabStore"
 import { useTranslation } from "../sharedBase/globalUtils"
 import { UserInfo } from "../types/auth";
 import { useAuthStore } from "../store/auth.store"
 import { AiFillHome, BiCategory, Button, FiUser, InputText, IoList, IoPersonSharp, MdGridView, IoIosArrowDown, RiLogoutCircleLine, RxCross2, Toast, FaUserSlash, FaUserCheck, FaUserTimes, IoGiftSharp, IoPeopleSharp, TbReportSearch, IoMdSettings, IoHeart, RiOrderPlayFill, RiFilter2Fill } from "../sharedBase/globalImports"
 import { useFetchDashboardInfoData } from "../sharedBase/lookupService"
+// import { AppUserTabStore } from "../pages/admin/appuser/AppUserTabStore";
+import { useModelTabStore } from "../store/useModelTabStore";
 
 type SidebarProps = {
   isSidebarOpen: boolean
@@ -22,7 +23,7 @@ type SidebarProps = {
 
 const cx = (...classes: (string | false | null | undefined)[]) => classes.filter(Boolean).join(" ")
 
-type TabType = "active" | "inactive" | "isDelete"
+type TabType = "active" | "inactive" | "deleted"
 type SubItem = {
   label: string
   to: string
@@ -57,7 +58,8 @@ export default function Sidebar({
   const [searchTerm, setSearchTerm] = useState("")
   const [openSection, setOpenSection] = useState<string | null>(null)
   const toast = useRef<Toast>(null)
-  const { setTab } = useAppUserTabStore();
+  // const { setTab } = AppUserTabStore();
+  const { setActiveTab } = useModelTabStore();
   const { login, userInfo } = useAuthStore();
   const { data: dashboardInfoData } = useFetchDashboardInfoData();
 
@@ -130,11 +132,11 @@ export default function Sidebar({
         },
         {
           label: "Delete Users",
-          to: "/appuser?tab=isDelete",
+          to: "/appuser?tab=deleted",
           icon: <FaUserTimes size={14} />,
           accessKey: "appuser:list",
-          activeWhen: (p) => p === "/appuser?tab=isDelete",
-          tabType: "isDelete",
+          activeWhen: (p) => p === "/appuser?tab=deleted",
+          tabType: "deleted",
           count: dashboardInfoData.appUser?.[0]?.deletedCount ?? 0,
         },
       ],
@@ -290,7 +292,7 @@ export default function Sidebar({
     }
   }
 
-  const renderSubItem = (item: SubItem) => {
+  const renderSubItem = (item: SubItem, modelKey: string) => {
     const { label, to, icon, accessKey, tabType, activeWhen, count } = item
     if (!can(accessKey)) return null
     const active = activeWhen(path);
@@ -300,7 +302,8 @@ export default function Sidebar({
         key={`${label}-${to}`}
         onClick={() => {
           if (tabType) {
-            setTab(tabType);
+            // setTab(tabType);            
+            setActiveTab(modelKey.toLowerCase(), tabType);
           }
           navigateTo(to)
         }}
@@ -456,7 +459,7 @@ export default function Sidebar({
                           : "hidden"
                       )}
                     >
-                      {section.items?.map((it) => renderSubItem(it))}
+                      {section.items?.map((it) => renderSubItem(it, section.key))}
                     </div>
                   </div>
                 )}

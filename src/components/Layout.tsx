@@ -57,12 +57,12 @@ const Layout = ({ children }: LayoutProps) => {
 
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-[var(--color-white)] text-[var(--color-dark)]">
-      <div className="hidden md:block lg:block">
+      <div className="hidden md:block">
         <Header toggleMinimized={toggleMinimized} />
       </div>
 
       {showSidebar && (
-        <header className="flex h-14 md:hidden lg:hidden items-center justify-between bg-[var(--color-primary)] border-b px-2 w-full">
+        <header className="flex h-14 md:hidden items-center justify-between bg-[var(--color-primary)] border-b px-2 w-full">
           <button
             className="text-[var(--color-white)] p-2 rounded-md z-50 relative"
             onClick={toggleSidebar}

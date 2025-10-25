@@ -11,8 +11,8 @@ import { AppUserService, convertLang } from "../../../core/service/appUsers.serv
 import Loader from "../../../components/Loader";
 import userAvtar from "../../../assets/images/user-avatar.png";
 import { CustomFile } from "../../../core/model/customfile";
-import { useAppUserTabStore } from "../../../store/useAppUserTabStore";
 import { useFetchDashboardInfoData } from "../../../sharedBase/lookupService";
+import { useModelTabStore } from "../../../store/useModelTabStore";
 
 
 export default function AppUsersList() {
@@ -24,7 +24,7 @@ export default function AppUsersList() {
     // search    
     const userService = AppUserService();
     const query = useListQuery<AppUser>(userService);
-    const tab = useAppUserTabStore((state) => state.tab);
+    const { activeTabs, setTabLists } = useModelTabStore();
     const { data: dashboardInfoData } = useFetchDashboardInfoData();
     const {
         roleData, hasAccess, globalFilterValue, setGlobalFilterValue, onGlobalFilterChange, refreshItemData, isDeleteDialogVisible,
@@ -44,28 +44,47 @@ export default function AppUsersList() {
                 service: userService
             }
         });
+    const storeTabName = useModelTabStore((s) => s.activeTabs[baseModelName]?.tabName);
 
     useEffect(() => {
-        if (dashboardInfoData) {
-            if (dashboardInfoData.appUser) {
-                const tabList: TabItem[] = [
-                    { condition: { isActive: 1 }, name: "Active", count: dashboardInfoData.appUser[0]?.activeCount ?? 0 },
-                    { condition: { isActive: 0 }, name: "In Active", count: dashboardInfoData.appUser[0]?.inactiveCount ?? 0 },
-                    { condition: { isDelete: true }, name: "Deleted", count: dashboardInfoData.appUser[0]?.deletedCount ?? 0 },
-                ];
+        if (!dashboardInfoData?.appUser) return;
+        if (dashboardInfoData?.appUser) {
+            const countData = dashboardInfoData?.appUser[0]
 
-                setTabList(tabList);
-                if (tabList.length > 0) {
-                    if (!query.tabName) {
-                        const data = tabList[0].condition;
-                        query.setRoleCondition(data);
-                    }
+            const tabs: TabItem[] = [
+                { name: "Active", condition: { isActive: 1 }, count: countData.activeCount ?? 0 },
+                { name: "Inactive", condition: { isActive: 0 }, count: countData.inactiveCount ?? 0 },
+                { name: "Deleted", condition: { isDelete: true }, count: countData.deletedCount ?? 0 },
+            ];
+            if (tabs.length) {
+                setTabList(tabs);
+                setTabLists(baseModelName, tabs);
+
+                const modelTabs = activeTabs[baseModelName];
+                const activeTabName = modelTabs?.tabName ?? tabs[0].name;
+
+                const selectedTab = tabs.find((t) => t.name.toLowerCase() === activeTabName.toLowerCase());
+                if (selectedTab) {
+                    query.setRoleCondition(selectedTab.condition);
+                    query.load();
                 }
-            } else {
-                setTabList([]);
             }
         }
-    }, [dashboardInfoData, tabList.length]);// eslint-disable-line react-hooks/exhaustive-deps
+    }, [dashboardInfoData]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    useEffect(() => {
+        if (!storeTabName || !tabList.length) return;
+
+        const selected = tabList.find(
+            (t) => t.name.toLowerCase() === storeTabName.toLowerCase()
+        );
+
+        if (selected) {
+            query.setRoleCondition(selected.condition);
+            const index = tabList.findIndex(tab => tab.name.toLowerCase() === storeTabName.toLowerCase());
+            if (index !== -1) setActiveIndex(index);
+        }
+    }, [storeTabName, tabList]);
 
     useEffect(() => {
         if (query.tabName && tabList.length > 0) {
@@ -76,18 +95,6 @@ export default function AppUsersList() {
             }
         }
     }, [query.tabName, tabList]);// eslint-disable-line react-hooks/exhaustive-deps
-
-    useEffect(() => {
-        if (tab) {
-            if (tab === "inactive") setActiveIndex(1);
-            else if (tab === "isDelete") setActiveIndex(2);
-            else setActiveIndex(0);
-        }
-        const selectedTab = tabList[tab ? (tab === "inactive" ? 1 : tab === "isDelete" ? 2 : 0) : 0];
-        if (!selectedTab) return;
-
-        query.setRoleCondition(selectedTab.condition);
-    }, [tab]);// eslint-disable-line react-hooks/exhaustive-deps
 
     const columnsConfigDefault = useMemo(() => [
         { field: "createDate", header: t("appUsers.columns.fields.createDate"), isDefault: true, show: true },
@@ -255,7 +262,8 @@ export default function AppUsersList() {
 
     const renderTable = (data: AppUser[]) => (
         <DataTable
-            key={i18n.language}
+            // key={i18n.language}
+            key={`${i18n.language}-${!!roleData}`}
             ref={dtRef}
             value={data}
             dataKey="id"
