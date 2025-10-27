@@ -7,12 +7,12 @@ import confirmImg from '../../../assets/images/are-you-sure.jpg';
 import { AppUser } from "../../../core/model/appUser";
 import { RowData, TabItem } from "../../../types/listpage";
 import { useListQuery } from "../../../store/useListQuery";
-import { AppUserService, convertLang } from "../../../core/service/appUsers.service";
 import Loader from "../../../components/Loader";
 import userAvtar from "../../../assets/images/user-avatar.png";
 import { CustomFile } from "../../../core/model/customfile";
 import { useFetchDashboardInfoData } from "../../../sharedBase/lookupService";
 import { useModelTabStore } from "../../../store/useModelTabStore";
+import {CustomAppUserService} from "./appUsers.service";
 
 
 export default function AppUsersList() {
@@ -22,7 +22,7 @@ export default function AppUsersList() {
     const { t, i18n } = useTranslation();
     const dtRef = useRef<DataTable<AppUser[]>>(null);
     // search    
-    const userService = AppUserService();
+    const userService = CustomAppUserService();
     const query = useListQuery<AppUser>(userService);
     const { activeTabs, setTabLists } = useModelTabStore();
     const { data: dashboardInfoData } = useFetchDashboardInfoData();
@@ -154,7 +154,7 @@ export default function AppUsersList() {
     const convertLanguage = async () => {
         setLoading(true);
         try {
-            await convertLang();
+            await userService.convertLang();
         } finally {
             setLoading(false);
         }

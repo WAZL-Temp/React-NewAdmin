@@ -5,13 +5,13 @@ import successimg from '../../../assets/images/success.gif';
 import confirmImg from '../../../assets/images/are-you-sure.jpg';
 import { AppUser } from "../../../core/model/appUser";
 import { RowData, TabItem } from "../../../types/listpage";
-import { AppUserService, appUserPageDataService, convertLang } from "../../../core/service/appUsers.service";
 import Loader from "../../../components/Loader";
 import { useListGridPage } from "../../../hooks/useListGridPage";
 import { CustomFile } from "../../../core/model/customfile";
 import userAvtar from "../../../assets/images/user-avatar.png";
 import { useFetchDashboardInfoData } from "../../../sharedBase/lookupService";
 import { useListGridQuery } from "../../../store/useListGridQuery";
+import { CustomAppUserService} from "./appUsers.service";
 
 
 export default function AppUserListGrid() {
@@ -21,7 +21,7 @@ export default function AppUserListGrid() {
     const { t, i18n } = useTranslation();
     const dtRef = useRef<DataTable<AppUser[]>>(null);
     // search
-    const userService = AppUserService();
+    const userService = CustomAppUserService();
     const query = useListGridQuery<AppUser>(userService);
     const { data: dashboardInfoData } = useFetchDashboardInfoData();
 
@@ -52,7 +52,7 @@ export default function AppUserListGrid() {
                 baseModelName: baseModelName,
                 typeName: typeName,
                 service: userService,
-                pageGridService: appUserPageDataService,
+                pageGridService: userService,
                 tabsData: tabs
             }
         });
@@ -273,7 +273,7 @@ export default function AppUserListGrid() {
             globalFilter={globalFilterValue}
             filterDisplay="row"
             scrollable
-            scrollHeight="68vh"
+            scrollHeight="62vh"
             sortMode="multiple"
             multiSortMeta={multiSortMeta}
             selectionMode="single"
@@ -1131,24 +1131,24 @@ export default function AppUserListGrid() {
                         <div className="card flex justify-center gap-2">
                             <Button
                                 type="button"
-                                className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
+                                className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs rounded-md"
                                 onClick={() => { setListSearch(); }}
                                 tooltip={t("globals.apply")}
                                 tooltipOptions={{
                                     position: 'top',
-                                    className: 'font-normal rounded text-sm p-1'
+                                    className: 'font-normal rounded text-xs p-1'
                                 }}
                             >
                                 {t("globals.apply")}
                             </Button>
                             <Button
                                 type="button"
-                                className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
+                                className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs rounded-md"
                                 onClick={() => { setCalendarCreateDateTo(null); setCalendarCreateDateFrom(null); clearListSearch('search'); }}
                                 tooltip={t("globals.clearAll")}
                                 tooltipOptions={{
                                     position: 'top',
-                                    className: 'font-normal rounded text-sm p-1'
+                                    className: 'font-normal rounded text-xs p-1'
                                 }}
                             >
                                 {t("globals.clearAll")}
