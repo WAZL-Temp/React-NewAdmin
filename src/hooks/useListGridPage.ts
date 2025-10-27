@@ -6,15 +6,16 @@ import { Action, ColumnConfig, RoleData, TabItem } from "../types/listpage";
 import { UseListQueryResult } from "../store/useListQuery";
 import { useFetchRoleDetailsData } from "../sharedBase/lookupService";
 import { RoleDetail } from "../core/model/roledetail";
-import { getGridData } from "../core/service/appUsers.service";
 import { CustomFile } from "../core/model/customfile";
 
-type UseListPageCommonProps = {
+type UseListPageCommonProps<TService = ReturnType<typeof useBaseService>> = {
     initialFilterValue?: string;
     baseModelName?: string;
     typeName?: string;
     service: ReturnType<typeof useBaseService>;
-    pageGridService?: ReturnType<typeof getGridData>;
+    pageGridService?: Partial<TService> & {
+        getPageData?: (payload: any) => Promise<any>;
+    };
     tabsData?: TabItem[];
     onFilterChange?: (value: string) => void;
     onConfirmDelete?: (id: number) => void;
@@ -23,9 +24,9 @@ type UseListPageCommonProps = {
     onShowSuccessMessage?: (message: string) => void;
 };
 
-type UseListGridPageProps<TQuery> = {
+type UseListGridPageProps<TQuery, TService> = {
     query: TQuery;
-    props: UseListPageCommonProps;
+    props: UseListPageCommonProps<TService>;
 };
 
 export const useColumnConfig = (columnsConfigDefault: ColumnConfig[], roleData: RoleDetail | RoleDetail[] | null) => {
@@ -94,7 +95,7 @@ export const useColumnConfig = (columnsConfigDefault: ColumnConfig[], roleData: 
     return { columnsConfig, visibleColumns, setVisibleColumns, fixedColumnFields, selectableColumns, filteredFixedColumns, handleSelectAll, handleColumnChange };
 };
 
-export function useListGridPage<TQuery extends UseListQueryResult<TItem>, TItem>({ query, props }: UseListGridPageProps<TQuery>) {
+export function useListGridPage<TQuery extends UseListQueryResult<TItem>, TItem, TService = ReturnType<typeof useBaseService>>({ query, props }: UseListGridPageProps<TQuery, TService>) {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const [globalFilterValue, setGlobalFilterValue] = useState(props.initialFilterValue);
@@ -132,28 +133,30 @@ export function useListGridPage<TQuery extends UseListQueryResult<TItem>, TItem>
     const gridRunning = useRef(false);
 
     useEffect(() => {
-        if (!hasInitialized.current && props.tabsData && props.tabsData.length > 0) {
-            hasInitialized.current = true;
+        if (props.tabsData && props.tabsData.length > 0) {
             setTabList(props.tabsData);
+        }
+        if (hasInitialized.current) return;
 
-            const firstCondition = props.tabsData[0].condition;
-            if (firstCondition) {
-                query.setRoleCondition(firstCondition);
+        hasInitialized.current = true;
+        const firstCondition = props.tabsData?.[0]?.condition ?? {};
 
+        if (props.tabsData && props.tabsData.length > 0) {
+            query.setRoleCondition(firstCondition);
+            setTimeout(() => {
                 const finalCondition = {
                     ...query.condition,
                     ...query.search,
                     ...firstCondition,
                 };
                 gridData(finalCondition);
-            }
+            }, 0);
         } else {
             const finalCondition = {
                 ...query.condition,
                 ...query.search,
                 ...query.roleCondition,
             };
-
             gridData(finalCondition);
         }
     }, [props.tabsData]);
@@ -412,13 +415,13 @@ export function useListGridPage<TQuery extends UseListQueryResult<TItem>, TItem>
             pageSize: params.rows || 10,
         };
 
-        if (!props.pageGridService) {
+        if (!props.pageGridService?.getPageData) {
             setLoading(false);
             return;
         }
 
         try {
-            const response = await props.pageGridService.getPageData(payload);
+            const response = await props.pageGridService?.getPageData?.(payload);
 
             if (response) {
                 const items = response.items || response.data?.items || [];
@@ -461,7 +464,7 @@ export function useListGridPage<TQuery extends UseListQueryResult<TItem>, TItem>
                 totalCount: totalCount,
             };
 
-            const response = await props.pageGridService?.getPageData(payload);
+            const response = await props.pageGridService?.getPageData?.(payload);
 
             if (response) {
                 const items = response.items || response.data?.items || [];

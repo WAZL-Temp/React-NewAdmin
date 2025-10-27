@@ -10,7 +10,6 @@ import FileUploadMain from '../../../components/FileUploadMain';
 import { EnumDetail } from '../../../core/model/enumdetail';
 import { CustomFile } from '../../../core/model/customfile';
 import { useItemQuery } from '../../../store/useItemQuery';
-import { AppUserService, convertLangItem } from '../../../core/service/appUsers.service';
 import { useListQuery } from '../../../store/useListQuery';
 import { getData, useFetchDataEnum } from '../../../sharedBase/lookupService';
 import Loader from '../../../components/Loader';
@@ -18,6 +17,7 @@ import { appUser } from '../../../schema/appuser';
 import FormFieldError from '../../../components/FormFieldError';
 import { DropdownWithAutoClose } from '../../../components/DropdownWithAutoClose';
 import { MultiSelectWithAutoClose } from '../../../components/MultiSelectWithAutoClose';
+import { CustomAppUserService } from './appUsers.service';
 
 export default function AppUsersEdit() {
   const { id } = useParams<{ id: string }>();
@@ -27,7 +27,7 @@ export default function AppUsersEdit() {
   const toast = useRef<Toast>(null);
   const baseModelName = "appuser";
   const typeName = "appuser";
-  const userService = AppUserService();
+  const userService = CustomAppUserService();
   const itemQuery = useItemQuery<AppUser>(userService);
   const listQuery = useListQuery<AppUser>(userService);
   const isEditMode = Boolean(id);
@@ -548,7 +548,7 @@ export default function AppUsersEdit() {
 
   const convertLanguage = async (id: number, language: string) => {
     try {
-      await convertLangItem(id, language);
+      await userService.convertLangItem(id, language);
     } catch (error) {
       console.error("Error converting language:", error);
     }
@@ -557,7 +557,7 @@ export default function AppUsersEdit() {
   return (
     <div className='relative h-screen flex flex-col'>
       <div className="flex flex-col flex-1 min-w-0 overflow-y-auto overflow-x-hidden">
-        <div className="flex flex-wrap items-center justify-between p-1 topbar border-none bg-[var(--color-white)] text-[var(--color-dark)] min-w-0 gap-2 fixed top-30 z-20">
+        <div className="flex flex-wrap pr-3 lg:pr-5 w-full items-center justify-between p-1 topbar border-none bg-[var(--color-white)] text-[var(--color-dark)] min-w-0 gap-2 fixed top-30 z-20">
           <div className="flex items-center min-w-0">
             <Button
               className="backBtn cursor-pointer flex items-center"
