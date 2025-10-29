@@ -5,7 +5,7 @@ import { BsArrowLeft, Button, FaEdit, IoIosArrowBack, IoIosArrowForward, Stepper
 import { useTranslation, useParams, format } from '../../../sharedBase/globalUtils';
 import { AppUserTest } from "../../../core/model/appUserTest";
 import { useViewPage } from "../../../hooks/useViewPage";
-import { AppUserTestsService } from "../../../core/service/appUserTests.service";
+import { CustomAppUserTestService} from "./AppUserTests.service";
 import { useItemQuery } from "../../../store/useItemQuery";
 import Loader from "../../../components/Loader";
 
@@ -18,7 +18,7 @@ export default function AppUserTestsView() {
  const stepsData = [ t("appUserTests.form_detail.fields.Step1"), t("appUserTests.form_detail.fields.Step2"), t("appUserTests.form_detail.fields.Step3"), t("appUserTests.form_detail.fields.Step4")];
   const baseModelName = "appUserTests";
 const typeName= "appUserTest";
-  const appUserTestsService = AppUserTestsService();
+  const appUserTestsService = CustomAppUserTestService();
   const query = useItemQuery<AppUserTest>(appUserTestsService);
    const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [item, setItemData] = useState<AppUserTest | undefined>(initData() || {});
