@@ -1,16 +1,19 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useListPage } from "../../../hooks/useListPage";
-import { BiSolidTrash, Button, Calendar, Column, DataTable, Dialog, HiOutlinePlus, IoMdSettings, Image, InputText, IoMdRefresh, MdOutlineUploadFile, MenuItem, RiPencilFill, SplitButton, TbFileExcel, TiEye, Toast, Tooltip, FilterMatchMode, Checkbox, IoLanguage, Sidebar } from "../../../sharedBase/globalImports";
+import { BiSolidTrash, Button, Calendar, Column, DataTable, Dialog, HiOutlinePlus, IoMdSettings, Image, InputText, IoMdRefresh, MdOutlineUploadFile, MenuItem, RiPencilFill, SplitButton, TbFileExcel, TiEye, Toast, Tooltip, FilterMatchMode, Checkbox, IoLanguage, Sidebar, TabView, TabPanel } from "../../../sharedBase/globalImports";
 import { useTranslation, useNavigate } from '../../../sharedBase/globalUtils';
 import successimg from '../../../assets/images/success.gif';
 import confirmImg from '../../../assets/images/are-you-sure.jpg';
 import { AppUserTest } from "../../../core/model/appUserTest";
-import { RowData } from "../../../types/listpage";
+import { RowData, TabItem } from "../../../types/listpage";
 import { useListQuery } from "../../../store/useListQuery";
-import { AppUserTestsService, convertLang } from "../../../core/service/appUserTests.service";
 import Loader from "../../../components/Loader";
 import userAvtar from "../../../assets/images/user-avatar.png";
 import { CustomFile } from "../../../core/model/customfile";
+import { useFetchDashboardInfoData } from "../../../sharedBase/lookupService";
+import { useModelTabStore } from "../../../store/useModelTabStore";
+import { CustomAppUserTestService} from "./AppUserTests.service";
+
 
 export default function AppUserTestsList() {
     const navigate = useNavigate();
@@ -19,8 +22,10 @@ export default function AppUserTestsList() {
     const { t, i18n } = useTranslation();
     const dtRef = useRef<DataTable<AppUserTest[]>>(null);
     // search    
-    const appUserTestsService = AppUserTestsService();
-    const query = useListQuery<AppUserTest>(appUserTestsService);
+    const userService = CustomAppUserTestService();
+    const query = useListQuery<AppUserTest>(userService);
+    const { activeTabs, setTabLists } = useModelTabStore();
+    const { data: dashboardInfoData } = useFetchDashboardInfoData();
     const {
         roleData, hasAccess, globalFilterValue, setGlobalFilterValue, onGlobalFilterChange, refreshItemData, isDeleteDialogVisible,
         deleteItem, closeDeleteDialog, setFilters, onSort, onPage, first, rows, sortField, sortOrder, totalRecords,
@@ -28,69 +33,120 @@ export default function AppUserTestsList() {
         toast, isSuccessDialogOpen, setIsSuccessDialogOpen, formatDate, exportToExcel,
         importFromExcel, addData, handleDelete, useColumnConfig, visible, setVisible, calendarCreateDateFrom, setCalendarCreateDateFrom,
         calendarCreateDateTo, setCalendarCreateDateTo, setLoading, parseAndFormatImages,
-        selectedItem, sidebarVisible, setSidebarVisible, handleSelectItem }
+        selectedItem, sidebarVisible, setSidebarVisible, handleSelectItem,
+        activeIndex, setActiveIndex, tabList, setTabList }
         = useListPage<typeof query, AppUserTest>({
             query: query,
             props: {
                 initialFilterValue: '',
                 baseModelName: baseModelName,
                 typeName: typeName,
-                service: appUserTestsService,
-                autoLoad: true,
+                service: userService
             }
         });
+    const storeTabName = useModelTabStore((s) => s.activeTabs[baseModelName]?.tabName);
 
-    const columnsConfigDefault = useMemo(() => [
-        { field: 'id', header: t("appUserTests.columns.fields.id"), isDefault: true, show: true },
-        { field: 'name', header: t("appUserTests.columns.fields.name"), isDefault: true, show: true },
-        { field: 'firstName', header: t("appUserTests.columns.fields.firstName"), isDefault: true, show: true },
-        { field: 'lastName', header: t("appUserTests.columns.fields.lastName"), isDefault: true, show: true },
-        { field: 'mobile', header: t("appUserTests.columns.fields.mobile"), isDefault: true, show: true },
-        { field: 'mobileVerified', header: t("appUserTests.columns.fields.mobileVerified"), isDefault: true, show: true },
-        { field: 'emailId', header: t("appUserTests.columns.fields.emailId"), isDefault: true, show: true },
-        { field: 'emailVerified', header: t("appUserTests.columns.fields.emailVerified"), isDefault: true, show: true },
-        { field: 'shopName', header: t("appUserTests.columns.fields.shopName"), isDefault: true, show: true },
-        { field: 'password', header: t("appUserTests.columns.fields.password"), isDefault: true, show: true },
-        { field: 'pincode', header: t("appUserTests.columns.fields.pincode"), isDefault: true, show: true },
-        { field: 'state', header: t("appUserTests.columns.fields.state"), isDefault: true, show: true },
-        { field: 'district', header: t("appUserTests.columns.fields.district"), isDefault: true, show: true },
-        { field: 'address', header: t("appUserTests.columns.fields.address"), isDefault: true, show: true },
-        { field: 'addressLine', header: t("appUserTests.columns.fields.addressLine"), isDefault: true, show: true },
-        { field: 'verifyShop', header: t("appUserTests.columns.fields.verifyShop"), isDefault: true, show: true },
-        { field: 'verifyShopLabel', header: t("appUserTests.columns.fields.verifyShopLabel"), isDefault: true, show: true },
-        { field: 'gst', header: t("appUserTests.columns.fields.gst"), isDefault: true, show: true },
-        { field: 'gstCertificate', header: t("appUserTests.columns.fields.gstCertificate"), isDefault: true, show: true },
-        { field: 'photoShopFront', header: t("appUserTests.columns.fields.photoShopFront"), isDefault: true, show: true },
-        { field: 'visitingCard', header: t("appUserTests.columns.fields.visitingCard"), isDefault: true, show: true },
-        { field: 'cheque', header: t("appUserTests.columns.fields.cheque"), isDefault: true, show: true },
-        { field: 'gstOtp', header: t("appUserTests.columns.fields.gstOtp"), isDefault: true, show: true },
-        { field: 'isActive', header: t("appUserTests.columns.fields.isActive"), isDefault: true, show: true },
-        { field: 'isAdmin', header: t("appUserTests.columns.fields.isAdmin"), isDefault: true, show: true },
-        { field: 'hasImpersonateAccess', header: t("appUserTests.columns.fields.hasImpersonateAccess"), isDefault: true, show: true },
-        { field: 'photoAttachment', header: t("appUserTests.columns.fields.photoAttachment"), isDefault: true, show: true },
-        { field: 'role', header: t("appUserTests.columns.fields.role"), isDefault: true, show: true },
-        { field: 'roleLabel', header: t("appUserTests.columns.fields.roleLabel"), isDefault: true, show: true },
-        { field: 'publish', header: t("appUserTests.columns.fields.publish"), isDefault: true, show: true },
-        { field: 'publishLabel', header: t("appUserTests.columns.fields.publishLabel"), isDefault: true, show: true },
-        { field: 'importDataId', header: t("appUserTests.columns.fields.importDataId"), isDefault: true, show: true },
-        { field: 'lastLogin', header: t("appUserTests.columns.fields.lastLogin"), isDefault: true, show: true },
-        { field: 'defaultLanguage', header: t("appUserTests.columns.fields.defaultLanguage"), isDefault: true, show: true },
-        { field: 'isPremiumUser', header: t("appUserTests.columns.fields.isPremiumUser"), isDefault: true, show: true },
-        { field: 'totalPlot', header: t("appUserTests.columns.fields.totalPlot"), isDefault: true, show: true },
-        { field: 'reportedTo', header: t("appUserTests.columns.fields.reportedTo"), isDefault: true, show: true },
-        { field: 'reportedToName', header: t("appUserTests.columns.fields.reportedToName"), isDefault: true, show: true },
-        { field: 'reportedBy', header: t("appUserTests.columns.fields.reportedBy"), isDefault: true, show: true },
-        { field: 'reportedByName', header: t("appUserTests.columns.fields.reportedByName"), isDefault: true, show: true },
-        { field: 'gender', header: t("appUserTests.columns.fields.gender"), isDefault: true, show: true },
-        { field: 'genderLabel', header: t("appUserTests.columns.fields.genderLabel"), isDefault: true, show: true },
-        { field: 'createDate', header: t("appUserTests.columns.fields.createDate"), isDefault: true, show: true },
-        { field: 'updateDate', header: t("appUserTests.columns.fields.updateDate"), isDefault: true, show: true },
-        { field: 'deleteDate', header: t("appUserTests.columns.fields.deleteDate"), isDefault: true, show: true },
-        { field: 'createById', header: t("appUserTests.columns.fields.createById"), isDefault: true, show: true },
-        { field: 'updateById', header: t("appUserTests.columns.fields.updateById"), isDefault: true, show: true },
-        { field: 'deleteById', header: t("appUserTests.columns.fields.deleteById"), isDefault: true, show: true },
-        { field: 'isDelete', header: t("appUserTests.columns.fields.isDelete"), isDefault: true, show: true },
-    ].filter(col => col.field),
+    useEffect(() => {
+        if (!dashboardInfoData?.appUserTest) return;
+        if (dashboardInfoData?.appUserTest) {
+            const countData = dashboardInfoData?.appUserTest[0]
+
+            const tabs: TabItem[] = [
+                { name: "Active", condition: { isActive: 1 }, count: countData.activeCount ?? 0 },
+                { name: "Inactive", condition: { isActive: 0 }, count: countData.inactiveCount ?? 0 },
+                { name: "Deleted", condition: { isDelete: true }, count: countData.deletedCount ?? 0 },
+            ];
+            if (tabs.length) {
+                setTabList(tabs);
+                setTabLists(baseModelName, tabs);
+
+                const modelTabs = activeTabs[baseModelName];
+                const activeTabName = modelTabs?.tabName ?? tabs[0].name;
+
+                const selectedTab = tabs.find((t) => t.name.toLowerCase() === activeTabName.toLowerCase());
+                if (selectedTab) {
+                    query.setRoleCondition(selectedTab.condition);
+                    query.load();
+                }
+            }
+        }
+    }, [dashboardInfoData]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    useEffect(() => {
+        if (!storeTabName || !tabList.length) return;
+
+        const selected = tabList.find(
+            (t) => t.name.toLowerCase() === storeTabName.toLowerCase()
+        );
+
+        if (selected) {
+            query.setRoleCondition(selected.condition);
+            const index = tabList.findIndex(tab => tab.name.toLowerCase() === storeTabName.toLowerCase());
+            if (index !== -1) setActiveIndex(index);
+        }
+    }, [storeTabName, tabList]);
+
+    useEffect(() => {
+        if (query.tabName && tabList.length > 0) {
+            const index = tabList.findIndex(tab => tab.name.toLowerCase().replace(" ", "") === query.tabName.toLowerCase().replace(" ", ""));
+            if (index !== -1) {
+                setActiveIndex(index);
+                query.setRoleCondition(tabList[index].condition);
+            }
+        }
+    }, [query.tabName, tabList]);// eslint-disable-line react-hooks/exhaustive-deps
+
+    const columnsConfigDefault = useMemo(() =>[
+			 {field: 'id', header: t("appUserTests.columns.fields.id"), isDefault: true, show: true }, 
+			 {field: 'name', header: t("appUserTests.columns.fields.name"), isDefault: true, show: true }, 
+			 {field: 'firstName', header: t("appUserTests.columns.fields.firstName"), isDefault: true, show: true }, 
+			 {field: 'lastName', header: t("appUserTests.columns.fields.lastName"), isDefault: true, show: true }, 
+			 {field: 'mobile', header: t("appUserTests.columns.fields.mobile"), isDefault: true, show: true }, 
+			 {field: 'mobileVerified', header: t("appUserTests.columns.fields.mobileVerified"), isDefault: true, show: true }, 
+			 {field: 'emailId', header: t("appUserTests.columns.fields.emailId"), isDefault: true, show: true }, 
+			 {field: 'emailVerified', header: t("appUserTests.columns.fields.emailVerified"), isDefault: true, show: true }, 
+			 {field: 'shopName', header: t("appUserTests.columns.fields.shopName"), isDefault: true, show: true }, 
+			 {field: 'password', header: t("appUserTests.columns.fields.password"), isDefault: true, show: true }, 
+			 {field: 'pincode', header: t("appUserTests.columns.fields.pincode"), isDefault: true, show: true }, 
+			 {field: 'state', header: t("appUserTests.columns.fields.state"), isDefault: true, show: true }, 
+			 {field: 'district', header: t("appUserTests.columns.fields.district"), isDefault: true, show: true }, 
+			 {field: 'address', header: t("appUserTests.columns.fields.address"), isDefault: true, show: true }, 
+			 {field: 'addressLine', header: t("appUserTests.columns.fields.addressLine"), isDefault: true, show: true }, 
+			 {field: 'verifyShop', header: t("appUserTests.columns.fields.verifyShop"), isDefault: true, show: true }, 
+			 {field: 'verifyShopLabel', header: t("appUserTests.columns.fields.verifyShopLabel"), isDefault: true, show: true }, 
+			 {field: 'gst', header: t("appUserTests.columns.fields.gst"), isDefault: true, show: true }, 
+			 {field: 'gstCertificate', header: t("appUserTests.columns.fields.gstCertificate"), isDefault: true, show: true }, 
+			 {field: 'photoShopFront', header: t("appUserTests.columns.fields.photoShopFront"), isDefault: true, show: true }, 
+			 {field: 'visitingCard', header: t("appUserTests.columns.fields.visitingCard"), isDefault: true, show: true }, 
+			 {field: 'cheque', header: t("appUserTests.columns.fields.cheque"), isDefault: true, show: true }, 
+			 {field: 'gstOtp', header: t("appUserTests.columns.fields.gstOtp"), isDefault: true, show: true }, 
+			 {field: 'isActive', header: t("appUserTests.columns.fields.isActive"), isDefault: true, show: true }, 
+			 {field: 'isAdmin', header: t("appUserTests.columns.fields.isAdmin"), isDefault: true, show: true }, 
+			 {field: 'hasImpersonateAccess', header: t("appUserTests.columns.fields.hasImpersonateAccess"), isDefault: true, show: true }, 
+			 {field: 'photoAttachment', header: t("appUserTests.columns.fields.photoAttachment"), isDefault: true, show: true }, 
+			 {field: 'role', header: t("appUserTests.columns.fields.role"), isDefault: true, show: true }, 
+			 {field: 'roleLabel', header: t("appUserTests.columns.fields.roleLabel"), isDefault: true, show: true }, 
+			 {field: 'publish', header: t("appUserTests.columns.fields.publish"), isDefault: true, show: true }, 
+			 {field: 'publishLabel', header: t("appUserTests.columns.fields.publishLabel"), isDefault: true, show: true }, 
+			 {field: 'importDataId', header: t("appUserTests.columns.fields.importDataId"), isDefault: true, show: true }, 
+			 {field: 'lastLogin', header: t("appUserTests.columns.fields.lastLogin"), isDefault: true, show: true }, 
+			 {field: 'defaultLanguage', header: t("appUserTests.columns.fields.defaultLanguage"), isDefault: true, show: true }, 
+			 {field: 'isPremiumUser', header: t("appUserTests.columns.fields.isPremiumUser"), isDefault: true, show: true }, 
+			 {field: 'totalPlot', header: t("appUserTests.columns.fields.totalPlot"), isDefault: true, show: true }, 
+			 {field: 'reportedTo', header: t("appUserTests.columns.fields.reportedTo"), isDefault: true, show: true }, 
+			 {field: 'reportedToName', header: t("appUserTests.columns.fields.reportedToName"), isDefault: true, show: true }, 
+			 {field: 'reportedBy', header: t("appUserTests.columns.fields.reportedBy"), isDefault: true, show: true }, 
+			 {field: 'reportedByName', header: t("appUserTests.columns.fields.reportedByName"), isDefault: true, show: true }, 
+			 {field: 'gender', header: t("appUserTests.columns.fields.gender"), isDefault: true, show: true }, 
+			 {field: 'genderLabel', header: t("appUserTests.columns.fields.genderLabel"), isDefault: true, show: true }, 
+			 {field: 'createDate', header: t("appUserTests.columns.fields.createDate"), isDefault: true, show: true }, 
+			 {field: 'updateDate', header: t("appUserTests.columns.fields.updateDate"), isDefault: true, show: true }, 
+			 {field: 'deleteDate', header: t("appUserTests.columns.fields.deleteDate"), isDefault: true, show: true }, 
+			 {field: 'createById', header: t("appUserTests.columns.fields.createById"), isDefault: true, show: true }, 
+			 {field: 'updateById', header: t("appUserTests.columns.fields.updateById"), isDefault: true, show: true }, 
+			 {field: 'deleteById', header: t("appUserTests.columns.fields.deleteById"), isDefault: true, show: true }, 
+			 {field: 'isDelete', header: t("appUserTests.columns.fields.isDelete"), isDefault: true, show: true }, 
+ 		].filter(col => col.field),
         [t]);
 
     const { columnsConfig, visibleColumns, handleSelectAll, handleColumnChange } = useColumnConfig(columnsConfigDefault, roleData);
@@ -113,7 +169,7 @@ export default function AppUserTestsList() {
     const convertLanguage = async () => {
         setLoading(true);
         try {
-            await convertLang();
+            await userService.convertLang();
         } finally {
             setLoading(false);
         }
@@ -138,7 +194,7 @@ export default function AppUserTestsList() {
         items.push({
             label: t("globals.exportExcel"),
             icon: 'pi pi-file-excel',
-            command: () => exportToExcel(appUserTestsService, globalFilterValue || '', 'AppUserTest')
+            command: () => exportToExcel(userService, globalFilterValue || '', 'AppUserTest')
         });
     }
 
@@ -219,6 +275,780 @@ export default function AppUserTestsList() {
         );
     };
 
+    const renderTable = (data: AppUserTest[]) => (
+        <DataTable
+            // key={i18n.language}
+            key={`${i18n.language}-${!!roleData}`}
+            ref={dtRef}
+            value={data}
+            dataKey="id"
+            showGridlines
+            resizableColumns
+            columnResizeMode="expand"
+            filters={filters}
+            sortField={sortField}
+            sortOrder={sortOrder as 1 | 0 | -1}
+            onSort={onSort}
+            onFilter={(e) => setFilters(e.filters)}
+            removableSort
+            paginator
+            rowsPerPageOptions={[10, 25, 50]}
+            rows={rows}
+            first={first}
+            rowHover
+            totalRecords={totalRecords}
+            onPage={onPage}
+            globalFilter={globalFilterValue}
+            globalFilterFields={columnsConfig.map(config => config.field)}
+            paginatorTemplate={t('globals.layout')}
+            currentPageReportTemplate={t('globals.report')}
+            className="datatable-responsive p-datatable-gridlines tableResponsive bg-[var(--color-white)] text-[var(--color-dark)]" filterDisplay="row"
+            emptyMessage={t('globals.emptyMessage')}
+            scrollable
+            scrollHeight="62vh"
+        >
+            {hasAccess(roleData, "Actions") && (
+                <Column
+                    header={t('globals.headerActions')}
+                    headerStyle={{
+                        backgroundColor: "var(--color-primary)",
+                        color: "var(--color-white)",
+                        textAlign: "center",
+                    }}
+                    body={(rowData) => actionBodyTemplate(rowData, openItem)}
+                    style={{ width: '50px', minWidth: '50px', maxWidth: '50px', background: 'var(--color-white)', color: 'var(--color-dark)' }}
+                    frozen
+                    alignFrozen="left"
+                    className="text-sm sticky bg-[var(--color-white)] text-[var(--color-dark)]  font-semibold whitespace-nowrap overflow-hidden text-ellipsis"
+                />
+            )}
+            {visibleColumns.includes('name') && (
+<Column field="name" header={t("appUserTests.columns.fields.name")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.name || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("name", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.name}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
+</>
+)}
+ />)} 
+{visibleColumns.includes('firstName') && (
+<Column field="firstName" header={t("appUserTests.columns.fields.firstName")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.firstName || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("firstName", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-firstName-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.firstName}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-firstName-${rowIndex}`} content={rowData.firstName} showDelay={200} position="top" />
+</>
+)}
+ />)} 
+{visibleColumns.includes('lastName') && (
+<Column field="lastName" header={t("appUserTests.columns.fields.lastName")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.lastName || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("lastName", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-lastName-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.lastName}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-lastName-${rowIndex}`} content={rowData.lastName} showDelay={200} position="top" />
+</>
+)}
+ />)} 
+{visibleColumns.includes('mobile') && (
+<Column field="mobile" header={t("appUserTests.columns.fields.mobile")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.mobile || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("mobile", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-mobile-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.mobile}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-mobile-${rowIndex}`} content={rowData.mobile} showDelay={200} position="top" />
+</>
+)}
+ />)} 
+{visibleColumns.includes('mobileVerified') && (
+<Column field="mobileVerified" header={t("appUserTests.columns.fields.mobileVerified")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.mobileVerified || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("mobileVerified", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-mobileVerified-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.mobileVerified ? "true" : "false"}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-mobileVerified-${rowIndex}`} content={rowData.mobileVerified ? "true" : "false"} showDelay={200} position="top" />
+</>
+)}
+ />)}
+{visibleColumns.includes('emailId') && (
+<Column field="emailId" header={t("appUserTests.columns.fields.emailId")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.emailId || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("emailId", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-emailId-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.emailId}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-emailId-${rowIndex}`} content={rowData.emailId} showDelay={200} position="top" />
+</>
+)}
+ />)} 
+{visibleColumns.includes('emailVerified') && (
+<Column field="emailVerified" header={t("appUserTests.columns.fields.emailVerified")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.emailVerified || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("emailVerified", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-emailVerified-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.emailVerified ? "true" : "false"}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-emailVerified-${rowIndex}`} content={rowData.emailVerified ? "true" : "false"} showDelay={200} position="top" />
+</>
+)}
+ />)}
+{visibleColumns.includes('shopName') && (
+<Column field="shopName" header={t("appUserTests.columns.fields.shopName")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.shopName || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("shopName", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-shopName-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.shopName}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-shopName-${rowIndex}`} content={rowData.shopName} showDelay={200} position="top" />
+</>
+)}
+ />)} 
+{visibleColumns.includes('password') && (
+<Column field="password" header={t("appUserTests.columns.fields.password")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.password || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("password", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-password-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.password}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-password-${rowIndex}`} content={rowData.password} showDelay={200} position="top" />
+</>
+)}
+ />)} 
+{visibleColumns.includes('pincode') && (
+<Column field="pincode" header={t("appUserTests.columns.fields.pincode")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.pincode || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("pincode", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-pincode-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.pincode}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-pincode-${rowIndex}`} content={rowData.pincode} showDelay={200} position="top" />
+</>
+)}
+ />)} 
+{visibleColumns.includes('state') && (
+<Column field="state" header={t("appUserTests.columns.fields.state")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.state || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("state", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-state-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.state}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-state-${rowIndex}`} content={rowData.state} showDelay={200} position="top" />
+</>
+)}
+ />)} 
+{visibleColumns.includes('district') && (
+<Column field="district" header={t("appUserTests.columns.fields.district")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.district || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("district", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-district-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.district}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-district-${rowIndex}`} content={rowData.district} showDelay={200} position="top" />
+</>
+)}
+ />)} 
+{visibleColumns.includes('address') && (
+<Column field="address" header={t("appUserTests.columns.fields.address")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.address || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("address", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-address-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.address}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-address-${rowIndex}`} content={rowData.address} showDelay={200} position="top" />
+</>
+)}
+ />)} 
+{visibleColumns.includes('addressLine') && (
+<Column field="addressLine" header={t("appUserTests.columns.fields.addressLine")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.addressLine || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("addressLine", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-addressLine-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.addressLine}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-addressLine-${rowIndex}`} content={rowData.addressLine} showDelay={200} position="top" />
+</>
+)}
+ />)} 
+{visibleColumns.includes('verifyShopLabel') && (
+<Column field="verifyShopLabel" header={t("appUserTests.columns.fields.verifyShopLabel")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.verifyShopLabel || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("verifyShopLabel", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-verifyShopLabel-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.verifyShopLabel}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-verifyShopLabel-${rowIndex}`} content={rowData.verifyShopLabel} showDelay={200} position="top" />
+</>
+)}
+ />)} 
+{visibleColumns.includes('gst') && (
+<Column field="gst" header={t("appUserTests.columns.fields.gst")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.gst || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("gst", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-gst-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.gst}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-gst-${rowIndex}`} content={rowData.gst} showDelay={200} position="top" />
+</>
+)}
+ />)} 
+{visibleColumns.includes('gstCertificate') && (
+<Column field="gstCertificate" header={t("appUserTests.columns.fields.gstCertificate")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.gstCertificate || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("gstCertificate", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<div className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {renderFileCell(rowData, 'gstCertificate', rowIndex)}
+ </div>
+)} />)} 
+{visibleColumns.includes('photoShopFront') && (
+<Column field="photoShopFront" header={t("appUserTests.columns.fields.photoShopFront")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.photoShopFront || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("photoShopFront", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<div className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {renderFileCell(rowData, 'photoShopFront', rowIndex)}
+ </div>
+)} />)} 
+{visibleColumns.includes('visitingCard') && (
+<Column field="visitingCard" header={t("appUserTests.columns.fields.visitingCard")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.visitingCard || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("visitingCard", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<div className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {renderFileCell(rowData, 'visitingCard', rowIndex)}
+ </div>
+)} />)} 
+{visibleColumns.includes('cheque') && (
+<Column field="cheque" header={t("appUserTests.columns.fields.cheque")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.cheque || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("cheque", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<div className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {renderFileCell(rowData, 'cheque', rowIndex)}
+ </div>
+)} />)} 
+{visibleColumns.includes('gstOtp') && (
+<Column field="gstOtp" header={t("appUserTests.columns.fields.gstOtp")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.gstOtp || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("gstOtp", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-gstOtp-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.gstOtp}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-gstOtp-${rowIndex}`} content={rowData.gstOtp} showDelay={200} position="top" />
+</>
+)}
+ />)} 
+{visibleColumns.includes('isActive') && (
+<Column field="isActive" header={t("appUserTests.columns.fields.isActive")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.isActive || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("isActive", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-isActive-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.isActive ? "true" : "false"}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isActive-${rowIndex}`} content={rowData.isActive ? "true" : "false"} showDelay={200} position="top" />
+</>
+)}
+ />)}
+{visibleColumns.includes('isAdmin') && (
+<Column field="isAdmin" header={t("appUserTests.columns.fields.isAdmin")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.isAdmin || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("isAdmin", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-isAdmin-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.isAdmin ? "true" : "false"}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isAdmin-${rowIndex}`} content={rowData.isAdmin ? "true" : "false"} showDelay={200} position="top" />
+</>
+)}
+ />)}
+{visibleColumns.includes('hasImpersonateAccess') && (
+<Column field="hasImpersonateAccess" header={t("appUserTests.columns.fields.hasImpersonateAccess")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.hasImpersonateAccess || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("hasImpersonateAccess", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-hasImpersonateAccess-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.hasImpersonateAccess ? "true" : "false"}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-hasImpersonateAccess-${rowIndex}`} content={rowData.hasImpersonateAccess ? "true" : "false"} showDelay={200} position="top" />
+</>
+)}
+ />)}
+{visibleColumns.includes('photoAttachment') && (
+<Column field="photoAttachment" header={t("appUserTests.columns.fields.photoAttachment")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.photoAttachment || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("photoAttachment", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<div className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {renderFileCell(rowData, 'photoAttachment', rowIndex)}
+ </div>
+)} />)} 
+{visibleColumns.includes('roleLabel') && (
+<Column field="roleLabel" header={t("appUserTests.columns.fields.roleLabel")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.roleLabel || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("roleLabel", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-roleLabel-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.roleLabel}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-roleLabel-${rowIndex}`} content={rowData.roleLabel} showDelay={200} position="top" />
+</>
+)}
+ />)} 
+{visibleColumns.includes('publishLabel') && (
+<Column field="publishLabel" header={t("appUserTests.columns.fields.publishLabel")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.publishLabel || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("publishLabel", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-publishLabel-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.publishLabel}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-publishLabel-${rowIndex}`} content={rowData.publishLabel} showDelay={200} position="top" />
+</>
+)}
+ />)} 
+{visibleColumns.includes('lastLogin') && (
+<Column field="lastLogin" header={t("appUserTests.columns.fields.lastLogin")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.lastLogin || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("lastLogin", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<div id={`tooltip-lastLogin-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {formatDate(rowData.lastLogin)}
+ </div>
+)} />)} 
+{visibleColumns.includes('defaultLanguage') && (
+<Column field="defaultLanguage" header={t("appUserTests.columns.fields.defaultLanguage")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.defaultLanguage || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("defaultLanguage", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-defaultLanguage-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.defaultLanguage}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-defaultLanguage-${rowIndex}`} content={rowData.defaultLanguage} showDelay={200} position="top" />
+</>
+)}
+ />)} 
+{visibleColumns.includes('isPremiumUser') && (
+<Column field="isPremiumUser" header={t("appUserTests.columns.fields.isPremiumUser")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.isPremiumUser || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("isPremiumUser", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-isPremiumUser-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.isPremiumUser ? "true" : "false"}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isPremiumUser-${rowIndex}`} content={rowData.isPremiumUser ? "true" : "false"} showDelay={200} position="top" />
+</>
+)}
+ />)}
+{visibleColumns.includes('totalPlot') && (
+<Column field="totalPlot" header={t("appUserTests.columns.fields.totalPlot")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.totalPlot || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("totalPlot", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-totalPlot-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.totalPlot}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-totalPlot-${rowIndex}`} content={rowData.totalPlot} showDelay={200} position="top" />
+</>
+)}
+ />)} 
+{visibleColumns.includes('reportedToName') && (
+<Column field="reportedToName" header={t("appUserTests.columns.fields.reportedToName")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.reportedToName || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("reportedToName", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-reportedToName-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.reportedToName}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-reportedToName-${rowIndex}`} content={rowData.reportedToName} showDelay={200} position="top" />
+</>
+)}
+ />)} 
+{visibleColumns.includes('reportedByName') && (
+<Column field="reportedByName" header={t("appUserTests.columns.fields.reportedByName")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.reportedByName || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("reportedByName", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-reportedByName-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.reportedByName}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-reportedByName-${rowIndex}`} content={rowData.reportedByName} showDelay={200} position="top" />
+</>
+)}
+ />)} 
+{visibleColumns.includes('genderLabel') && (
+<Column field="genderLabel" header={t("appUserTests.columns.fields.genderLabel")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.genderLabel || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("genderLabel", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-genderLabel-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.genderLabel}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-genderLabel-${rowIndex}`} content={rowData.genderLabel} showDelay={200} position="top" />
+</>
+)}
+ />)} 
+{visibleColumns.includes('createDate') && (
+<Column field="createDate" header={t("appUserTests.columns.fields.createDate")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.createDate || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("createDate", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<div id={`tooltip-createDate-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {formatDate(rowData.createDate)}
+ </div>
+)} />)} 
+{visibleColumns.includes('createById') && (
+<Column field="createById" header={t("appUserTests.columns.fields.createById")} sortable filter
+headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
+style={{width: "200px", backgroundColor: "var(--color-white)" }}
+filterElement={
+<InputText
+value={query.tableSearch.searchRowFilter?.createById || ''}
+className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
+onChange={(e) => handleFilterChangeLocal("createById", e.target.value)}
+/> 
+ }
+body={(rowData, { rowIndex }) => (
+<>
+<div id={`tooltip-createById-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
+ {rowData.createById}
+ </div>
+<Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-createById-${rowIndex}`} content={rowData.createById} showDelay={200} position="top" />
+</>
+)}
+ />)} 
+
+        </DataTable>
+    );
+
+    const tabsChange = (e: any) => {
+        setActiveIndex(e.index);
+        const selectedTab = tabList[e.index];
+
+        if (!selectedTab) return;
+        fetchDataCondition(selectedTab);
+
+        setGlobalFilterValue('');
+        query.setSearch({});
+        query.tableSearch.searchRowFilter = {};
+        query.setTableSearch({ ...query.tableSearch });
+        setCalendarCreateDateTo(null);
+        setCalendarCreateDateFrom(null);
+        clearListSearch('search');
+        setFilters((prevFilters) => {
+            const clearedFilters = { ...prevFilters };
+            Object.keys(clearedFilters).forEach((key) => {
+                if ('value' in clearedFilters[key]) {
+                    (clearedFilters[key] as { value: any }).value = null;
+                }
+            });
+            return clearedFilters;
+        });
+    };
+
+    const fetchDataCondition = (item: TabItem) => {
+        const condition = item.condition ? item.condition : {};
+        query.setTabName(item.name);
+        query.setRoleCondition(condition);
+    };
+
     return (
         <div className='relative h-screen flex flex-col overflow-auto'>
             <div className="flex justify-between items-center m-1">
@@ -289,7 +1119,7 @@ export default function AppUserTestsList() {
                                 tooltip={t("globals.apply")}
                                 tooltipOptions={{
                                     position: 'top',
-                                    className: 'font-normal rounded text-sm p-1'
+                                    className: 'font-normal rounded text-xs p-1'
                                 }}
                             >
                                 {t("globals.apply")}
@@ -301,7 +1131,7 @@ export default function AppUserTestsList() {
                                 tooltip={t("globals.clearAll")}
                                 tooltipOptions={{
                                     position: 'top',
-                                    className: 'font-normal rounded text-sm p-1'
+                                    className: 'font-normal rounded text-xs p-1'
                                 }}
                             >
                                 {t("globals.clearAll")}
@@ -384,7 +1214,7 @@ export default function AppUserTestsList() {
                                 <Button
                                     type="button"
                                     className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
-                                    onClick={() => exportToExcel(appUserTestsService, globalFilterValue || '', 'AppUserTest')}
+                                    onClick={() => exportToExcel(userService, globalFilterValue || '', 'AppUserTest')}
                                     tooltip={t("globals.exportExcel")}
                                     tooltipOptions={{
                                         position: 'top',
@@ -439,747 +1269,21 @@ export default function AppUserTestsList() {
                         </div>
                     </div>
 
-                    <div className="m-2 ">
+                    <div>
                         {!query.isLoading && (
-                            <DataTable
-                                key={i18n.language}
-                                ref={dtRef}
-                                value={query?.data}
-                                dataKey="id"
-                                showGridlines
-                                resizableColumns
-                                columnResizeMode="expand"
-                                filters={filters}
-                                sortField={sortField}
-                                sortOrder={sortOrder as 1 | 0 | -1}
-                                onSort={onSort}
-                                onFilter={(e) => setFilters(e.filters)}
-                                removableSort
-                                paginator
-                                rowsPerPageOptions={[10, 25, 50]}
-                                rows={rows}
-                                first={first}
-                                rowHover
-                                totalRecords={totalRecords}
-                                onPage={onPage}
-                                globalFilter={globalFilterValue}
-                                globalFilterFields={columnsConfig.map(config => config.field)}
-                                paginatorTemplate={t('globals.layout')}
-                                currentPageReportTemplate={t('globals.report')}
-                                className="datatable-responsive p-datatable-gridlines tableResponsive bg-[var(--color-white)] text-[var(--color-dark)]" filterDisplay="row"
-                                emptyMessage={t('globals.emptyMessage')}
-                                scrollable
-                                scrollHeight="68vh"
-                            >
-                                {hasAccess(roleData, "Actions") && (
-                                    <Column
-                                        header={t('globals.headerActions')}
-                                        headerStyle={{
-                                            backgroundColor: "var(--color-primary)",
-                                            color: "var(--color-white)",
-                                            textAlign: "center",
-                                        }}
-                                        body={(rowData) => actionBodyTemplate(rowData, openItem)}
-                                        style={{ width: '50px', minWidth: '50px', maxWidth: '50px', background: 'var(--color-white)', color: 'var(--color-dark)' }}
-                                        frozen
-                                        alignFrozen="left"
-                                        className="text-sm sticky bg-[var(--color-white)] text-[var(--color-dark)]  font-semibold whitespace-nowrap overflow-hidden text-ellipsis"
-                                    />
+                            <>
+                                {tabList.length > 0 ? (
+                                    <TabView activeIndex={activeIndex} onTabChange={tabsChange}>
+                                        {tabList.map((tab, i) => (
+                                            <TabPanel key={i} header={`${tab.name} (${tab.count})`}>
+                                                {renderTable(query.data ?? [])}
+                                            </TabPanel>
+                                        ))}
+                                    </TabView>
+                                ) : (
+                                    renderTable(query.data ?? [])
                                 )}
-                                {visibleColumns.includes('name') && (
-                                    <Column field="name" header={t("appUserTests.columns.fields.name")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.name || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("name", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-name-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.name}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-name-${rowIndex}`} content={rowData.name} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-                                {visibleColumns.includes('firstName') && (
-                                    <Column field="firstName" header={t("appUserTests.columns.fields.firstName")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.firstName || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("firstName", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-firstName-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.firstName}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-firstName-${rowIndex}`} content={rowData.firstName} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-                                {visibleColumns.includes('lastName') && (
-                                    <Column field="lastName" header={t("appUserTests.columns.fields.lastName")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.lastName || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("lastName", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-lastName-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.lastName}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-lastName-${rowIndex}`} content={rowData.lastName} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-                                {visibleColumns.includes('mobile') && (
-                                    <Column field="mobile" header={t("appUserTests.columns.fields.mobile")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.mobile || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("mobile", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-mobile-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.mobile}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-mobile-${rowIndex}`} content={rowData.mobile} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-                                {visibleColumns.includes('mobileVerified') && (
-                                    <Column field="mobileVerified" header={t("appUserTests.columns.fields.mobileVerified")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.mobileVerified || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("mobileVerified", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-mobileVerified-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.mobileVerified ? "true" : "false"}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-mobileVerified-${rowIndex}`} content={rowData.mobileVerified ? "true" : "false"} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-                                {visibleColumns.includes('emailId') && (
-                                    <Column field="emailId" header={t("appUserTests.columns.fields.emailId")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.emailId || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("emailId", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-emailId-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.emailId}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-emailId-${rowIndex}`} content={rowData.emailId} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-                                {visibleColumns.includes('emailVerified') && (
-                                    <Column field="emailVerified" header={t("appUserTests.columns.fields.emailVerified")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.emailVerified || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("emailVerified", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-emailVerified-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.emailVerified ? "true" : "false"}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-emailVerified-${rowIndex}`} content={rowData.emailVerified ? "true" : "false"} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-                                {visibleColumns.includes('shopName') && (
-                                    <Column field="shopName" header={t("appUserTests.columns.fields.shopName")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.shopName || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("shopName", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-shopName-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.shopName}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-shopName-${rowIndex}`} content={rowData.shopName} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-                                {visibleColumns.includes('password') && (
-                                    <Column field="password" header={t("appUserTests.columns.fields.password")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.password || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("password", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-password-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.password}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-password-${rowIndex}`} content={rowData.password} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-                                {visibleColumns.includes('pincode') && (
-                                    <Column field="pincode" header={t("appUserTests.columns.fields.pincode")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.pincode || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("pincode", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-pincode-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.pincode}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-pincode-${rowIndex}`} content={rowData.pincode} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-                                {visibleColumns.includes('state') && (
-                                    <Column field="state" header={t("appUserTests.columns.fields.state")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.state || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("state", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-state-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.state}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-state-${rowIndex}`} content={rowData.state} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-                                {visibleColumns.includes('district') && (
-                                    <Column field="district" header={t("appUserTests.columns.fields.district")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.district || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("district", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-district-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.district}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-district-${rowIndex}`} content={rowData.district} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-                                {visibleColumns.includes('address') && (
-                                    <Column field="address" header={t("appUserTests.columns.fields.address")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.address || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("address", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-address-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.address}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-address-${rowIndex}`} content={rowData.address} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-                                {visibleColumns.includes('addressLine') && (
-                                    <Column field="addressLine" header={t("appUserTests.columns.fields.addressLine")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.addressLine || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("addressLine", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-addressLine-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.addressLine}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-addressLine-${rowIndex}`} content={rowData.addressLine} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-                                {visibleColumns.includes('verifyShopLabel') && (
-                                    <Column field="verifyShopLabel" header={t("appUserTests.columns.fields.verifyShopLabel")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.verifyShopLabel || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("verifyShopLabel", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-verifyShopLabel-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.verifyShopLabel}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-verifyShopLabel-${rowIndex}`} content={rowData.verifyShopLabel} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-                                {visibleColumns.includes('gst') && (
-                                    <Column field="gst" header={t("appUserTests.columns.fields.gst")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.gst || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("gst", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-gst-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.gst}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-gst-${rowIndex}`} content={rowData.gst} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-                                {visibleColumns.includes('gstCertificate') && (
-                                    <Column field="gstCertificate" header={t("appUserTests.columns.fields.gstCertificate")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.gstCertificate || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("gstCertificate", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <div className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                {renderFileCell(rowData, 'gstCertificate', rowIndex)}
-                                            </div>
-                                        )} />)}
-                                {visibleColumns.includes('photoShopFront') && (
-                                    <Column field="photoShopFront" header={t("appUserTests.columns.fields.photoShopFront")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.photoShopFront || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("photoShopFront", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <div className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                {renderFileCell(rowData, 'photoShopFront', rowIndex)}
-                                            </div>
-                                        )} />)}
-                                {visibleColumns.includes('visitingCard') && (
-                                    <Column field="visitingCard" header={t("appUserTests.columns.fields.visitingCard")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.visitingCard || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("visitingCard", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <div className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                {renderFileCell(rowData, 'visitingCard', rowIndex)}
-                                            </div>
-                                        )} />)}
-                                {visibleColumns.includes('cheque') && (
-                                    <Column field="cheque" header={t("appUserTests.columns.fields.cheque")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.cheque || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("cheque", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <div className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                {renderFileCell(rowData, 'cheque', rowIndex)}
-                                            </div>
-                                        )} />)}
-                                {visibleColumns.includes('gstOtp') && (
-                                    <Column field="gstOtp" header={t("appUserTests.columns.fields.gstOtp")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.gstOtp || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("gstOtp", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-gstOtp-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.gstOtp}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-gstOtp-${rowIndex}`} content={rowData.gstOtp} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-                                {visibleColumns.includes('isActive') && (
-                                    <Column field="isActive" header={t("appUserTests.columns.fields.isActive")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.isActive || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("isActive", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-isActive-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.isActive ? "true" : "false"}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isActive-${rowIndex}`} content={rowData.isActive ? "true" : "false"} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-                                {visibleColumns.includes('isAdmin') && (
-                                    <Column field="isAdmin" header={t("appUserTests.columns.fields.isAdmin")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.isAdmin || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("isAdmin", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-isAdmin-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.isAdmin ? "true" : "false"}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isAdmin-${rowIndex}`} content={rowData.isAdmin ? "true" : "false"} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-                                {visibleColumns.includes('hasImpersonateAccess') && (
-                                    <Column field="hasImpersonateAccess" header={t("appUserTests.columns.fields.hasImpersonateAccess")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.hasImpersonateAccess || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("hasImpersonateAccess", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-hasImpersonateAccess-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.hasImpersonateAccess ? "true" : "false"}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-hasImpersonateAccess-${rowIndex}`} content={rowData.hasImpersonateAccess ? "true" : "false"} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-                                {visibleColumns.includes('photoAttachment') && (
-                                    <Column field="photoAttachment" header={t("appUserTests.columns.fields.photoAttachment")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.photoAttachment || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("photoAttachment", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <div className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                {renderFileCell(rowData, 'photoAttachment', rowIndex)}
-                                            </div>
-                                        )} />)}
-                                {visibleColumns.includes('roleLabel') && (
-                                    <Column field="roleLabel" header={t("appUserTests.columns.fields.roleLabel")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.roleLabel || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("roleLabel", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-roleLabel-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.roleLabel}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-roleLabel-${rowIndex}`} content={rowData.roleLabel} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-                                {visibleColumns.includes('publishLabel') && (
-                                    <Column field="publishLabel" header={t("appUserTests.columns.fields.publishLabel")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.publishLabel || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("publishLabel", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-publishLabel-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.publishLabel}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-publishLabel-${rowIndex}`} content={rowData.publishLabel} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-                                {visibleColumns.includes('lastLogin') && (
-                                    <Column field="lastLogin" header={t("appUserTests.columns.fields.lastLogin")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.lastLogin || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("lastLogin", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <div id={`tooltip-lastLogin-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                {formatDate(rowData.lastLogin)}
-                                            </div>
-                                        )} />)}
-                                {visibleColumns.includes('defaultLanguage') && (
-                                    <Column field="defaultLanguage" header={t("appUserTests.columns.fields.defaultLanguage")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.defaultLanguage || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("defaultLanguage", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-defaultLanguage-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.defaultLanguage}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-defaultLanguage-${rowIndex}`} content={rowData.defaultLanguage} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-                                {visibleColumns.includes('isPremiumUser') && (
-                                    <Column field="isPremiumUser" header={t("appUserTests.columns.fields.isPremiumUser")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.isPremiumUser || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("isPremiumUser", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-isPremiumUser-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.isPremiumUser ? "true" : "false"}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-isPremiumUser-${rowIndex}`} content={rowData.isPremiumUser ? "true" : "false"} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-                                {visibleColumns.includes('totalPlot') && (
-                                    <Column field="totalPlot" header={t("appUserTests.columns.fields.totalPlot")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.totalPlot || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("totalPlot", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-totalPlot-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.totalPlot}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-totalPlot-${rowIndex}`} content={rowData.totalPlot} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-                                {visibleColumns.includes('reportedToName') && (
-                                    <Column field="reportedToName" header={t("appUserTests.columns.fields.reportedToName")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.reportedToName || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("reportedToName", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-reportedToName-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.reportedToName}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-reportedToName-${rowIndex}`} content={rowData.reportedToName} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-                                {visibleColumns.includes('reportedByName') && (
-                                    <Column field="reportedByName" header={t("appUserTests.columns.fields.reportedByName")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.reportedByName || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("reportedByName", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-reportedByName-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.reportedByName}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-reportedByName-${rowIndex}`} content={rowData.reportedByName} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-                                {visibleColumns.includes('genderLabel') && (
-                                    <Column field="genderLabel" header={t("appUserTests.columns.fields.genderLabel")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.genderLabel || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("genderLabel", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-genderLabel-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.genderLabel}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-genderLabel-${rowIndex}`} content={rowData.genderLabel} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-                                {visibleColumns.includes('createDate') && (
-                                    <Column field="createDate" header={t("appUserTests.columns.fields.createDate")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.createDate || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("createDate", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <div id={`tooltip-createDate-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                {formatDate(rowData.createDate)}
-                                            </div>
-                                        )} />)}
-                                {visibleColumns.includes('createById') && (
-                                    <Column field="createById" header={t("appUserTests.columns.fields.createById")} sortable filter
-                                        headerStyle={{ backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
-                                        style={{ width: "200px", backgroundColor: "var(--color-white)" }}
-                                        filterElement={
-                                            <InputText
-                                                value={query.tableSearch.searchRowFilter?.createById || ''}
-                                                className="w-full bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] rounded-md p-[5px]"
-                                                onChange={(e) => handleFilterChangeLocal("createById", e.target.value)}
-                                            />
-                                        }
-                                        body={(rowData, { rowIndex }) => (
-                                            <>
-                                                <div id={`tooltip-createById-${rowIndex}`} className="text-left truncate font-medium" onClick={() => handleSelectItem(rowData)}>
-                                                    {rowData.createById}
-                                                </div>
-                                                <Tooltip className="text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-createById-${rowIndex}`} content={rowData.createById} showDelay={200} position="top" />
-                                            </>
-                                        )}
-                                    />)}
-
-                            </DataTable>
+                            </>
                         )}
                     </div>
 
@@ -1228,58 +1332,55 @@ export default function AppUserTestsList() {
                                     {selectedItem?.name}
                                 </h2>
 
-                                <div className="space-y-1 text-center sm:text-left">
-                                    <p>
-                                        <strong className="text-sm font-bold">Name :</strong>{" "}
-                                        <span className="text-sm">
-                                            {selectedItem?.name ? selectedItem.name : "-"}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <strong className="text-sm font-bold">First Name:</strong>{" "}
-                                        <span className="text-sm">
-                                            {selectedItem?.firstName ? selectedItem.firstName : "-"}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <strong className="text-sm font-bold">Last Name:</strong>{" "}
-                                        <span className="text-sm">
-                                            {selectedItem?.lastName ? selectedItem.lastName : "-"}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <strong className="text-sm font-bold">Mobile:</strong>{" "}
-                                        <span className="text-sm">
-                                            {selectedItem?.mobile ? selectedItem.mobile : "-"}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <strong className="text-sm font-bold">Mobile Verified:</strong>{" "}
-                                        <span className="text-sm">
-                                            {selectedItem?.mobileVerified ? selectedItem.mobileVerified : "-"}
-                                        </span>
-                                    </p>
-                                </div>
+                               <div className="space-y-1 text-center sm:text-left">
+    <p>
+        <strong className="text-sm font-bold">Name :</strong>{" "}
+        <span className="text-sm">
+            {selectedItem?.name ? selectedItem.name : "-"}
+        </span>
+    </p>
+    <p>
+        <strong className="text-sm font-bold">First Name:</strong>{" "}
+        <span className="text-sm">
+             {selectedItem?.firstName ? selectedItem.firstName : "-"}
+        </span>
+    </p>
+    <p>
+        <strong className="text-sm font-bold">Last Name:</strong>{" "}
+        <span className="text-sm">
+             {selectedItem?.lastName ? selectedItem.lastName : "-"}
+        </span>
+    </p>
+    <p>
+        <strong className="text-sm font-bold">Mobile:</strong>{" "}
+        <span className="text-sm">
+            {selectedItem?.mobile ? selectedItem.mobile : "-"}
+        </span>
+    </p>
+    <p>
+        <strong className="text-sm font-bold">Mobile Verified:</strong>{" "}
+        <span className="text-sm">
+             {selectedItem?.mobileVerified ? selectedItem.mobileVerified : "-"}
+        </span>
+    </p>
+</div>
                             </div>
 
                             <div className="p-3 border-t shadow-lg flex flex-col sm:flex-row justify-center sm:justify-end gap-2 sm:gap-3 bg-white">
                                 <Button
                                     label="View"
                                     icon="pi pi-eye"
-                                    className="w-full sm:w-auto bg-[var(--color-primary)] text-[var(--color-white)] px-4 py-2 text-sm rounded-md font-semibold"
-                                    onClick={() => openItem(selectedItem!, "view")}
+                                    className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[var(--color-primary)] text-[var(--color-white)] px-5 py-2.5 text-sm font-semibold rounded-lg leading-normal"
                                 />
                                 <Button
                                     label="Edit"
                                     icon="pi pi-pencil"
-                                    className="w-full sm:w-auto bg-[var(--color-primary)] text-[var(--color-white)] px-4 py-2 text-sm rounded-md font-semibold"
-                                    onClick={() => openItem(selectedItem!, "edit")}
+                                    className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[var(--color-primary)] text-[var(--color-white)] px-5 py-2.5 text-sm font-semibold rounded-lg leading-normal"
                                 />
                                 <Button
                                     label="Close"
                                     icon="pi pi-times"
-                                    className="w-full sm:w-auto bg-[var(--color-primary)] text-[var(--color-white)] px-4 py-2 text-sm rounded-md font-semibold"
-                                    onClick={() => setSidebarVisible(false)}
+                                    className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[var(--color-primary)] text-[var(--color-white)] px-5 py-2.5 text-sm font-semibold rounded-lg leading-normal"
                                 />
                             </div>
                         </div>

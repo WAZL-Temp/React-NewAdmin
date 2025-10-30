@@ -1,27 +1,39 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
-
-import { BiSolidTrash, Button, Calendar, Column, DataTable, Dialog, HiOutlinePlus, IoMdSettings, Image, InputText, IoMdRefresh, MdOutlineUploadFile, MenuItem, RiPencilFill, SplitButton, TbFileExcel, TiEye, Toast, Tooltip, FilterMatchMode, Checkbox, IoLanguage, Sidebar } from "../../../sharedBase/globalImports";
+import { BiSolidTrash, Button, Calendar, Column, DataTable, Dialog, HiOutlinePlus, IoMdSettings, Image, InputText, IoMdRefresh, MdOutlineUploadFile, MenuItem, RiPencilFill, SplitButton, TbFileExcel, TiEye, Toast, Tooltip, FilterMatchMode, Checkbox, IoLanguage, Sidebar, TabView, TabPanel } from "../../../sharedBase/globalImports";
 import { useTranslation, useNavigate } from '../../../sharedBase/globalUtils';
 import successimg from '../../../assets/images/success.gif';
 import confirmImg from '../../../assets/images/are-you-sure.jpg';
 import { AppUserTest } from "../../../core/model/appUserTest";
-import { RowData } from "../../../types/listpage";
-import { useListQuery } from "../../../store/useListQuery";
-import { AppUserTestsService, appUserTestPageDataService,convertLang } from "../../../core/service/appUserTests.service";
+import { RowData, TabItem } from "../../../types/listpage";
 import Loader from "../../../components/Loader";
 import { useListGridPage } from "../../../hooks/useListGridPage";
 import { CustomFile } from "../../../core/model/customfile";
 import userAvtar from "../../../assets/images/user-avatar.png";
+import { useFetchDashboardInfoData } from "../../../sharedBase/lookupService";
+import { useListGridQuery } from "../../../store/useListGridQuery";
+import { CustomAppUserTestService} from "./AppUserTests.service";
+
 
 export default function AppUserTestsListGrid() {
     const navigate = useNavigate();
     const baseModelName = "appUserTests";
     const typeName = "appUserTest";
-    const { t ,i18n} = useTranslation();
+    const { t, i18n } = useTranslation();
     const dtRef = useRef<DataTable<AppUserTest[]>>(null);
     // search
-    const appUserTestsService = AppUserTestsService();
-    const query = useListQuery<AppUserTest>(appUserTestsService);
+    const userService = CustomAppUserTestService();
+    const query = useListGridQuery<AppUserTest>(userService);
+    const { data: dashboardInfoData } = useFetchDashboardInfoData();
+
+    const tabs: TabItem[] = useMemo(() => {
+        if (!dashboardInfoData?.appUserTest) return [];
+        return [
+            { name: "Active", condition: { isActive: 1 }, count: dashboardInfoData.appUserTest[0]?.activeCount ?? 0 },
+            { name: "Inactive", condition: { isActive: 0 }, count: dashboardInfoData.appUserTest[0]?.inactiveCount ?? 0 },
+            { name: "Deleted", condition: { isDelete: true }, count: dashboardInfoData.appUserTest[0]?.deletedCount ?? 0 },
+        ];
+    }, [dashboardInfoData]);
+
     const {
         roleData, hasAccess, globalFilterValue, setGlobalFilterValue, refreshItemData, isDeleteDialogVisible,
         deleteItem, closeDeleteDialog, setFilters, first, rows, totalRecords,
@@ -31,18 +43,32 @@ export default function AppUserTestsListGrid() {
         onLazyLoad, selectedRow, setSelectedRow, multiSortMeta, currentPageReportTemplate, data,
         sortField, sortOrder, calendarCreateDateFrom, setCalendarCreateDateFrom,
         calendarCreateDateTo, setCalendarCreateDateTo, setLoading, parseAndFormatImages,
-        selectedItem, sidebarVisible, setSidebarVisible, handleSelectItem }
+        selectedItem, sidebarVisible, setSidebarVisible, handleSelectItem,
+        activeIndex, setActiveIndex, tabList, gridData }
         = useListGridPage<typeof query, AppUserTest>({
             query: query,
             props: {
                 initialFilterValue: '',
                 baseModelName: baseModelName,
                 typeName: typeName,
-                service: appUserTestsService,
-                pageGridService: appUserTestPageDataService,
+                service: userService,
+                pageGridService: userService,
+                tabsData: tabs
             }
         });
     const debounceTimeoutsRef = useRef<Record<string, NodeJS.Timeout>>({});
+
+
+    useEffect(() => {
+        if (query.tabName && tabList.length > 0) {
+            const index = tabList.findIndex(tab => tab.name.toLowerCase().replace(" ", "") === query.tabName.toLowerCase().replace(" ", ""));
+            if (index !== -1) {
+                setActiveIndex(index);
+                query.setRoleCondition(tabList[index].condition);
+            }
+        }
+    }, [query.tabName, tabList]);// eslint-disable-line react-hooks/exhaustive-deps
+
 const columnsConfigDefault = useMemo(() =>[
 			 {field: 'id', header: t("appUserTests.columns.fields.id"), isDefault: true, show: true }, 
 			 {field: 'name', header: t("appUserTests.columns.fields.name"), isDefault: true, show: true }, 
@@ -95,6 +121,7 @@ const columnsConfigDefault = useMemo(() =>[
 			 {field: 'isDelete', header: t("appUserTests.columns.fields.isDelete"), isDefault: true, show: true }, 
  		].filter(col => col.field),
         [t]);
+
     const { columnsConfig, visibleColumns, handleSelectAll, handleColumnChange } = useColumnConfig(columnsConfigDefault, roleData);
 
     useEffect(() => {
@@ -140,7 +167,7 @@ const columnsConfigDefault = useMemo(() =>[
         items.push({
             label: t("globals.exportExcel"),
             icon: 'pi pi-file-excel',
-            command: () => exportToExcel(appUserTestsService, globalFilterValue || '', 'AppUserTest')
+            command: () => exportToExcel(userService, globalFilterValue || '', 'AppUserTest')
         });
     }
 
@@ -239,271 +266,59 @@ const columnsConfigDefault = useMemo(() =>[
         );
     };
 
-
-    return (
-        <div className='relative h-screen flex flex-col overflow-auto'>
-            <div className="flex justify-between items-center m-1">
-                <h1 className="font-bold text-[16px] lg:text-xl ml-2">{t("appUserTests.form_detail.fields.modelname")}</h1>
-            </div>
-
-            {query.isLoading ? (
-                <Loader />
-            ) : (
-                <>
-                    <div className="flex mx-2 flex-wrap justify-start items-center gap-3 border text-[var(--color-dark)] border-[var(--color-border)] rounded-md p-1 lg:my-1">
-                        <div className="flex sm:flex md:flex lg:hidden card justify-content-center">
-                            <Toast ref={toast}></Toast>
-                            <SplitButton
-                                label={t("globals.action")}
-                                className="small-button text-xs lg:text-sm border border-[var(--color-border)] p-1 lg:p-2"
-                                model={items} />
-                        </div>
-
-                        <div className="flex gap-2 w-full sm:w-auto">
-                            <Calendar
-                                value={calendarCreateDateFrom}
-                                dateFormat="mm-dd-yy"
-                                id="fromDate"
-                                name="fromDate"
-                                onChange={(e) => { setCalendarCreateDateFrom(e.value); searchChange(e.value, 'createDateSearchFrom') }}
-                                showIcon
-                                placeholder={t("globals.startDatePlaceholder")}
-                                yearRange="2023:2025"
-                                monthNavigator
-                                yearNavigator
-                                className="calendardark w-[180px] bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] p-1 lg:p-2 rounded-md text-xs"
-                            />
-
-                            <Calendar
-                                value={calendarCreateDateTo}
-                                dateFormat="mm-dd-yy"
-                                id="toDate"
-                                name="toDate"
-                                onChange={(e) => { setCalendarCreateDateTo(e.value); searchChange(e.value, 'createDateSearchTo') }}
-                                showIcon
-                                placeholder={t("globals.endDatePlaceholder")}
-                                yearRange="2023:2025"
-                                monthNavigator
-                                yearNavigator
-                                className="calendardark w-[180px] bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] p-1 lg:p-2 rounded-md text-xs"
-                            />
-                        </div>
-
-                        <div className="card flex justify-center gap-2">
-                            <Button
-                                type="button"
-                                className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
-                                onClick={() => { setListSearch(); }}
-                                tooltip={t("globals.apply")}
-                                tooltipOptions={{
-                                    position: 'top',
-                                    className: 'font-normal rounded text-sm p-1'
-                                }}
-                            >
-                                {t("globals.apply")}
-                            </Button>
-                            <Button
-                                type="button"
-                                className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
-                                onClick={() => { setCalendarCreateDateTo(null); setCalendarCreateDateFrom(null); clearListSearch('search'); }}
-                                tooltip={t("globals.clearAll")}
-                                tooltipOptions={{
-                                    position: 'top',
-                                    className: 'font-normal rounded text-sm p-1'
-                                }}
-                            >
-                                {t("globals.clearAll")}
-                            </Button>
-                        </div>
-
-                        <Dialog
-                            header={t("globals.columnVisibility")}
-                            visible={visible}
-                            onHide={() => setVisible(false)}
-                            className="columnVisibility w-full max-w-[95vw] sm:max-w-[70vw] md:max-w-[60vw] lg:max-w-[50vw] text-xs lg:text-sm"
-                            style={{
-                                position: "fixed",
-                                top: "10vh",
-                                left: "50%",
-                                transform: "translateX(-50%)",
-                                maxHeight: "80vh",
-                                overflowY: "auto"
-                            }}
-                        >
-                            <div className="my-2">
-                                <label className="flex items-center justify-start space-x-2 mb-3">
-                                    <Checkbox
-                                        onChange={handleSelectAll}
-                                        checked={visibleColumns.length === columnsConfig.length}
-                                    >
-                                    </Checkbox>
-                                    <span className="sm:text-xs text-sm font-normal text-black">{t("globals.selectAll")}</span>
-                                </label>
-                            </div>
-
-                            <div className="selectable-columns-container">
-                                <div className="selectable-columns-grid">
-                                    {columnsConfigDefault.map((col) => (
-                                        <label key={col.field} className="flex items-center space-x-2">
-                                            <>
-                                                <Checkbox
-                                                    onChange={() => handleColumnChange(col.field)}
-                                                    checked={visibleColumns.includes(col.field)}
-                                                    disabled={col.isDefault}
-                                                >
-                                                </Checkbox>
-                                                <span className="text-sm sm:text-xs font-normal text-black">{col.header}</span>
-                                            </>
-                                        </label>
-                                    ))}
-                                </div>
-                            </div>
-                        </Dialog>
-
-                        <div className="hidden lg:flex items-center space-x-2 flex-wrap  bg-[var(--color-white)] text-[var(--color-dark)]">
-                            <Button
-                                type="button"
-                                className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
-                                onClick={() => convertLanguage()}
-                                tooltip={t("globals.convertLang")}
-                                tooltipOptions={{
-                                    position: 'top',
-                                    className: 'font-normal rounded text-xs'
-                                }}
-                            >
-                                <IoLanguage size={18} />
-                            </Button>
-
-                            {hasAccess(roleData, "Add") && (
-                                <Button
-                                    type="button"
-                                    className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
-                                    onClick={() => addData(navigate, baseModelName)}
-                                    tooltip={t("globals.add")}
-                                    tooltipOptions={{
-                                        position: 'top',
-                                        className: 'font-normal rounded text-xs'
-                                    }}
-                                >
-                                    <HiOutlinePlus size={18} />
-                                </Button>
-                            )}
-
-                            {hasAccess(roleData, "Export") && (
-                                <Button
-                                    type="button"
-                                    className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
-                                    onClick={() => exportToExcel(appUserTestsService, globalFilterValue || '', 'AppUserTest')}
-                                    tooltip={t("globals.exportExcel")}
-                                    tooltipOptions={{
-                                        position: 'top',
-                                        className: 'font-normal rounded text-sm p-1'
-                                    }}
-                                >
-                                    <TbFileExcel size={18} />
-                                </Button>
-                            )}
-
-                            {hasAccess(roleData, "Import") && (
-                                <Button
-                                    type="button"
-                                    className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
-                                    tooltip={t("globals.import")}
-                                    onClick={() => importFromExcel(navigate, baseModelName)}
-                                    tooltipOptions={{
-                                        position: 'top',
-                                        className: 'font-normal rounded text-sm p-1'
-                                    }}
-                                >
-                                    <MdOutlineUploadFile size={18} />
-                                </Button>
-                            )}
-
-                            <Button
-                                type="button"
-                                className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
-                                onClick={refreshItemData}
-                                tooltip={t("globals.refresh")}
-                                tooltipOptions={{
-                                    position: 'top',
-                                    className: 'font-normal rounded text-sm p-1'
-                                }}
-                            >
-                                <IoMdRefresh size={18} />
-                            </Button>
-                        </div>
-
-                        <div className="flex card justify-content-center">
-                            <Button
-                                onClick={() => setVisible(true)}
-                                className="p-1 lg:p-2 bg-[var(--color-primary)] text-[var(--color-white)] border border-[var(--color-border)] text-xs lg:text-sm rounded-md"
-                                tooltip={t("globals.columnVisibility")}
-                                tooltipOptions={{
-                                    position: 'top',
-                                    className: 'font-normal rounded text-xs'
-                                }}
-                            >
-                                <IoMdSettings size={20} />
-                            </Button>
-                        </div>
-                    </div>
-
-                    <div className="m-2 ">
-                        {!query.isLoading && (
-                            <>
-                                <DataTable
-                                    key={i18n.language}
-                                    ref={dtRef}
-                                    value={data}
-                                    lazy
-                                    dataKey="id"
-                                    paginator
-                                    first={first}
-                                    rows={rows}
-                                    rowHover
-                                    totalRecords={totalRecords}
-                                    onPage={onLazyLoad}
-                                    onSort={onLazyLoad}
-                                    onFilter={onLazyLoad}
-                                    filters={filters}
-                                    sortField={sortField}
-                                    sortOrder={sortOrder as 1 | 0 | -1}
-                                    globalFilterFields={columnsConfig.map(config => config.field)}
-                                    globalFilter={globalFilterValue}
-                                    filterDisplay="row"
-                                    scrollable
-                                    scrollHeight="68vh"
-                                    sortMode="multiple"
-                                    multiSortMeta={multiSortMeta}
-                                    selectionMode="single"
-                                    columnResizeMode="expand"
-                                    selection={selectedRow}
-                                    onSelectionChange={(e) => setSelectedRow(e.value)}
-                                    removableSort
-                                    resizableColumns
-                                    paginatorTemplate={t('globals.layout')}
-                                    currentPageReportTemplate={currentPageReportTemplate}
-                                    rowsPerPageOptions={[10, 25, 50]}
-                                    className="p-datatable-gridlines datatable-responsive bg-[var(--color-white)] text-[var(--color-dark)] tableResponsive"
-                                    emptyMessage={t('globals.emptyMessage')}
-                                >
-                                    {hasAccess(roleData, "Actions") && (
-                                        <Column
-                                            header={t('globals.headerActions')}
-                                            headerStyle={{
-                                                backgroundColor: "var(--color-primary)",
-                                                color: "var(--color-white)",
-                                                textAlign: "center",
-                                            }}
-                                            body={(rowData) => actionBodyTemplate(rowData, openItem)}
-                                            style={{ width: '50px', minWidth: '50px', maxWidth: '50px', background: 'var(--color-white)', color: 'var(--color-dark)' }}
-                                            frozen
-                                            alignFrozen="left"
-                                            className="text-sm sticky bg-[var(--color-white)] text-[var(--color-dark)]  font-semibold whitespace-nowrap overflow-hidden text-ellipsis"
-                                        />
-                                    )}
-                                    
-                                     {visibleColumns.includes('name') && (
+    const renderTable = (data: AppUserTest[]) => (
+        <DataTable
+            key={i18n.language}
+            ref={dtRef}
+            value={data}
+            lazy
+            dataKey="id"
+            paginator
+            first={first}
+            rows={rows}
+            rowHover
+            totalRecords={totalRecords}
+            onPage={onLazyLoad}
+            onSort={onLazyLoad}
+            onFilter={onLazyLoad}
+            filters={filters}
+            sortField={sortField}
+            sortOrder={sortOrder as 1 | 0 | -1}
+            globalFilterFields={columnsConfig.map(config => config.field)}
+            globalFilter={globalFilterValue}
+            filterDisplay="row"
+            scrollable
+            scrollHeight="62vh"
+            sortMode="multiple"
+            multiSortMeta={multiSortMeta}
+            selectionMode="single"
+            columnResizeMode="expand"
+            selection={selectedRow}
+            onSelectionChange={(e) => setSelectedRow(e.value)}
+            removableSort
+            resizableColumns
+            paginatorTemplate={t('globals.layout')}
+            currentPageReportTemplate={currentPageReportTemplate}
+            rowsPerPageOptions={[10, 25, 50]}
+            className="p-datatable-gridlines datatable-responsive bg-[var(--color-white)] text-[var(--color-dark)] tableResponsive"
+            emptyMessage={t('globals.emptyMessage')}
+        >
+            {hasAccess(roleData, "Actions") && (
+                <Column
+                    header={t('globals.headerActions')}
+                    headerStyle={{
+                        backgroundColor: "var(--color-primary)",
+                        color: "var(--color-white)",
+                        textAlign: "center",
+                    }}
+                    body={(rowData) => actionBodyTemplate(rowData, openItem)}
+                    style={{ width: '50px', minWidth: '50px', maxWidth: '50px', background: 'var(--color-white)', color: 'var(--color-dark)' }}
+                    frozen
+                    alignFrozen="left"
+                    className="text-sm sticky bg-[var(--color-white)] text-[var(--color-dark)]  font-semibold whitespace-nowrap overflow-hidden text-ellipsis"
+                />
+            )}
+            {visibleColumns.includes('name') && (
 <Column field="name" header={t("appUserTests.columns.fields.name")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
@@ -1196,7 +1011,267 @@ body={(rowData, { rowIndex }) => (
 )}
  />)} 
 
-                                </DataTable>
+        </DataTable>
+    );
+
+    const tabsChange = (e: any) => {
+        setActiveIndex(e.index);
+        const selectedTab = tabList[e.index];
+
+        if (!selectedTab) return;
+        fetchDataCondition(selectedTab);
+
+        setGlobalFilterValue('');
+        query.setSearch({});
+        query.tableSearch.searchRowFilter = {};
+        query.setTableSearch({ ...query.tableSearch });
+        setCalendarCreateDateTo(null);
+        setCalendarCreateDateFrom(null);
+        clearListSearch('search');
+        setFilters((prevFilters) => {
+            const clearedFilters = { ...prevFilters };
+            Object.keys(clearedFilters).forEach((key) => {
+                if ('value' in clearedFilters[key]) {
+                    (clearedFilters[key] as { value: any }).value = null;
+                }
+            });
+            return clearedFilters;
+        });
+    };
+
+    const fetchDataCondition = (item: TabItem) => {
+
+        const condition = item.condition ? item.condition : {};
+        query.setTabName(item.name);
+        query.setRoleCondition(condition);
+        const finalCondition = {
+            ...query.roleCondition = condition,
+        };
+            gridData(finalCondition);
+    };
+
+    return (
+        <div className='relative h-screen flex flex-col overflow-auto'>
+            <div className="flex justify-between items-center m-1">
+                <h1 className="font-bold text-[16px] lg:text-xl ml-2">{t("appUserTests.form_detail.fields.modelname")}</h1>
+            </div>
+
+            {query.isLoading ? (
+                <Loader />
+            ) : (
+                <>
+                    <div className="flex mx-2 flex-wrap justify-start items-center gap-3 border text-[var(--color-dark)] border-[var(--color-border)] rounded-md p-1 lg:my-1">
+                        <div className="flex sm:flex md:flex lg:hidden card justify-content-center">
+                            <Toast ref={toast}></Toast>
+                            <SplitButton
+                                label={t("globals.action")}
+                                className="small-button text-xs lg:text-sm border border-[var(--color-border)] p-1 lg:p-2"
+                                model={items} />
+                        </div>
+
+                        <div className="flex gap-2 w-full sm:w-auto">
+                            <Calendar
+                                value={calendarCreateDateFrom}
+                                dateFormat="mm-dd-yy"
+                                id="fromDate"
+                                name="fromDate"
+                                onChange={(e) => { setCalendarCreateDateFrom(e.value); searchChange(e.value, 'createDateSearchFrom') }}
+                                showIcon
+                                placeholder={t("globals.startDatePlaceholder")}
+                                yearRange="2023:2025"
+                                monthNavigator
+                                yearNavigator
+                                className="calendardark w-[180px] bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] p-1 lg:p-2 rounded-md text-xs"
+                            />
+
+                            <Calendar
+                                value={calendarCreateDateTo}
+                                dateFormat="mm-dd-yy"
+                                id="toDate"
+                                name="toDate"
+                                onChange={(e) => { setCalendarCreateDateTo(e.value); searchChange(e.value, 'createDateSearchTo') }}
+                                showIcon
+                                placeholder={t("globals.endDatePlaceholder")}
+                                yearRange="2023:2025"
+                                monthNavigator
+                                yearNavigator
+                                className="calendardark w-[180px] bg-[var(--color-white)] text-[var(--color-dark)] border border-[var(--color-border)] p-1 lg:p-2 rounded-md text-xs"
+                            />
+                        </div>
+
+                        <div className="card flex justify-center gap-2">
+                            <Button
+                                type="button"
+                                className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs rounded-md"
+                                onClick={() => { setListSearch(); }}
+                                tooltip={t("globals.apply")}
+                                tooltipOptions={{
+                                    position: 'top',
+                                    className: 'font-normal rounded text-xs p-1'
+                                }}
+                            >
+                                {t("globals.apply")}
+                            </Button>
+                            <Button
+                                type="button"
+                                className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs rounded-md"
+                                onClick={() => { setCalendarCreateDateTo(null); setCalendarCreateDateFrom(null); clearListSearch('search'); }}
+                                tooltip={t("globals.clearAll")}
+                                tooltipOptions={{
+                                    position: 'top',
+                                    className: 'font-normal rounded text-xs p-1'
+                                }}
+                            >
+                                {t("globals.clearAll")}
+                            </Button>
+                        </div>
+
+                        <Dialog
+                            header={t("globals.columnVisibility")}
+                            visible={visible}
+                            onHide={() => setVisible(false)}
+                            className="columnVisibility w-full max-w-[95vw] sm:max-w-[70vw] md:max-w-[60vw] lg:max-w-[50vw] text-xs lg:text-sm"
+                            style={{
+                                position: "fixed",
+                                top: "10vh",
+                                left: "50%",
+                                transform: "translateX(-50%)",
+                                maxHeight: "80vh",
+                                overflowY: "auto"
+                            }}
+                        >
+                            <div className="my-2">
+                                <label className="flex items-center justify-start space-x-2 mb-3">
+                                    <Checkbox
+                                        onChange={handleSelectAll}
+                                        checked={visibleColumns.length === columnsConfig.length}
+                                    >
+                                    </Checkbox>
+                                    <span className="sm:text-xs text-sm font-normal text-black">{t("globals.selectAll")}</span>
+                                </label>
+                            </div>
+
+                            <div className="selectable-columns-container">
+                                <div className="selectable-columns-grid">
+                                    {columnsConfigDefault.map((col) => (
+                                        <label key={col.field} className="flex items-center space-x-2">
+                                            <>
+                                                <Checkbox
+                                                    onChange={() => handleColumnChange(col.field)}
+                                                    checked={visibleColumns.includes(col.field)}
+                                                    disabled={col.isDefault}
+                                                >
+                                                </Checkbox>
+                                                <span className="text-sm sm:text-xs font-normal text-black">{col.header}</span>
+                                            </>
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+                        </Dialog>
+
+                        <div className="hidden lg:flex items-center space-x-2 flex-wrap  bg-[var(--color-white)] text-[var(--color-dark)]">
+                            <Button
+                                type="button"
+                                className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
+                                onClick={() => convertLanguage()}
+                                tooltip={t("globals.convertLang")}
+                                tooltipOptions={{
+                                    position: 'top',
+                                    className: 'font-normal rounded text-xs'
+                                }}
+                            >
+                                <IoLanguage size={18} />
+                            </Button>
+
+                            {hasAccess(roleData, "Add") && (
+                                <Button
+                                    type="button"
+                                    className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
+                                    onClick={() => addData(navigate, baseModelName)}
+                                    tooltip={t("globals.add")}
+                                    tooltipOptions={{
+                                        position: 'top',
+                                        className: 'font-normal rounded text-xs'
+                                    }}
+                                >
+                                    <HiOutlinePlus size={18} />
+                                </Button>
+                            )}
+
+                            {hasAccess(roleData, "Export") && (
+                                <Button
+                                    type="button"
+                                    className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
+                                    onClick={() => exportToExcel(userService, globalFilterValue || '', 'AppUserTest')}
+                                    tooltip={t("globals.exportExcel")}
+                                    tooltipOptions={{
+                                        position: 'top',
+                                        className: 'font-normal rounded text-xs p-1'
+                                    }}
+                                >
+                                    <TbFileExcel size={18} />
+                                </Button>
+                            )}
+
+                            {hasAccess(roleData, "Import") && (
+                                <Button
+                                    type="button"
+                                    className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
+                                    tooltip={t("globals.import")}
+                                    onClick={() => importFromExcel(navigate, baseModelName)}
+                                    tooltipOptions={{
+                                        position: 'top',
+                                        className: 'font-normal rounded text-xs p-1'
+                                    }}
+                                >
+                                    <MdOutlineUploadFile size={18} />
+                                </Button>
+                            )}
+
+                            <Button
+                                type="button"
+                                className="bg-[var(--color-primary)] text-[var(--color-white)] p-1 lg:p-2 text-xs lg:text-sm rounded-md"
+                                onClick={refreshItemData}
+                                tooltip={t("globals.refresh")}
+                                tooltipOptions={{
+                                    position: 'top',
+                                    className: 'font-normal rounded text-xs p-1'
+                                }}
+                            >
+                                <IoMdRefresh size={18} />
+                            </Button>
+                        </div>
+
+                        <div className="flex card justify-content-center">
+                            <Button
+                                onClick={() => setVisible(true)}
+                                className="p-1 lg:p-2 bg-[var(--color-primary)] text-[var(--color-white)] border border-[var(--color-border)] text-xs lg:text-sm rounded-md"
+                                tooltip={t("globals.columnVisibility")}
+                                tooltipOptions={{
+                                    position: 'top',
+                                    className: 'font-normal rounded text-xs'
+                                }}
+                            >
+                                <IoMdSettings size={20} />
+                            </Button>
+                        </div>
+                    </div>
+
+                    <div className="m-2 ">
+                        {!query.isLoading && (
+                            <>
+                                {tabList.length > 0 ? (
+                                    <TabView activeIndex={activeIndex} onTabChange={tabsChange}>
+                                        {tabList.map((tab, i) => (
+                                            <TabPanel key={i} header={`${tab.name} (${tab.count})`}>
+                                                {renderTable(data ?? [])}
+                                            </TabPanel>
+                                        ))}
+                                    </TabView>
+                                ) : (
+                                    renderTable(data ?? [])
+                                )}
                             </>
 
                         )}
@@ -1278,26 +1353,27 @@ body={(rowData, { rowIndex }) => (
         </span>
     </p>
 </div>
+                               
                             </div>
 
                             <div className="p-3 border-t shadow-lg flex flex-col sm:flex-row justify-center sm:justify-end gap-2 sm:gap-3 bg-white">
                                 <Button
                                     label="View"
                                     icon="pi pi-eye"
-                                    className="w-full sm:w-auto bg-[var(--color-primary)] text-[var(--color-white)] px-4 py-2 text-sm rounded-md font-semibold"
-                                    onClick={() => openItem(selectedItem!, "view")}
+                                    className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[var(--color-primary)] text-[var(--color-white)] px-5 py-2.5 text-sm font-semibold rounded-lg leading-normal"
+                                onClick={() => openItem(selectedItem!, "view")}
                                 />
                                 <Button
                                     label="Edit"
                                     icon="pi pi-pencil"
-                                    className="w-full sm:w-auto bg-[var(--color-primary)] text-[var(--color-white)] px-4 py-2 text-sm rounded-md font-semibold"
-                                    onClick={() => openItem(selectedItem!, "edit")}
+                                    className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[var(--color-primary)] text-[var(--color-white)] px-5 py-2.5 text-sm font-semibold rounded-lg leading-normal"
+                                onClick={() => openItem(selectedItem!, "edit")}
                                 />
                                 <Button
                                     label="Close"
                                     icon="pi pi-times"
-                                    className="w-full sm:w-auto bg-[var(--color-primary)] text-[var(--color-white)] px-4 py-2 text-sm rounded-md font-semibold"
-                                    onClick={() => setSidebarVisible(false)}
+                                    className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[var(--color-primary)] text-[var(--color-white)] px-5 py-2.5 text-sm font-semibold rounded-lg leading-normal"
+                                 onClick={() => setSidebarVisible(false)}
                                 />
                             </div>
                         </div>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { AppUserTestsService } from '../../../core/service/appUserTests.service';
-import { BsArrowLeft, Button, Column, DataTable, DataTableFilterMeta, Dialog, FilterMatchMode, Image, InputText, RiEyeFill, RiFileDownloadFill, RiFileFill, SplitButton, Tooltip } from '../../../sharedBase/globalImports';
+import { CustomAppUserTestService} from "./AppUserTests.service";
+import { BsArrowLeft, Button, Column, DataTable, DataTableFilterMeta, Dialog, FilterMatchMode, Image, InputText, RiEyeFill, RiFileDownloadFill, RiFileFill, SplitButton } from '../../../sharedBase/globalImports';
 import { useTranslation } from '../../../sharedBase/globalUtils';
 import { useFileUploadService } from "../../../core/service/fileUpload.service";
 import FileUploadMain from '../../../components/FileUploadMain';
@@ -26,13 +26,13 @@ const AppUserTestsImport = () => {
   const [loadingSync, setLoadingSync] = useState(false);
   const baseModelName = "appUserTest";
   const typeName= "appUserTest";
-  const appUserTestsService = AppUserTestsService();
+  const appUserTestsService = CustomAppUserTestService();
   const [filters, setFilters] = useState<DataTableFilterMeta>({ global: { value: null, matchMode: FilterMatchMode.CONTAINS } });
 
   const { onPage, first, rows, handleDownloadTemplate, downloading, importAllow, formatDate }
     = useImportPage({
       props: {
-        baseModelName: typeName,
+        baseModelName: baseModelName,
         service: appUserTestsService
       }
     });
@@ -166,6 +166,7 @@ const AppUserTestsImport = () => {
 			 {field: 'isDelete', header: t("appUserTests.columns.fields.isDelete"), isDefault: true, show: true }, 
  		].filter(col => col.field),
         [t]);
+
   const renderFileCell = (rowData: RowData, field: string, rowIndex: number) => {
     let fileName = "";
     const uniqueId = `tooltip-${field}-${rowIndex}`;
@@ -184,7 +185,7 @@ const AppUserTestsImport = () => {
     return (
       <div id={uniqueId} className='text-[13px] overflow-hidden overflow-ellipsis whitespace-nowrap'>
         {(fileName)}
-        <Tooltip className=' text-xs font-semibold hide-tooltip-mobile' target={`#${uniqueId}`} content={fileName} showDelay={200} position="top" />
+        {/* <Tooltip className=' text-xs font-semibold hide-tooltip-mobile' target={`#${uniqueId}`} content={fileName} showDelay={200} position="top" /> */}
       </div>
     );
   };
@@ -273,24 +274,25 @@ const AppUserTestsImport = () => {
                   <DataTable
                     value={importedData}
                     dataKey="id"
+                    showGridlines
                     resizableColumns
-                    scrollable
-                    // scrollHeight="53vh"
+                    columnResizeMode="expand"
                     filterDisplay="row"
                     filters={filters}
                     onFilter={(e) => setFilters(e.filters)}
-                    scrollHeight="calc(100vh - 300px)"
-                    showGridlines
                     paginator
                     first={first}
                     rows={rows}
+                    rowHover
                     totalRecords={totalRecords}
                     onPage={onPage}
                     paginatorTemplate={t('globals.layout')}
                     currentPageReportTemplate={t('globals.report')}
                     emptyMessage={t('globals.emptyMessage')}
                     rowsPerPageOptions={[10, 25, 50]}
-                    className="p-datatable-gridlines  datatable-responsive bg-[var(--color-white)]"
+                    className="p-datatable-gridlines datatable-responsive bg-[var(--color-white)]"
+                    scrollable
+                    scrollHeight="calc(100vh - 300px)"
                   >
                     <Column
                       field="importAction" header={t("appUsers.form_detail.fields.importAction")} sortable
@@ -308,7 +310,7 @@ const AppUserTestsImport = () => {
                           <div id={`tooltip-importAction-${rowIndex}`} className="text-left truncate font-medium">
                             {rowData.importAction}
                           </div>
-                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-importAction-${rowIndex}`} content={rowData.importAction} showDelay={200} position="top" />
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-importAction-${rowIndex}`} content={rowData.importAction} showDelay={200} position="top" /> */}
                         </>
                       )}
                     />
@@ -328,11 +330,11 @@ const AppUserTestsImport = () => {
                           <div id={`tooltip-importRemark-${rowIndex}`} className="text-left truncate font-medium">
                             {rowData.importRemark}
                           </div>
-                          <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-importRemark-${rowIndex}`} content={rowData.importRemark} showDelay={200} position="top" />
+                          {/* <Tooltip className=" text-xs font-semibold hide-tooltip-mobile" target={`#tooltip-importRemark-${rowIndex}`} content={rowData.importRemark} showDelay={200} position="top" /> */}
                         </>
                       )}
                     />
-                      
+                     
 <Column field="name" header={t("appUserTests.columns.fields.name")} sortable filter
 headerStyle={{backgroundColor: "var(--color-primary)", color: "var(--color-white)", textAlign: "center" }}
 style={{width: "200px", backgroundColor: "var(--color-white)" }}
