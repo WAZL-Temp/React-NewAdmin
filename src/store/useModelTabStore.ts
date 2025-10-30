@@ -4,7 +4,7 @@ export type TabCondition = Record<string, any>;
 
 export interface ModelTabState {
   activeTabs: Record<
-    string, // model key (e.g., "appuser", "category")
+    string,
     {
       tabName: string | null;
       tabList: { name: string; condition: TabCondition; count?: number }[];
@@ -20,12 +20,13 @@ export const useModelTabStore = create<ModelTabState>((set, get) => ({
   activeTabs: {},
 
   setTabLists: (model, list) => {
+    const key = model.toLowerCase();
     set((state) => {
-      const existing = state.activeTabs[model];
+      const existing = state.activeTabs[key];
       return {
         activeTabs: {
           ...state.activeTabs,
-          [model]: {
+          [key]: {
             tabList: list,
             tabName: existing?.tabName ?? list[0]?.name ?? null,
           },
@@ -35,11 +36,12 @@ export const useModelTabStore = create<ModelTabState>((set, get) => ({
   },
 
   setActiveTab: (model, tabName) => {
+    const key = model.toLowerCase();
     set((state) => ({
       activeTabs: {
         ...state.activeTabs,
-        [model]: {
-          ...(state.activeTabs[model] ?? { tabList: [] }),
+        [key]: {
+          ...(state.activeTabs[key] ?? { tabList: [] }),
           tabName,
         },
       },
@@ -47,7 +49,8 @@ export const useModelTabStore = create<ModelTabState>((set, get) => ({
   },
 
   getCondition: (model) => {
-    const modelState = get().activeTabs[model];
+    const key = model.toLowerCase();
+    const modelState = get().activeTabs[key];
     if (!modelState || !modelState.tabName) return null;
     const tab = modelState.tabList.find(
       (t) => t.name.toLowerCase() === modelState.tabName?.toLowerCase()
@@ -55,5 +58,8 @@ export const useModelTabStore = create<ModelTabState>((set, get) => ({
     return tab?.condition ?? null;
   },
 
-  getTabName: (model) => get().activeTabs[model]?.tabName ?? null,
+  getTabName: (model) => {
+    const key = model.toLowerCase();
+    return get().activeTabs[key]?.tabName ?? null;
+  },
 }));
