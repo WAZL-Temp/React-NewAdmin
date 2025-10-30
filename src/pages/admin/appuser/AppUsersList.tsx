@@ -12,7 +12,7 @@ import userAvtar from "../../../assets/images/user-avatar.png";
 import { CustomFile } from "../../../core/model/customfile";
 import { useFetchDashboardInfoData } from "../../../sharedBase/lookupService";
 import { useModelTabStore } from "../../../store/useModelTabStore";
-import {CustomAppUserService} from "./appUsers.service";
+import { CustomAppUserService } from "./appUsers.service";
 
 
 export default function AppUsersList() {
@@ -44,7 +44,8 @@ export default function AppUsersList() {
                 service: userService
             }
         });
-    const storeTabName = useModelTabStore((s) => s.activeTabs[baseModelName]?.tabName);
+    // const storeTabName = useModelTabStore((s) => s.activeTabs[baseModelName]?.tabName);
+    const storeTabName = useModelTabStore((s) => s.activeTabs[baseModelName.toLowerCase()]?.tabName);
 
     useEffect(() => {
         if (!dashboardInfoData?.appUser) return;

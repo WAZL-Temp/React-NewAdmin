@@ -260,64 +260,64 @@ export default function Sidebar({
       accessKey: "offers:open",
     },
     {
-  key: "AppUserTests",
-  label: t("appUserTests.form_detail.fields.modelname"),
-  icon: <FiUser size={18} className="flex-shrink-0" />,
-  count: 1880,
-  showToastOnMinimized: false,
-  isOpenWhen: (p) => p.startsWith("/appUserTests"),
-  items: [
-    {
-      label: t("globals.homes"),
-      to: "/appUserTests/home",
-      icon: <AiFillHome size={14} />,
-      accessKey: "appUserTests:home",
-      activeWhen: (p) => p === "/appUserTests/home",
+      key: "appUserTests",
+      label: t("appUserTests.form_detail.fields.modelname"),
+      icon: <FiUser size={18} className="flex-shrink-0" />,
+      count: 1880,
+      showToastOnMinimized: false,
+      isOpenWhen: (p) => p.startsWith("/appUserTests"),
+      items: [
+        {
+          label: t("globals.homes"),
+          to: "/appUserTests/home",
+          icon: <AiFillHome size={14} />,
+          accessKey: "appUserTests:home",
+          activeWhen: (p) => p === "/appUserTests/home",
+        },
+        {
+          label: t("globals.list"),
+          to: "/appUserTests",
+          icon: <IoList size={14} />,
+          accessKey: "appUserTests:list",
+          activeWhen: (p) => p === "/appUserTests",
+        },
+        {
+          label: t("globals.grid"),
+          to: "/appUserTests/grid",
+          icon: <MdGridView size={14} />,
+          accessKey: "appUserTests:grid",
+          activeWhen: (p) => p === "/appUserTests/grid",
+        },
+        {
+          label: "Active appUserTests",
+         to: "/appUserTests?tab=active", 
+          icon: <FaUserCheck size={14} />,
+          accessKey: "appUserTests:list",
+          activeWhen: (p) => p === "/appUserTests?tab=active",
+          tabType: "active",
+          count: dashboardInfoData.appUserTest?.[0]?.activeCount ?? 0,
+        },
+        {
+          label: "Inactive appUserTests",
+          to: "/appUserTests?tab=inactive",
+          icon: <FaUserSlash size={14} />,
+          accessKey: "appUserTests:list",
+          activeWhen: (p) => p === "/appUserTests?tab=inactive",
+          tabType: "inactive",
+          count: dashboardInfoData.appUserTest?.[0]?.inactiveCount ?? 0,
+        },
+        {
+          label: "Delete appUserTests",
+          to: "/appUserTests?tab=deleted",
+          icon: <FaUserTimes size={14} />,
+          accessKey: "appUserTests:list",
+          activeWhen: (p) => p === "/appUserTests?tab=deleted",
+          tabType: "deleted",
+          count: dashboardInfoData.appUserTest?.[0]?.deletedCount ?? 0,
+        },
+      ],
     },
-    {
-      label: t("globals.list"),
-      to: "/appUserTests",
-      icon: <IoList size={14} />,
-      accessKey: "appUserTests:list",
-      activeWhen: (p) => p === "/appUserTests",
-    },
-    {
-      label: t("globals.grid"),
-      to: "/appUserTests/grid",
-      icon: <MdGridView size={14} />,
-      accessKey: "appUserTests:grid",
-      activeWhen: (p) => p === "/appUserTests/grid",
-    },
-    {
-      label: "Active appUserTests",
-      to: "/appUserTests?tab=active",
-      icon: <FaUserCheck size={14} />,
-      accessKey: "appUserTests:list",
-      activeWhen: (p) => p === "/appUserTests?tab=active",
-      tabType: "active",
-      count: dashboardInfoData.AppUserTests?.[0]?.activeCount ?? 0,
-    },
-    {
-      label: "Inactive appUserTests",
-      to: "/appUserTests?tab=inactive",
-      icon: <FaUserSlash size={14} />,
-      accessKey: "appUserTests:list",
-      activeWhen: (p) => p === "/appUserTests?tab=inactive",
-      tabType: "inactive",
-      count: dashboardInfoData.AppUserTests?.[0]?.inactiveCount ?? 0,
-    },
-    {
-      label: "Delete appUserTests",
-      to: "/appUserTests?tab=deleted",
-      icon: <FaUserTimes size={14} />,
-      accessKey: "appUserTests:list",
-      activeWhen: (p) => p === "/appUserTests?tab=deleted",
-      tabType: "deleted",
-      count: dashboardInfoData.AppUserTests?.[0]?.deletedCount ?? 0,
-    },
-  ],
-},
-/* <!--router-link-admin--> */
+    /* <!--router-link-admin--> */
   ]
 
   useEffect(() => {
@@ -361,8 +361,8 @@ export default function Sidebar({
         key={`${label}-${to}`}
         onClick={() => {
           if (tabType) {
-            // setTab(tabType);            
-            setActiveTab(modelKey.toLowerCase(), tabType);
+            // setTab(tabType); 
+            setActiveTab(modelKey, tabType);
           }
           navigateTo(to)
         }}
