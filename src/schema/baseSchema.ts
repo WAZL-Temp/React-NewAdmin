@@ -140,11 +140,35 @@ const numberOrDoubleField = (fieldName: string, t: TransFn) =>
         message: t('validators.invalid', { field: fieldName }),
     });
 
-const anyValueField = (fieldName: string, t: TransFn) =>
-  z.any({
-    invalid_type_error: t('validators.invalid', { field: fieldName }),
-    required_error: t('validators.required', { field: fieldName }),
-  });
+const anyValueField = (
+    fieldName: string,
+    t: TransFn,
+    min: number,
+    max: number
+) => {
+    let schema = z
+        .string({
+            invalid_type_error: t("validators.invalid", { field: fieldName }),
+            required_error: t("validators.required", { field: fieldName }),
+        })
+        .trim();
+
+    if (min !== undefined) {
+        schema = schema.min(
+            min,
+            { message: t("validators.minLength", { field: fieldName, length: min }) }
+        );
+    }
+
+    if (max !== undefined) {
+        schema = schema.max(
+            max,
+            { message: t("validators.maxLength", { field: fieldName, length: max }) }
+        );
+    }
+
+    return schema;
+};
 
 export {
     stringOnlyAlphabets, stringAlphanumeric, stringAlphanumericWithSpecialChars,

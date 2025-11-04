@@ -1,10 +1,10 @@
-import { booleanField, fileUploadField, genderField, gstField, numericField, requiredStringField, stringAlphanumeric, stringAlphanumericWithSpecialChars, stringDateFormat, stringEmail, stringMobileNumber, stringNumeric, stringOnlyAlphabets, stringPassword } from "./baseSchema";
+import { anyValueField, booleanField, fileUploadField, genderField, gstField, numericField, requiredStringField, stringAlphanumeric, stringAlphanumericWithSpecialChars, stringDateFormat, stringEmail, stringMobileNumber, stringNumeric, stringOnlyAlphabets, stringPassword } from "./baseSchema";
 
 type TransFn = (key: string, params?: Record<string, unknown>) => string;
 
 
 export const appUser = (t: TransFn) => ({
-    name: stringOnlyAlphabets(t("appUsers.columns.fields.name"), t, 2, 100),
+    name: anyValueField(t("appUsers.columns.fields.name"), t, 2, 100),
     firstName: stringOnlyAlphabets(t("appUsers.columns.fields.firstName"), t, 2, 100),
     lastName: stringOnlyAlphabets(t("appUsers.columns.fields.lastName"), t, 2, 100),
     mobile: stringMobileNumber(t("appUsers.columns.fields.mobile"), t, 10, 10),
