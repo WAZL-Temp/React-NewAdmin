@@ -306,7 +306,7 @@ const RoleDetailsForm = () => {
     };
 
     const handleBackToUser = () => {
-        navigate("/appuser");
+        navigate("/appUsers");
     };
 
     return (

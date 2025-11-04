@@ -25,7 +25,7 @@ export default function AppUsersEdit() {
   const { t } = useTranslation();
   const appUserSchema = appUser(t);
   const toast = useRef<Toast>(null);
-  const baseModelName = "appuser";
+  const baseModelName = "appUsers";
   const typeName = "appuser";
   const userService = CustomAppUserService();
   const itemQuery = useItemQuery<AppUser>(userService);
@@ -262,7 +262,7 @@ export default function AppUsersEdit() {
   };
 
   const handleBackToUser = () => {
-    navigate("/appuser");
+    navigate("/appUsers");
   };
 
   const handleCheckboxChange = (e: { checked?: boolean }, key: string) => {

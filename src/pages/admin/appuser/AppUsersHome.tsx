@@ -42,7 +42,7 @@ export default function AppUsersHome() {
   }, [query?.homeCommonData, query?.homeUserData]);
 
   const handleListClick = () => {
-    navigate('/appuser')
+    navigate('/appUsers')
   }
 
   return (
@@ -104,7 +104,7 @@ export default function AppUsersHome() {
                     <div className="flex space-x-4 overflow-x-auto scrollbar-hide px-4 py-4 snap-x snap-proximity justify-start">
                       {listHomeUserData.map((item, index) => (
                         <div key={index} className="flex-none snap-center w-[140px] sm:w-[160px] cursor-pointer"
-                          onClick={() => navigate(`/appuser/${item.id}`)}>
+                          onClick={() => navigate(`/appUsers/${item.id}`)}>
                           <div className="bg-white shadow-xl rounded-2xl p-4 flex flex-col items-center h-[180px] sm:h-[200px]">
                             <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden">
                               <Image
@@ -302,7 +302,7 @@ const ItemCard = ({ user }: { user: AppUser }) => {
           label={t('globals.view')}
           icon="pi pi-arrow-right"
           className="homecard text-white py-2 px-5 rounded-full hover:bg-[var(--color-primary)] transition duration-300 text-sm"
-          onClick={() => navigate(`/appuser/${user.id}`)}
+          onClick={() => navigate(`/appUsers/${user.id}`)}
         />
       </div>
     </Card>
