@@ -36,13 +36,13 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<LoginPage />} />
-      <Route path="/appuser" element={<Layout><AppUsersList /></Layout>} />
-      <Route path="/appuser/home" element={<Layout><AppUsersHome /></Layout>} />
-      <Route path="/appuser/:id" element={<Layout><AppUsersView /></Layout>} />
-      <Route path="/appuser/add" element={<Layout><AppUsersEdit /></Layout>} />
-      <Route path="/appuser/edit/:id" element={<Layout><AppUsersEdit /></Layout>} />
-      <Route path="/appuser/import" element={<Layout><AppUsersImport /></Layout>} />
-      <Route path="/appuser/grid" element={<Layout><AppUserListGrid /></Layout>} />
+      <Route path="/appUsers" element={<Layout><AppUsersList /></Layout>} />
+      <Route path="/appUsers/home" element={<Layout><AppUsersHome /></Layout>} />
+      <Route path="/appUsers/:id" element={<Layout><AppUsersView /></Layout>} />
+      <Route path="/appUsers/add" element={<Layout><AppUsersEdit /></Layout>} />
+      <Route path="/appUsers/edit/:id" element={<Layout><AppUsersEdit /></Layout>} />
+      <Route path="/appUsers/import" element={<Layout><AppUsersImport /></Layout>} />
+      <Route path="/appUsers/grid" element={<Layout><AppUserListGrid /></Layout>} />
 
       <Route path="/role" element={<Layout><RoleDetailsForm /></Layout>} />
 

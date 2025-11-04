@@ -7,7 +7,6 @@ import { UserInfo } from "../types/auth";
 import { useAuthStore } from "../store/auth.store"
 import { AiFillHome, BiCategory, Button, FiUser, InputText, IoList, IoPersonSharp, MdGridView, IoIosArrowDown, RiLogoutCircleLine, RxCross2, Toast, FaUserSlash, FaUserCheck, FaUserTimes, IoGiftSharp, IoPeopleSharp, TbReportSearch, IoMdSettings, IoHeart, RiOrderPlayFill, RiFilter2Fill } from "../sharedBase/globalImports"
 import { useFetchDashboardInfoData } from "../sharedBase/lookupService"
-// import { AppUserTabStore } from "../pages/admin/appuser/AppUserTabStore";
 import { useModelTabStore } from "../store/useModelTabStore";
 
 type SidebarProps = {
@@ -58,7 +57,6 @@ export default function Sidebar({
   const [searchTerm, setSearchTerm] = useState("")
   const [openSection, setOpenSection] = useState<string | null>(null)
   const toast = useRef<Toast>(null)
-  // const { setTab } = AppUserTabStore();
   const { setActiveTab } = useModelTabStore();
   const { login, userInfo } = useAuthStore();
   const { data: dashboardInfoData } = useFetchDashboardInfoData();
@@ -87,91 +85,60 @@ export default function Sidebar({
       key: "appUser",
       label: t("appUsers.form_detail.fields.modelname"),
       icon: <FiUser size={18} className="flex-shrink-0" />,
-      count: 1880,
+      count: dashboardInfoData.appUser?.[0]?.activeCount ?? 0,
       showToastOnMinimized: false,
-      isOpenWhen: (p) => p.startsWith("/appuser"),
+      isOpenWhen: (p) => p.startsWith("/appUsers"),
       items: [
         {
           label: t("globals.homes"),
-          to: "/appuser/home",
+          to: "/appUsers/home",
           icon: <AiFillHome size={14} />,
-          accessKey: "appuser:home",
-          activeWhen: (p) => p === "/appuser/home",
+          accessKey: "appUsers:home",
+          activeWhen: (p) => p === "/appUsers/home",
         },
         {
           label: t("globals.list"),
-          to: "/appuser",
+          to: "/appUsers",
           icon: <IoList size={14} />,
-          accessKey: "appuser:list",
-          activeWhen: (p) => p === "/appuser",
+          accessKey: "appUsers:list",
+          activeWhen: (p) => p === "/appUsers",
         },
         {
           label: t("globals.grid"),
-          to: "/appuser/grid",
+          to: "/appUsers/grid",
           icon: <MdGridView size={14} />,
-          accessKey: "appuser:grid",
-          activeWhen: (p) => p === "/appuser/grid",
+          accessKey: "appUsers:grid",
+          activeWhen: (p) => p === "/appUsers/grid",
         },
         {
           label: "Active Users",
-          to: "/appuser?tab=active",
+          to: "/appUsers?tab=active",
           icon: <FaUserCheck size={14} />,
-          accessKey: "appuser:list",
-          activeWhen: (p) => p === "/appuser?tab=active",
+          accessKey: "appUsers:list",
+          activeWhen: (p) => p === "/appUsers?tab=active",
           tabType: "active",
           count: dashboardInfoData.appUser?.[0]?.activeCount ?? 0,
         },
         {
           label: "Inactive Users",
-          to: "/appuser?tab=inactive",
+          to: "/appUsers?tab=inactive",
           icon: <FaUserSlash size={14} />,
-          accessKey: "appuser:list",
-          activeWhen: (p) => p === "/appuser?tab=inactive",
+          accessKey: "appUsers:list",
+          activeWhen: (p) => p === "/appUsers?tab=inactive",
           tabType: "inactive",
           count: dashboardInfoData.appUser?.[0]?.inactiveCount ?? 0,
         },
         {
           label: "Delete Users",
-          to: "/appuser?tab=deleted",
+          to: "/appUsers?tab=deleted",
           icon: <FaUserTimes size={14} />,
-          accessKey: "appuser:list",
-          activeWhen: (p) => p === "/appuser?tab=deleted",
+          accessKey: "appUsers:list",
+          activeWhen: (p) => p === "/appUsers?tab=deleted",
           tabType: "deleted",
           count: dashboardInfoData.appUser?.[0]?.deletedCount ?? 0,
         },
       ],
-    },
-    // {
-    //   key: "appUserTest",
-    //   label: t("appUserTests.form_detail.fields.modelname"),
-    //   icon: <FiUser size={18} className="flex-shrink-0" />,
-    //   count: 544,
-    //   showToastOnMinimized: false,
-    //   isOpenWhen: (p) => p.startsWith("/appUserTests"),
-    //   items: [
-    //     {
-    //       label: t("globals.homes"),
-    //       to: "/appUserTests/home",
-    //       icon: <AiFillHome size={14} />,
-    //       accessKey: "appUserTests:home",
-    //       activeWhen: (p) => p === "/appUserTests/home",
-    //     },
-    //     {
-    //       label: t("globals.list"),
-    //       to: "/appUserTests",
-    //       icon: <IoList size={14} />,
-    //       accessKey: "appUserTests:list",
-    //       activeWhen: (p) => p === "/appUserTests",
-    //     },
-    //     {
-    //       label: t("globals.grid"),
-    //       to: "/appUserTests/grid",
-    //       icon: <MdGridView size={14} />,
-    //       accessKey: "appUserTests:grid",
-    //       activeWhen: (p) => p === "/appUserTests/grid",
-    //     },
-    //   ],
-    // },
+    },     
     {
       key: "category",
       label: t("categories.form_detail.fields.modelname"),
@@ -263,7 +230,7 @@ export default function Sidebar({
       key: "appUserTests",
       label: t("appUserTests.form_detail.fields.modelname"),
       icon: <FiUser size={18} className="flex-shrink-0" />,
-      count: 1880,
+      count: dashboardInfoData.appUserTest?.[0]?.activeCount ?? 0,
       showToastOnMinimized: false,
       isOpenWhen: (p) => p.startsWith("/appUserTests"),
       items: [

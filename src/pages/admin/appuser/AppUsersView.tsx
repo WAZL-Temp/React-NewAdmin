@@ -22,7 +22,7 @@ export default function AppUsersView() {
     t("appUsers.form_detail.fields.shopAddress"),
     t("appUsers.form_detail.fields.verifyShop"),
   ];
-  const baseModelName = "appuser";
+  const baseModelName = "appUsers";
   const typeName = "appuser";
   const userService = AppUserService();
   const query = useItemQuery<AppUser>(userService);

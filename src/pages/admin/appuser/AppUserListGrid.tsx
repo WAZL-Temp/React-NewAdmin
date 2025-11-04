@@ -16,7 +16,7 @@ import { CustomAppUserService} from "./appUsers.service";
 
 export default function AppUserListGrid() {
     const navigate = useNavigate();
-    const baseModelName = "appuser";
+    const baseModelName = "appUsers";
     const typeName = "appuser";
     const { t, i18n } = useTranslation();
     const dtRef = useRef<DataTable<AppUser[]>>(null);
